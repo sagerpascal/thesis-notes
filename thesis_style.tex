@@ -1,0 +1,56 @@
+% -------------------------------------------------------------
+% thesis_style.tex
+% This file defines custom style updates for the PhD thesis,
+% including colors and fonts.
+% -------------------------------------------------------------
+
+% 1. Define custom colors for the document
+% You can change these RGB values to match your university's branding
+\definecolor{ThesisDarkBlue}{RGB}{20, 50, 100}
+\definecolor{ThesisAccent}{RGB}{0, 102, 204}
+\definecolor{ThesisGray}{RGB}{100, 100, 100}
+
+% 2. Update font formatting for headings using KOMA-Script commands
+% This applies the dark blue color to chapters, sections, etc.
+\addtokomafont{chapter}{\color{ThesisDarkBlue}}
+\addtokomafont{section}{\color{ThesisDarkBlue}}
+\addtokomafont{subsection}{\color{ThesisAccent}}
+\addtokomafont{subsubsection}{\color{ThesisAccent}}
+\addtokomafont{paragraph}{\color{ThesisAccent}}
+\addtokomafont{captionlabel}{\color{ThesisDarkBlue}\bfseries}
+\addtokomafont{pagenumber}{\color{ThesisGray}}
+
+% 3. Update hyperlink colors
+% Here we apply the custom colors to links, citations, and URLs
+\hypersetup{
+    colorlinks=true,
+    linkcolor=ThesisAccent,
+    filecolor=ThesisAccent,
+    urlcolor=ThesisDarkBlue,
+    citecolor=ThesisDarkBlue,
+}
+
+% 4. Enable chapter formatting
+% kaobook supports different chapter styles (e.g. kao, plain)
+\setchapterstyle{kao}
+
+% 5. Cross-referencing helpers using cleveref
+% This ensures consistent formatting (e.g., "Figure" vs "Fig." etc.) across the document.
+% By default kaobook uses noabbrev for cleveref. If you prefer abbreviations
+% (so \cref outputs Fig. instead of Figure), uncomment the next lines:
+% \crefname{figure}{Fig.}{Figs.}
+% \Crefname{figure}{Fig.}{Figs.}
+% \crefname{equation}{Eq.}{Eqs.}
+% \Crefname{equation}{Eq.}{Eqs.}
+% \crefname{table}{Tab.}{Tabs.}
+% \Crefname{table}{Tab.}{Tabs.}
+% \crefname{section}{Sec.}{Secs.}
+% \Crefname{section}{Sec.}{Secs.}
+
+% Standardized helper macros bridging to \cref
+\newcommand{\figref}[1]{\cref{#1}}
+\newcommand{\tabref}[1]{\cref{#1}}
+\newcommand{\secref}[1]{\cref{#1}}
+\newcommand{\chapref}[1]{\cref{#1}}
+\newcommand{\eqnref}[1]{\cref{#1}}
+\newcommand{\appref}[1]{\cref{#1}}
