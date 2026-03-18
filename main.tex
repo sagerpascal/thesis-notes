@@ -66,11 +66,11 @@
 
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-\input{sections/abstract_en.tex}
+\input{sections/01_abstract_en.tex}
 
 \chapter*{Zusammenfassung}
 \addcontentsline{toc}{chapter}{Zusammenfassung}
-\input{sections/abstract_de.tex}
+\input{sections/02_abstract_de.tex}
 
 %----------------------------------------------------------------------------------------
 %	PREFACE
@@ -111,8 +111,81 @@ Preface goes here.
 \mainmatter % Denotes the start of the main document content, resets page numbering and uses arabic numbers
 \setchapterstyle{kao} % Choose the default chapter heading style
 
-\input{sections/introduction.tex}
-\input{sections/related_work.tex}
+
+
+%----------------------------------------------------------------------------------------
+%	PART I: THE FOUNDATION
+%----------------------------------------------------------------------------------------
+
+\pagelayout{wide}
+\addpart{The Foundation}
+\pagelayout{margin}
+
+\chapter{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\input{sections/11_introduction.tex}
+
+\chapter{Related Work}
+\addcontentsline{toc}{chapter}{Related Work}
+\input{sections/12_related_work.tex}
+
+%----------------------------------------------------------------------------------------
+%	PART II: THE PROBLEM WITH CURRENT AGENTS
+%----------------------------------------------------------------------------------------
+
+\pagelayout{wide}
+\addpart{The Problem with Current Agents}
+\pagelayout{margin}
+
+
+\chapter{The Agentic Gap}
+\addcontentsline{toc}{chapter}{The Agentic Gap}
+\input{sections/21_acu_survey.tex}
+
+\chapter{Limitations of Foundation Models}
+\addcontentsline{toc}{chapter}{Limitations of Foundation Models}
+\input{sections/22_llm_benchmark.tex}
+
+\chapter{The Failure of Compositionality (COGITAO)}
+\addcontentsline{toc}{chapter}{The Failure of Compositionality}
+\input{sections/23_cogitao.tex}
+
+\chapter{Looking Under the Hood (Attention)}
+\addcontentsline{toc}{chapter}{Looking Under the Hood}
+\input{sections/24_attention.tex}
+
+
+%----------------------------------------------------------------------------------------
+%   PART III: TWO PATHS TO STRUCTURED REPRESENTATION
+%----------------------------------------------------------------------------------------
+
+\pagelayout{wide}
+\addpart{Two Paths to Structured Representation}
+\pagelayout{margin}
+
+\chapter{The Bottom-Up Architectural Approach}
+\addcontentsline{toc}{chapter}{The Bottom-Up Architectural Approach}
+\input{sections/31_cna.tex}
+
+\chapter{The Top-Down Objective Approach}
+\addcontentsline{toc}{chapter}{The Top-Down Objective Approach}
+\input{sections/32_world_models.tex}
+
+%----------------------------------------------------------------------------------------
+%   PART IV: DISCUSSION AND CONCLUSION
+%----------------------------------------------------------------------------------------
+
+\pagelayout{wide}
+\addpart{Synthesis}
+\pagelayout{margin}
+
+\chapter{Discussion}
+\addcontentsline{toc}{chapter}{Discussion}
+\input{sections/41_discussion_conclusion.tex}
+
+\chapter{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+\input{sections/42_conclusion.tex}
 
 \appendix % From here onwards, chapters are numbered with letters, as is the appendix convention
 
