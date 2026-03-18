@@ -1,0 +1,255 @@
+Official Start Date PhD: 01.10.2023
+
+Potential outline:
+
+
+Part I: The Problem with Current Agents
+
+Chapter 1: The Agentic Gap (ACU Survey & LLM Benchmark). You establish that we want autonomous agents, but current models fail at robust planning, generalization, and reasoning. Also, we are bound by compute limits, so we need efficient solutions.
+
+Chapter 2: The Failure of Compositionality (COGITAO). You put state-of-the-art deep learning to the test. You prove empirically that without explicit rules, current models fail to generalize in compositional visual reasoning tasks.
+
+Chapter 3: Looking Under the Hood (Attention). To understand why they fail, you look at the underlying mechanics. You show how standard self-attention embeds information natively based on training objectives, highlighting that it learns statistical correlations rather than true structural rules.
+
+
+
+Part II: Two Paths to Structured Representation
+
+
+
+Pillar A: The Bottom-Up Architectural Approach (CNA)
+
+Chapter 4: Biologically Inspired Explicit Structure. You argue that standard deep learning architectures are fundamentally lacking. You introduce CNA to show what happens when you build structure directly into the wiring of the model (dynamically assembled nets).
+
+The Takeaway: It works brilliantly for OOD generalization and noise resilience. However, the trade-off is that it breaks away from the highly optimized, dense-matrix multiplication paradigm that allows standard DL to scale so massively.
+
+Pillar B: The Top-Down Objective Approach (World Models)
+
+Chapter 5: Learning Implicit Structure at Scale. You pivot to the second path. If we accept the architectural constraints of standard DL because of its massive scalability, how do we force it to learn structure? You introduce your World Model. By changing the training objective—forcing the model to maintain long-term consistency and predict future states—you compel standard architectures to implicitly learn the rules of the environment.
+
+
+
+Part III: Synthesis
+
+Chapter 6: Conclusion. You don't pick a "winner." You compare the two approaches. CNA offers robust, explicit structure but challenges current hardware paradigms. World Models leverage current scaling laws but have to learn structure implicitly, which can still be brittle. You conclude that the ultimate agent will likely require a synthesis of both: the scalable predictive objectives of World Models combined with the dynamic, structurally sound representations of CNA.
+
+
+
+
+
+
+Papers I can include:
+
+
+
+So you want your private LLM at home? A survey and benchmark of methods for efficient GPTs
+
+Abstract: At least since the introduction of ChatGPT, the
+abilities of generative large language models (LLMs), sometimes
+called GPTs, are at the center of the attention of AI researchers,
+entrepreneurs, and others. However, for many applications, it
+is not possible to call an existing LLM service via an API due
+to data protection concerns or when no task-appropriate LLM
+exists. On the other hand, deploying or training a private LLM is
+often prohibitively computationally expensive. In this paper, we
+give an overview of the most important recent methodologies that
+help reduce the computational footprint of LLMs. We further
+present extensive benchmarks for seven methods from two of
+the most important areas of recent progress: model quantization
+and low-rank adapters, showcasing how it is possible to leverage
+state-of-the-art LLMs with limited resources. Our benchmarks
+include resource consumption metrics (e.g. GPU memory usage),
+a state-of-the-art quantitative performance evaluation as well as
+a qualitative performance study conducted by eight individual
+human raters. Our evaluations show that quantization has a
+profound effect on GPU memory requirements. However, we also
+show that these quantization methods, contrary to how they are
+advertised, cause a noticeable loss in text quality. We further
+show that low-rank adapters allow effective model fine-tuning
+with moderate compute resources. For methods that require less
+than 16 GB of GPU memory, we provide easy-to-use Jupyter
+notebooks that allow anyone to deploy and fine-tune state-of-the-
+art LLMs on the Google Colab free tier within minutes without
+any prior experience or infrastructure.
+
+My contribution: Evaluation of LLMs
+My thoughts: Not major thing, maybe mention at the end, like half a page of the thesis
+
+
+
+
+
+A Comprehensive Survey of Agents for Computer Use: Foundations, Challenges, and Future Directions
+
+Abstract: Background: Agents for computer use (ACUs) are systems that execute complex tasks on digital devices – such as personal
+computers or mobile phones – given instructions in natural language. These agents automate tasks by controlling software
+through low-level actions like mouse clicks and touchscreen gestures. However, despite rapid progress, ACUs are not yet
+mature for everyday use.
+Objectives: This survey examines the current state-of-the-art, identifies trends, and points out research gaps in the develop-
+ment of practical ACUs. The goal is to provide a comprehensive review and analysis that helps advance general-purpose,
+robust, and scalable agents for real-world computer use.
+Methods: We introduce a multifaceted taxonomy of ACUs across three dimensions: (I) the domain perspective, characterizing
+the contexts in which agents operate; (II) the interaction perspective, describing observation modalities (e.g., screenshots,
+HTML) and action modalities (e.g., mouse, keyboard, code execution); and (III) the agent perspective, detailing how agents
+perceive, reason, and learn. We review 87 original research papers about ACUs and 33 relevant datasets, covering both
+foundation model-based and specialized approaches.
+Results: Our taxonomy comprehensively structures state-of-the-art approaches and establishes the groundwork for guiding
+future ACU research. We found that the field is transitioning from specialized agents toward foundation-model-based agents, a
+shift from text to image-based observation space, and an increasing adoption of behavior cloning methodologies. Furthermore,
+we identify six key research gaps: insufficient generalization, inefficient learning, limited planning, low task complexity in
+benchmarks, non-standardized evaluation, and a disconnect between research and practical conditions.
+Conclusions: To continue rapid improvements in the field, we recommend focusing on: (a) vision-based observations and
+low-level control to enhance generalization; (b) adaptive learning beyond static prompting; (c) effective planning and reasoning
+capabilities; (d) realistic, high-complexity benchmarks; (e) standardized evaluation criteria based on task success; and (f)
+aligning agent design with real-world deployment constraints. Collectively, our findings and proposed directions help develop
+more general-purpose agents for everyday digital tasks.
+
+My contribution: Shared First Authors
+My thoughts: Major part; Maybe either for motivation (like what is missing) or closing (see, it is actually missing)
+
+
+
+
+The underlying structures of self-attention: symmetry, directionality, and emergent dynamics in Transformer training
+
+Abstract: Self-attention is essential to Transformer architec-
+tures, yet how information is embedded in the self-
+attention matrices and how different objective func-
+tions impact this process remains unclear. We present
+a mathematical framework to analyze self-attention
+matrices by deriving the structures governing their
+weight updates. Using this framework, we demon-
+strate that bidirectional training induces symmetry
+in the weight matrices, while autoregressive train-
+ing results in directionality and column dominance.
+Our theoretical findings are validated across multi-
+ple Transformer models — including ModernBERT,
+GPT, LLaMA3, and Mistral — and input modalities
+like text, vision, and audio. Finally, we apply these
+insights by showing that symmetric initialization im-
+proves the performance of encoder-only models on
+language tasks. This mathematical analysis offers a
+novel theoretical perspective on how information is
+embedded through self-attention, thereby improving
+the interpretability of Transformer models.
+
+My contribution: Shared First Authors
+My thoughts: Major part; I did most of the experiments. Mainly about structure inside attention
+
+
+
+
+
+The Cooperative Network Architecture: Learning Structured Networks as Representation of Sensory Patterns
+
+Abstract: We introduce the Cooperative Network Architecture (CNA), a model that represents sensory signals
+using structured, recurrently connected networks of neurons, termed “nets.” Nets are dynamically
+assembled from overlapping net fragments, which are learned based on statistical regularities in
+sensory input. This architecture offers robustness to noise, deformation, and generalization to out-
+of-distribution data, addressing challenges in current vision systems from a novel perspective. We
+demonstrate that net fragments can be learned without supervision and flexibly recombined to encode
+novel patterns, enabling figure completion and resilience to noise. Our findings establish CNA as a
+promising paradigm for developing neural representations that integrate local feature processing with
+global structure formation, providing a foundation for future research on invariant object recognition.
+
+My contribution: First Authors
+My thoughts: Major part; A bit exotic but neuroscience inspired
+
+
+
+Deep Retrieval at CheckThat! 2025: Identifying Scientific Papers from Implicit Social Media Mentions via Hybrid Retrieval and Re-Ranking
+
+Abstract: We present the methodology and results of the Deep Retrieval team for subtask 4b of the CLEF CheckThat! 2025
+competition, which focuses on retrieving relevant scientific literature for given social media posts. To address this
+task, we propose a hybrid retrieval pipeline that combines lexical precision, semantic generalization, and deep
+contextual re-ranking, enabling robust retrieval that bridges the informal-to-formal language gap. Specifically,
+we combine BM25-based keyword matching with a FAISS vector store using a fine-tuned INF-Retriever-v1 model
+for dense semantic retrieval. BM25 returns the top 30 candidates, and semantic search yields 100 candidates,
+which are then merged and re-ranked via a large language model (LLM)-based cross-encoder.
+Our approach achieves a mean reciprocal rank at 5 (MRR@5) of 76.46% on the development set and 66.43%
+on the hidden test set, securing the 1st position on the development leaderboard and ranking 3rd on the test
+leaderboard (out of 31 teams), with a relative performance gap of only 2 percentage points compared to the
+top-ranked system. We achieve this strong performance by running open-source models locally and without
+external training data, highlighting the effectiveness of a carefully designed and fine-tuned retrieval pipeline.
+
+My contribution: First Authors
+My thoughts: Probably not major part, except it fits well
+
+
+
+
+Hounsfield Unit Ranges as Inductive Bias for Intra-Clinical Learning of Data-Efficient CT Segmentation Models
+
+Abstract: Automated tissue segmentation in medical imaging
+plays a critical role in clinical AI-assisted decision-making, and
+particularly in the assessment of body composition from CT
+scans. However, acquiring data and annotations of sufficient
+quality to train deep-learning models is expensive and time-
+consuming. In this work, we propose a novel approach to
+improve data efficiency and model accuracy by leveraging domain
+knowledge about biologically relevant tissue-specific Hounsfield
+unit (HU) ranges as an inductive bias for learning. Specifically, we
+extend the input representation of deep learning-based segmen-
+tation models with binary masks indicating potential tissue types,
+where each binary mask is created from thresholds derived from
+medical literature. Our method not only enhances segmentation
+performance by up to 5 % for intramuscular adipose tissue but
+surpasses the performance of the baseline model with 50 % of
+the training data. Our easy-to-apply method thus improves data
+efficiency and facilitates the development and use of segmentation
+models in resource-constrained clinical settings.
+
+
+My contribution: Shared First Authors, but did mostly the framing, not the implementation
+My thoughts: Probably not major part, except it fits well
+
+
+
+COGITAO: A Visual Reasoning Framework To Study Compositionality & Generalization
+
+Abstract: The ability to compose learned concepts and ap-
+ply them in novel settings is key to human intelli-
+gence, but remains a key challenge in state-of-the-
+art machine learning models.
+To address this issue, we introduce COGITAO, a
+modulable data-generation framework to evaluate
+compositional and systematic generalization in
+object-centric domains.
+Drawing inspiration from ARC-AGI’s environ-
+ment and problem-setting, COGITAO constructs
+rule-based tasks to be solved by applying a set of
+transformations to objects in grid-based environ-
+ments.
+It supports composition over a set of 28 interoper-
+able transformations, at adjustable composition-
+depth, along with extensive control over grid
+parametrization and object properties.
+This flexibility enables the creation of millions of
+unique task rules – surpassing existing datasets by
+several orders of magnitude – across a broad range
+of difficulties, while allowing virtually unlimited
+sample generation per rule.
+Alongside open-sourcing our flexible data-
+generation framework, we release benchmark
+datasets and provide baseline results with sev-
+eral state-of-the-art architectures that incorporate
+inductive biases well-suited for compositionality,
+such as diffusion-based Transformers (LLaDA)
+or recurrent Transformers with Adaptive Compu-
+tation Time (Universal Transformer/PonderNet).
+Despite strong in-domain performance, these
+models consistently fail to generalize to novel
+
+
+My contribution: Only author, I did the testing of MLDM on this dataset.
+
+My thoughts: Probably not major part, but the MLDM part could be mentioned well
+
+
+
+
+
+Still todo: One publication, most likely related to world models and long term consistency. Should be major part.
+
+
+

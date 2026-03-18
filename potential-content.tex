@@ -1,0 +1,25 @@
+
+### Thesis Title: Bridging the Agentic Gap: Dual Paradigms in Structured Representations and Deep Generative World Models
+
+**Abstract**
+
+The development of autonomous agents holds immense promise for automating complex digital and physical tasks. However, as identified in our comprehensive evaluation of Agents for Computer Use (ACUs), practical deployment is currently hindered by critical research gaps, including insufficient generalization, limited planning horizons, and high computational barriers. While large-scale deep learning models provide a powerful foundation, their deployment is fundamentally constrained by real-world compute and memory limits, indicating that the path to robust agents requires more than merely scaling existing architectures. 
+
+To understand these limitations, this thesis first investigates the internal mechanics of current Transformer-based paradigms. By establishing a mathematical framework to analyze the underlying structures of self-attention, we demonstrate how training objectives—such as autoregressive versus bidirectional modeling—dictate information embedding. These models excel at capturing statistical correlations but lack a robust, rule-based understanding of their environment. The consequences of this unstructured learning become starkly evident when state-of-the-art models are evaluated in highly compositional domains. Through the introduction of the COGITAO visual reasoning framework, we empirically show that standard deep learning architectures systematically fail to generalize to novel compositional tasks, highlighting a critical need for structural grounding in agentic reasoning.
+
+To bridge this agentic gap, this thesis explores two fundamentally distinct paradigms for instilling structured representations into AI systems. 
+
+**The first paradigm** investigates a bottom-up, architectural approach inspired by neuroscience. We introduce the Cooperative Network Architecture (CNA), which replaces rigid, layer-based processing with dynamically assembled, structured networks of neurons. By explicitly embedding structural formation into the model’s architecture, CNA demonstrates remarkable resilience to noise, deformation, and out-of-distribution data. However, while this explicit structure solves key robustness challenges, it requires a departure from the dense-matrix multiplication paradigm that enables modern deep learning to scale. 
+
+**The second paradigm**, therefore, explores a top-down, objective-driven approach designed to operate within the scalable framework of standard deep learning. Instead of altering the fundamental architecture, we compel the model to learn implicit environmental rules by optimizing for long-term spatial and temporal consistency. Through the development of a deep generative World Model, we demonstrate that forcing an agent to predict future states over extended horizons effectively instills a structured understanding of its environment. This leverages existing scaling laws while directly addressing the planning and reasoning deficits of current systems.
+
+Ultimately, this thesis provides a comprehensive analysis of the trade-offs between explicit architectural priors and implicit, objective-driven learning. By exploring both the biologically inspired extremes of dynamic network assembly and the highly scalable realm of deep generative world models, this work establishes a dual-pathway roadmap for the next generation of AI. We conclude that while world models offer the most viable immediate path for scalable agents, achieving true, robust autonomy will ultimately require synthesizing the predictive objectives of generative models with the dynamic, structurally sound representations inherent to biological intelligence.
+
+***
+
+### How does this feel?
+Read through it and see if the balance between your papers feels right. 
+
+Notice how the **ACU Survey** and **LLM Benchmark** set the stage in paragraph 1. The **Attention** and **COGITAO** papers act as the diagnosis in paragraph 2. Then, your two heavy-hitters—**CNA** and the **World Model**—get their own dedicated paragraphs as the proposed solutions. 
+
+If you are happy with this overarching narrative, our next step is to outline the specific chapters. Would you like to start outlining Chapter 1 (Introduction/Background) to see how we weave those first few papers together?
