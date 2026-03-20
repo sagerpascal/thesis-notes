@@ -6,28 +6,28 @@
 
 % 1. Define custom colors for the document
 % You can change these RGB values to match your university's branding
-\definecolor{ThesisDarkBlue}{RGB}{20, 50, 100}
-\definecolor{ThesisAccent}{RGB}{0, 102, 204}
+\definecolor{ThesisDarkRed}{RGB}{140, 0, 0}
+\definecolor{ThesisAccentRed}{RGB}{210, 0, 0}
 \definecolor{ThesisGray}{RGB}{100, 100, 100}
 
 % 2. Update font formatting for headings using KOMA-Script commands
 % This applies the dark blue color to chapters, sections, etc.
-\addtokomafont{chapter}{\color{ThesisDarkBlue}}
-\addtokomafont{section}{\color{ThesisDarkBlue}}
-\addtokomafont{subsection}{\color{ThesisAccent}}
-\addtokomafont{subsubsection}{\color{ThesisAccent}}
-\addtokomafont{paragraph}{\color{ThesisAccent}}
-\addtokomafont{captionlabel}{\color{ThesisDarkBlue}\bfseries}
+\addtokomafont{chapter}{\color{ThesisDarkRed}}
+\addtokomafont{section}{\color{ThesisDarkRed}}
+\addtokomafont{subsection}{\color{ThesisAccentRed}}
+\addtokomafont{subsubsection}{\color{ThesisAccentRed}}
+\addtokomafont{paragraph}{\color{ThesisAccentRed}}
+\addtokomafont{captionlabel}{\color{ThesisDarkRed}\bfseries}
 \addtokomafont{pagenumber}{\color{ThesisGray}}
 
 % 3. Update hyperlink colors
 % Here we apply the custom colors to links, citations, and URLs
 \hypersetup{
     colorlinks=true,
-    linkcolor=ThesisAccent,
-    filecolor=ThesisAccent,
-    urlcolor=ThesisDarkBlue,
-    citecolor=ThesisDarkBlue,
+    linkcolor=black,
+    filecolor=black,
+    urlcolor=ThesisDarkRed,
+    citecolor=ThesisDarkRed,
 }
 
 % 4. Enable chapter formatting
