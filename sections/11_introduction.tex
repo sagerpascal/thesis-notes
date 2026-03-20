@@ -1,3 +1,125 @@
-% Introduction
+The pursuit of artificial intelligence has long been driven by the vision of creating autonomous agents---systems capable of perceiving their environment, reasoning over extended horizons, and taking actions to achieve complex, user-defined goals. While this agent-based paradigm has demonstrated remarkable success in tightly constrained domains such as robotic control, game playing, and autonomous driving, the recent advent of advanced natural language processing has unlocked a new frontier: instruction-based agents. 
 
-Your introduction goes here.
+\section{Limitations of Autonomous Agents}
+
+One of the most promising and challenging applications of this paradigm is the development of Agents for Computer Use (ACUs). These agents are designed to execute complex, multi-step tasks on digital devices by interacting with interfaces originally built for humans. Given a natural language instruction---such as ``Look up possible dates this week and propose timeslots via email''---an ideal ACU must autonomously navigate operating systems, switch between applications, and execute low-level actions like simulated mouse clicks and touchscreen gestures. 
+
+Historically, research into ACUs relied heavily on specialized reinforcement learning techniques. However, as documented in our comprehensive survey of the field [Cite ACU Survey], the introduction of large-scale foundation models---specifically Large Language Models (LLMs) and Vision-Language Models (VLMs)---has triggered a fundamental paradigm shift. By leveraging the vast pre-training data of these models, modern agents have gained unprecedented capabilities in zero-shot reasoning, moving the field away from narrow, task-specific reinforcement learning toward general-purpose, foundation-model-based agents.
+
+Despite this rapid acceleration, a critical reality remains: current ACUs are not yet mature for reliable, everyday use. In our systematic review of the ACU landscape, we identified a stark discrepancy between the theoretical capabilities of foundation models and their practical execution in dynamic environments. Through our proposed taxonomical framework, we synthesized the state-of-the-art and identified several fundamental research gaps currently bottlenecking the field. Most notably, modern agents suffer from insufficient generalization due to inconsistent observation spaces, an inability to maintain long-horizon planning, and highly inefficient learning paradigms. These identified gaps form the foundational motivation for this thesis, highlighting the need to fundamentally re-evaluate how these models structurally represent and reason about their environments.
+
+\section{The Limits of Unstructured Deep Learning}
+
+While the integration of massive foundation models has undeniably advanced the reasoning capabilities of agents, it has also introduced a severe deployment bottleneck: computational complexity. The transformer architecture, which underpins modern LLMs, scales quadratically with sequence length. Furthermore, these models require billions of parameters to unlock their emergent reasoning capabilities. Consequently, deploying state-of-the-art models for private, autonomous, or edge-case agentic use is often prohibitively expensive and computationally inaccessible.
+
+To understand the boundaries of this limitation, we investigated the state-of-the-art methodologies designed to reduce the computational footprint of LLMs, specifically focusing on model quantization and low-rank adapters (LoRA) [Cite LLM Benchmark]. In this collaborative evaluation, my specific contribution centered on conducting the rigorous quantitative performance benchmarking of these compressed models across various language tasks. 
+
+Our findings revealed a critical trade-off. While techniques like quantization drastically reduce GPU memory requirements---enabling deployment on consumer-grade hardware---they do not come for free. Our evaluations demonstrated that these efficiency methods, contrary to common industry claims, cause a noticeable degradation in text quality and reasoning performance. Furthermore, the quantitative metrics utilized in my evaluation highlighted the immense difficulty in capturing these nuanced drops in generative quality, which were later corroborated by qualitative human testing. 
+
+This presents a fundamental paradox for the future of autonomous agents. To bridge the ``agentic gap'' identified in Section 1.1, we require the advanced reasoning capabilities of massive foundation models. Yet, we are bound by strict hardware limits. Furthermore, as our benchmark study proved, attempting to solve this by simply compressing standard, unstructured deep learning models results in a loss of the very reasoning and performance capabilities required for autonomous planning. 
+
+This proves that merely scaling and compressing existing architectures is a flawed roadmap for robust agentic deployment. Instead of relying on brute-force parameter scaling and subsequent compression, we must find more efficient, structural ways for models to understand their environments. This thesis argues that to overcome these computational and reasoning limits, we must look beyond unstructured data scaling and investigate the underlying structural representations of the models themselves.
+
+
+\section{Research Questions}
+
+To address the severe limitations of unstructured deep learning in agentic applications---namely the lack of generalization, the inability to plan, and the computational bottlenecks of scaling---this thesis is guided by three core research questions. These questions are designed to first diagnose the fundamental representational flaws in current state-of-the-art models, and subsequently explore two distinct paradigms for injecting structural understanding into AI systems.
+
+\begin{itemize}
+    \item \textbf{Research Question 1 (The Diagnosis): How do standard self-attention mechanisms embed information, and why do these implicit representations fail to generalize in compositional environments?}\\
+    Before proposing novel architectures or objectives, we must first deeply understand the mechanics and limitations of the current standard. This question investigates how foundational training objectives (such as autoregressive versus bidirectional modeling) mathematically govern the internal symmetry and directionality of Transformer models. Furthermore, it seeks to empirically test the boundaries of these unstructured representations by evaluating state-of-the-art architectures on novel, rule-based visual reasoning tasks. By establishing exactly where and why standard models fail at systematic generalization, we define the exact structural deficits that future agentic systems must overcome.
+
+    \item \textbf{Research Question 2 (The Architectural Paradigm): Can we overcome the fragility of standard deep learning by explicitly embedding biological structure into the network architecture?}\\
+    Having established that standard, unstructured architectures struggle with structural reasoning and out-of-distribution (OOD) data, this question explores a bottom-up, neuroscience-inspired approach to representation. It investigates whether abandoning rigid, layer-based matrices in favor of dynamically assembled, overlapping network fragments can inherently provide robustness to noise, spatial deformation, and OOD environments. By explicitly hardcoding structural priors into the model's wiring, we ask if it is possible to solve the generalization gap at the architectural level.
+
+    \item \textbf{Research Question 3 (The Objective-Driven Paradigm): How can we compel standard, highly scalable deep learning architectures to implicitly learn environmental structures and facilitate long-term planning?}\\
+    While explicit architectural interventions provide remarkable robustness, they fundamentally challenge the dense-matrix optimizations that allow modern deep learning to scale efficiently. Therefore, this final question explores a top-down, highly scalable alternative. Rather than altering the underlying architecture, it investigates whether we can alter the learning objective itself. By forcing an agent to predict future states and maintain long-term spatial and temporal consistency through a deep generative world model, we ask whether predictive objectives alone are sufficient to implicitly instill the structured reasoning and planning capabilities required for robust, autonomous agents.
+\end{itemize}
+
+
+\subsection{Summary of Contributions}
+
+This cumulative thesis is based on a collection of peer-reviewed publications, preprints, and upcoming submissions. The papers are organized to first establish the foundational challenges of autonomous agents, diagnose the representational limits of current models, and finally explore two distinct paradigms for structured reasoning. In addition to the core narrative, two auxiliary publications are included that demonstrate the practical application of inductive biases and structured retrieval in applied deep learning.
+
+\subsubsection{Foundation and Problem Framing}
+
+\begin{itemize}
+    \item \textbf{Paper I: A Comprehensive Survey of Agents for Computer Use: Foundations, Challenges, and Future Directions}
+    \begin{itemize}
+        \item \textit{Core Contribution:} This paper introduces a multifaceted taxonomy for Agents for Computer Use (ACUs) and reviews 87 agents and 33 datasets. It identifies the critical transition from specialized RL agents to foundation-model-based agents and formally defines the six core research gaps currently preventing robust, real-world deployment---most notably the lack of generalization and planning capabilities.
+        \item \textit{Personal Contribution:} As a shared first author, I initiated this project and engaged in a highly collaborative, iterative process across all phases of the research. My contributions were deeply intertwined with my co-authors throughout the conceptualization of the taxonomy, the systematic screening of the literature, and the synthesis of our final conclusions regarding the agentic generalization gap.
+    \end{itemize}
+
+    \item \textbf{Paper II: So you want your private LLM at home? A survey and benchmark of methods for efficient GPTs}
+    \begin{itemize}
+        \item \textit{Core Contribution:} This paper evaluates methods for reducing the computational footprint of LLMs, such as model quantization and low-rank adapters (LoRA). It demonstrates that while these methods drastically reduce GPU memory requirements, they cause a noticeable degradation in text quality and reasoning performance, proving that standard model compression is insufficient for reliable agentic deployment.
+        \item \textit{Personal Contribution:} I led the quantitative performance evaluation of the LLMs, executing the benchmark methodologies that captured the nuanced performance degradation across the tested efficiency methods.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Diagnosing Representational Limits}
+
+\begin{itemize}
+    \item \textbf{Paper III: The underlying structures of self-attention: symmetry, directionality, and emergent dynamics in Transformer training}
+    \begin{itemize}
+        \item \textit{Core Contribution:} This work presents a mathematical framework to analyze how information is embedded within self-attention matrices. It demonstrates that training objectives dictate fundamental structural properties, such as symmetry in bidirectional training and directionality in autoregressive training, highlighting the implicit, statistical nature of standard Transformer representations.
+        \item \textit{Personal Contribution:} As a shared first author, I led the empirical validation of the theoretical framework. I designed and executed the majority of the experiments across multiple Transformer architectures (including ModernBERT, GPT, LLaMA3, and Mistral) and input modalities.
+    \end{itemize}
+
+    \item \textbf{Paper IV: COGITAO: A Visual Reasoning Framework To Study Compositionality \& Generalization}
+    \begin{itemize}
+        \item \textit{Core Contribution:} This paper introduces COGITAO, a highly modulable data-generation framework designed to evaluate systematic generalization in object-centric domains. By generating millions of unique task rules, it empirically proves that state-of-the-art architectures consistently fail to generalize to novel rule compositions, exposing the limits of unstructured deep learning.
+        \item \textit{Personal Contribution:} As a co-author, my primary focus was on the empirical evaluation phase of the framework. Specifically, I was responsible for benchmarking Masked Latent Diffusion Models (MLDMs) on the COGITAO datasets, systematically assessing their performance and characterizing their failure modes on compositional visual reasoning tasks.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Architectural and Objective-Driven Interventions}
+
+\begin{itemize}
+    \item \textbf{Paper V: The Cooperative Network Architecture: Learning Structured Networks as Representation of Sensory Patterns}
+    \begin{itemize}
+        \item \textit{Core Contribution:} Addressing the fragility of standard deep learning, this paper introduces the Cooperative Network Architecture (CNA). By dynamically assembling overlapping net fragments learned from statistical regularities, this biologically inspired model achieves remarkable robustness to noise, spatial deformation, and out-of-distribution data by explicitly hardcoding structural formation.
+        \item \textit{Personal Contribution:} Building upon the initial architectural draft developed during my Master's thesis, I led the formalization and expansion of the CNA framework as the first author. My specific contributions included formulating the mathematical definition of the framework, implementing significant code modifications, and scaling the empirical evaluations from simple straight-line stimuli to complex, diverse line shapes and out-of-distribution (OOD) scenarios to empirically demonstrate the architecture's robustness.
+    \end{itemize}
+
+    \item \textbf{Paper VI: [Working Title of Upcoming World Model Paper]}
+    \begin{itemize}
+        \item \textit{Core Contribution:} This paper explores an objective-driven approach to structured representation by training a deep generative world model. It demonstrates that by forcing a highly scalable, standard deep learning architecture to predict future states and maintain long-term environmental consistency, the model implicitly learns the underlying rules of the domain, bridging the agentic planning gap.
+        \item \textit{Personal Contribution:} As the primary contributor, I [insert a brief description of your role, e.g., designed the predictive objective, implemented the long-term consistency constraints, and evaluated the model's planning capabilities].
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Auxiliary Contributions in Applied Deep Learning}
+
+The following two papers, while falling outside the core theoretical narrative of agentic world models, represent significant auxiliary contributions to the broader theme of injecting structure and external knowledge into deep learning pipelines. They are included in the Appendix of this thesis.
+
+\begin{itemize}
+    \item \textbf{Paper VII: Deep Retrieval at CheckThat! 2025: Identifying Scientific Papers from Implicit Social Media Mentions via Hybrid Retrieval and Re-Ranking}
+    \begin{itemize}
+        \item \textit{Core Contribution:} This paper demonstrates how to bridge the informal-to-formal language gap by combining BM25-based lexical precision with dense semantic retrieval and LLM-based cross-encoder re-ranking. The pipeline achieved top-tier performance on the CLEF CheckThat! 2025 leaderboard using locally run, open-source models.
+        \item \textit{Personal Contribution:} As the first author, I architected the overall hybrid pipeline and directly implemented the dense semantic retrieval system. Additionally, I collaborated closely with my co-authors to integrate the BM25 lexical matching and fine-tune the LLM-based re-ranking modules.
+    \end{itemize}
+
+    \item \textbf{Paper VIII: Hounsfield Unit Ranges as Inductive Bias for Intra-Clinical Learning of Data-Efficient CT Segmentation Models}
+    \begin{itemize}
+        \item \textit{Core Contribution:} This paper proves that injecting explicit domain knowledge---specifically biologically relevant Hounsfield unit ranges---as an inductive bias into deep learning models drastically improves data efficiency and segmentation accuracy in resource-constrained clinical settings.
+        \item \textit{Personal Contribution:} As a shared first author, I led the conceptual framing of the methodology, defining how explicit medical domain knowledge could be mathematically represented as an inductive bias for the network.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Thesis Outline}
+
+This thesis is organized into four main parts, tracing a logical progression from diagnosing the limitations of current AI agents to proposing and evaluating dual paradigms for structured reasoning.
+
+\begin{itemize}
+    \item \textbf{Part I: The Foundation} sets the stage for the research. Chapter 1 introduces the overarching motivation, outlines the core problem of unstructured deep learning, defines the guiding research questions, and summarizes the core contributions. Chapter 2 provides a comprehensive review of the related work, contextualizing the thesis within the broader landscape of artificial intelligence, agentic systems, and representation learning.
+    
+    \item \textbf{Part II: The Problem with Current Agents} diagnoses the specific failures of modern architectures. Chapter 3 establishes the ``agentic gap'' through a comprehensive survey of Agents for Computer Use (ACUs), highlighting critical deficits in generalization and planning. Chapter 4 empirically demonstrates the computational bottlenecks of foundation models, proving that standard compression methods result in performance degradation and cannot solve the agentic gap alone. Chapter 5 introduces the COGITAO framework, demonstrating that current state-of-the-art models systematically fail at compositional visual reasoning. Finally, Chapter 6 looks under the hood of standard architectures, mathematically analyzing how self-attention embeds information natively based on training objectives, thereby explaining the root cause of these compositional failures.
+    
+    \item \textbf{Part III: Two Paths to Structured Representation} explores two distinct interventions to solve the problems identified in Part II. Chapter 7 investigates the bottom-up, architectural approach, introducing the Cooperative Network Architecture (CNA) to demonstrate how explicitly hardcoding biological structure into a model yields remarkable robustness to noise and out-of-distribution data. Chapter 8 pivots to the top-down, objective-driven approach, presenting a deep generative world model that forces highly scalable, standard architectures to implicitly learn environmental rules and long-term consistency.
+    
+    \item \textbf{Part IV: Synthesis} brings the two paradigms together. Chapter 9 provides an in-depth discussion comparing the trade-offs between explicit architectural priors (CNA) and implicit, objective-driven learning (World Models). Chapter 10 concludes the thesis, summarizing the findings and outlining future directions for the development of robust, autonomous agents.
+\end{itemize}
+
+Finally, the \textbf{Appendix} contains supplementary material and two auxiliary publications detailing the successful application of inductive biases and structured retrieval in applied deep learning settings (specifically, medical CT segmentation and scientific literature retrieval).

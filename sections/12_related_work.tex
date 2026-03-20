@@ -1,3 +1,31 @@
-% Related Work
+The ambition to create artificial agents capable of autonomous reasoning and action requires a deep synthesis of multiple paradigms within machine learning. As established in Chapter 1, the recent transition from narrow, task-specific models to broad, generative foundation models has unlocked unprecedented capabilities, yet simultaneously exposed critical vulnerabilities in systematic generalization and computational efficiency. To rigorously diagnose these failures and subsequently propose structural interventions, it is first necessary to establish the theoretical scaffolding upon which modern state-of-the-art models are built. 
 
-Related work goes here.
+This chapter provides the foundational context for the methodologies and architectures discussed throughout this thesis. We begin by tracing the historical evolution of autonomous agents, formalizing the transition from classical reinforcement learning to the current paradigm of instruction-based foundation models. Next, we examine the underlying mechanics of unstructured deep learning---specifically the Transformer architecture---detailing how its mathematical formulations govern both its emergent reasoning capabilities and its severe computational bottlenecks. We then formalize the core challenge of systematic generalization, defining the boundaries between independent and identically distributed (IID) performance and out-of-distribution (OOD) reasoning. Finally, this chapter outlines distinct paradigms of representation learning, contrasting the injection of explicit architectural priors with implicit, objective-driven world models, thereby setting the theoretical stage for the dual-pathway solutions proposed in Part III of this work.
+
+\section{The Evolution of Autonomous Agents}
+\begin{itemize}
+    \item \textbf{Formal Definition of an Agent:} Define the core components (perception, reasoning/planning, action space, and environment) in the context of digital and continuous spaces.
+    \item \textbf{Classical Approaches:} Briefly review the era of specialized Reinforcement Learning (RL) and symbolic AI, noting their successes in constrained environments (e.g., games, robotic control) and their limitations in open-ended tasks.
+    \item \textbf{The Foundation Model Paradigm Shift:} Describe how the advent of Large Language Models (LLMs) and Vision-Language Models (VLMs) introduced zero-shot and few-shot reasoning, allowing agents to process natural language instructions and generalize across diverse, human-centric interfaces.
+\end{itemize}
+
+\section{Foundation Models and the Transformer Architecture}
+\begin{itemize}
+    \item \textbf{Mechanics of Self-Attention:} Explain the core mathematical operations of the Transformer architecture (Query, Key, Value matrices) and how they allow models to contextualize information across a sequence.
+    \item \textbf{Training Objectives (Autoregressive vs. Bidirectional):} Contrast causal language modeling (predicting the next token) with masked language modeling (reconstructing corrupted inputs), establishing how these objectives shape the model's internal representation of information.
+    \item \textbf{Scaling Laws and Computational Bottlenecks:} Discuss the empirical relationship between parameter count, dataset size, and model performance. Highlight the quadratic complexity of self-attention with respect to sequence length, setting up the computational paradox faced by edge-case and autonomous deployment.
+\end{itemize}
+
+\section{The Generalization Challenge in Deep Learning}
+\begin{itemize}
+    \item \textbf{IID vs. OOD Generalization:} Define the fundamental assumption of Independent and Identically Distributed (IID) data in standard deep learning and contrast it with the reality of Out-of-Distribution (OOD) scenarios encountered by autonomous agents.
+    \item \textbf{Compositionality and Systematic Generalization:} Formalize what it means for a model to exhibit compositional reasoning---the ability to combine known components or rules into novel configurations---and why standard architectures often rely on statistical shortcut learning instead.
+    \item \textbf{The Fragility of Unstructured Representations:} Explain why dense-matrix representations struggle with structural constraints, spatial deformations, and noisy environments, leading to the brittle performance observed in real-world deployment.
+\end{itemize}
+
+\section{Paradigms of Representation Learning}
+\begin{itemize}
+    \item \textbf{Inductive Biases in Neural Networks:} Define inductive biases as the set of assumptions a learning algorithm uses to predict outputs for inputs it has not encountered. Discuss how injecting structural or domain-specific knowledge can drastically improve data efficiency.
+    \item \textbf{Explicit Architectural Priors (The Bottom-Up Approach):} Introduce the concept of neuroscience-inspired or biologically plausible network designs. Discuss how moving away from rigid layers to dynamically assembled or overlapping structures can inherently provide robustness to noise and OOD data.
+    \item \textbf{Implicit Objective-Driven Learning (The Top-Down Approach):} Introduce the theoretical framework of Generative World Models. Explain the concept of compelling an agent to learn the underlying dynamics of its environment by forcing it to predict future states, thereby enabling long-term spatial and temporal planning.
+\end{itemize}
