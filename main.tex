@@ -26,6 +26,7 @@
 \usepackage{xspace}
 \usepackage{enumitem}      % for \setlist — already may be in kaobook, safe to add
 \usepackage[edges]{forest}
+\usepackage{subcaption}
 \usetikzlibrary{trees, positioning, calc}
 
 % Load the bibliography package
@@ -64,6 +65,10 @@
     \parencite[e.g.,][]{#1}%
 }
 
+% ACM template no-ops for imported papers
+\providecommand{\Description}[2][]{}
+\providecommand{\numpapers}{87\xspace}
+
 % cleveref name overrides — place AFTER kaorefs loads cleveref
 \crefname{figure}{Figure}{Figures}
 \Crefname{figure}{Figure}{Figures}
@@ -79,7 +84,7 @@
 
 
 
-\graphicspath{{images/}{./}} % Paths where images are looked for
+\graphicspath{{images/}{./}{figures/}{imported_papers/ACU_JAIR/figures/}{imported_papers/ACU_JAIR/}} % Paths where images are looked for
 
 \makeindex[columns=3, title=Alphabetical Index, intoc] % Make LaTeX produce the files required to compile the index
 
