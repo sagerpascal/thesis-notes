@@ -1,0 +1,8 @@
+% Forwarding stub so that \input{sections/04_1_observation_space}
+% (used by imported_papers/ACU_JAIR/sections/04_interaction_perspective.tex)
+% resolves to the real file under imported_papers/. Guarded against
+% double-inclusion in case the imported paper is also \input directly.
+\@ifundefined{acuobservationspaceloaded}{%
+    \global\@namedef{acuobservationspaceloaded}{}%
+    \input{imported_papers/ACU_JAIR/sections/04_1_observation_space}%
+}{}
