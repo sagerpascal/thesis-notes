@@ -1,0 +1,78 @@
+
+\subsection{Observation Spaces}\label{sec:obervation_space}
+
+Observation spaces $\mathcal{O}$ of ACUs typically comprise image screen representations, textual screen representations, or indirect observations. 
+Similar to the previous chapter, we classify the observation type used by the reviewed $\numagents$ ACUs (see Appendix \cref{tab:interaction_literature}).
+Our analysis shows textual observations are the most common observation type with $35$ ACUs relying only on textual representations (see Appendix \cref{fig:observation-space-trend}), reflecting the influence of LLMs over the last years. %  (cp. \cref{fig:timeline-new})
+However, we identify a trend towards image screen representation, with image observations even being the most common observation type in 2024 (see Appendix \cref{fig:observation-space-trend}), partly driven by advances in vision language models (VLM).
+
+\subsubsection{Image Screen Representation}\label{sec:obervation_space_image}
+Image-based observations (e.g., screenshots) are used across Web \citepeg{zheng_gpt-4vision_2024}, Android \citepeg{zhang_appagent_2023}, and desktop environments \citepeg{gao_assistgui_2024}.
+Using screenshots aligns with human visual perception, offering broad applicability since most applications provide a graphical interface.
+
+Besides capturing the entire screen, there exist different approaches for taking screenshots. Some approaches only use parts of the screen, such as the active application \citep{gao_assistgui_2024}, while others extend it beyond the visible viewpoint by rendering the entire application as an image \citep{chen_webvln_2024}, whereas humans have to scroll.
+
+To reduce the computational load of processing large images, screenshot observations $o_t$ are typically simplified $o_t \rightarrow o_t^*$ by downsampling their resolution \citepeg{toyama_androidenv_2021,chen_webvln_2024}.
+\citet{rahman_v-zen_2024} even combine high-resolution and low-resolution screenshots to have a compact view but still access image details if needed.
+
+Another challenge is to feed the textual instruction $i$ into vision-only agents.
+Typically, the instruction is either encoded separately and added in the embedding space \citepeg{baechler_screenai_2024} or visually rendered atop of each screenshot \citepeg{shaw_pixels_2023}.
+
+According to our analysis in Appendix Section~\Cref{sec:domain_view:nature}, a common assumption within the field of ACUs is that the environment remains static between actions, resulting in the prevailing practice of capturing screenshots only after actions. However, real-world applications exhibit dynamic behavior, necessitating continuous monitoring and the capacity to react to asynchronous events (e.g., the arrival of a new email). This area is currently underexplored in ACU research.
+
+\subsubsection{Textual Screen Representation}\label{sec:obervation_space_image_text}
+Agents using textual screen representations operate across diverse platforms, including the Web (via HTML) \citepeg{kim_language_2023}, Android (via view hierarchies) \citepeg{shvo_appbuddy_2021}, and desktop systems (via the Windows UI automation tree) \citepeg{zhang_ufo_2024}.
+However, not all textual representations are equally robust; HTML and Android view hierarchies tend to be well-structured and consistent, as they are generated through standardized frameworks that a majority of developers follow. In contrast, the Windows UI automation tree is often of lower quality (due to a variety of UI toolkits or legacy applications), leading to incomplete or semantically sparse UI descriptions. Therefore, textual representations are typically only used for Web, Android, and very specific desktop applications.
+
+Textual representations, particularly HTML, are often verbose, as they include styling metadata in addition to content. Processing raw text \citepeg{kim_language_2023, assouel_unsolved_2023} is therefore generally restricted to artificial environments with minimal markup, such as the MiniWoB++ benchmark (see \cref{sec:datasets}). 
+In more realistic environments, textual representations are typically simplified through a combination of the following strategies:
+
+\begin{description}
+    \item[Heuristic pruning:] 
+        Selects only the most essential attributes such as \texttt{id}, \texttt{class}, or \texttt{name} for each element while removing others \citepeg{li_zero-shot_2023, tao_webwise_2023}.
+    \item[Elements filtering:] 
+        Keeps only specific elements, such as leaf elements \citepeg{gur_learning_2019}, or those considered most relevant to fulfill a given instruction $i$ \citepeg{deng_mind2web_2023, zheng_synapse_2024}.
+    \item[Representation embedding:] 
+        Uses an embedding model to compress HTML into a vector representation \citepeg{jia_dom-q-net_2019, gur_learning_2019, liu_reinforcement_2018}.
+    \item[Text summarization:]
+        Utilizes an auxiliary model to compress the HTML into an abstract text summary \citepeg{zheng_synapse_2024}.
+\end{description}
+
+A key advantage of using HTML is its alignment with the pretraining data of LLMs, enabling LLM-based agents to exhibit a general understanding of it. 
+To leverage this alignment in the Android domain, \citet{wang_enabling_2023} propose to map the Android view hierarchy to simplified HTML, an approach later adopted by subsequent works \citepeg{deng_mobile-bench_2024}.
+
+This mapping approach has also been extended to image-based agents, where screenshots are translated into textual representations to align with text foundation models. The process, applied in Web \citepeg{cho_caap_2024}, Android \citepeg{li_uinav_2024}, and desktop environments \citepeg{gao_assistgui_2024}, typically involves two steps: First, object detection is used to detect UI elements, and then an additional model is used to extract an element's properties, such as its text and type.
+
+
+\subsubsection{Bi-Modal Screen Representation}\label{sec:obervation_space_bimodal}
+Bi-modal observations combine both image and textual inputs, and have been explored across domains such as Web \citepeg{he_webvoyager_2024}, Android \citepeg{sun_meta-gui_2022}, and desktop systems \citepeg{zhang_ufo_2024}, aiming to unify complementary information streams.
+Typically, the two modalities have modality-specific encoders that embed the two types of observations before they are combined in the embedding space \citepeg{furuta_multimodal_2024}.
+The potential of bi-modal agents leveraging the advantages of both modalities is an open research question, as more information can also lead to distracting information overload through irrelevant content and has not yet been proven to be considerably more effective on current benchmarks.
+
+\subsubsection{Indirect Observation}\label{sec:obervation_space_indirect}
+Some agents do not directly observe screen representation but have actions or routines to collect information about the current computer state $s_t$ \citepeg{qin_toolllm_2024,kong_tptu-v2_2023,guo_stabletoolbench_2024}.
+For example, \citet{guo_pptc_2024} use a content reader routine that at each time step $t$ reads information from a PowerPoint file as observation $o_t$.
+\citet{song_restgpt_2023} execute a REST-API call as an action $a_t$, and use the API \emph{response} as the next observation $o_{t+1}$. % particularly of GET requests.
+Similarly, \citet{wang_officebench_2024} use task-tailored actions to directly read information from files, e.g., \texttt{read\_excel\_file}, or use application-specific actions, e.g., an action \texttt{list\_emails} in an email application.
+
+\subsubsection{Recommendations}
+ACU agents commonly rely on either image-based or textual screen observations, each offering distinct advantages. 
+Textual representations encode rich semantic information such as element attributes and hierarchical structures.
+For example, a form element might include a semantic identifier such as \texttt{email-sender}, or a table may be represented as a hierarchy of rows and cells.
+However, we hypothesize that agent behaviors trained on such structured representations are often brittle when applied across diverse applications, such as different websites.
+This brittleness arises from a dependency on \emph{optional} semantic information, which is frequently absent, incomplete, inconsistent, or ambiguous in real-world settings.
+For example, a form might lack a descriptive \texttt{id} attribute, or tables may be implemented using non-standard constructs. As a result, agents leveraging this information may develop scenario-specific heuristics (shortcuts, cp. \citet{geirhos2020shortcut}) that do not generalize well beyond the training data.
+
+In contrast, image-based screen representations tend to exhibit greater consistency across scenarios due to widely adopted design conventions.
+This consistency suggests that image-based observations can support the development of more robust and generalizable agent behavior. 
+Based on this reasoning, we argue that \textbf{versatile ACUs should rely on visual perception} to enhance generalization and applicability in all scenarios where humans also operate computers.
+A detailed comparison of textual versus image-based screen representations is provided in Appendix~\Cref{sec:img_vs_text}.
+
+Our analysis of datasets supports our suspicion of brittle behavior for text-based agents.
+In the Web domain, MiniWoB++ \citep{shi_world_2017,liu_reinforcement_2018} provides an artificial environment with unrealistic uniform HTML representations across its tasks.
+In such sanitized settings, textual agents achieve strong performance, as shown by \citet{humphreys_data-driven_2022}, where removing the textual modality of a bi-model input resulted in a 75\% drop in performance.
+However, in benchmarks based on realistic websites like Mind2Web \citep{deng_mind2web_2023}, success rates for text-based agents fall below 10\% \citep{deng_mind2web_2023, gur_real-world_2024, furuta_multimodal_2024}, while image-based agents leveraging large vision models (e.g., GPT-4V) achieve significantly higher success rates of up to 38\% \citep{zheng_gpt-4vision_2024}, hinting on the importance of visual input in real-world settings.
+
+A similar shift is observable in the Android domain: while early systems favored textual representations \citep{wang_enabling_2023, shvo_appbuddy_2021}, recent image-based agents such as \citep{zhang_appagent_2023} outperform them in more dynamic or complex applications. 
+
+

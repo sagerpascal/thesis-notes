@@ -1,0 +1,46 @@
+\begin{proposition}
+\label{prop-gradients-self-attention}
+%
+(\textbf{The implicit weight update as sum of rank-1 matrices}).
+%
+Let \( U = \{t_1, \dots, t_N\} \) be a sequence of \( N \) tokens, and let \( \mathcal{L}(U; \mathcal{W}) \) denote the negative log-likelihood of the sequence under a Transformer model with learnable parameters \( \mathcal{W} \),
+%
+\begin{equation}
+    \mathcal{L}(U; \mathcal{W}) = \sum_i \mathcal{L}(t_i) = - \sum_i \log p_{\mathcal{W}}(t_i \mid t_{\mathcal{D}_i})\,,
+\end{equation}
+%
+where \( \mathcal{D}_i \subseteq \{1, \dots, N\} \) is the set of indices used to condition the prediction of token \( t_i \).
+%
+Let the self-attention function be defined as in Equation~\eqref{eq:results:self-attention-bilinear-form}.
+%
+Following the gradient of \( \mathcal{L}(U; \mathcal{W}) \), the implicit gradient-based update to the bilinear weight matrix \( \bm{W}_{qk}^l \) at the \( l \)-th self-attention layer is proportionally equivalent to:
+
+\begin{enumerate}[noitemsep]
+    \item 
+    The sum of contributions from each token \( t_j: j  \in \mathcal{C}_i \) used to predict \( t_i \),
+    \begin{equation}
+    \label{eq:weight-update-bilinear-form}
+    \Delta \bm{W}_{qk}^l \propto \sum_i \sum_{j \in \mathcal{C}_i} \Delta \bm{W}_{qk}^l\Big|_{t_i \leftarrow t_j} = \sum_i \sum_{j \in \mathcal{C}_i} \beta^l_{ij} \bm{K}^{l-1}_{ij}\,,
+    \end{equation}
+    where \( \mathcal{C}_i \) denotes the set of context indices for predicting \( t_i \).
+%\mathcal{L}_3|_{t_i \leftarrow t_j} \,\, \alpha{3N}
+%
+\[
+\Delta \mathbf{W}_{qk} \propto \sum_{i \in \mathcal{P}_j} \sum_{j} \beta_{ij} \mathbf{K}_{ij}
+\]
+    \item
+    The sum of contributions from each prediction target \( t_i: i \in \mathcal{P}_j \) when predicted with \( t_j \),
+    \begin{equation}
+    \label{eq:weight-update-bilinear-form-prediction}
+    \Delta \bm{W}_{qk}^l \propto \sum_{i \in \mathcal{P}_j} \sum_j \Delta \bm{W}_{qk}^l\Big|_{t_i \leftarrow t_j} = \sum_{i \in \mathcal{P}_j} \sum_j \beta^l_{ij} \bm{K}^{l-1}_{ij}\,,
+    \end{equation}
+    where \( \mathcal{P}_j \) denotes the set of tokens for which \( t_j \) is included in the context.
+\end{enumerate}
+%
+Here, \( \beta^l_{ij} \) is a scalar that quantifies the contribution of the token embedding \( \bm{x}_j \) to the prediction error for \( \bm{x}_i \) at the \( l \)-th layer, and the matrix \( \bm{K}^{l-1}_{ij} \in \mathbb{M}_d \) is a rank-1 matrix defined by the outer product of the token embeddings at the previous layer,
+%
+\begin{equation}
+    \bm{K}^{l-1}_{ij} = \bm{x}^{l-1}_i {\bm{x}^{l-1}_j}^\top\,.
+\end{equation}
+%
+\end{proposition}

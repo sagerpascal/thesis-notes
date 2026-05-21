@@ -1,0 +1,57 @@
+\begin{proof}
+%
+%
+Let $U = \{t_1, \dots, t_N\}$ be a sequence of tokens.
+%
+It follows from Proposition \ref{prop-gradients-self-attention} that the implciit weight update for $\bm{W}_{qk}$ following the gradient of $\mathcal{L}(\bm{U})$ w.r.t. $\bm{W}_{qk}$ is given by
+%
+\begin{equation}
+\label{eq:gradient-self-attention-summations}
+    \Delta \bm{W}_{qk} = \sum_{i =1}^N \sum_{j=1}^N \beta_{ij} \bm{K}_{ij} \,,
+\end{equation}
+%
+where we neglect any constant of proportionality (e.g. learning rate) for simplicity.
+%
+The double summation in Equation \eqref{eq:gradient-self-attention-summations} contains $N^2$ elements.
+%
+Note that \( \bm{K}_{ji} = \bm{K}_{ij}^\top \), so we can rewrite the double summation as follows,
+%
+\begin{equation}
+\sum_{i = 1}^N \sum_{j =1}^N \beta_{ij} \bm{K}_{ij} =
+\sum_{i =1}^N \beta_{ii} \bm{K}_{ii} +
+\sum_{\substack{i,j = 1 \\ i < j}}^N(\beta_{ij} \bm{K}_{ij} + \beta_{ji} \bm{K}_{ji})
+\end{equation}
+%
+where the first term includes the diagonal terms, and the second includes the contributions of every pair $(i,j)$ with $i,j \in [0, \dots, N]$.
+%
+The second term can be written as,
+%
+\begin{equation}
+ \sum_{\substack{i,j = 1 \\ i < j}}^N (\beta_{ij} \bm{K}_{ij} + \beta_{ji} \bm{K}_{ji}) = \sum_{\substack{i,j = 1 \\ i < j}}^N(\beta_{ij} \bm{K}_{ij} + \beta_{ji} {\bm{K}_{ij}}^\top) \,, 
+\end{equation}
+%
+and by decomposing $\bm{K}_{ij}$ in its symmetric and skew-symmetric parts, such that $\bm{K}_{ij} = \bm{S}_{ij} + \bm{N}_{ij}$, we obtain,
+%
+\begin{equation}
+\label{eq:gradients-symmetric-terms}
+\begin{split}
+    \sum_{\substack{i,j = 1 \\ i < j}}^N (\beta_{ij} \bm{K}_{ij} + \beta_{ji} {\bm{K}_{ij}}^\top)
+    & = \sum_{\substack{i,j = 1 \\ i < j}}^N \big[ \beta_{ij}(\bm{S}_{ij} + \bm{N}_{ij}) + \beta_{ji}(\bm{S}_{ij} + \bm{N}_{ij})^T \big] \\
+    & = \sum_{\substack{i,j = 1 \\ i < j}}^N \big[(\beta_{ij} + \beta_{ji})\bm{S}_{ij} + (\beta_{ij} - \beta_{ji})\bm{N}_{ij}\big]\,.
+\end{split}
+\end{equation}
+%
+Let $\beta_{ij}$ and $\beta_{ji}$ be such that $\text{sign}(\beta_{ij}) = \text{sign}(\beta_{ji})$ and $|\beta_{ij}| \approx $$|\beta_{ji}|$.
+%
+By defining $\Delta \bm{W}_{qk}\big|_{\bm{t}_i \leftrightarrow \bm{t}_j} = \beta_{ij}\bm{K}
+_{ij} + \beta_{ji}{\bm{K}_{ij}}^T$,
+%
+it follows that
+%
+\begin{equation}
+ \Delta \bm{W}_{qk}\big|_{\bm{t}_i \leftrightarrow \bm{t}_j} \approx \sum_{\substack{i,j = 1 \\ i < j}}^N \beta_{ij}\bm{S}_{ij} = \sum_{\substack{i,j = 1 \\ i < j}}^N \beta_{ij}{\bm{S}}^\top_{ij} = \Delta {\bm{W}_{qk}}^\top\big|_{\bm{t}_i \leftrightarrow \bm{t}_j} \,
+\end{equation}
+%
+thus concluding the proof.
+%
+\end{proof}

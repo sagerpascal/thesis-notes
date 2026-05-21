@@ -1,0 +1,28 @@
+\begin{theorem}
+\label{theo-gradients-symmetry}
+%
+(\textbf{Bidirectional training induces symmetry}).
+%
+Let $U = \{t_1, \dots, t_N\}$ be a sequence of tokens.
+%
+Let \( \bm{W}_{qk} \) be the query-key matrix of a self-attention mechanism, and let \( \Delta \bm{W}_{qk} \) denote its gradient update as defined in Proposition~\ref{prop-gradients-self-attention}, computed under a bidirectional objective as in Definition~\ref{def-objective-functions}.
+%
+It follows that,
+%
+\begin{equation}
+    \Delta \bm{W}_{qk} = \sum_{i = 1}^N \sum_{j = 1}^N \beta_{ij} \bm{K}_{ij} \,,
+\end{equation}
+%
+and that every pair $(i,j)$ with $i \neq j$ contributes to the weight update with a term
+%
+\begin{equation}
+    \Delta \bm{W}_{qk}\big|_{\bm{t}_i \leftrightarrow \bm{t}_j} = \beta_{ij}\bm{K}_{ij} + \beta_{ji}{\bm{K}_{ij}}^T \,,
+\end{equation}
+%
+that is approximately symmetric,
+%
+\begin{equation}
+    \Delta \bm{W}_{qk}\big|_{\bm{t}_i \leftrightarrow \bm{t}_j} \approx \Delta \bm{W}_{qk}\big|^\top_{\bm{t}_i \leftrightarrow \bm{t}_j} \,.
+\end{equation}
+%
+\end{theorem}

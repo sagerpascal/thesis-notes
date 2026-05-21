@@ -1,0 +1,70 @@
+\begin{proof}
+%
+Let $\{U_1, \dots, U_D\}$ be a dataset of sequences of length $N$ drawn i.i.d. from a distribution $P$.
+%
+Let \( k_u \) denote the position of token \( t^* \) in sequence \( U_u \), and let superscript \( u \) refer to tokens in the \( u \)-th sequence.
+%
+Following Proposition \ref{prop-gradient-columns-rows} and \ref{prop-gradient-asymmetric-growth-rows-columns}, we obtain 
+%
+\begin{equation}
+\Delta \bm{w}_{\cdot, k}  =  \sum_{u=1}^D \left[[\bm{y}]_k \sum_{i=k_u+1}^N \beta^u_{i*}\bm{x}^u_i + \sum_{j=1}^{k_u-1} \beta^u_{*j}[\bm{x}^u_j]_k\bm{y}
+\right] \,,
+\end{equation}
+%
+while the squared norm of the weight update of the $m$-th row by
+%
+\begin{equation}
+\Delta \bm{w}_{m, \cdot}  =  \sum_{u=1}^D \left[ \sum_{i=k_u+1}^N \beta^u_{i*}[\bm{x}^u_i]_m\bm{y} + [\bm{y}]_m\sum_{j=1}^{k_u-1} \beta^u_{*j}\bm{x}^u_j
+\right]\,,
+\end{equation}
+%
+where in both equations the superscript $u$ indicates tokens belonging to the $u$-th sequence in the dataset, and $k_u$ indicates the position index of $t^*$.
+%
+It follows again from Proposition \ref{prop-gradient-asymmetric-growth-rows-columns} that the expected value of the squared norm of these updates is
+%
+\begin{equation}
+\label{suppeq:ratio-squared-norm-theorem-directionality}
+\frac{\mathbb{E}_{\mathcal{D}}\left[ ||\Delta \bm{w}_{\cdot, k}||^2 \right]}{\mathbb{E}_{\mathcal{D}}\left[ ||\Delta \bm{w}_{m, \cdot}||^2 \right]} \approx \frac{\Gamma_{kk}\text{Tr}(\Sigma)\big(\sum_{u=1}^D\sum_{i=k_u+1}^N \beta^u_{i*}\big) + \Sigma_{kk}\text{Tr}(\Gamma)\big(\sum_{u=1}^D\sum_{j=1}^{k_u-1} \beta^u_{*j}\big)}{\Sigma_{mm}\text{Tr}(\Gamma)\big(\sum_{u=1}^D\sum_{i=k_u+1}^N \beta^u_{i*}\big) + \Gamma_{mm}\text{Tr}(\Sigma)\big(\sum_{u=1}^D\sum_{j=1}^{k_u-1} \beta^u_{*j}\big)} \,.
+\end{equation}
+%
+Following Proposition \ref{prop-counting-prediction-context}, let $\mu_c(t^*, U)$ be the random variable quantifying the number of tokens predicted by $t^*$, while $\mu_p(t^*, U)$ is the random variable quantifying the number of tokens predicted by $t^*$.
+%
+When assuming autoregressive training, it follows that the empirical average of $\mu_c(t^*, U)$ and $\mu_p(t^*, U)$ over the dataset $\{U_1, \dots, U_D\}$ approaches,
+%
+\begin{equation}
+    \frac{\mathbb{E}_P[\mu_c(t^*, U)]}{\mathbb{E}_P[\mu_p(t^*, U)]} = \frac{\sum_{j=1}^N (N-j)\Pr[t_j = t^*]}{\sum_{j=1}^N(j-1)\Pr[t_j = t^*]} \,.
+\end{equation}
+%
+Following Remark \ref{remark:ratio-autoregressive}, assume that the expected position \( \mu(t^*) \) of \( t^* \) satisfies \( \mu(t^*) < (N+1)/2 - \delta \) for some \( \delta > 0 \), then
+%
+\begin{equation}
+\frac{\mathbb{E}_P[\mu_c(t^*, U)]}{\mathbb{E}_P[\mu_p(t^*, U)]} > 1 + \epsilon(t^*)\,,
+\end{equation}
+%
+for some \( \epsilon(t^*) > 0 \).
+%
+Hence, across the dataset, \( t^* \) appears more often as a context token than as a predicted token. 
+%
+This implies \( \mathbb{E}_P[k_u] < (N+1)/2 \), so that the first terms in the numerator and denominator of Equation~\eqref{suppeq:ratio-squared-norm-theorem-directionality} dominate, leading to, 
+%
+\begin{equation}
+\frac{\mathbb{E}\left[ ||\Delta \bm{w}_{\cdot, k}||^2 \right]}{\mathbb{E}\left[ ||\Delta \bm{w}_{m, \cdot}||^2 \right]} > 1 \,,
+\end{equation}
+%
+that is, the net increase in column norms exceeds that of row norms.
+%
+Assume \( \bm{W}_{qk} \) is initialized with i.i.d. entries from a distribution with mean \( \mu \) and variance \( \sigma^2 \), then at the beginning of training
+$\mathrm{Var}(\|\bm{w}_{\cdot, k}\|) = \mathrm{Var}(\|\bm{w}_{m, \cdot}\|)
+$, while after training we have
+%
+$
+\mathrm{Var}(\|\bm{w}_{\cdot, k}\|) > \mathrm{Var}(\|\bm{w}_{m, \cdot}\|) \,\,\forall k, m.
+$
+Applying Lemma~\ref{lemma-same_mean_different_variance_bound}, it follows that for all \( w > \gamma \), where \( \gamma = \sqrt{ \mathrm{Var}(\|\bm{w}_{\cdot, k}\|) \cdot \mathrm{Var}(\|\bm{w}_{m, \cdot}\|)} - \mu \),
+\begin{equation}
+    \text{Pr}[||\bm{w}_{\cdot, k}|| > w] > \text{Pr}[|| \bm{w}_{m, \cdot}|| > w] \,\,\ \forall \,w > \gamma \,,
+\end{equation}
+% 
+thus concluding the proof.
+%
+\end{proof}

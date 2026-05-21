@@ -1,0 +1,181 @@
+\begin{proposition}
+\label{prop-counting-prediction-context}
+%
+(\textbf{Ratio of expected counts during autoregressive and bidirectional training}).
+%
+Let $\mathcal{V} = \{t_0, \dots, t_V\}$ be a set of tokens.
+%
+Let $\mathcal{U}$ be the sample space of all possible sequences of $N$ tokens, and let the sequence $U = \{t_1, \dots, t_N\} \in\mathcal{U}$ be a random variable with probability distribution $P(U)$ defined over $\mathcal{U}$.
+%
+Let $\Pr[t_j = t^*]$ be the probability that the token at index $j$ in a sequence $U \in \mathcal{U}$ is given by $t^* \in \mathcal{V}$.
+%
+Let $\mathbb{E}_{P}[\mu_c(t^*)]$ be the expected number of tokens that are predicted by a given token $t^*$, and $\mathbb{E}_{P}[\mu_p(t^*)]$ the expected number of tokens that predict a given token $t^*$.
+%
+For autoregressive training, the ratio
+%
+\begin{equation}
+    \frac{\mathbb{E}_{P}[\mu_c(t^*, U)]}{\mathbb{E}_{P}[\mu_p(t^*, U)]} = \frac{\sum_{k=1}^N (N-k)\Pr[t_k = t^*]}{\sum_{k=1}^N(k-1)\Pr[t_k = t^*]} \,,
+\end{equation}
+%
+depends on $\Pr[t_k = t^*] \,\,\forall t^* \in \mathcal{V}, \forall k \in \{1,\dots. N\}$, while for bidirectional training the same ratio is given by 
+%
+\begin{equation}
+     \frac{\mathbb{E}_{P}[\mu_c(t^*, U)]}{\mathbb{E}_{P}[\mu_p(t^*, U)]} = 1 \,.
+\end{equation}
+%    
+\end{proposition}
+
+% \begin{proposition}[Ratio of expected counts]
+% \label{prop:count_ratio}
+% %
+% Fix a vocabulary $\mathcal V=\{t_0,\dots,t_V\}$ and an integer
+% sequence length $N\ge 2$.
+% Let
+% \(
+%   (\Omega,\mathscr F,\Pr)
+% \)
+% be a probability space that carries  
+
+% * random tokens
+%   \(
+%     T_1,\dots,T_N:\Omega\to\mathcal V,
+%   \)
+%   collected in the random sequence
+%   \(U=(T_1,\dots,T_N)\in\mathcal V^{N}\), and  
+
+% * (for the bidirectional‐training analysis) i.i.d.\
+%   Bernoulli masking variables
+%   \(
+%     M_1,\dots,M_N\sim\mathrm{Bernoulli}(\rho),
+%     \quad 0<\rho<1,
+%   \)
+%   which are independent of each other and of the tokens.
+
+% For a fixed token
+% \(t^*\in\mathcal V\) define the random variables
+% \begin{align}
+%   \mu_c(t^*,U)
+%     &=\sum_{k=1}^{N}(N-k)\,
+%        \mathbf 1_{\{T_k=t^*\}}, &\text{(tokens \emph{predicted by} }t^*),
+%   \\
+%   \mu_p(t^*,U)
+%     &=\sum_{k=1}^{N}(k-1)\,
+%        \mathbf 1_{\{T_k=t^*\}}, &\text{(tokens that \emph{predict} }t^*).
+% \end{align}
+% Write
+% \(
+%   E[\cdot]=\E_{U,M_1{:}N}[\cdot]
+% \)
+% for expectation with respect to all randomness.
+
+% \begin{enumerate}[label=(\roman*),topsep=4pt,itemsep=2pt]
+% \item \textbf{Autoregressive training.}
+%       Then
+%       \begin{equation}\label{eq:ratio_ar}
+%         \frac{E[\mu_c(t^*)]}{E[\mu_p(t^*)]}
+%         \;=\;
+%         \frac{\displaystyle\sum_{k=1}^{N}(N-k)\Pr[T_k=t^*]}
+%              {\displaystyle\sum_{k=1}^{N}(k-1)\Pr[T_k=t^*]}\;.
+%       \end{equation}
+
+% \item \textbf{Bidirectional (masked-LM) training.}
+%       Assume the model predicts every \emph{masked} token using
+%       every \emph{unmasked} token.
+%       Under the independence assumptions stated above,
+%       \[
+%         \frac{E[\mu_c(t^*)]}{E[\mu_p(t^*)]}\;=\;1 .
+%       \]
+% \end{enumerate}
+% \end{proposition}
+
+% \begin{proof}
+% \textbf{(i) Autoregressive case.}
+% Because $\mathbf 1_{\{T_k=t^*\}}$ is
+% $\{0,1\}$‐valued, linearity of expectation yields
+% \[
+%   E[\mu_c(t^*)]
+%   =\sum_{k=1}^{N}(N-k)E[\mathbf 1_{\{T_k=t^*\}}]
+%   =\sum_{k=1}^{N}(N-k)\Pr[T_k=t^*].
+% \]
+% The same calculation with the weights $(k-1)$ gives
+% \(
+%   \E[\mu_p(t^*)]=\sum_{k=1}^{N}(k-1)\Pr[T_k=t^*].
+% \)
+% Taking the ratio gives \eqref{eq:ratio_ar}.
+
+% \medskip
+% \noindent
+% \textbf{(ii) Bidirectional case.}
+% Fix a position $k$.
+% If $T_k=t^*$ and $M_k=0$ (token visible),
+% it contributes
+% \(
+%   \sum_{k'\ne k}\mathbf 1_{\{M_{k'}=1\}}
+% \)
+% to $\mu_c(t^*)$.
+% If $T_k=t^*$ and $M_k=1$ (token masked),
+% it contributes
+% \(
+%   \sum_{k'\ne k}\mathbf 1_{\{M_{k'}=0\}}
+% \)
+% to $\mu_p(t^*)$.
+% Taking expectations and using independence of
+% \(\{M_i\}\) together with
+% \(E[\mathbf 1_{\{M_i=1\}}]=\rho\),
+% \(E[\mathbf 1_{\{M_i=0\}}]=1-\rho\),
+% we obtain
+% \[
+%   E[\mu_c(t^*)]
+%   =\sum_{k=1}^{N}\Pr[T_k=t^*]\,(1-\rho)\,(N-1)\rho,
+%   \qquad
+%   E[\mu_p(t^*)]
+%   =\sum_{k=1}^{N}\Pr[T_k=t^*]\,(  \rho)\,(N-1)(1-\rho).
+% \]
+% The multiplicative factors are identical, hence
+% \(
+%   E[\mu_c(t^*)]=E[\mu_p(t^*)]
+% \)
+% and the stated ratio equals~$1$.
+% \end{proof}
+
+% \begin{remark}[Effect of token–position statistics]\label{rem:iid_vs_corr}
+% \hfill
+% \begin{enumerate}[label=(\alph*),leftmargin=*,topsep=2pt,itemsep=2pt]
+% \item \emph{i.i.d.\ tokens.}
+%       If the tokens are independent and identically distributed,
+%       \(\Pr[T_k=t^*]=\pi_{t^*}\) for all $k$.
+%       Then the two sums in \eqref{eq:ratio_ar} coincide,
+%       giving
+%       \(
+%         E[\mu_c(t^*)]=E[\mu_p(t^*)]=
+%         \pi_{t^*}\tfrac{N(N-1)}2
+%       \)
+%       and the ratio is~1.  Hence no directional bias appears.
+
+% \item \emph{Correlated tokens.}
+%       For a general joint law
+%       \(\Pr[T_1{:}T_N]\),
+%       \eqref{eq:ratio_ar} remains valid but cannot be simplified.
+%       Writing the joint law via the reverse chain rule
+%       \(
+%         \Pr[T_1{:}T_N]
+%         =\prod_{i=1}^{N}\Pr[T_i\mid T_{i+1{:}N}],
+%       \)
+%       one obtains
+%       \[
+%         \Pr[T_k=t^*]
+%         =\!\!\!\sum_{\substack{t_{-k}\in\mathcal V^{N-1}}}
+%           \Bigl(
+%             \Pr[T_k=t^*\mid T_{k+1{:}N}=t_{k+1{:}N}]
+%             \!\!\!\prod_{i\ne k}
+%             \Pr[T_i=t_i\mid T_{i+1{:}N}=t_{i+1{:}N}]
+%           \Bigr),
+%       \]
+%       which may depend strongly on $k$.
+%       If $t^*$ is more likely to occur at early positions
+%       than late ones, the numerator of \eqref{eq:ratio_ar}
+%       (weighted by $N-k$) becomes larger than the denominator,
+%       giving a ratio \(>1\) and
+%       inducing directionality even under autoregressive training.
+% \end{enumerate}
+% \end{remark}

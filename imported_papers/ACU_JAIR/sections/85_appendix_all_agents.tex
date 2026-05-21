@@ -1,0 +1,359 @@
+
+\section{Structured Overview of Existing Work}\label{sec:appendix_tables}
+
+For this review, we identified $\numagents$ ACUs and $\numdatasets$ datasets and categorized them according to the introduced taxonomy. Here, we present a detailed list of the identified literature and their classification.
+A more detailed version of the tables presented in this section are available on our project page at \url{https://sagerpascal.github.io/agents-for-computer-use}.
+
+
+\definecolor{observation_space_color_bg_l}{RGB}{230,241,252} % light sky blue
+
+
+\subsection{Environment and Interaction Perspective}
+\label{appendix_A1}
+
+{\footnotesize
+\begin{longtable}{%
+    m{6.5cm}
+    >{\centering\arraybackslash\columncolor{domain_color_bg}}m{1.8cm}
+    >{\columncolor{observation_space_color_bg}}m{0.3cm}
+    >{\columncolor{observation_space_color_bg}}m{0.3cm}
+    >{\columncolor{observation_space_color_bg_l}}m{0.3cm}
+    >{\columncolor{observation_space_color_bg_l}}m{0.3cm}
+    >{\columncolor{observation_space_color_bg_l}}m{0.3cm}
+    >{\columncolor{observation_space_color_bg}}m{0.3cm}
+    >{\columncolor{observation_space_color_bg}}m{0.3cm}
+    >{\columncolor{action_space_color_bg}}m{0.3cm}
+    >{\columncolor{action_space_color_bg}}m{0.3cm}
+    >{\columncolor{action_space_color_bg}}m{0.3cm}
+    >{\columncolor{action_space_color_bg}}m{0.3cm}
+}
+
+\caption{
+    Literature overview: Domain and interaction types. \T\ indicates full presence of an aspect; \halfTT\ indicates partial presence; empty means absence.
+}
+\label{tab:interaction_literature}
+\\
+
+\toprule
+\textbf{Paper} & \textbf{Domain} & \multicolumn{7}{>{\columncolor{observation_space_color_bg}}c}{\textbf{Observation Space}} & \multicolumn{4}{>{\columncolor{action_space_color_bg}}c}{\textbf{Action Space}} \\
+\midrule
+%& & \multicolumn{2}{>{\columncolor{observation_space_color_bg}}c }{} & \multicolumn{4}{>{\columncolor{observation_space_color_bg}}c }{\textbf{Textual}} & & \multicolumn{4}{>{\columncolor{action_space_color_bg}}c }{} \\
+%\midrule
+ &  & \rotatebox{90}{\textbf{Image}} & \rotatebox{90}{\textbf{Image to Textual}} & \rotatebox{90}{\textbf{HTML}} & \rotatebox{90}{\textbf{Android View Hierarchy\ }} & \rotatebox{90}{\textbf{UI Automation Tree}} & \rotatebox{90}{\textbf{Accessibility Tree}} & \rotatebox{90}{\textbf{Indirect}} & \rotatebox{90}{\textbf{Mouse Keyboard}} & \rotatebox{90}{\textbf{Direct UI Access}} & \rotatebox{90}{\textbf{Tailored}} & \rotatebox{90}{\textbf{Executable Code}} \\
+\midrule
+\endfirsthead
+
+\multicolumn{13}{c}
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{Paper} & \textbf{Domain} & \multicolumn{7}{>{\columncolor{observation_space_color_bg}}c}{\textbf{Observation Space}} & \multicolumn{4}{>{\columncolor{action_space_color_bg}}c}{\textbf{Action Space}} \\
+\midrule
+%& & \multicolumn{2}{>{\columncolor{observation_space_color_bg}}c }{}  & \multicolumn{4}{>{\columncolor{observation_space_color_bg}}c }{\textbf{Textual}} & & \multicolumn{4}{>{\columncolor{action_space_color_bg}}c }{} \\
+%\midrule
+ &  & \rotatebox{90}{\textbf{Image}} & \rotatebox{90}{\textbf{Image to Textual}} & \rotatebox{90}{\textbf{HTML}} & \rotatebox{90}{\textbf{Android View Hierarchy\ }} & \rotatebox{90}{\textbf{UI Automation Tree}} & \rotatebox{90}{\textbf{Accessibility Tree}} & \rotatebox{90}{\textbf{Indirect}} & \rotatebox{90}{\textbf{Mouse Keyboard}} & \rotatebox{90}{\textbf{Direct UI Access}} & \rotatebox{90}{\textbf{Tailored}} & \rotatebox{90}{\textbf{Executable Code}} \\
+\midrule
+\endhead
+
+\endfoot
+
+\bottomrule
+\endlastfoot
+\citet{shaw_pixels_2023,niu_screenagent_2024,he_webvoyager_2024} & Web & \T &  &  &  &  &  &  & \T &  &  &  \\
+\midrule
+\citet{pan_autonomous_2024,koh_tree_2024} & Web & \T &  &  &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{iki_berts_2022} & Web &  & \T &  &  &  &  &  & \T &  &  &  \\
+\midrule
+\citet{lo_hierarchical_2023,fereidouni_search_2024,guan_intelligent_2023} & Web &  & \T &  &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{cho_caap_2024} & Web &  & \T &  &  &  &  &  & \T & \T &  &  \\
+\midrule
+\citet{kim_language_2023,li_zero-shot_2023,liu_reinforcement_2018,deng_multi-turn_2024,sodhi_heap_2023,gur_learning_2019,ma_laser_2024,gur_environment_2021,jia_dom-q-net_2019,zheng_synapse_2024,li_glider_2021,murty_bagel_2024,deng_mind2web_2023,gur_understanding_2023,lutz_wilbur_2024,lai_autowebglm_2024} & Web &  &  & \T &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{putta_agent_2024,xu_grounding_2021} & Web &  &  & \T &  &  &  &  &  &  & \T &  \\
+\midrule
+\citet{furuta_exposing_2023,sun_adaplanner_2023,tao_webwise_2023,gur_real-world_2024} & Web &  &  & \T &  &  &  &  &  &  &  & \T \\
+\midrule
+\citet{nakano_webgpt_2022} & Web &  &  & \T &  &  &  &  &  & \T & \T &  \\
+\midrule
+\citet{zaheer_learning_2022} & Web &  &  & \halfT &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{zhou_webarena_2024} & Web &  &  &  &  &  & \T &  &  & \T &  &  \\
+\midrule
+\citet{zhang_webpilot_2024} & Web &  &  &  &  &  & \T &  &  & \T &  & \T \\
+\midrule
+\citet{humphreys_data-driven_2022,lin_automating_2021,shi_world_2017} & Web & \T &  & \T &  &  &  &  & \T &  &  &  \\
+\midrule
+\citet{furuta_multimodal_2024,mazumder_flin_2021,lu_weblinx_2024,kil_dual-view_2024,zheng_gpt-4vision_2024} & Web & \T &  & \T &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{chae_web_2024} & Web &  &  & \T &  &  & \T &  &  & \T &  &  \\
+\midrule
+\citet{wang_mobile-agent_2024,zhang_you_2024,zhang_android_2024,lu_gui_2024} & Android & \T &  &  &  &  &  &  & \T &  &  &  \\
+\midrule
+\citet{wen_autodroid_2024,sun_meta-gui_2022,wu_mobilevlm_2024,ding_mobileagent_2024,li_interactive_2020,nong_mobileflow_2024} & Android & \T &  &  &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{dorka_training_2024} & Android & \T &  &  &  &  &  &  & \T & \T &  &  \\
+\midrule
+\citet{abukadah_mapping_2024,song_navigating_2023,song_visiontasker_2024,li_learning_2021,ma_coco-agent_2024} & Android &  & \T &  &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{rawles_android_2023} & Android &  & \T &  &  &  &  &  & \T & \T &  &  \\
+\midrule
+\citet{wen_droidbot-gpt_2024,li_mapping_2020} & Android &  &  &  & \T &  &  &  &  & \T &  &  \\
+\midrule
+\citet{bishop_latent_2024,li_effects_2024} & Android &  &  &  &  &  & \T &  & \T &  &  &  \\
+\midrule
+\citet{li_uinav_2024,lee_explore_2023} & Android &  &  &  &  &  & \T &  &  & \T &  &  \\
+\midrule
+\citet{zhang_appagent_2023,li_appagent_2024} & Android & \T &  &  & \T &  &  &  &  & \T &  &  \\
+\midrule
+\citet{wang_enabling_2023} & Android &  &  & \halfT & \T &  &  &  &  & \T &  &  \\
+\midrule
+\citet{deng_mobile-bench_2024} & Android &  &  & \halfT & \T &  &  &  &  & \T &  & \T \\
+\midrule
+\citet{cheng_seeclick_2024,hong_cogagent_2024} & Web, Android & \T &  &  &  &  &  &  & \T &  &  &  \\
+\midrule
+\citet{lu_omniparser_2024} & Web, Android &  & \T &  &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{rahman_v-zen_2024} & PC & \T &  &  &  &  &  &  & \T &  &  &  \\
+\midrule
+\citet{gao_assistgui_2024} & PC & \T &  &  &  &  &  &  & \T &  &  & \T \\
+\midrule
+\citet{song_mmac-copilot_2024} & PC & \T &  &  &  &  &  &  &  & \T &  & \T \\
+\midrule
+\citet{wang_officebench_2024} & PC &  &  &  &  &  &  & \T &  &  & \T &  \\
+\midrule
+\citet{wu_os-copilot_2024,guo_pptc_2024} & PC &  &  &  &  &  &  & \T &  &  &  & \T \\
+\midrule
+\citet{zhang_ufo_2024} & PC & \T &  &  &  & \T &  &  &  & \T & \T &  \\
+\midrule
+\citet{bonatti_windows_2024} & Web, PC & \T &  & \T &  & \T &  &  &  & \T & \T & \T \\
+\midrule
+\citet{yan_gpt-4v_2023} & Android, iOS & \T &  &  &  &  &  &  &  & \T &  &  \\
+\midrule
+\citet{song_restgpt_2023} & API &  &  &  &  &  &  & \T &  &  &  & \T \\
+\end{longtable} 
+}
+
+\newpage
+\subsection{Agent Perspective}
+\label{appendix_A2}
+{\footnotesize
+\begin{longtable}{ m{7cm} >{\centering\arraybackslash\columncolor{agent_color_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{agent_color_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{policy_color_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{policy_color_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{policy_color_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_General_Pre_training_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_General_Pre_training_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_Environment_Adaption_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_Environment_Adaption_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_Environment_Adaption_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_Episodic_improvement_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_Episodic_improvement_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{learning_strategy_color_Episodic_improvement_bg}}m{0.25cm} >{\centering\arraybackslash\columncolor{agent_color_Reinforce_Agent_bg}}m{0.25cm} }
+\caption{
+Literature overview: Core agent design principles. PT = general pre-training; EL = environment learning; EI = episodic improvement;
+BC = behavioral cloning; RL = reinforcement learning; LTM = long-term memory;
+\T\ indicates the full presence of an aspect; \halfTT\ indicates the presence of an aspect with variations; empty means the aspect is absent.
+} \label{tab:agent_literature}
+\\
+\toprule
+\textbf{Paper} & \multicolumn{2}{>{\centering\arraybackslash\columncolor{agent_color_bg}}c }{\textbf{Type}} & \multicolumn{3}{>{\centering\arraybackslash\columncolor{policy_color_bg}}c }{\textbf{Policy}} & \multicolumn{2}{>{\centering\arraybackslash\columncolor{learning_strategy_color_General_Pre_training_bg}}c }{\textbf{PT}} & \multicolumn{3}{>{\centering\arraybackslash\columncolor{learning_strategy_color_Environment_Adaption_bg}}c }{\textbf{EL}} & \multicolumn{4}{>{\centering\arraybackslash\columncolor{learning_strategy_color_Episodic_improvement_bg}}c }{\textbf{EI}} \\
+\midrule
+& \rotatebox{90}{\textbf{Foundation agent}} & \rotatebox{90}{\textbf{Specialized agent}} & \rotatebox{90}{\textbf{Memoryless}} & \rotatebox{90}{\textbf{History-based}} & \rotatebox{90}{\textbf{State-based}} & \rotatebox{90}{\textbf{Foundation model\ }} & \rotatebox{90}{\textbf{Backbone}} & \rotatebox{90}{\textbf{BC}} & \rotatebox{90}{\textbf{RL}} & \rotatebox{90}{\textbf{LTM}} & \rotatebox{90}{\textbf{Instruction tuning\ }} & \rotatebox{90}{\textbf{Few-shot}} & \rotatebox{90}{\textbf{Planning}} \\
+\midrule
+\endfirsthead
+
+\multicolumn{11}{c}
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{Paper} & \multicolumn{2}{>{\centering\arraybackslash\columncolor{agent_color_bg}}c }{\textbf{Type}} & \multicolumn{3}{>{\centering\arraybackslash\columncolor{policy_color_bg}}c }{\textbf{Policy}} & \multicolumn{2}{>{\centering\arraybackslash\columncolor{learning_strategy_color_General_Pre_training_bg}}c }{\textbf{PT}} & \multicolumn{3}{>{\centering\arraybackslash\columncolor{learning_strategy_color_Environment_Adaption_bg}}c }{\textbf{EL}} & \multicolumn{4}{>{\centering\arraybackslash\columncolor{learning_strategy_color_Episodic_improvement_bg}}c }{\textbf{EI}} \\
+\midrule
+& \rotatebox{90}{\textbf{Foundation agent}} & \rotatebox{90}{\textbf{Specialized agent}} & \rotatebox{90}{\textbf{Memoryless}} & \rotatebox{90}{\textbf{History-based}} & \rotatebox{90}{\textbf{State-based}} & \rotatebox{90}{\textbf{Foundation model\ }} & \rotatebox{90}{\textbf{Backbone}} & \rotatebox{90}{\textbf{BC}} & \rotatebox{90}{\textbf{RL}} & \rotatebox{90}{\textbf{LTM}} & \rotatebox{90}{\textbf{Instruction tuning\ }} & \rotatebox{90}{\textbf{Demonstrations}} & \rotatebox{90}{\textbf{Planning}} \\
+\midrule
+\endhead
+
+% \multicolumn{11}{ r }{{Continued on next page}} \\ 
+\endfoot
+
+\bottomrule 
+\endlastfoot
+\citet{wang_enabling_2023} & \T &  & \T &  &  & \T &  &  &  &  & \T & \T &  \\
+\midrule
+\citet{niu_screenagent_2024} & \T &  & \T &  &  & \T &  &  &  &  & \T &  & \T \\
+\midrule
+\citet{ding_mobileagent_2024} & \T &  & \T &  &  & \T &  &  &  &  & \T &  &  \\
+\midrule
+\citet{sun_adaplanner_2023,lee_explore_2023} & \T &  & \T &  &  & \T &  &  &  & \T & \T & \T & \T \\
+\midrule
+\citet{tao_webwise_2023} & \T &  & \T &  &  & \T &  &  &  & \T & \T & \T &  \\
+\midrule
+\citet{wu_os-copilot_2024} & \T &  & \T &  &  & \T &  &  &  & \T & \T &  &  \\
+\midrule
+\citet{nong_mobileflow_2024} & \T &  & \T &  &  & \T & \T &  &  &  & \T &  & \T \\
+\midrule
+\citet{kim_language_2023,zhang_webpilot_2024,zhou_webarena_2024,sodhi_heap_2023,cho_caap_2024,koh_tree_2024,deng_mobile-bench_2024,tan_towards_2024} & \T &  &  & \T &  & \T &  &  &  &  & \T & \T & \T \\
+\midrule
+\citet{zheng_synapse_2024,bishop_latent_2024} & \T &  &  & \T &  & \T &  &  &  &  & \T & \T &  \\
+\midrule
+\citet{chae_web_2024,song_restgpt_2023} & \T &  &  & \T &  & \T &  &  &  &  & \T &  & \T \\
+\midrule
+\citet{li_zero-shot_2023,ma_laser_2024,zheng_gpt-4vision_2024,wang_mobile-agent_2024,wen_droidbot-gpt_2024,cheng_seeclick_2024,wang_officebench_2024,guo_pptc_2024} & \T &  &  & \T &  & \T &  &  &  &  & \T &  &  \\ \midrule
+\citet{murty_bagel_2024,deng_mind2web_2023,lu_weblinx_2024,zhang_android_2024,li_effects_2024} & \T &  &  & \T &  & \T &  & \T &  &  & \T & \T &  \\
+\midrule
+\citet{lai_autowebglm_2024,ma_coco-agent_2024} & \T &  &  & \T &  & \T &  & \T &  &  & \T &  &  \\
+\midrule
+\citet{deng_multi-turn_2024,lutz_wilbur_2024,wen_autodroid_2024,li_appagent_2024} & \T &  &  & \T &  & \T &  &  &  & \T & \T & \T &  \\
+\midrule
+\citet{gao_assistgui_2024} & \T &  &  & \T &  & \T & \T &  &  &  & \T & \T & \T \\
+\midrule
+\citet{furuta_exposing_2023,gur_real-world_2024} & \T &  &  & \T &  & \T & \T &  &  &  & \T & \T &  \\
+\midrule
+\citet{guan_intelligent_2023} & \T &  &  & \T &  & \T & \T &  &  &  & \T &  & \T \\
+\midrule
+\citet{song_navigating_2023,lu_omniparser_2024} & \T &  &  & \T &  & \T & \T &  &  &  & \T &  &  \\
+\midrule
+\citet{rawles_android_2023} & \T &  &  & \T &  & \T & \T & \T &  &  & \T & \T & \T \\
+\midrule
+\citet{song_visiontasker_2024} & \T &  &  & \T &  & \T & \T &  &  & \T & \T & \T &  \\
+\midrule
+\citet{pan_autonomous_2024} & \T &  &  &  & \T & \T &  & \T &  &  & \T &  &  \\
+\midrule
+\citet{zhang_appagent_2023} & \T &  &  &  & \T & \T &  &  &  & \T & \T & \T &  \\
+\midrule
+\citet{zhang_ufo_2024} & \T &  &  & \T & \T & \T &  &  &  &  & \T & \T & \T \\
+\midrule
+\citet{bonatti_windows_2024} & \T &  &  & \T & \T & \T &  &  &  &  & \T &  &  \\
+\midrule
+\citet{xu_grounding_2021} & \halfT &  & \T &  &  & \T &  &  &  &  &  &  &  \\
+\midrule
+\citet{song_mmac-copilot_2024} & \halfT &  & \T &  &  & \T &  & \T &  &  &  &  & \T \\
+\midrule
+\citet{abukadah_mapping_2024} & \halfT &  & \T &  &  & \T & \T & \T &  &  &  &  &  \\
+\midrule
+\citet{zhang_you_2024} & \halfT &  &  & \T &  & \T &  & \T &  &  &  &  & \T \\
+\midrule
+\citet{gur_understanding_2023,he_webvoyager_2024,wu_mobilevlm_2024,lu_gui_2024,hong_cogagent_2024,rahman_v-zen_2024} & \halfT &  &  & \T &  & \T &  & \T &  &  &  &  &  \\
+\midrule
+\citet{putta_agent_2024} & \halfT &  &  & \T &  & \T &  &  & \T &  &  &  & \T \\
+\midrule
+\citet{lo_hierarchical_2023} & \halfT &  &  & \T &  & \T &  &  &  & \T &  &  &  \\
+\midrule
+\citet{nakano_webgpt_2022,fereidouni_search_2024} & \halfT &  &  & \T &  & \T &  & \T & \T &  &  &  &  \\
+\midrule
+\citet{furuta_multimodal_2024,kil_dual-view_2024,dorka_training_2024} & \halfT &  &  & \T &  & \T & \T & \T &  &  &  &  &  \\
+\midrule
+\citet{liu_reinforcement_2018} &  & \T & \T &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+\citet{zaheer_learning_2022,li_interactive_2020,li_mapping_2020} &  & \T & \T &  &  &  &  & \T &  &  &  &  &  \\
+\midrule
+\citet{gur_learning_2019,gur_environment_2021,jia_dom-q-net_2019,li_glider_2021} &  & \T & \T &  &  &  &  &  & \T &  &  &  &  \\
+\midrule
+\citet{shi_world_2017,li_learning_2021} &  & \T & \T &  &  &  &  & \T & \T &  &  &  &  \\
+\midrule
+\citet{mazumder_flin_2021} &  & \T & \T &  &  &  & \T &  &  &  &  &  &  \\
+\midrule
+\citet{li_uinav_2024} &  & \T & \T &  &  &  & \T & \T &  &  &  &  &  \\
+\midrule
+\citet{shaw_pixels_2023} &  & \T & \T &  &  &  & \T & \T & \T &  &  &  &  \\
+\midrule
+\citet{lin_automating_2021,sun_meta-gui_2022} &  & \T &  & \T &  &  &  & \T &  &  &  &  &  \\
+\midrule
+\citet{yan_gpt-4v_2023} &  & \T &  & \T &  &  &  & \T &  & \T &  &  &  \\
+\midrule
+\citet{humphreys_data-driven_2022} &  & \T &  &  & \T &  &  & \T & \T &  &  &  &  \\
+\midrule
+\citet{iki_berts_2022} &  & \T &  & \T & \T &  & \T & \T &  &  &  &  &  \\
+\end{longtable} 
+}
+
+\newpage
+\subsection{Datasets}
+\label{appendix_A3}
+
+{\footnotesize
+\begin{longtable}{ p{4cm} >{\centering\arraybackslash\columncolor{domain_color_bg}}p{2cm} c c >{\centering\arraybackslash\columncolor{observation_space_color_bg}}c >{\centering\arraybackslash\columncolor{observation_space_color_bg}}c >{\centering\arraybackslash\columncolor{action_space_color_bg}}c >{\centering\arraybackslash\columncolor{action_space_color_bg}}c >{\centering\arraybackslash\columncolor{action_space_color_bg}}c >{\centering\arraybackslash\columncolor{action_space_color_bg}}c }
+\caption{Literature overview: Datasets. OS = observation space; AS = action space. \T\ indicates the presence of an aspect; empty means the aspect is absent.} \label{tab:overview_datasets} \\
+\toprule 
+\textbf{Paper} & \textbf{Domain} & \multicolumn{2}{c }{\textbf{Type}} & \multicolumn{2}{>{\centering\arraybackslash\columncolor{observation_space_color_bg}}c }{\textbf{OS}} & \multicolumn{4}{>{\centering\arraybackslash\columncolor{action_space_color_bg}}c }{\textbf{AS}} \\
+\midrule
+ &  & \rotatebox{90}{\textbf{Controlled Environment\ }} & \rotatebox{90}{\textbf{Offline Dataset}} & \rotatebox{90}{\textbf{Image}} & \rotatebox{90}{\textbf{Textual}} & \rotatebox{90}{\textbf{Mouse}} & \rotatebox{90}{\textbf{Direct}} & \rotatebox{90}{\textbf{Tailored}} & \rotatebox{90}{\textbf{Code}} \\
+\midrule
+\endfirsthead
+
+\multicolumn{10}{c}
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule 
+\textbf{Paper} & \textbf{Domain} & \multicolumn{2}{c }{\textbf{Type}} & \multicolumn{2}{>{\centering\arraybackslash\columncolor{observation_space_color_bg}}c }{\textbf{OS}} & \multicolumn{4}{>{\centering\arraybackslash\columncolor{action_space_color_bg}}c }{\textbf{AS}} \\
+\midrule
+ &  & \rotatebox{90}{\textbf{Controlled Environment\ }} & \rotatebox{90}{\textbf{Offline Dataset}} & \rotatebox{90}{\textbf{Image}} & \rotatebox{90}{\textbf{Textual}} & \rotatebox{90}{\textbf{Mouse}} & \rotatebox{90}{\textbf{Direct}} & \rotatebox{90}{\textbf{Tailored}} & \rotatebox{90}{\textbf{Code}} \\
+\midrule
+\endhead
+
+%\bottomrule 
+% \multicolumn{10}{ r }{{Continued on next page}} \\ 
+\endfoot
+
+\bottomrule 
+\endlastfoot
+
+\multicolumn{10}{ c }{\textbf{Established benchmarks}} \\
+\midrule
+MiniWoB \citep{shi_world_2017} & Web & \T &  & \T & \T & \T &  &  &  \\
+%\midrule
+MiniWoB++ \citep{liu_reinforcement_2018} & Web & \T &  &  & \T &  & \T &  &  \\
+%\midrule
+WebShop \citep{yao_webshop_2022} & Web & \T & \T &  & \T &  & \T & \T &  \\
+%\midrule
+Mind2Web \citep{deng_mind2web_2023} & Web &  & \T &  & \T & \T &  &  &  \\
+%\midrule
+WebArena \citep{zhou_webarena_2024} & Web &  & \T & \T & \T & \T &  &  &  \\
+%\midrule
+VisualWebArena \citep{koh_visualwebarena_2024} & Web &  & \T & \T & \T &  & \T &  &  \\
+%\midrule
+PixelHelp \citep{li_mapping_2020} & Android &  & \T & \T & \T & \T & \T &  &  \\
+%\midrule
+AndroidEnv \citep{toyama_androidenv_2021} & Android & \T &  &  & \T &  & \T &  &  \\
+%\midrule
+MoTIF \citep{avidan_dataset_2022} & Android &  & \T & \T & \T & \T &  &  &  \\
+%\midrule
+Android in the Wild \citep{rawles_android_2023} & Android &  & \T & \T &  & \T &  &  &  \\
+%\midrule
+AgentBench \citep{liu_agentbench_2023-1} & PC & \T &  &  &  &  &  & \T &  \\
+%\midrule
+OmniACT \citep{kapoor_omniact_2024} & PC &  & \T & \T & \T & \T &  &  &  \\
+\midrule
+\multicolumn{10}{ c }{\textbf{Other datasets}} \\
+\midrule
+RUSS \citep{xu_grounding_2021} & Web & \T & \T &  & \T &  & \T &  &  \\
+%\midrule
+gMiniWoB \citep{gur_environment_2021} & Web & \T &  & \T & \T &  & \T &  &  \\
+%\midrule
+WebVLN \citep{chen_webvln_2024} & Web &  & \T & \T & \T &  & \T &  &  \\
+%\midrule
+MT-Mind2Web \citep{deng_multi-turn_2024} & Web & \T &  &  & \T &  & \T &  &  \\
+%\midrule
+WorkArena \citep{drouin_workarena_2024} & Web &  & \T & \T & \T & \T & \T &  &  \\
+%\midrule
+AutoWebBench \citep{lai_autowebglm_2024} & Web &  & \T & \T & \T &  & \T &  &  \\
+%\midrule
+QBE-F-Droid \citep{koroglu_qbe_2018} & Android &  & \T &  & \T &  & \T &  &  \\
+%\midrule
+AppBuddy \citep{shvo_appbuddy_2021} & Android & \T &  &  & \T &  & \T &  &  \\
+%\midrule
+Meta-GUI \citep{sun_meta-gui_2022} & Android &  & \T & \T & \T &  & \T &  &  \\
+%\midrule
+UGIF \citep{venkatesh_ugif_2023} & Android &  & \T & \T & \T &  & \T &  &  \\
+%\midrule
+Mobile-Env \citep{zhang_mobile-env_2024} & Android &  & \T & \T & \T & \T &  &  &  \\
+%\midrule
+DroidTask \citep{wen_empowering_2023} & Android &  & \T & \T &  &  & \T &  &  \\
+%\midrule
+Android in the zoo \citep{zhang_android_2024} & Android &  & \T & \T &  &  & \T &  &  \\
+%\midrule
+GUIAct \citep{chen_guicourse_2024} & Android &  & \T & \T &  &  & \T &  &  \\
+%\midrule
+AssistGUI \citep{gao_assistgui_2024} & PC &  & \T & \T & \T & \T &  &  &  \\
+%\midrule
+ScreenAgent \citep{niu_screenagent_2024} & PC & \T &  & \T &  & \T &  &  &  \\
+%\midrule
+OSWorld \citep{xie_osworld_2024} & PC &  & \T & \T & \T & \T &  &  &  \\
+%\midrule
+AgentStudio \citep{zheng_agentstudio_2024} & PC &  & \T &  &  & \T &  &  & \T \\
+%\midrule
+PPTC \citep{guo_pptc_2024} & PC &  & \T &  & \T &  &  &  & \T \\
+%\midrule
+RestBench \citep{song_restgpt_2023} & API &  & \T &  &  &  &  &  & \T \\
+%\midrule
+GUI-World \citep{chen_gui-world_2024} & Multi &  & \T & \T &  & \T &  &  &  \\
+
+\end{longtable} 
+}

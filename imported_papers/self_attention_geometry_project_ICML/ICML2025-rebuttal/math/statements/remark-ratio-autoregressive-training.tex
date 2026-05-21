@@ -1,0 +1,64 @@
+\begin{remark}
+\label{remark:ratio-autoregressive}
+%
+We separately analyze the following two cases:
+%
+\begin{itemize}[noitemsep,nolistsep]
+%
+    \item \emph{No statistical correlation between tokens.}
+    %
+    Assume that the tokens are statistically independent and identically distributed (i.i.d.) across positions, i.e., the probability of each token is the same at every position and does not depend on surrounding tokens.
+    %
+    Under this assumption, during autoregressive training, the expected number of times token \( t^* \) is used to predict future tokens is given by,
+    %
+    \begin{equation}
+    \mathbb{E}_P[\mu_c(t^*, U)] = \sum_{k=1}^N (N - k)\Pr[t_k = t^*] = \Pr[t^*] \sum_{k=1}^N (N - k) = \Pr[t^*] \frac{N(N-1)}{2} \,.
+    \end{equation}
+    %
+    Similarly, the expected number of times token \( t^* \) is predicted by preceding tokens is,
+    \begin{equation}
+    \mathbb{E}_P[\mu_p(t^*, U)] = \sum_{k=1}^N (k - 1)\Pr[t_k = t^*] = \Pr[t^*] \sum_{k=1}^N (k - 1) = \Pr[t^*] \frac{N(N-1)}{2} \,.
+    \end{equation}
+    %
+    Therefore, when tokens are independent and identically distributed, the expected number of tokens predicted \emph{by} \( t^* \) and the expected number of tokens used to predict \( t^* \) are equal. In this case, there is no difference between autoregressive and bidirectional training.
+    %
+    \item \emph{Statistical correlation between tokens.} 
+    %
+    Let us assume that the probability distribution \( P \) encodes statistical dependencies between tokens.
+    %
+    Define \( \mu(t^*) \) as the expected position index of token \( t^* \),
+    \begin{equation}
+        \mu(t^*) = \frac{\sum_{k=1}^N k \Pr[t_k = t^*]}{\sum_{k=1}^N \Pr[t_k = t^*]} \,.
+    \end{equation}
+    %
+    Using this, the ratio of expected counts under autoregressive training becomes,
+    \begin{equation}
+    \frac{\mathbb{E}_P[\mu_c(t^*, U)]}{\mathbb{E}_P[\mu_p(t^*, U)]} = \frac{N - \mu(t^*)}{\mu(t^*) - 1} \,.
+    \end{equation}
+    %
+    This expression shows that if \( t^* \) tends to appear earlier in the sequence, that is, if \( \mu(t^*) < (N+1)/2 \) (left of center), then the ratio is greater than 1. 
+    %
+    Conversely, if \( t^* \) appears later in the sequence (right of center), the ratio is less than 1.
+    %
+    More formally, suppose there exists \( \delta > 0 \) such that
+    \begin{equation}
+        \mu(t^*) \le \frac{N+1}{2} - \delta \,.
+    \end{equation}
+    % 
+    Then the ratio can be rewritten as,
+    \begin{equation}
+        \frac{\mathbb{E}_P[\mu_c(t^*, U)]}{\mathbb{E}_P[\mu_p(t^*), U]} - 1
+        = \frac{N + 1 - 2\mu(t^*)}{\mu(t^*) - 1} \,,
+    \end{equation}
+    where the numerator satisfies \( N + 1 - 2\mu(t^*) \ge 2\delta \), and the denominator is positive for any token that can appear at position 1 (i.e., \( \mu(t^*) > 1 \)).
+    %
+    Hence, the ratio is bounded below by,
+    \begin{equation}
+        \frac{\mathbb{E}_P[\mu_c(t^*, U)]}{\mathbb{E}_P[\mu_p(t^*, U)]} \ge 1 + \varepsilon(t^*) \,, \quad
+        \text{with} \quad \varepsilon(t^*) = \frac{2\delta}{\mu(t^*) - 1} \,.
+    \end{equation}
+%
+\end{itemize}
+%
+\end{remark}
+%

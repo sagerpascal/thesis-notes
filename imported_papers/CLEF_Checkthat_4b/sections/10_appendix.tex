@@ -1,0 +1,263 @@
+%
+%
+\section{Additional Experiments on Lexical Retrieval} \label{sec:lexical_exp}
+
+\begin{table}[h]
+\centering
+\caption{Comparison of lexical retrieval approaches with optional query augmentation on $1,000$ samples from the training set. Preprocessing includes lowercasing, punctuation removal, and subword tokenization.}
+\label{tab:preprocessing-comparison}
+\begin{tabular}{lccccc}
+\toprule
+ & \multicolumn{5}{c}{\textbf{Precision@k (\%)}} \\
+ \cmidrule(lr){2-6}
+\textbf{Approach} & \textbf{k=1} & \textbf{k=5} & \textbf{k=10} & \textbf{k=15} & \textbf{k=20} \\
+\midrule
+BM25 Baseline & 49.90 & 60.50 & 64.70 & 67.10 & 69.70 \\
+BM25 + Preprocessing & 56.00 & 70.10 & 74.30 & 76.80 & 78.10 \\
+Query Expansion + Preprocessing & 56.80 & \textbf{71.50} & \textbf{76.80} & \textbf{79.00} & \textbf{80.60} \\
+Query Rewriting + Preprocessing & \textbf{57.80} & 70.90 & 75.10 & 77.50 & 79.60 \\
+\bottomrule
+\end{tabular}
+\vspace{0.1cm}
+\end{table}
+
+To explore potential improvements in lexical retrieval, we experimented with two query reformulation strategies using the Gemma3 12B language model \cite{gemmateam2025gemma3technicalreport}. These methods aim to reduce the linguistic mismatch between informal social media posts and formal scientific abstracts.
+%
+\begin{enumerate}
+\item \textbf{Query Rewriting}: Reformulating social media posts to correct grammar and match the formal language style of scientific abstracts while preserving the original query semantics (see Listing \ref{lst:rewrite_prompt}).
+\item \textbf{Query Expansion}: Augmenting the original social media post with $2$-$3$ contextually relevant sentences to increase n-gram overlap with scientific abstracts (see Listing \ref{lst:expansion_prompt}).
+\end{enumerate}
+%
+Among the evaluated methods, query expansion yielded the highest performance, achieving a Precision@20 of $80.6$\%, an improvement of $2.5$ percentage points over BM25 with preprocessing. Query rewriting also led to performance gains, with a Precision@20 of $79.6$\% (a $1.5$ percentage point improvement). 
+
+However, both methods incur significant computational overhead due to the reliance on a large language model. Specifically, inference time increased by approximately a factor of 60. Furthermore, given that our pipeline includes a subsequent re-ranking stage, the marginal precision gains from these query reformulations diminish in the final results of the entire pipeline. This unfavorable cost-benefit trade-off renders these methods impractical for integration into the final pipeline, so we excluded them.
+
+
+\begin{center}
+\begin{minipage}{0.8\linewidth}
+\begin{lstlisting}[style=promptstyle, caption={Prompt template to rewrite a social media post.}, label={lst:rewrite_prompt}]
+Translate informal text into precise academic language, preserving
+original meaning.
+
+Transformation Guidelines:
+- Correct the original tweet's spelling and grammar errors while maintaining its style
+- Convert colloquial language to precise academic terminology
+- Convert hastags into proper words
+- Do not add anything new. Only correct the mistakes in the original tweet.
+
+Output format:
+Return a single string
+
+Example:
+Original Tweet: "Just saw amazin new study - mice w/ #Alzheimers showed
+45% improvemnt in memory after new drug treatment!! Game changer for
+#neurodegeneration research imo"
+
+Output:
+Just saw amazing new study - mice with Alzheimers showed 45% improvement
+in memory after new drug treatment!! Game changer for
+neurodegeneration research in my opinion
+
+Transform the following tweet:
+{tweet}
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+
+\begin{center}
+\begin{minipage}{0.8\linewidth}
+\begin{lstlisting}[style=promptstyle, caption={Prompt template to expand the social media post.}, label={lst:expansion_prompt}]
+Translate informal text into precise academic language, according to the
+transformation guidelines.
+
+Transformation Guidelines:
+
+First, correct the original tweet's spelling and grammar errors while
+maintaining its style. Then transform the tweet into academic language
+using these rules:
+
+-Convert colloquial language to precise academic terminology
+-Maintain semantic accuracy of the original message
+-Use passive voice and objective scientific tone
+-Eliminate informal expressions and subjective qualifiers
+-Transform hashtags into their full, proper form (e.g., "#COVID19" -> "COVID-19 pandemic")
+-Expand abbreviations and acronyms to their full forms
+-Include key research terms that would appear in academic database searches
+-Preserve all factual claims, statistics, and findings mentioned
+-Structure as a concise academic abstract (2-3 sentences)
+
+Output format:
+Return a single continuous string with both versions separated by " || " as follows:
+[Corrected Tweet] || [Academic Version]
+
+Example:
+Original Tweet: "Just saw amazin new study - mice w/ #Alzheimers showed
+45% improvemnt in memory after new drug treatment!! Game changer for
+#neurodegeneration research imo"
+
+Output:
+"Just saw amazing new study - mice with #Alzheimers showed 45%
+improvement in memory after new drug treatment!! Game changer for
+#neurodegeneration research in my opinion || A recent pharmacological
+intervention demonstrated significant efficacy in an Alzheimer's
+disease mouse model, with subjects exhibiting a 45% improvement in
+memory function following administration of the novel compound.
+These findings represent a potentially significant advancement in
+neurodegenerative disease research, particularly regarding
+therapeutic approaches for memory deficit amelioration in Alzheimer's
+pathology."
+
+Transform the following tweet:
+{tweet}
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+
+
+
+
+\section{Embedding Model Fine-Tuning Details}\label{sec:details_embedding_ft}
+
+To fine-tune the semantic embedding model, we initialize from \texttt{INF-Retriever-v1} \cite{infly-ai_inf-retriever-v1_nodate}, a transformer encoder pre-trained for dense retrieval tasks. Fine-tuning is performed by applying low-rank adaptation (LoRA) \cite{hu_lora_2022} to the query and value projection layers of the self-attention modules in the top $8$ transformer layers (layers $20$–$27$) using a rank $r=8$, scaling $\alpha=32$, and dropout of $0.1$.
+The inputs are tokenized independently for queries (social media posts) and documents (title + abstract). The maximum sequence length is $8,192$ tokens, allowing for the processing of social media posts and documents without truncation.
+
+We use the multiple negatives ranking (MNR) loss~\cite{henderson_efficient_2017}. Given a batch of $N$ query–document pairs, each query is trained to score highest on its corresponding document, while all other $N-1$ documents in the batch act as negatives.
+We extract embeddings using \textit{last-token pooling}, which selects the hidden state of the final token in each sequence. Embeddings are $L_2$-normalized, and cosine similarity is computed via dot product.
+
+We use AdamW \cite{loshchilov_decoupled_2019} as optimizer with a learning rate of $1 \times 10^{-5}$. We use $20$ linear warmup steps and then decay the learning rate to $0$ using a cosine scheduler. We train on $2$ A-100 GPUs using DDP with a per-device batch size of $4$ and $16$ gradient accumulation steps (resulting in an effective batch size of $64$).
+We use gradient clipping with $\text{norm}=1.0$ and use FP16 mixed precision.
+We evaluate \emph{retrieval quality} (i.e., run the vector store)  on the development set after each epoch by measuring Precision@100. The final model checkpoint is selected based on the best performance, which is obtained after epoch $2$.
+
+\section{Comparison of Re-Ranking Models} \label{sec:rerankers}
+
+\begin{table}[h]
+\centering
+\caption{Performance comparison of different re-ranking models using top $50$ semantic retrieval candidates on the development set. The chosen model and best scores are displayed in bold.}
+\label{tab:reranker-comparison}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Re-ranking Model} & \textbf{MRR@1 (\%)} & \textbf{MRR@5 (\%)} \\
+\midrule
+\multicolumn{3}{c}{\textit{Baseline}} \\
+\midrule
+Semantic Retrieval & 61.50 & 67.56 \\
+\midrule
+\multicolumn{3}{c}{\textit{Traditional Cross-Encoders}} \\
+\midrule
+mxbai-rerank-large-v2 & 61.43 & 66.80 \\
+bge-reranker-large & 62.50 & 67.54 \\
+\midrule
+\multicolumn{3}{c}{\textit{LLM-based Cross-Encoders}} \\
+\midrule
+\textbf{bge-reranker-v2-gemma} & 71.36 & \textbf{76.03} \\
+bge-reranker-v2-minicpm [Layer 28] & 71.57 & 75.87 \\
+bge-reranker-v2-minicpm [Layer 32]  & \textbf{71.79} & 76.02 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+We conducted a comparative evaluation of various re-ranking models on the development set to identify the most effective approach for our retrieval pipeline. The evaluated re-ranking models include traditional cross-encoders (\texttt{mxbai-rerank-large-v2} \cite{rerank2024mxbai}, bge-reranker-large \cite{bge_embedding}) and LLM-based re-rankers (\texttt{bge-reranker-v2-gemma} \cite{li_making_2023, chen_m3-embedding_2024}, \texttt{bge-reranker-v2-minicpm} \cite{li_making_2023, chen_m3-embedding_2024}), which use pre-trained language models as base for relevance scoring. The \texttt{bge-reranker-v2-minicpm} model supports layer-wise inference optimization, allowing computation to terminate at intermediate layers rather than processing through the full network.
+We experimented with two different intermediate layer configurations, terminating after layer $28$ and layer $32$. We selected layer $32$ based on our preliminary experiment with $100$ samples across all available layers, which showed that layer $32$ achieved the best performance. Additionally, we included layer $28$, as this is recommended by the official BGE re-ranker repository. All re-rankers are evaluated on the development set using semantic retrieval candidates as input. As shown in Table \ref{tab:reranker-comparison}, LLM-based re-rankers outperformed traditional cross-encoders by a considerable margin. This performance gap likely stems from LLMs' extensive pre-training on diverse text corpora, enabling them to comprehend both formal and informal language patterns. Between the three LLM-based re-rankers, \texttt{bge-reranker-v2-gemma} achieved the best MRR@5 performance ($76.03$\% vs. $76.02$\% and $75.87$ \%). Although the margin is small, we selected \texttt{BAAI/bge-reranker-v2-gemma} as our final model.
+
+\section{Data Augmentation for Semantic Retrieval}\label{sec:prompt_templates}
+To enrich semantic retrieval, we experimented with two text augmentation strategies: hypothetical document embeddings (HyDE) \cite{gao_precise_2023} and additional documents (AD). Both methods leverage the Llama 3.2 7B model \cite{grattafiori_llama_2024} to generate auxiliary text representations.
+
+For HyDE, we prompted the model to generate a hypothetical scientific article (title and abstract) based on a given social media post, aiming to bridge the domain gap between informal social media language and formal scientific discourse (see Listing~\ref{lst:hyde_prompt}). For AD, we augmented the document corpus by generating (1) a summary and (2) a synthetic social media post for each document. These variants were stored alongside the original document in the vector index (Listings~\ref{lst:ad_prompt_1} and~\ref{lst:ad_prompt_2}).
+
+\begin{center}
+\begin{minipage}{0.8\linewidth}
+\begin{lstlisting}[style=promptstyle, caption={Prompt template to generate hypothetical document embeddings.}, label={lst:hyde_prompt}]
+You are an expert in scientific research. Based on the following tweet,
+generate a hypothetical scientific paper that includes only a title and
+an abstract. The abstract should succinctly summarize the research
+objective, methodology,  key findings, and conclusions.
+
+Tweet: {tweet}
+
+{format_instructions}
+\end{lstlisting}
+
+\begin{lstlisting}[style=promptstyle, caption={Summary Prompt Template for AD}, label={lst:ad_prompt_1}]
+Summarize the following document:
+
+Title: {title}
+Abstract: {page_content}
+
+Make sure to include keywords that are likely to be found later by a
+search.
+
+{format_instructions}
+\end{lstlisting}
+
+\begin{lstlisting}[style=promptstyle, caption={Tweet Prompt template to generate additional documents.}, label={lst:ad_prompt_2}]
+Generate a hypothetical Twitter tweet about the following document:
+
+Title: {title}
+Abstract: {page_content}
+
+Make sure it looks like a typical tweet from an average person and is
+not too long.
+
+{format_instructions}
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+
+
+\begin{table}
+  \caption{Detailed performance comparison on the development set of semantic retrieval with additional text pre-processing.
+  ``AD'' denotes additional documents, ``HyDE'' stands for hypothetical document embeddings. The best results per category are in bold.}
+  \label{tab:performance_dev_detail}
+  \begin{tabular}{lcc|cc}
+    \toprule
+     & \multicolumn{2}{c|}{\textbf{MRR@k (\%)}} & \multicolumn{2}{c}{\textbf{Precision@k (\%)}} \\
+     \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+     \textbf{Approach} & \textbf{k=1} & \textbf{k=5} & \textbf{k=30} & \textbf{k=100} \\
+    \midrule
+    INF-Retriever-v1 & 58.66 & 65.21 & \textbf{86.50} & \textbf{92.04} \\
+    \,\,+ HyDE & 48.89 & 56.06 & 80.37 & \textbf{87.44} \\
+    \,\,+ AD & \textbf{60.73} & \textbf{66.69} & \textbf{87.09} & 90.87 \\
+    \,\,+ HyDE + AD & 51.63 & 58.46 & 81.56 & 85.36\\
+    \midrule
+    INF-Retriever-v1 + Fine-tuning & 60.86 & \textbf{67.19} & \textbf{87.86} & \textbf{93.12} \\
+    \,\,+ HyDE & 51.53 & 58.79 & 83.01 & 89.60 \\
+    \,\,+ AD & \textbf{61.88} & \textbf{67.89} & \textbf{88.49} & 91.50 \\
+    \,\,+ HyDE + AD & 53.44 & 60.56 & 83.60 & 87.32 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+The results on the development set are displayed Table~\ref{tab:performance_dev_detail}.
+As discussed in Section~\ref{sec:results}, our primary objective for semantic retrieval is to ensure high precision, providing strong candidates for downstream re-ranking. We find that augmentation strategies offer modest improvements for off-the-shelf models but yield limited or no benefit when applied to the fine-tuned retriever. We hypothesize that the limited benefit observed from these augmentation methods stems from the fine-tuned model’s already high semantic fidelity, which reduces the marginal gains achievable through additional data augmentation. Therefore, these methods were excluded from the final pipeline.
+
+\section{Hybrid Search using Elasticsearch} \label{sec:elastic_search}
+In addition to our main retrieval pipeline, we explored a fully integrated alternative using Elasticsearch\footnote{\url{https://www.elastic.co}}. This system unifies indexing, retrieval, and ranking into a single framework, while still capturing both lexical and semantic signals.
+
+We build an Elasticsearch pipeline closely mirroring our original architecture: it incorporates (1) a BM25 retriever with fuzzy matching, (2) a $k$-nearest neighbor (kNN) semantic retriever using our fine-tuned embedding model (configured with $k=50$ and $200$ candidates), and (3) a fusion stage based on reciprocal rank fusion (RRF) to combine results \cite{cormack_reciprocal_2009}. The RRF configuration uses a window size of $100$ and a rank constant of $20$, allowing it to integrate signals from both retrieval branches efficiently. Unlike our main system, which uses a cross-encoder for deep re-ranking, the Elasticsearch pipeline relies on this lightweight re-scoring mechanism.
+
+
+\paragraph{Performance.}
+\begin{table}[h]
+\caption{Elasticsearch (ES) hybrid pipeline results on the development set. ``AD'' denotes additional documents, ``HyDE'' stands for hypothetical document embeddings. The best results are displayed in bold.}
+\label{tab:Elasticsearch_results}
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Configuration} & \textbf{MRR@1 (\%)} & \textbf{MRR@5 (\%)}\\
+\midrule
+ES & 60.53 & 66.69 \\
+ES + HyDE & 45.99 & 53.56 \\
+ES + AD & \textbf{63.72} & \textbf{69.35} \\
+ES + AD + HyDE & 51.65 & 58.55 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Similar to the evaluation of our custom pipeline described in Appendix~\ref{sec:prompt_templates}, we evaluate different variants of this Elasticsearch—based method, leveraging raw and extended documents, as well as with and without query expansion. Table~\ref{tab:Elasticsearch_results} presents the results obtained on the development set.
+
+The best Elasticsearch configuration (ES + AD) achieves MRR@5 of $69.35$\%, slightly superior to our custom pipeline’s semantic retriever. However, it lags behind the full system with cross-encoder re-ranking (MRR@5 = $76.46$\%). This highlights the benefit of contextual re-scoring for fine-grained relevance. Nonetheless, the Elasticsearch-based approach remains a viable, scalable option for latency-sensitive applications.

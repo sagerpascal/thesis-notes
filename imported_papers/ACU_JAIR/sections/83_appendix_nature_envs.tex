@@ -1,0 +1,46 @@
+\section{The Nature of Computer Environments}\label{sec:domain_view:nature}
+
+\begin{table*}
+\begin{threeparttable}
+    \caption{Properties of common computer environments, assembled from \citet[Chapter~2]{russell_artificial_2022} and \citet[Chapter~2.3]{sutton_reinforcement_2018}. The middle and right columns compare common assumptions in research to actual computer environments.}
+    \label{table:environment-property}
+
+    \begin{tabular}{>{\raggedright\arraybackslash}p{4.3cm} >{\raggedright\arraybackslash}p{4cm} >{\raggedright\arraybackslash}p{4cm}}
+    \toprule
+    \textbf{Property}   & \textbf{Research computer \newline environment}   & \textbf{Actual computer \newline environment}     \\ %\midrule
+    \midrule
+    Observability                & Partially observable                                  & Partially observable      \\ 
+    Number of agents             & Single-agent                                          & Single-agent\tnote{a}     \\ 
+    Determinism                  & Deterministic                                         & Primarily deterministic\tnote{b}   \\ 
+    Episodicity                 & Episodic                                              & Sequential                \\ 
+    Dynamism                     & Static\tnote{c}                                       & Dynamic                   \\ 
+    Stationarity                & Stationary                                            & Non-stationary            \\ 
+    Environment knowledge       & Initially unknown                                    & Initially unknown          \\ 
+    \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+        \footnotesize
+        \item[a] Assuming the user hands control to the agent and does not intervene.
+        \item[b] Computer use is primarily deterministic due to user-friendly design principles, but can be stochastic.
+        \item[c] \citet{toyama_androidenv_2021} is an exception providing a dynamic Android environment.
+        % \item[d] \citet{koh_tree_2024} is an exception, using the environment for planning.
+    \end{tablenotes}
+\end{threeparttable}
+\end{table*}
+
+In \cref{table:environment-property}, we classify computer environments according to the framework established by \citet[Chapter~2.3]{russell_artificial_2022}.
+We distinguish between the computer environment typically found in research (middle column) and the actual computer environment in a productive setting (right column).
+%This classification highlights several simplifying assumptions in research, whose implications we discussed in \cref{sec:discussion}.
+
+% Computer environments are typically partially observable and single-agent, aligning research and practice.
+% However, several simplifying assumptions in research diverge from real-world conditions and may limit the transferability of trained agents. 
+Determinism is often assumed, meaning that for a state $s_t$ and action $a_t$, only one possible outcome $s_{t+1}$ exists. 
+While this holds for many interface-driven tasks, real environments may contain stochastic elements, such as randomized content (e.g., shuffle button in a music app) or latency effects, that introduce variability.
+% 
+The assumption of episodicity simplifies credit assignment, but computer environments are inherently sequential. States may depend on long-term history across sessions, requiring agents to model extended temporal dependencies beyond the task-specific trajectories.
+% 
+Research environments are often considered static, where only agent actions cause changes. In contrast, real environments are dynamic—background processes, user actions, or updates can alter state independently, requiring robustness to asynchronous events \citep{humble_continuous_2011}.
+% 
+Stationarity, another common assumption, implies stable dynamics over time. Yet actual environments are non-stationary due to software updates, configuration changes, or shifting data, which challenges long-term generalization.
+% 
+Lastly, computer environments are typically assumed to have unknown dynamics, meaning an agent does not initially know the effect of an action. While technically true, some agents leverage pre-training to learn conventions and begin with anticipatory knowledge (see \cref{sec:learning_strategy_pretraining}). For example, they might learn that clicking a 'submit' button typically submits a form.

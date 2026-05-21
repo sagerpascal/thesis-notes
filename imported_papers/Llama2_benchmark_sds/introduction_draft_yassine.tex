@@ -1,0 +1,92 @@
+Framing: LLM/chat gpt is great etc.. everyone needs to use these now or you are super uncool.
+Access to LLMs has been greatly democratized thanks to three changes (1) open sourcing of powerful foundation models i.e. llama2. (2) smarter model quantization (3) low rank approximators.
+
+In this paper, we explain 1 and 2 in depth and showcase how today llms can be used by everyone thanks to these advances. We run all of our experiments on a singular T4 in a fashion that is replicable on collab.
+
+We investigate the memory and compute efficiency as well as learning performance of the latest state-of-the-art in 1,2 by training multiple combinations thereof on text classification dataset A and conversational (chat) dataset B. 
+
+------------------------
+
+Large Language Models have seen a large rise in interest in recent years, and have shown state-of-the-art performance in several different language tasks such as translation, summarization, writing etc... They have become an indispensable methodology for anyone working on Natural Language Processing, and for anyone who can afford to work with them. Indeed, despite their current popularity, large language models remain particularly challenging to train, characterize, and deploy due to the engineering challenges they present: data-hungriness, large number of trainable parameters, and subsequent large compute cost. 
+
+
+Progress has however been made to democratize the use of LLMs, such as 
+
+Several big corporations (e.g. Meta, Google) and research labs (e.g. X and Y) have made admirable efforts to make general access to this technology more accessible and less burdensome for engineers. 
+
+
+Since the advent of transformers in 2018, their use has been 
+
+
+The Attention Mechanism: 
+
+Attention mechanisms, first introduced for machine translation \cite{bahdanau2014neural}, have recently emerged as pivotal components of neural architectures, and enabled state-of-the-art performance in a remarkably large number of natural language processing tasks \cite{attention_review}. Attention mechanisms in language models work by enabling the model to focus on specific parts of the input sequence when making predictions for a given output. This mechanism mimics human-like selective perception and allows the model to give varying degrees of importance to different elements in the input sequence. The key idea is to weigh the importance of each element dynamically, depending on its relevance to the current step in the sequence generation process. This process comes at a cost of important computational complexity. "Self Attention", which is currently the most commonly used attention mechanism, as introduced in \cite{vaswani_attention_2017} requires $O(n^2 d)$, with $n$ sequence length, and $d$ dimensionality of the embedding. This creates a significant challenge in training large language models for large sequence lengths very computationally expensive.  
+
+
+As noted in Table 1, a self-attention layer connects all positions with a constant number of sequentially
+executed operations, whereas a recurrent layer requires O(n) sequential operations. In terms of
+computational complexity, self-attention layers are faster than recurrent layers when the sequence
+6
+length n is smaller than the representation dimensionality d, which is most often the case with
+sentence representations used by state-of-the-art models in machine translations, such as word-piece
+[38] and byte-pair [31] representations. To improve computational performance for tasks involving
+very long sequences, self-attention could be restricted to considering only a neighborhood of size r in
+the input sequence centered around the respective output position. This would increase the maximum
+path length to O(n/r). We plan to investigate this approach further in future work.
+
+
+
+
+
+In the context of language models, attention proves to be a critical cognitive tool, mimicking human-like selective perception and enhancing the model's ability to capture intricate dependencies and relationships within language.
+
+
+1) What attention is in LLM
+2) How it works in practice in modern architectures
+3) The problem of computational cost
+
+
+
+Attention mechanisms have emerged as a pivotal component in the field of natural language processing, profoundly impacting the capabilities of language models. Originally introduced by Bahdanau et al. in 2014 \cite{bahdanau2014neural}, attention mechanisms address the challenge of efficiently processing sequential data by allowing neural networks to selectively focus on different segments of input sequences when generating corresponding outputs. In the context of language models, attention proves to be a critical cognitive tool, mimicking human-like selective perception and enhancing the model's ability to capture intricate dependencies and relationships within language. As language models aim to comprehend and generate coherent and contextually relevant text, attention mechanisms have become indispensable in fostering improved contextual understanding and semantic coherence in the model's responses.
+
+Recent advancements in language model architectures, such as GPT-3, have further underscored the significance of attention mechanisms. These models leverage attention to grasp intricate linguistic nuances and contextual cues, allowing for more nuanced language generation. As explored in various studies (Brown et al., 2020), the integration of attention mechanisms has substantially elevated the performance of language models, contributing to their state-of-the-art capabilities in tasks ranging from text completion to machine translation. This paper delves into the intricate workings of attention within language models, examining its impact on model performance, interpretability, and its broader implications for advancing natural language understanding and generation.
+
+
+
+
+
+
+
+ 
+Attention is a cognitive function that enables humans to navigate the problem of information overload. Through attention, humans can better allocate resources by concentrating on important information in a given context, and ignore perceivable but irrelevant information at the same time \cite{attention_review}. To achieve similar objectives, Bahdanau et al. first introduced the concept of attention in the context of language translation. Since then,
+
+
+The attention mechanism was introduced by Bahdanau et al. (2014) to address the bottleneck problem that arises with the use of a fixed-length encoding vector, where the decoder would have limited access to the information provided by the input. This is thought to become especially problematic for long and/or complex sequences, where the dimensionality of their representation would be forced to be the same as for shorter or simpler sequences.
+
+
+This cognitive function is central to human intelligence, and more specifically, its decision-making capabilities. The artificial intelligence community has for a long time attempted different processes to solve the problem of attention overload, but it is only recently that works from natural language processing (where the problem is very significant) have offered a promising solution. 
+
+
+The problem of discerning efficiently discarding relevant from irrelevant information to solve a given problem has been at the centre of deep learning for research for decades
+
+This allows humans to naturally "cherry-picky" high-value information 
+
+The attention mechanism has become a central methodology in deep learning practice 
+
+
+
+
+Attention is a complex cognitive function that is indispensable
+for human beings [1,2]. One important property of perception is
+that humans do not tend to process whole information in its
+entirety at once. Instead, humans tend to selectively concentrate
+on a part of the information when and where it is needed, but
+ignore other perceivable information at the same time. For
+instance, humans usually don’t see all the scenes from the beginning to the end when visually perceiving things, but instead,
+observe and pay attention to specific parts as needed. When
+humans find that a scene often has something they want to
+observe in a certain part, they will learn to focus on that part when
+similar scenes appear again and focus more attention on the useful
+part. This is a means for humans to quickly select high-value information from massive information using limited processing
+resources. The attention mechanism greatly improves the efficiency and accuracy of perceptual information processing.
+

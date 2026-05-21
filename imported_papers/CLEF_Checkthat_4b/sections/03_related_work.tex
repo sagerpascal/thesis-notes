@@ -1,0 +1,14 @@
+%
+%
+\paragraph{Fact-Checking and Scientific Source Retrieval.}
+Automated fact-checking critically depends on robust document retrieval methods to identify evidence that supports or refutes a given claim \cite{thorne_fever_2018}. The evolution of this field has progressed from early strategies utilizing structured knowledge bases and curated news sources \cite{vlachos_fact_2014} to approaches that exploit unstructured, domain-specific corpora \cite{wadden_fact_2020}. A particularly challenging scenario involves retrieving scientific literature to verify claims originating from social media, due to the frequent lexical and conceptual mismatch between informal language and the academic writing style \cite{wadden_scifact-open_2022, arampatzis_overview_2023, goeuriot_overview_2024}.
+
+\paragraph{Sparse vs. Dense Retrieval.}
+Retrieval methods are commonly grouped into sparse and dense approaches.
+\emph{Sparse} approaches like BM25 \cite{robertson_relevance_1976, robertson_probabilistic_2009} rely on term overlap and excel with strong lexical alignment, using probabilistic relevance frameworks with saturation parameters and document length normalization for robust ranking.
+Conversely, \emph{dense} retrieval uses neural networks to encode text into vector representations, enabling semantic similarity matching through metrics such as cosine similarity \cite{karpukhin_dense_2020, izacard_leveraging_2021}. Dense models are particularly advantageous in scenarios where claims are paraphrased or loosely aligned with scientific language, as is often the case in user-generated content. 
+ Although dense retrieval has historically required domain-specific fine-tuning \cite{lee_learning_2021, maillard_multi-task_2021}, recent foundation models pre-trained on diverse corpora exhibit strong generalization \cite{infly-ai_inf-retriever-v1_nodate}, increasingly blurring the distinction between general-purpose and domain-adapted retrieval.
+
+\paragraph{Hybrid Retrieval and LLM Re-Ranking.}
+Hybrid retrieval frameworks can combine sparse and dense retrieval by adding a subsequent re-ranking stage to merge their results and improve retrieval quality. Neural re-rankers \cite{nogueira_passage_2019} have demonstrated substantial improvements in ranking accuracy across multiple domains. Recently, large language models (LLMs) have been employed as cross-encoders, jointly encoding claim–document pairs to capture nuanced semantic relationships \cite{li_making_2023, chen_m3-embedding_2024}.
+In this work, we adopt such a hybrid retrieval architecture by combining sparse retrieval via BM25, dense neural retrieval, and LLM-based re-ranking to leverage the different strengths of these retrieval methods.

@@ -1,0 +1,27 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,bindingoffset=0.in,left=.8in,right=.8in,top=1in,bottom=1in,
+            footskip=.25in]{geometry}
+\usepackage{tikz-cd}
+
+\begin{document}
+
+Thank you very much for your thorough and positive review, as well as your valuable suggestions and questions. 
+%
+\\\\
+%
+First, we agree with the reviewer that we could have utilized the available manuscript space more effectively. In response to suggestions from Reviewers HwPP and JKhN, we will revise Section 2 by explicitly presenting Theorems 2.3 and 2.4, clearly stating their assumptions, conditions, and implications, integrating key points into the main text. We appreciate the reviewer’s feedback, as these adjustments will enhance both the rigor and clarity of our theoretical contributions.
+%
+\\\\
+%
+Second, we address the questions raised by the reviewer:
+%
+\\
+%
+\textbf{1.} 
+%
+The analysis presented in Section 2 is not specific to single-layer self-attention, but applies generally to any layer within a Transformer model. Empirically, however, we observe that early layers can deviate from our theoretical predictions compared to deeper layers. This is expected, as backpropagation causes early layers to receive noisier updates, leading to greater divergence from theoretical predictions. On the other hand, the connections between tokens $x_i$ and $x_j$ and the corresponding prediction errors encoded by $\beta_{ij}$ are accurately reflected in the weight updates of deeper layers (which are closer to the output). The degree of deviation depends on the model and dataset and is often minimal. Figure S4 (complementing Figure 3) shows examples of models where such deviations are negligible. Based on these observations, we hypothesize that symmetric initialization of early layers is unlikely to be beneficial. Indeed, we tested symmetric initialization of all layers of decoder-only models, and we did not observe any significant improvement in training speed compared to standard initialization. We refer to our answer to reviewer jZNG for further details. 
+%
+\\
+%
+\textbf{2.} We thank the reviewer for pointing this out. Since Figure 2 presents the symmetry and directionality scores for pretrained models, we assume this comment refers to Figure 3. We will update the caption of Figure 3 to explicitly mention the model (`Bert-Base-Uncased`) and the number of layers (12).
+\end{document}

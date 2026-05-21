@@ -1,0 +1,171 @@
+%% The first command in your LaTeX source must be the \documentclass command.
+%%
+%% Options:
+%% twocolumn : Two column layout.
+%% hf: enable header and footer.
+\documentclass[
+% twocolumn,
+% hf,
+]{ceurart}
+
+%%
+%% One can fix some overfulls
+\sloppy
+
+%%
+%% Minted listings support 
+%% Need pygment <http://pygments.org/> <http://pypi.python.org/pypi/Pygments>
+\usepackage{listings}
+%% auto break lines
+\lstset{breaklines=true}
+
+
+%% Custom Listing style by Pascal
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+\definecolor{lightgray}{gray}{0.95}
+
+\lstdefinestyle{promptstyle}{
+    backgroundcolor=\color{lightgray},
+    basicstyle=\ttfamily\small,
+    frame=single,
+    rulecolor=\color{black},
+    breaklines=true,
+    columns=fullflexible,
+    captionpos=b,
+    showstringspaces=false,
+    keepspaces=true,
+    xleftmargin=0pt,
+    xrightmargin=0pt,
+    aboveskip=1em,
+    belowskip=1em
+}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% Rights management information.
+%% CC-BY is default license.
+\copyrightyear{2025}
+\copyrightclause{Copyright for this paper by its authors.
+  Use permitted under Creative Commons License Attribution 4.0
+  International (CC BY 4.0).}
+
+
+%%
+%% This command is for the conference information
+\conference{CLEF 2025 Working Notes, 9 -- 12 September 2025, Madrid, Spain}
+
+%%
+%% The "title" command
+\title{Deep Retrieval at CheckThat! 2025: Identifying Scientific Papers from Implicit Social Media Mentions via Hybrid Retrieval and Re-Ranking}
+\title[mode=sub]{Notebook for the CheckThat! Lab at CLEF 2025}
+
+%\tnotemark[1]
+%\tnotetext[1]{You can use this document as the template for preparing your
+%  publication. We recommend using the latest version of the ceurart style.}
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+\author[1,2,3]{Pascal J. Sager}[%
+orcid=0000-0002-8084-2317,
+email=pascaljosef.sager@uzh.ch,
+]
+\cormark[1]
+
+\author[1]{Ashwini Kamaraj}[%
+email=ashwini.kamaraj@uzh.ch,
+]
+
+\author[3]{Benjamin F. Grewe}[%
+orcid=0000-0001-8560-2120,
+email=bgrewe@ethz.ch,
+]
+
+\author[2,4]{Thilo Stadelmann}[%
+orcid=0000-0002-3784-0420,
+email=stdm@zhaw.ch,
+]
+
+\address[1]{University of Zurich, Rämistrasse 71, 8006 Zurich, Switzerland}
+\address[2]{Centre for Artificial Intelligence, Zurich University of Applied Sciences, Technikumstrasse 71, 8401 Winterthur, Switzerland}
+\address[3]{Institute of Neuroinformatics, ETH Zurich and University of Zurich, Winterthurerstrasse 190, 8057 Zurich, Switzerland}
+\address[4]{European Centre for Living Technology, Dorsoduro 3246, 30123 Venice, Italy}
+
+
+%% Footnotes
+\cortext[1]{Corresponding author.}
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\input{sections/01_abstract}
+
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\begin{keywords}
+    Information retrieval \sep
+    Scientific document search \sep
+    Social media fact verification \sep
+    Fact-checking \sep
+    CLEF
+\end{keywords}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+\section{Introduction}
+\input{sections/02_fig_motivation_clef}
+\input{sections/02_introduction}
+
+\section{Related Work}
+\input{sections/03_related_work}
+
+\section{Methodology}
+\input{sections/04_fig_overview_clef}
+\input{sections/04_methods}
+
+\section{Results} \label{sec:results}
+\input{sections/05_results}
+
+
+\section{Discussion and Conclusion}
+\input{sections/06_discussion}
+
+%%
+%% The acknowledgments section is defined using the "acknowledgments" environment
+%% (and NOT an unnumbered section). This ensures the proper
+%% identification of the section in the article metadata, and the
+%% consistent spelling of the heading.
+\begin{acknowledgments}
+  We thank Prof. Dr. Simon Clematide and Andrianos Michail for guiding the research, engineering, and writing process.
+  We also thank the Department of Computational Linguistics at the University of Zurich and the Centre for Artificial Intelligence at the Zurich University of Applied Sciences for providing computational resources.
+\end{acknowledgments}
+
+%% The declaration on generative AI comes in effect
+%% in Janary 2025. See also
+%% https://ceur-ws.org/GenAI/Policy.html
+\section*{Declaration on Generative AI}
+\noindent During the creation of this work, the authors used ChatGPT\footnote{\url{https://chatgpt.com}} to refine the pre-written text. Further, the authors used Grammarly\footnote{\url{https://www.grammarly.com}} for spell checking.
+ After using these tools, the authors reviewed and edited the content as needed and take full responsibility for the publication’s content. 
+
+%%
+%% Define the bibliography file to be used
+\bibliography{sources_cleaned}
+
+%%
+%% If your work has an appendix, this is the place to put it.
+\appendix
+\input{sections/10_appendix}
+
+
+\end{document}
+

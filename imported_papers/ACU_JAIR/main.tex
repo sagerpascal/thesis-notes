@@ -1,0 +1,219 @@
+%% This is a JAIR Example File Compiled by Nicholas Mattei (nsmattei@tulane.edu) 
+%% and Odd Erik Gundersen (odderik@ntnu.no)
+%% and Mykel Kochenderfer (mykel@stanford.edu)
+%% September 15, 2025
+%%
+%% This file is based off the ACM Latex Template https://www.acm.org/publications/proceedings-template
+%% Revision 2.12 (12/28/2024)
+%% 
+%% Please see https://www.jair.org/index.php/jair for more information and submission instructions.
+%%
+
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For final camera ready please change the
+%% command to \documentclass[]{jair}.
+%%
+%\documentclass[manuscript, screen, review]{jair}
+
+%\documentclass[]{jair}
+\documentclass[]{preprint}
+
+
+\setcopyright{cc}
+%\copyrightyear{2025}
+\acmDOI{10.1613/jair.1.19490}
+
+%%
+%\JAIRAE{Patrik Haslum}
+%\JAIRTrack{Surveys}
+\acmVolume{85}
+\acmArticle{34}
+\acmMonth{03}
+\acmYear{2026}
+
+
+
+\RequirePackage[
+  datamodel=acmdatamodel,
+  style=acmauthoryear,
+  backend=biber,
+  giveninits=true,
+  uniquename=init
+  ]{biblatex}
+
+\renewcommand*{\bibopenbracket}{(}
+\renewcommand*{\bibclosebracket}{)}
+
+%%
+%% For managing citations, use BibLaTeX with the acmauthoryear style.
+%% The next line specifies the bibliography file.
+\addbibresource{cleaned_references.bib}
+
+
+%%=====================================================================
+%% Custom Libraries
+%%=====================================================================
+\usepackage{amsmath,amsfonts}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{cleveref}
+\usepackage{tikz}
+\usetikzlibrary{trees, positioning, calc}
+\usepackage[edges]{forest}
+\usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage{longtable}
+\usepackage{xspace}
+
+
+%%=====================================================================
+%% Custom Definitions
+%%=====================================================================
+
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Eq.}{Eqs.}
+\crefname{appendix}{Appendix}{Appendix}
+\Crefname{appendix}{Appendix}{Appendix}
+\crefname{table}{Table}{Table}
+\Crefname{table}{Table}{Table}
+
+%\newcommand{\numpapers}{120\xspace} 
+\newcommand{\numagents}{87\xspace} 
+\newcommand{\numdatasets}{33\xspace} 
+
+\newcommand{\uproman}[1]{\uppercase\expandafter{\romannumeral#1}}
+\newcommand{\lowroman}[1]{\romannumeral#1\relax}
+
+\setlist[description]{
+  itemsep=3pt,
+  leftmargin=10pt,
+  labelindent=10pt,
+  font=\normalfont\bfseries, 
+  %before=\medskip,  % Some spacing would be nice -> But JAIR does not allow vspace
+  %after=\medskip,   % Some spacing would be nice -> But JAIR does not allow vspace
+  labelsep=1ex, 
+  style=sameline,
+  itemindent=!,
+}
+
+% Optional for adding e.g. to references (where lists are incomplete)
+\let\citet\textcite      % Narrative: Smith (2024)
+\let\citep\parencite     % Parenthetical: (Smith, 2024)
+\NewDocumentCommand{\citepeg}{m}{%
+  \parencite[e.g.,][]{#1}%
+}
+
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title[Agents for Computer Use]{A Comprehensive Survey of Agents for Computer Use: Foundations, Challenges, and Future Directions}
+
+\input{sections/00_authors}
+\input{sections/00_abstract}
+
+
+%% JAIR Note: 
+%% Do not include ACM CCS Concepts or Keywords
+
+
+%% To be updated by authors.
+\received{11 June 2025}
+%\received[revised]{--}
+\received[accepted]{24 February 2026}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+% Generates the table of contents
+%\renewcommand\contentsname{Outline}
+%\tableofcontents
+
+\input{sections/01_introduction}
+\input{sections/02_field_of_agents}
+\input{sections/03_domain_perspective}
+\input{sections/04_interaction_perspective}
+\input{sections/05_agent_perspective}
+\input{sections/06_datasets}
+\input{sections/07_evaluation}
+\input{sections/08_challenges}
+\input{sections/09_conclusion}
+
+\begin{acks}
+The authors P. Sager and B. Meyer contributed equally to this work.
+The work is funded in part by the Canton of Zurich, Switzerland, through the Digitalization Initiative of the Canton of Zurich (DIZH) Fellowship project `Stability of self-organizing net fragments as inductive bias for next-generation deep learning.'
+\end{acks}
+
+%\section*{Author contributions}
+%P.J.S.: conceptualization, visualization, original draft writing, review and editing, project management. B.M.: conceptualization, visualization, original draft improvement, review and editing. P.Y.:  original draft writing (evaluation), visualization, review and editing. R.v.W.: original draft writing (datasets), visualization. L.E.: visualization, review and editing. A.E.: review and editing. G.N.: review and editing. A.A.: proof reading, review and editing, supervision. B.F.G.: proof reading, review and editing, supervision. T.S.: proof reading, structure, review and editing, supervision, funding. 
+
+
+%%
+%% The next line prints the references.
+\printbibliography
+
+\appendix
+
+\newcommand{\T}{\checkmark}
+\newcommand{\halfTT}{(\checkmark)}
+\newcommand{\halfT}{\kern-4.5px(\checkmark)}
+\renewcommand*{\arraystretch}{1.3} % cell padding
+\input{sections/80_appendix}
+
+
+%\section{Reproducibility Checklist for JAIR}
+%
+%Select the answers that apply to your research -- one per item. 
+%
+%\subsection*{All articles:}
+%
+%\begin{enumerate}
+%    \item All claims investigated in this work are clearly stated.  \textbf{Yes.}
+%    \item Clear explanations are given how the work reported substantiates the claims.  \textbf{Yes.}
+%    \item Limitations or technical assumptions are stated clearly and explicitly.  \textbf{Yes.}
+%    \item Conceptual outlines and/or pseudo-code descriptions of the AI methods introduced in this work are provided, and important implementation details are discussed.  \textbf{NA.}
+%    \item 
+%    Motivation is provided for all design choices, including algorithms, implementation choices, parameters, data sets and experimental protocols beyond metrics. \textbf{Yes.}
+%\end{enumerate}
+%
+%\subsection*{Articles containing theoretical contributions:}
+%Does this paper make theoretical contributions? 
+%\\
+%\newline
+%\noindent \textbf{no.}
+%
+%\subsection*{Articles reporting on computational experiments:}
+%Does this paper include computational experiments? [yes/no]
+%\\
+%\newline
+%\noindent \textbf{no.}
+%
+%
+%\subsection*{Articles using data sets:}
+%Does this work rely on one or more data sets (possibly obtained from a benchmark generator or similar software artifact)? 
+%\\
+%\newline
+%\noindent \textbf{no.}
+%
+
+\end{document}

@@ -1,0 +1,18 @@
+\begin{corollary}
+%
+(\textbf{Bidirectional training does not induce directionality})
+%
+Let \( \mathcal{V} = \{t_0, \dots, t_V\} \) be a vocabulary of tokens, and let \( \mathcal{U} \subset \mathcal{V}^N \) denote the sample space of all sequences of length \( N \). Let \( U = \{t_1, \dots, t_N\} \in \mathcal{U} \) be a random variable with \( U \sim P(U) \). Define \( \Pr[t_j = t^*] \) as the marginal probability that the token at position \( j \) equals \( t^* \in \mathcal{V} \).
+%
+Let \( \{\bm{x}_1, \dots, \bm{x}_N\} \) be the token embeddings corresponding to the elements of \( U \), where each embedding \( \bm{x}_i \sim \mathcal{D} \) is drawn i.i.d. from a distribution \( \mathcal{D} \) with zero mean and covariance matrix $\text{Cov}(\bm{x}_i)  = \Sigma$..
+%
+Let \( \bm{W}_{qk} \) be query-key matrix of a self-attention mechanism, and let \( \Delta \bm{W}_{qk} \) denote its gradient update as defined in Proposition~\ref{prop-gradients-self-attention}, computed under an autoregressive objective as in Definition~\ref{def-objective-functions}.
+%
+Then, the variance of the norm of the rows and the columns at the end of training is equal,
+%
+%
+\begin{equation}
+    \text{Var}\left(||\bm{w}_{m, \cdot}||\right) =\text{Var}\left(||\bm{w}_{ \cdot, k}||\right) \,\, \forall k,m \,.
+\end{equation}
+%
+\end{corollary}

@@ -1,0 +1,256 @@
+% =============================================================================
+\chapter{Agents for Computer Use: A Comprehensive Survey}
+\label{chap:acu}
+% =============================================================================
+
+% ─────────────────────────────────────────────────────────────────────────────
+% PUBLICATION HEADER
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[
+    colback=gray!6,
+    colframe=gray!35,
+    arc=3pt,
+    boxrule=0.4pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt
+]
+\small
+\textbf{Publication basis of this chapter}
+
+\medskip
+Sager, P.\,J., Meyer, B., Yan, P., von Wartburg-Kottler, R., Etaiwi, L.,
+Enayati, A., Nobel, G., Abdulkadir, A., Grewe, B.\,F., \& Stadelmann, T.
+(2026). A comprehensive survey of agents for computer use: Foundations,
+challenges, and future directions. \textit{Journal of Artificial Intelligence
+Research}, \textit{85}, 34. \cite{acu_survey}
+
+\medskip
+\textbf{Status:} Published.
+\end{tcolorbox}
+
+\bigskip
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section*{Contribution Statement}
+\label{sec:acu_contribution}
+\addcontentsline{toc}{section}{Contribution Statement}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The thesis author holds shared first authorship on this work with Benjamin
+Meyer. The nature of the collaboration was deeply iterative and the
+contributions of both first authors are interleaved throughout the paper in a
+way that makes clean attribution of individual sections difficult. The following
+account reflects the thesis author's best reconstruction of the intellectual
+trajectory.
+
+The project originated with the thesis author, who identified the absence of
+a technology-agnostic, theoretically grounded taxonomy as a gap in the existing
+ACU literature and initiated the survey independently. The initial structure of
+the taxonomy and the selection of the three analytical perspectives — domain,
+interaction, and agent — were proposed in a first draft by the thesis author.
+Benjamin Meyer subsequently refined the taxonomy structure substantially,
+improving its internal consistency and the precision of its category boundaries,
+after which the thesis author revised the framework again. The final taxonomy
+reflects this multi-pass collaborative development and cannot be attributed to
+either first author alone.
+
+The paper collection and classification process was carried out collectively by
+all authors: each author independently read and classified a subset of the
+surveyed papers into a shared structured spreadsheet, using the evolving
+taxonomy as a classification schema. The survey structure, including the
+identification and articulation of the six research gaps, was derived
+inductively from the classification data through discussions involving both
+first authors and with input from the senior authors Ahmed Abdulkadir,
+Benjamin Grewe, and Thilo Stadelmann.
+
+The framing of the survey's findings within the broader thesis argument
+presented in this chapter — specifically, the interpretation of the six
+research gaps as symptoms of structural limitations in the learning paradigm
+rather than as incidental engineering shortcomings — is the intellectual
+contribution of the thesis author and was developed in the context of this
+thesis rather than the original paper.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Chapter Introduction}
+\label{sec:acu_intro_thesis}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The argument developed in Chapter~\ref{chap:introduction} rests on a specific
+empirical claim: that the failures of current deep learning systems are not
+distributed randomly across applications but form a consistent pattern,
+one that is predictable from the structural properties of what
+gradient-based learning produces. Establishing this claim requires an
+empirical anchor — a domain in which the failure modes can be observed
+concretely, measured systematically, and connected to the underlying learning
+paradigm. Agents for computer use (ACUs) provide precisely this anchor.
+
+ACUs are systems that execute complex tasks on digital devices given
+instructions in natural language, automating workflows by controlling software
+through low-level actions such as mouse clicks and touchscreen gestures. The
+combination of natural language understanding, visual perception, multi-step
+planning, and real-time interaction makes ACUs one of the most demanding
+evaluation settings for contemporary AI. They are also among the most
+practically consequential: a reliable general-purpose ACU would constitute a
+qualitative shift in how AI systems are deployed. The gap between this
+potential and the current reality, documented in detail in this chapter, is
+the gap that motivates the rest of this thesis.
+
+The contribution of this chapter is a comprehensive survey and taxonomy of the
+ACU literature, covering 87 original research papers and 33 datasets published
+between 2018 and 2024. We structure the literature using a three-perspective
+taxonomy grounded in established agent theory — domain, interaction, and agent
+perspectives — and apply it to identify six persistent research gaps. These
+gaps are not presented here merely as a field-specific finding; they serve as
+the empirical foundation for the structural diagnosis developed in
+Part~\ref{part:diagnosis}.
+
+Section~\ref{sec:acu_methodology} describes the survey methodology.
+Sections~\ref{sec:field} through~\ref{sec:evaluation_agent} constitute the
+core survey content, reproduced from the published paper with minor
+reformatting for thesis consistency. Section~\ref{sec:acu_chapter_summary}
+provides a new chapter summary that draws out the specific implications of the
+survey findings for the thesis argument.
+
+A note on scope: the broader literature on ACUs and the prior surveys in this
+space are reviewed in Chapter~\ref{chap:relatedwork}, Section~\ref{sec:rw_agents}.
+The methodology section below discusses methodological prior work specifically
+relevant to the survey design; general contextualisation of the ACU field in
+the literature is not repeated here.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+%
+%   ██████╗ ██████╗ ██████╗ ███████╗    ██████╗  ██████╗ ██████╗ ██╗   ██╗
+%  ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██╔══██╗██╔═══██╗██╔══██╗╚██╗ ██╔╝
+%  ██║     ██║   ██║██████╔╝█████╗      ██████╔╝██║   ██║██║  ██║ ╚████╔╝
+%  ██║     ██║   ██║██╔══██╗██╔══╝      ██╔══██╗██║   ██║██║  ██║  ╚██╔╝
+%  ╚██████╗╚██████╔╝██║  ██║███████╗    ██████╔╝╚██████╔╝██████╔╝   ██║
+%   ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═════╝  ╚═════╝ ╚═════╝    ╚═╝
+%
+%   ═══════════════════════════════════════════════════════════════════════
+%   INSERT SECTIONS 2–9 OF THE PUBLISHED PAPER HERE
+%   (from \section{Formalizing the Problem} / \label{sec:field}
+%    through \section{Evaluation} / \label{sec:evaluation_agent})
+%
+%   Renumber all figures and tables to the thesis scheme:
+%     Figure 1  →  Figure~\ref{fig:acu_example}   (prefix: acu_)
+%     Table 1   →  Table~\ref{tab:acu_...}         (prefix: acu_)
+%
+%   Replace all \cref{sec:X} with \ref{sec:X} if using cleveref,
+%   or adjust cross-reference style to match thesis preamble.
+%
+%   The Appendix material from the paper (Appendix A1–A3 and the
+%   supplementary tables) should be placed in the thesis Appendix
+%   chapter, referenced here as Appendix~\ref{app:acu}.
+%   ═══════════════════════════════════════════════════════════════════════
+%
+% ─────────────────────────────────────────────────────────────────────────────
+
+
+\input{imported_papers/ACU_JAIR/sections/02_field_of_agents}
+\input{imported_papers/ACU_JAIR/sections/03_domain_perspective}
+\input{imported_papers/ACU_JAIR/sections/04_interaction_perspective}
+\input{imported_papers/ACU_JAIR/sections/04_1_observation_space}
+\input{imported_papers/ACU_JAIR/sections/04_2_action_space}
+\input{imported_papers/ACU_JAIR/sections/05_agent_perspective}
+\input{imported_papers/ACU_JAIR/sections/06_datasets}
+\input{imported_papers/ACU_JAIR/sections/07_evaluation}
+\input{imported_papers/ACU_JAIR/sections/08_challenges}
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Chapter Summary}
+\label{sec:acu_chapter_summary}
+% ─────────────────────────────────────────────────────────────────────────────
+
+This chapter has presented a comprehensive survey and taxonomy of agents for
+computer use, covering 87 original research papers and 33 benchmark datasets
+spanning the period 2018 to 2024. The three-perspective taxonomy — domain,
+interaction, and agent — provides a technology-agnostic organisational
+framework that bridges the previously fragmented literatures on
+reinforcement-learning-based agents and foundation-model-based agents, enabling
+systematic comparison across architectures and training paradigms.
+
+Three structural trends characterise the current state of the field. The field
+is transitioning from specialised, task-specific agents toward foundation-model-based
+agents that leverage pre-trained vision-language models for open-ended reasoning.
+The dominant observation modality is shifting from structured text
+representations, such as HTML and accessibility trees, toward raw screenshots,
+reflecting both the fragility of text-based observations and the improving
+visual capabilities of foundation models. Behaviour cloning from human
+demonstrations has emerged as the dominant learning paradigm among agents that
+do learn from experience, though its data requirements and limited adaptability
+represent significant practical constraints.
+
+The primary finding of the survey, and its central contribution to the
+thesis argument, is the identification of six persistent research gaps that
+recur across the surveyed systems independently of their specific architecture,
+training procedure, or platform:
+
+\begin{enumerate}
+    \item \textbf{Insufficient generalisation.} ACU systems fail reliably when
+    interface layouts, task formulations, or environmental conditions differ
+    from those encountered during training. The failure pattern is not one of
+    missing data but of missing representational structure: systems cannot
+    recombine familiar components in novel configurations.
+
+    \item \textbf{Inefficient learning.} Current systems require large volumes
+    of demonstration data and do not transfer learned behaviour effectively to
+    related tasks. Sample inefficiency is systematic, not incidental, and
+    reflects the absence of structural priors that would make infrequently
+    encountered situations tractable.
+
+    \item \textbf{Limited planning.} Reliable execution of long-horizon tasks
+    requires maintaining a coherent model of task state and anticipating the
+    effects of future actions. Current systems fail along both dimensions, either
+    drifting from the goal over long autoregressive sequences or relying on world
+    models whose predictions diverge exponentially with rollout length.
+
+    \item \textbf{Low task complexity in benchmarks.} Widely used benchmarks
+    evaluate agents on tasks that are systematically simpler than real-world
+    computer use in sequence length, environmental variability, and success
+    criterion complexity. Strong benchmark performance does not reliably predict
+    strong deployment performance.
+
+    \item \textbf{Non-standardised evaluation.} The absence of shared evaluation
+    protocols makes direct comparison between systems unreliable. Reported
+    success rates are not comparable across works, inflating the apparent
+    progress of the field.
+
+    \item \textbf{Disconnect between research and practical conditions.} ACU
+    systems are developed and evaluated in static, deterministic, idealised
+    environments. Real-world deployment introduces dynamic interfaces,
+    non-stationarity from software updates, privacy constraints, and the need
+    for conditional rather than full autonomy — properties that are absent from
+    virtually all existing research settings.
+\end{enumerate}
+
+These six gaps are not independent failures of individual systems. They are
+manifestations of a common pattern: current AI systems exhibit high competence
+within the statistical regime of their training distribution and systematic
+brittleness outside it. The specificity of this pattern demands a specific
+explanation.
+
+The standard response in the field is to attribute the gaps to insufficient
+scale or to benchmark limitations, and to predict that they will close as
+models and datasets grow. The evidence presented in this chapter does not
+support this prediction. The generalisation and planning failures persist in
+the largest and most capable foundation models currently evaluated on ACU
+benchmarks. The benchmark complexity gap is not narrowing: as benchmarks
+become more realistic, the gap between evaluated performance and the minimum
+required for practical deployment remains substantial. And the disconnect
+between research conditions and deployment conditions is structural — it
+reflects assumptions baked into experimental design, not a shortfall in
+model capacity that additional compute can correct.
+
+Part~\ref{part:diagnosis} takes up the question of what these failures do
+indicate. Chapter~\ref{chap:selfattention} establishes, at the level of
+mathematical proof, that the representational geometry produced by
+gradient-based training on standard objectives is determined by the structure
+of the training signal rather than by the causal structure of the world.
+The six gaps identified here are, under this account, predictable consequences
+of a learning paradigm that encodes statistical correlations rather than
+invariant structure. This reframing has direct implications for what kinds of
+interventions can address the gaps — a question taken up in Parts~\ref{part:constraints}
+and~\ref{part:paradigm}.

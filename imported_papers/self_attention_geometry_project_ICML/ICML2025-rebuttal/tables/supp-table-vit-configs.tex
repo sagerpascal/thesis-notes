@@ -1,0 +1,27 @@
+\begin{table}
+%
+\centering
+\begin{tabular}{l|c|c}
+\toprule
+\textbf{Configuration}                    & \textbf{ViT (6 layers)} & \textbf{ViT (12 layers)} \\
+                                          & CIFAR-10                & ImageNet-1k              \\
+\midrule
+%
+\textit{Hidden Size}                      & 512             & 768                  \\
+\textit{Intermediate Size}                & 2048            & 3072                 \\
+\textit{Number of Attention Heads}        & 8               & 12                   \\
+\textit{Number of Hidden Layers}          & 6               & 12                   \\
+\textit{Attention Dropout Probability}    & 0.0             & 0.0                  \\
+\textit{Hidden Activation Function}       & gelu            & gelu                 \\
+\textit{Hidden Dropout Probability}       & 0.0             & 0.0                  \\
+\textit{Layer Normalization Epsilon}      & 1e-6            & 1e-6                 \\
+\textit{Patch Size}                       & 4               & 16                   \\
+\textit{QKV Bias}                         & true            & true                 \\
+\textit{Encoder Stride}                   & 16              & 16                   \\
+%
+\bottomrule
+\end{tabular}
+\caption{Configurations for the 6-layer and 12-layer vision transformer models.}
+%
+\label{tab:vit_configs}
+\end{table}

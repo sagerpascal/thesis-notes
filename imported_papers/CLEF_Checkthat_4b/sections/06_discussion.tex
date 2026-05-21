@@ -1,0 +1,20 @@
+%
+%
+In this paper, we presented a hybrid retrieval pipeline for attributing scientific sources to social media claims. Our system combines BM25 retrieval, dense semantic search with a fine-tuned encoder, and LLM-based cross-encoder re-ranking. Our results on subtask 4b of the CLEF CheckThat! 2025 competition demonstrate the effectiveness of this architecture: We ranked \textbf{1st} on the development set and \textbf{3rd} on the test set. Key findings include:
+
+
+\begin{enumerate}
+\item \textbf{Hybrid retrieval is essential:}  Neither lexical nor semantic retrieval alone was sufficient. BM25 reached MRR@5 of $51.47$\%; the fine-tuned semantic retriever achieved $56.72$\%. Applying a cross-encoder to re-rank top candidates increased MRR@5 to $66.43$\% (a $23.3$ percentage point improvement over the baseline), confirming the benefit of hybrid retrieval followed by learned ranking.
+
+\item \textbf{In-domain fine-tuning improves performance:} Fine-tuning the dense retriever improved MRR@5 by approx. $+2$ percentage points and led to a Precision@100 of $89.21$\%. While pre-trained models perform well out of the box, domain adaptation further improves alignment between informal queries and scientific abstracts.
+
+\item \textbf{Engineering matters:}
+Achieving these results required substantial engineering and experimentation efforts. We optimized hyperparameters, evaluated multiple data augmentation strategies (Appendices~\ref{sec:lexical_exp} and~\ref{sec:prompt_templates}), and evaluated alternative re-ranking models (Appendix~\ref{sec:rerankers}).
+\end{enumerate}
+
+Despite the focus on CLEF’s benchmark task, the proposed architecture is designed with broader applicability in mind. All components are modular and utilize open-source models, eliminating reliance on commercial APIs, thereby enabling deployment on local infrastructure \cite{tuggener_so_2024}. This ensures compatibility with privacy-sensitive or offline environments and facilitates customization.
+
+%Overall, this work contributes a robust and extensible solution for aligning informal claims with formal scientific evidence and offers a template for future retrieval systems targeting evidence-based verification.
+
+\paragraph{Limitations and Future Work.}
+The current pipeline does not incorporate document-level metadata, such as author names, publication venues, or timestamps, which could improve retrieval precision and disambiguation. In addition, we do not integrate external resources such as web search engines or large-scale knowledge bases. Future work could explore metadata-aware retrieval and web-based search strategies to further enhance retrieval performance.

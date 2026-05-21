@@ -1,0 +1,35 @@
+%
+\section{Conclusions}\label{sec:discussion_conclusion}
+Agents for Computer Use (ACUs) represent a rapidly advancing frontier in AI, offering both significant research challenges and substantial practical impact.
+While specialized designs remain viable for narrow, efficiency-critical tasks, the field is undergoing a paradigm shift toward foundation agents to enable the open-ended reasoning required for general computer use.
+Despite the accelerated progress driven by foundation models, many core challenges remain unresolved.
+This work identifies these challenges based on a unifying taxonomy that organizes ACU research across key concepts and establishes a shared vocabulary. Our taxonomy is structured around three complementary perspectives: The \emph{domain perspective}, which characterizes the computing environment; the \emph{interaction perspective}, which defines the observation and action spaces; and the \emph{agent perspective}, which concerns internal structure and learning dynamics. This framework bridges previously disconnected lines of work, from reinforcement learning to prompting-based agents, and provides a technology-agnostic basis for comparison and analysis.
+
+By applying our taxonomy to $\numagents$ ACUs across $\numdatasets$ datasets, we uncover several fundamental limitations in the current landscape of ACU research. Specifically, we identify:
+(1) reliance on structurally inconsistent input modalities that hinder generalization; % insufficient generalization,
+(2) inefficient learning strategies; % inefficient learning
+(3) limited capabilities in planning for executing complex, multi-step tasks successfully; % limited planning, 
+(4) benchmarks that prioritize perception realism over task complexity; % low task complexity in benchmarks
+(5) inconsistent evaluation metrics that obstruct comparability; and % non-standardized evaluation
+(6) a disconnect between experimental assumptions and real-world deployment conditions. % a disconnect between research and practical conditions
+
+To overcome these limitations and advance the ACU field, we recommend:
+(a) adopting image-based observation spaces to support consistent and robust perception;
+(b) pursuing cost-efficient learning strategies that allow better scalability and adaptability;
+(c) advancing policy architectures that support long-horizon reasoning and planning;
+(d) constructing benchmarks that integrate both realistic perception and task complexity;
+(e) standardizing evaluation metrics, especially success rates, to enable fair comparisons; and
+(f) grounding research in realistic assumptions by closely examining deployment conditions.
+
+While limitations (1)–(5) and recommendations (a)–(e) are discussed throughout the main text, the limitation (6) and the recommendation (f) concern real-world discrepancies that are not addressed in the current literature.
+%By grounding our taxonomy on established concepts, we found several open challenges for deploying ACUs, which are absent in the current literature.
+% While these gaps can be found when analyzing scientific history, we argue that real-world deployment introduces further challenges that are not or only partially addressed in current literature.
+First, most ACU systems are built for idealized settings, assuming a deterministic, static, stationary, and episodic environment. 
+However, real computing environments are dynamic, meaning agents must adapt their strategy based on changing perceptions due to other running processes, e.g., notifications obscuring the view. Furthermore, real-world environments are non-stationary, meaning an environment changes over time due to, e.g., application updates (see Appendix \cref{sec:domain_view:nature} for a detailed discussion on such environment discrepancies).
+Second, there are unique privacy considerations: Traditional user education techniques fail, as users cannot control what an autonomous agent might observe and send to an ACU model provider (see Appendix \cref{sec:cp-technical-challenges} for a detailed discussion).
+Third, safety considerations are systematically underexplored.
+Current research focuses solely on full autonomy, but conditional autonomy can increase safety, such as an ACU handing back control to the user for critical decisions (see Appendix \cref{sec:safety} for a detailed discussion).
+
+While our taxonomy offers a structured overview, it has several limitations. We did not include a comprehensive comparison of agent capabilities, as many ACUs support only a subset of benchmarks or tasks within benchmarks and report different metrics, making it infeasible. We also do not explore how specific design choices, such as the selection of a foundation model or RL algorithms, affect performance. The scope is limited to agents using text-based instructions. Although our taxonomy is compatible with dynamic observation-action loops (e.g., those involving video inputs), we focus on static interaction patterns and do not evaluate the taxonomy in dynamic settings such as AndroidWorld \citep{rawles_androidworld_2024}. Furthermore, we intentionally focus on fully disclosed contributions, which excludes some of the recent commercial systems. While we ground our framework in established concepts, some components, such as our definition of agent learning, are computer use specific; it remains open how the field will evolve with respect to them.
+
+Nonetheless, our taxonomy and associated analysis offer a valuable foundation for organizing and advancing ACU research. By integrating diverse perspectives and identifying shared challenges, this work supports a more cohesive, forward-looking research agenda. We hope this work fosters the development of ACUs that are robust, adaptive, and ready for deployment in real-world computing environments, and that the structure and terminology we introduce bring coherence to this currently fragmented field.

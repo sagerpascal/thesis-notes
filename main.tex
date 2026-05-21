@@ -14,9 +14,24 @@
 % Load packages for testing
 \usepackage{blindtext}
 
+
+% Packages by Pascal
+\let\listofalgorithms\relax
+\let\l@algorithm\relax
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tabularx}
+\usepackage{threeparttable}
+\usepackage{longtable}
+\usepackage{xspace}
+\usepackage{enumitem}      % for \setlist — already may be in kaobook, safe to add
+\usepackage[edges]{forest}
+\usetikzlibrary{trees, positioning, calc}
+
 % Load the bibliography package
 \usepackage{kaobiblio}
 \addbibresource{thesis.bib} % Bibliography file
+\addbibresource{imported_papers/ACU_JAIR/cleaned_references.bib}
 
 % Load mathematical packages for theorems and related environments
 \usepackage{kaotheorems}
@@ -26,6 +41,43 @@
 
 % Load pdfpages for the custom title page
 \usepackage{pdfpages}
+
+
+
+% ── Custom commands shared across chapters ────────────────────────────────
+
+% ACU survey counters
+\newcommand{\numagents}{87\xspace}
+\newcommand{\numdatasets}{33\xspace}
+
+% Roman numeral helpers
+\newcommand{\uproman}[1]{\uppercase\expandafter{\romannumeral#1}}
+\newcommand{\lowroman}[1]{\romannumeral#1\relax}
+
+% Citation aliases — biblatex equivalents
+% Only define if not already defined by kaobiblio
+\providecommand{\citet}[1]{\textcite{#1}}
+\providecommand{\citep}[1]{\parencite{#1}}
+
+% \citepeg{key} → (e.g., Author 20XX)
+\NewDocumentCommand{\citepeg}{m}{%
+    \parencite[e.g.,][]{#1}%
+}
+
+% cleveref name overrides — place AFTER kaorefs loads cleveref
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Eq.}{Eqs.}
+\crefname{appendix}{Appendix}{Appendix}
+\Crefname{appendix}{Appendix}{Appendix}
+\crefname{table}{Table}{Table}
+\Crefname{table}{Table}{Table}
+
+
+
 
 \graphicspath{{images/}{./}} % Paths where images are looked for
 
@@ -66,11 +118,11 @@
 
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-\input{sections/01_abstract_en.tex}
+\input{sections/0-1_abstract_en}
 
 \chapter*{Zusammenfassung}
 \addcontentsline{toc}{chapter}{Zusammenfassung}
-\input{sections/02_abstract_de.tex}
+\input{sections/0-2_abstract_de}
 
 %----------------------------------------------------------------------------------------
 %	PREFACE
@@ -121,59 +173,88 @@
 \addpart{The Foundation}
 \pagelayout{margin}
 
-\chapter{Introduction}
+\chapter{Introduction}\label{chap:introduction}
 \margintoc
-\input{sections/11_introduction.tex}
+\input{sections/1-1_introduction}
 
-\chapter{Theoretical Foundations and Background}
+\chapter{Theoretical Foundations and Background}\label{chap:foundations_background}
 \margintoc
-\input{sections/12_related_work.tex}
+\input{sections/2-1_related_work}
 
 %----------------------------------------------------------------------------------------
 %	PART II: THE PROBLEM WITH CURRENT AGENTS
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{The Problem with Current Agents}
+\addpart{The State of Current AI — Identifying Limitations}
 \pagelayout{margin}
 
 
-\chapter{The Agentic Gap}
+\chapter{Agents for Computer Use — A Systematic Survey of Capabilities and Gaps}
 \margintoc
-\input{sections/21_acu_survey.tex}
+\input{sections/3-1_acu_survey}
 
 \chapter{Limitations of Foundation Models}
 \margintoc
-\input{sections/22_llm_benchmark.tex}
+\input{sections/3-2_llm_benchmark}
 
-\chapter[The Failure of Compositionality]{The Failure of Compositionality (COGITAO)}
+\chapter{Compositional Generalization Remains Unsolved}
 \margintoc
-\input{sections/23_cogitao.tex}
-
-\chapter[Looking Under the Hood]{Looking Under the Hood (Attention)}
-\margintoc
-\input{sections/24_attention.tex}
-
+\input{sections/3-3_cogitao}
 
 %----------------------------------------------------------------------------------------
-%   PART III: TWO PATHS TO STRUCTURED REPRESENTATION
+%	PART III: Root Causes
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{Two Paths to Structured Representation}
+\addpart{Root Causes — What Backpropagation Actually Learns}
 \pagelayout{margin}
 
-\chapter{The Bottom-Up Architectural Approach}
+\chapter{The Mathematical Structure of Self-Attention — Symmetry, Directionality, and Statistical Correlation}
 \margintoc
-\input{sections/31_cna.tex}
+\input{sections/4-1_attention}
 
-\chapter{The Top-Down Objective Approach}
-\margintoc
-\input{sections/32_world_models.tex}
 
 %----------------------------------------------------------------------------------------
-%   PART IV: DISCUSSION AND CONCLUSION
+%   PART IV: Mitigating the Limitations — Hard Constraints and Inductive Biases
 %----------------------------------------------------------------------------------------
+
+\pagelayout{wide}
+\addpart{Mitigating the Limitations — Hard Constraints and Inductive Biases}
+\pagelayout{margin}
+
+\chapter{Koopman-JEPA — Enforcing Linear Dynamics for Stable World Models}
+\margintoc
+\input{sections/5-1_koopman_jepa}
+
+\chapter{Input-Space Constraints via Domain Knowledge: Hounsfield Units for CT Segmentation}
+\margintoc
+\input{sections/5-2_hounsfield}
+
+\chapter{Inference-Time Grounding via Hybrid Retrieval}
+\margintoc
+\input{sections/5-3_retrieval}
+
+
+%----------------------------------------------------------------------------------------
+%   PART V: PARADIGM CHANGE
+%----------------------------------------------------------------------------------------
+
+\pagelayout{wide}
+\addpart{A Change of Paradigm — Neuro-Inspired Architectures}
+\pagelayout{margin}
+
+\chapter{The Cooperative Network Architecture — Structured Assemblies as an Alternative to Distributed Representations}
+\margintoc
+\input{sections/6-1_cna}
+
+%----------------------------------------------------------------------------------------
+%   PART VI: DISCUSSION AND CONCLUSION
+%----------------------------------------------------------------------------------------
+
+\pagelayout{wide}
+\addpart{Synthesis and Conclusion}
+\pagelayout{margin}
 
 \pagelayout{wide}
 \addpart{Synthesis}
@@ -181,11 +262,11 @@
 
 \chapter{Discussion}
 \margintoc
-\input{sections/41_discussion.tex}
+\input{sections/7-1_discussion}
 
 \chapter{Conclusion}
 \margintoc
-\input{sections/42_conclusion.tex}
+\input{sections/7-2_conclusion}
 
 \appendix % From here onwards, chapters are numbered with letters, as is the appendix convention
 

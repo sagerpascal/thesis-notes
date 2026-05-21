@@ -1,0 +1,27 @@
+\begin{theorem}
+\label{theo-gradient-directionality}
+%
+(\textbf{Autoregressive training induces directionality})
+Let \( \mathcal{V} = \{t_0, \dots, t_V\} \) be a vocabulary of tokens, and let \( \mathcal{U} \subset \mathcal{V}^N \) denote the sample space of all sequences of length \( N \). Let \( U = \{t_1, \dots, t_N\} \in \mathcal{U} \) be a random variable with \( U \sim P(U) \). Define \( \Pr[t_j = t^*] \) as the marginal probability that the token at position \( j \) equals \( t^* \in \mathcal{V} \).
+%
+Let \( \{\bm{x}_1, \dots, \bm{x}_N\} \) be the token embeddings corresponding to the elements of \( U \), where each embedding \( \bm{x}_i \sim \mathcal{D} \) is drawn i.i.d. from a distribution \( \mathcal{D} \) with zero mean and covariance matrix $\text{Cov}(\bm{x}_i)  = \Sigma$..
+%
+Let \( \bm{W}_{qk} \) be query-key matrix of a self-attention mechanism, and let \( \Delta \bm{W}_{qk} \) denote its gradient update as defined in Proposition~\ref{prop-gradients-self-attention}, computed under an autoregressive objective as in Definition~\ref{def-objective-functions}.
+%
+
+It follows that the contribution of the token \( t^* \) after training satisfies, 
+%
+\begin{equation}
+\frac{\mathbb{E}_{\mathcal{D}}\left[ \|\Delta \bm{w}_{\cdot, k}\|^2 \right]}{\mathbb{E}_{\mathcal{D}}\left[ \|\Delta \bm{w}_{m, \cdot}\|^2 \right]} > 1 
+\quad \forall k, \,\,\forall m\,\, \text{s.t.} \,\, \Sigma_{m,m} < \frac{\mathrm{Tr}(\Sigma)}{d} \,.
+\end{equation}
+%
+Moreover, there exists a scalar \( \gamma \in \mathbb{R}_{>0} \), proportional to the product of the row and column norm variances, $
+\gamma \propto \mathrm{Var}\left(\|\bm{w}_{m,\cdot}\|\right) \cdot \mathrm{Var}\left(\|\bm{w}_{\cdot,k}\|\right)$,
+such that for all \( w > \gamma \),
+\begin{equation}
+    \Pr\left[\|\bm{w}_{\cdot, k}\|^2 > w\right] > \Pr\left[\|\bm{w}_{m, \cdot}\|^2 > w\right] \,,
+\end{equation}
+that is, columns of \( \bm{W}_{qk} \) are more likely than rows to have high norm under autoregressive training, indicating a directional bias in gradient updates.
+%
+\end{theorem}

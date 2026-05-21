@@ -1,0 +1,187 @@
+
+\section{The Field of ACUs}
+\label{sec:field}
+
+This section formalizes ACUs and outlines our taxonomy perspectives.
+
+\subsection{Definitions}\label{sec:problem_statement}
+In the following, we describe ACUs using well-established intelligent agent notation \citep{russell_artificial_2022,sutton_reinforcement_2018} to provide a consistent basis for discussion in the upcoming sections. Human users interact with ACUs by issuing a text-based instruction $i$, which the agent must fulfill through actions in a computer environment. To illustrate this interaction model, \cref{fig:ACU-taxonomy} visualizes the key components of an ACU and its interface with the environment, including how it perceives observations and selects actions.
+
+
+At each time $t$, the computer environment is in a state $s_t \in \mathcal{S}$. 
+The ACU receives only a partial view, called an \emph{observation} $o_t \in \mathcal{O}$. 
+$\mathcal{S}$ denotes the state and $\mathcal{O}$ the observation space, respectively.
+For example, $o_t$ could be a screenshot of the current screen, only showing the foreground application, whereas $s_t$ would encompass all running computer processes.
+Based on $o_t$ and instruction $i$, the ACU selects an \emph{action} $a_t \in \mathcal{A}$ (action space), such as a mouse click, keypress, or a higher-level command \citepeg{shi_world_2017, wang_officebench_2024}.
+
+In practice, ACUs often \emph{simplify} observations, denoted $o_t \rightarrow o_t^*$,  to reduce complexity by, for example, downscaling or cropping UI screenshots \citepeg{chen_webvln_2024}.
+Besides using simplified observation, ACUs can also predict abstract actions.
+Such actions must be converted in a \emph{grounding} process $a_t^* \rightarrow a_t$ from abstract actions $a_t^*$ into executable actions $a_t \in \mathcal{A}$.
+Grounding is typically applied when a large language model (LLM) is used for planning, requiring the agent to convert high-level descriptions such as \texttt{click submit button} into executable commands such as \texttt{click(x,y)}, where \texttt{x} and \texttt{y} are screen coordinates of the submit button \citepeg{gao_assistgui_2024}.
+
+The ACU’s behavior is defined by a (typically stochastic) policy $\pi$. In its simplest form, the policy determines the action solely based on the current observation $o_t$ and the instruction $i$:
+%
+\begin{equation}
+a_t \sim \pi(\ \cdot\ |\ o_t,\ i\ ) \label{eq:simple-policy}
+\end{equation}
+%
+Interacting over several steps yields a trajectory $\tau = \bigl((o_0,a_0), (o_1, a_1), ... \bigr)$, ending when the instruction is fulfilled or a step limit is reached. 
+%
+Effective computer control often requires remembering previous observations $(o_0, ..., o_{t-1})$, making adding a memory component to the policy essential.
+% Complex instructions require planning, i.e., to think about future consequences of potential actions in the environment $s_{t+1}, ...$ before acting out $a_t$.
+
+
+\subsection{A Comprehensive Taxonomy}\label{sec:agent_dimensions}
+
+\definecolor{domain_color}{RGB}{144,193,157} % darker green
+\definecolor{domain_color_bg}{RGB}{214,239,220} % lighter green
+
+\definecolor{observation_space_color}{RGB}{110,164,220} % darker blue
+\definecolor{observation_space_color_bg}{RGB}{219,235,250} % light sky blue
+
+\definecolor{action_space_color}{RGB}{239,156,91} % vivid orange
+\definecolor{action_space_color_bg}{RGB}{254,230,209} % light orange
+
+\definecolor{learning_strategy_color}{RGB}{200,90,120} % deep pink/magenta
+\definecolor{learning_strategy_color_bg}{RGB}{245,210,220} % soft rose
+\definecolor{learning_strategy_color_General_Pre_training}{RGB}{170,70,130}
+\definecolor{learning_strategy_color_General_Pre_training_bg}{RGB}{235,210,230}
+\definecolor{learning_strategy_color_Environment_Adaption}{RGB}{190,65,115}
+\definecolor{learning_strategy_color_Environment_Adaption_bg}{RGB}{240,200,220}
+\definecolor{learning_strategy_color_Episodic_improvement}{RGB}{210,100,130}
+\definecolor{learning_strategy_color_Episodic_improvement_bg}{RGB}{250,225,230}
+
+\definecolor{policy_color}{RGB}{220,120,110}
+\definecolor{policy_color_bg}{RGB}{248,220,215}
+
+\definecolor{agent_color_Reinforce_Agent}{RGB}{125,175,210}
+\definecolor{agent_color_Reinforce_Agent_bg}{RGB}{210,230,245}
+\definecolor{agent_color_Foundation_Agent}{RGB}{250,170,100}
+\definecolor{agent_color_Foundation_Agent_bg}{RGB}{255,230,200}
+\definecolor{agent_color}{RGB}{230,200,200}
+\definecolor{agent_color_bg}{RGB}{245,235,235}
+
+\definecolor{interaction_color}{RGB}{220,220,220}
+\definecolor{interaction_color_bg}{RGB}{245,245,245}
+
+
+%\renewcommand*{\arraystretch}{1.4} % cell padding
+\begin{figure}[p]
+    \begin{forest}
+        forked edges,
+        for tree={
+            grow=east, % Grow tree from left to right
+            draw, % Draw edges
+            rounded corners, % Rounded corners for boxes
+            node options={align=center, font=\scriptsize}, % Align text to center, smaller font size
+            edge={thick}, % Thicker edges for better visibility
+            s sep=1mm, % Horizontal spacing between siblings
+            l sep=4mm, % Vertical spacing between levels
+            %xshift=2mm, % Nudge boxes to prevent overlap
+            minimum width=2.5cm, % Set consistent box width
+            anchor=west,
+            fork sep=2mm,
+            inner sep=2pt,
+            parent anchor=east,  % Anchor parent to the east (right)
+            child anchor=west     % Anchor child to the west (left)
+        },
+        [Domain Persp. \\ \textit{(\Cref{sec:domain_view}, p.~\pageref{sec:domain_view})}, fill=domain_color_bg
+            [Android \\ \textit{(\Cref{sec:domain_view}, p.~\pageref{sec:domain_view})}, fill=domain_color]
+            [Web \\ \textit{(\Cref{sec:domain_view}, p.~\pageref{sec:domain_view})}, fill=domain_color]
+            [Personal Computer \\ \textit{(\Cref{sec:domain_view}, p.~\pageref{sec:domain_view})}, fill=domain_color]
+        ]
+    \end{forest}
+    \par\vskip 4mm
+    \begin{forest}
+        forked edges,
+        for tree={
+            grow=east, % Grow tree from left to right
+            draw, % Draw edges
+            rounded corners, % Rounded corners for boxes
+            node options={align=center, font=\scriptsize}, % Align text to center, smaller font size
+            edge={thick}, % Thicker edges for better visibility
+            s sep=1mm, % Horizontal spacing between siblings
+            l sep=4mm, % Vertical spacing between levels
+            %xshift=2mm, % Nudge boxes to prevent overlap
+            minimum width=2.5cm, % Set consistent box width
+            anchor=west,
+            fork sep=2mm,
+            inner sep=2pt,
+            parent anchor=east,  % Anchor parent to the east (right)
+            child anchor=west     % Anchor child to the west (left)
+        },
+        [Interaction Perspective \\ \textit{(\Cref{sec:interaction_view}, p.~\pageref{sec:interaction_view})}, fill=interaction_color_bg
+            [Observation Spaces \\ \textit{(\Cref{sec:obervation_space}, p.~\pageref{sec:obervation_space})}, fill=observation_space_color_bg
+                [Image \\ \textit{(\Cref{sec:obervation_space_image}, p.~\pageref{sec:obervation_space_image})}, fill=observation_space_color_bg]
+                [Text \\ \textit{(\Cref{sec:obervation_space_image_text}, p.~\pageref{sec:obervation_space_image_text})}, fill=observation_space_color_bg]
+                [Bi-Modal \\ \textit{(\Cref{sec:obervation_space_bimodal}, p.~\pageref{sec:obervation_space_bimodal})}, fill=observation_space_color_bg]
+                [Indirect \\ \textit{(\Cref{sec:obervation_space_indirect}, p.~\pageref{sec:obervation_space_indirect})}, fill=observation_space_color_bg]
+            ]
+            [Action Spaces \\ \textit{(\Cref{sec:action_space}, p.~\pageref{sec:action_space})}, fill=action_space_color_bg
+                [Mouse \& Keyboard \\ \textit{(\Cref{sec:action_space_mouse}, p.~\pageref{sec:action_space_mouse})}, fill=action_space_color_bg]
+                [Direct UI Access \\ \textit{(\Cref{sec:action_space_direct}, p.~\pageref{sec:action_space_direct})}, fill=action_space_color_bg]
+                [Task-Tailored Actions \\ \textit{(\Cref{sec:action_space_task}, p.~\pageref{sec:action_space_task})}, fill=action_space_color_bg]
+                [Executable Code \\ \textit{(\Cref{sec:action_space_code}, p.~\pageref{sec:action_space_code})}, fill=action_space_color_bg]
+                [Action Grounding \\ \textit{(\Cref{sec:action_space_grounding}, p.~\pageref{sec:action_space_grounding})}, fill=action_space_color_bg]
+            ]
+        ]
+    \end{forest}
+    \par\vskip 4mm
+    \begin{forest}
+        forked edges,
+        for tree={
+            grow=east, % Grow tree from left to right
+            draw, % Draw edges
+            rounded corners, % Rounded corners for boxes
+            node options={align=center, font=\scriptsize}, % Align text to center, smaller font size
+            edge={thick}, % Thicker edges for better visibility
+            s sep=1mm, % Horizontal spacing between siblings
+            l sep=4mm, % Vertical spacing between levels
+            %xshift=2mm, % Nudge boxes to prevent overlap
+            minimum width=2.5cm, % Set consistent box width
+            anchor=west,
+            fork sep=2mm,
+            inner sep=2pt,
+            parent anchor=east,  % Anchor parent to the east (right)
+            child anchor=west     % Anchor child to the west (left)
+        },
+        [Agent Perspective \\ \textit{(\Cref{sec:conceptional_view}, p.~\pageref{sec:conceptional_view})}, fill=agent_color_bg
+                [Foundation Agents \\ \textit{(\Cref{sec:foundation_agent}, p.~\pageref{sec:foundation_agent})}, fill=agent_color_bg]
+                [Specialized Agents \\ \textit{(\Cref{sec:reinforce_agent}, p.~\pageref{sec:reinforce_agent})}, fill=agent_color_bg]
+                [Agent Policy \\ \textit{(\Cref{sec:agent_policy}, p.~\pageref{sec:agent_policy})}, fill=policy_color_bg
+                    [Memoryless \\ \textit{(\Cref{sec:agent_policy_memoryless}, p.~\pageref{sec:agent_policy_memoryless})}, fill=policy_color_bg]
+                    [History-Based \\ \textit{(\Cref{sec:agent_policy_history}, p.~\pageref{sec:agent_policy_history})}, fill=policy_color_bg]
+                    [State-Based \\ \textit{(\Cref{sec:agent_policy_state}, p.~\pageref{sec:agent_policy_state})}, fill=policy_color_bg]
+                    [Mixed \\ \textit{(\Cref{sec:agent_policy_mixed}, p.~\pageref{sec:agent_policy_mixed})}, fill=policy_color_bg]
+                ]
+                [Learning Strategy \\ \textit{(\Cref{sec:learning_strategy}, p.~\pageref{sec:learning_strategy})}, fill=learning_strategy_color_bg
+                    [General Pre-Training \\ \textit{(\Cref{sec:learning_strategy_pretraining}, p.~\pageref{sec:learning_strategy_pretraining})}, fill=learning_strategy_color_General_Pre_training_bg]
+                    [Environment Learning \\ \textit{(\Cref{sec:environment_adaption}, p.~\pageref{sec:environment_adaption})}, fill=learning_strategy_color_Environment_Adaption_bg
+                        [Reinforc. Learning \\ \textit{(\Cref{sec:environment_adaption_rl}, p.~\pageref{sec:environment_adaption_rl})}, fill=learning_strategy_color_Environment_Adaption_bg]
+                        [Behavioral Cloning \\ \textit{(\Cref{sec:environment_adaption_bc}, p.~\pageref{sec:environment_adaption_bc})}, fill=learning_strategy_color_Environment_Adaption_bg]
+                        [Long-Term Memory \\ \textit{(\Cref{sec:environment_adaption_ltm}, p.~\pageref{sec:environment_adaption_ltm})}, fill=learning_strategy_color_Environment_Adaption_bg]
+                    ]
+                    [Episodic Improvement \\ \textit{(\Cref{sec:episodic_improvement}, p.~\pageref{sec:episodic_improvement})}, fill=learning_strategy_color_Episodic_improvement_bg
+                        [Instruction Tuning \\ \textit{(\Cref{sec:episodic_improvement_instruction}, p.~\pageref{sec:episodic_improvement_instruction})}, fill=learning_strategy_color_Episodic_improvement_bg]
+                        [Demonstrations \\ \textit{(\Cref{sec:episodic_improvement_demostrations}, p.~\pageref{sec:episodic_improvement_demostrations})}, fill=learning_strategy_color_Episodic_improvement_bg]
+                        [Planning \\ \textit{(\Cref{sec:episodic_planning}, p.~\pageref{sec:episodic_planning})}, fill=learning_strategy_color_Episodic_improvement_bg]
+                    ]
+                ]
+            ]
+    \end{forest}
+    \caption{The taxonomy of instruction-based ACUs is structured by three main perspectives and their components. The respective colors will be used throughout this paper to help easily associate content with each component.}
+    \Description{
+    Taxonomy overview of instruction-based agents for computer use (ACUs) structured by three perspectives. The figure presents a hierarchical taxonomy that organizes ACUs from three complementary perspectives: domain, interaction, and agent. The domain perspective categorizes ACUs by target environment, including Android, web, and personal computers. The interaction perspective decomposes the agent–environment interface into observation and action spaces. Observation spaces include modalities such as image, text, bi-modal, and indirect signals. Action spaces encompass various control modalities, including mouse and keyboard input, direct user interface access, task-specific actions, executable code, and action grounding methods. The agent perspective outlines the internal components of ACUs. It distinguishes between foundation agents that rely on pre-trained foundation models and specialized agents with custom policies. It also breaks down agent policy types into memoryless, history-based, state-based, and mixed. Finally, it details learning strategies in terms of general pre-training, environment-specific learning (via reinforcement learning, behavioral cloning, and long-term memory), and episodic improvement (including instruction tuning, demonstrations, and planning). This taxonomy serves as a conceptual scaffold for the survey and introduces a novel organizational framework.
+    }
+    \label{fig:framework}
+\end{figure}
+%
+\Cref{fig:framework} introduces our proposed taxonomy, which is organized around three complementary perspectives (each of which is explored in detail in the following sections).
+The \emph{domain perspective} (\Cref{sec:domain_view}) focuses on the properties and interfaces of computer environments. It identifies commonalities in observation and action types across domains.
+The \emph{interaction perspective} (agent $\leftrightarrow$ environment) (\Cref{sec:interaction_view}) describes how agents interact with their environments. It formalizes the observation space $\mathcal{O}$ and action space $\mathcal{A}$ used by ACUs and discusses techniques for simplifying observations and action grounding.
+The \emph{agent perspective} (\Cref{sec:conceptional_view}) examines the internal structure of an ACU. We distinguish two main agent designs, identify three typical learning phases, and outline core components for acting, memory, and planning.
+
+Our taxonomy builds on the agent-environment framework central to intelligent agent theory \citep{russell_artificial_2022,sutton_reinforcement_2018} and adopts well-established, domain-agnostic concepts, such as observation spaces and policies, whenever possible.
+ACU-specific characteristics are categorized based on determining overarching patterns and concepts across the ACU literature.
+
+%This framework offers a unified lens through which instruction-based ACUs can be analyzed along the three key dimensions of \emph{domain}, \emph{interation}, and \emph{agent}. By decomposing the field into clearly defined components, the taxonomy facilitates comparative analysis of existing systems and informs the principled design of future agents.

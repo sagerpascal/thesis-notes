@@ -1,0 +1,31 @@
+\begin{table}[t]
+\caption{Final training and evaluation metrics for ViT models on CIFAR-10 \citep{krizhevsky2009learning} and ImageNet-1k \citep{deng_imagenet_2009}, trained with and without symmetric initialization.
+%
+Evaluation metrics include final loss and top-1 accuracy. For each dataset, we compare models trained with standard initialization and with symmetric initialization.
+%
+}
+\label{table:vit-symm-results}
+\vskip 0.15in
+\begin{center}
+\begin{small}
+\begin{sc}
+\begin{tabular}{lccc}
+\toprule
+Dataset & Train Loss & Eval Loss & Eval Accuracy \\
+\midrule\midrule
+\textbf{CIFAR-10} & & & \\
+\midrule
+ViT 6-layers & 1.07 & 0.40 & {0.90} \\
+ViT 6-layers (+ symm.) & {1.08} & {0.42} & 0.89 \\
+\midrule
+\textbf{ImageNet-1k} & & & \\
+\midrule
+ViT 12-layers & {2.49} & 1.97 & {0.76} \\
+ViT 12-layers (+ symm.) & {2.49} & {1.96} & {0.76} \\
+\bottomrule
+\end{tabular}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\end{table}

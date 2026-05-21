@@ -1,0 +1,66 @@
+\begin{proof}
+%
+Let $U = \{t_1, \dots, t_N\}$ be a sequence of tokens with the embedding of every $i$-th token be given by $\bm{x}_i \in \mathbb{R}^d$.
+%
+Proposition \ref{prop-gradients-self-attention} shows that the implicit weight update can be decomposed with two equivalent regrouping of the double summations, as follows,
+%
+\begin{equation}
+\Delta \bm{W}_{qk} = \sum_{(i,j) \in U} \beta_{ij}\bm{x}_i\bm{x}_j^T 
+= \sum_j \left(\sum_{i\in \mathcal{P}_j} \beta_{ij}\bm{x}_i\right)\bm{x}^\top_j
+= \sum_i \bm{x}_i\left(\sum_{i\in \mathcal{C}_i} \beta_{ij}\bm{x}^\top_j\right)\,,
+\end{equation}
+%
+where $\mathcal{P}_{i} \subset U$ is the set of tokens predicted by a given token $t_i$, while $\mathcal{C}_{j} \subset U$ is the set of tokens that predict a given token $t_j$.
+%
+%
+We neglect any constant of proportionality - such as a learning rate - for simplicity, and we do not assume any specific structure on $\mathcal{P}_i$ and $\mathcal{C}_j$ (autoregressive training, bidirectional training, or others).
+%
+First, the contribution of $t^* \in U$ to the weight update when $t^*$ is used as context to predict a set of tokens $\mathcal{P}_{t^*} \subset U$ is
+%%
+\begin{equation}
+\Delta \bm{W}_{qk} \bigg|_{t_j = t^*}
+= \left(\sum_{i\in \mathcal{P}_{t^*}} \beta_{i*}\bm{x}_i\right)\bm{x}^\top_{t^*}\,.
+\end{equation}
+%
+The associated weight update of the $k$-th column is then given by
+%
+\begin{equation}
+    \Delta \bm{w}_{\cdot, k} \bigg|_{t_j = t^*} = 
+    \left(\sum_{i\in \mathcal{P}_{t^*}} \beta_{i*}\bm{x}_i\right)[\bm{x}_{t^*}]_k
+    =
+    [\bm{x}_{t^*}]_k \left(\sum_{i \in \mathcal{P}_{t^*}}\beta_{i*}\bm{x}_i\right)\,,
+\end{equation}
+%
+while the update of the $m$-th row is
+%
+\begin{equation}
+    \Delta \bm{w}_{m, \cdot} \bigg|_{t_j = t^*} = \left(\sum_{i \in \mathcal{P}_{t^*}}\beta_{i*}[\bm{x}_i]_m\right)\bm{x}_{t^*} \,.
+\end{equation}
+%
+A complementary argument can be made when predicting a given token $t^*$ from a set of tokens $\mathcal{C}_{t^*}$.
+%
+Indeed, the contribution to the weight update when $t^*$ is predicted by set of tokens $\mathcal{C}_{t^*} \subset U$ is given by 
+%
+\begin{equation}
+\Delta \bm{W}_{qk} \bigg|_{t_i = t^*}
+= \left(\sum_{j\in \mathcal{C}_{t^*}} \beta_{*j}\bm{x}_{t^*}\right)\bm{x}_j^\top\,.
+\end{equation}
+%
+The associated weight update of the $k$-th column is then given by
+%
+\begin{equation}
+    \Delta \bm{w}_{k, \cdot} \bigg|_{t_i = t^*} = \left(\sum_{j \in \mathcal{C}_{t^*}}\beta_{*j}[\bm{x}_j]_k\right)\bm{x}_{t^*} \,,
+\end{equation}
+%
+while the update of the $m$-th row is
+%
+\begin{equation}
+    \Delta \bm{w}_{m, \cdot} \bigg|_{t_i = t^*} =  \left(\sum_{j \in \mathcal{C}_{t^*}}\beta_{*j}\bm{x}_j^\top\right) [\bm{x}_{t^*}]_m
+    = [\bm{x}_{t^*}]_m \left(\sum_{j \in \mathcal{C}_{t^*}}\beta_{*j}\bm{x}_j^\top\right)\,.
+\end{equation}
+%
+Therefore, the weight update of each column (row) when a set of tokens predicts $t^*$ is equivalent to the weight update of each row (column) when $t^*$ is used to predict a set of tokens.
+%
+This concludes the proof.
+%
+\end{proof}

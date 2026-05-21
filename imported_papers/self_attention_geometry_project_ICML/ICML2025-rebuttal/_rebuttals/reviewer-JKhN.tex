@@ -1,0 +1,81 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,bindingoffset=0.in,left=.8in,right=.8in,top=1in,bottom=1in,
+            footskip=.25in]{geometry}
+\usepackage{tikz-cd}
+
+\begin{document}
+
+We thank the reviewer for the detailed and constructive feedback provided. 
+%
+\\\\
+%
+Below, we address the reviewer’s first question, along with the related concerns highlighted as potential weaknesses.
+% 
+\\\\
+%
+\textbf{1.} The aim of Proposition 2.1 was to highlight the connection between bilinear forms and the implicit matrix product $\mathbf{W}_{qk}$, emphasizing that accurate token prediction relies on learning an effective bilinear projection in the embedding space. %This is part of the motivation for our focus on the implicit weight updates of $\mathbf{W}_{qk}$.
+However,  we will revise Section 2 to include a clearer presentation of Theorems 2.3 and 2.4 (together with their assumptions and implications), and we will remove Proposition 2.1 and instead integrate its key points into the main text. This revision will strengthen the narrative and make better use of the available space in the manuscript. Specifically, we will keep the standard definition of self-attention in Section 2.1 and keep Equation (3) to connect it later with Equations (8), (9), and Figure 1. We will retain the reference to Section A.1 for relevant definitions and remove the proof of Proposition 2.1.
+%
+\\\\
+%
+Next, we address the other questions raised by the reviewer:
+%
+\\\\
+%
+%
+% Results we can report:
+%========================
+%
+% Wikipedia after 123k steps
+%    No Symmetric: 0.2151
+%    Symmetric:    0.1874  -> Speedup: (78600 steps) -> 56.5%
+%
+% Jigsaw after 184k seps
+%    No Symmetric: 0.8113
+%    Symmetric:    0.7612  -> Speedup: (165800 steps) -> 11.0%
+%
+% Red Pajama after 140k seps
+%    No Symmetric: 0.2261
+%    Symmetric:    0.2058  -> Speedup: (101600 steps) -> 37.8%
+%
+%
+\textbf{2.} We thank the reviewer for raising these points. To address the first point, we conducted additional experiments using larger models and observed a consistent training speed-up, in line with our previous results. Specifically, we trained a BERT-large model on the same three datasets used for BERT-mini and BERT-base, that is, Jigsaw, Wikipedia, and Red Pajama. While our full training runs are set to 200k update steps, the current results are based on intermediate training steps.
+For Wikipedia, after 123k steps, we observed a reduction in final loss from 0.2151 (no symmetric initialization) to 0.1874 (symmetric initialization), and a training speed-up of 56.5\%.
+For Jigsaw, after 184k steps, the loss decreased from 0.8113 to 0.7612, with a speed-up of 11.0\%.
+Similarly, for Red Pajama, after 140k steps, the loss improved from 0.2261 to 0.2058, and a speed-up of 37.8\%.
+We will include these results in Table 1 of the revised manuscript.
+%
+We would like to highlight two key observations from these experiments. First, we found a clear positive correlation between increased symmetry from symmetric initialization and both faster training and lower final loss. This trend is consistent across small, medium, and large model sizes. Second, while the reviewer correctly notes a smaller relative gain in speed-up from BERT-mini to BERT-base, this is expected due to neural scaling laws (e.g., Kaplan et al., 2020), making it harder to improve by a larger margin (in terms of absolute values)
+%
+Regarding the second point, we conducted preliminary experiments on training Vision Transformers on the CIFAR-10 and ImageNet-1k datasets.
+%
+We did not observe a significant speed-up with these specific experiments. Nonetheless, we hypothesize that further analysis is necessary to check if symmetric initialization can speed up the training of vision Transformers.
+%
+%We will include the plots showing these correlations in the revised Figure S5.
+%
+\\
+%
+\textbf{3.} We have conducted experiments to enforce symmetry across layers by adding a regularization loss term, as follows:
+%
+\[
+\mathcal{L}_{reg} = \frac{\| \mathbf{W}^l_{qk}\|}{\| {\mathbf{W}^l_{qk}}_s\|} \quad \forall l \in [0,L]\,,
+\]
+%
+where $\| {\mathbf{W}^l_{qk}}_s\|$ is the symmetric component of the $\mathbf{W}_{qk}$ matrix.
+%
+However, this did not lead to noticeable improvements in training speed or final loss compared to the baseline. While we see training constraints that promote symmetry as a promising direction for future work, the specific regularization method we tested was not effective.
+%
+\\
+\textbf{4.} We thank the reviewer for raising this important point. In our current work, we have successfully explored methods to exploit symmetry. We are investigating several approaches to leverage column dominance to improve autoregressive training. These ongoing experiments will be fully addressed and presented in a dedicated future study.  
+% 
+\\\\
+%
+On the other comments and suggestions, we thank the reviewer for pointing out 3 typos in the manuscript. We will revise the manuscript accordingly.
+%
+\\\\
+%
+
+
+\newpage
+
+\end{document}

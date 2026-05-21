@@ -1,0 +1,54 @@
+%
+%
+The CLEF CheckThat! 2025 Subtask 4b evaluates systems using \emph{mean reciprocal rank at $5$ (MRR@5)}, which reflects how highly the correct source is ranked among the top five retrieved documents. Since MRR@5 is sensitive to ranking order, we prioritize optimizing the lexical and semantic retrievers for \emph{precision}.
+Unlike MRR, Precision@$k$ measures the proportion of relevant documents in the top-$k$ results regardless of their order, ensuring that each retrieval stage yields high-quality candidate sets suitable for downstream re-ranking.
+
+All experiments were conducted on the official datasets provided by the task organizers \cite{clef-checkthat:2025:task4}. The corpus includes $7,718$ documents. The development set comprises $1,400$ queries, and the test set contains $1,446$ queries.
+Our complete system achieves an MRR@5 score of $76.46$\% on the development set and $66.43$\% on the test set.
+Table~\ref{tab:performance_dev} summarizes development and test set results across individual and combined retrieval stages. We evaluate MRR@1 and MRR@5, along with Precision@30 and Precision@100\footnote{These metrics correspond to the best-performing configuration: BM25 returns the top 30 documents, and the semantic retriever contributes the top 100.}.
+Although the absolute performance on the development set is generally higher than on the test set by approximately $10$ percentage points, the relative gains achieved through our methods, such as pre-processing and fine-tuning, are consistent across both sets.
+%
+\begin{table}
+  \caption{Performance comparison on the development and test sets across retrieval and re-ranking stages. Precision is not reported for the re-ranking stage, and Elasticsearch was only evaluated on the development set. Best results in each category are in bold. ``FT'' denotes fine-tuning.}
+  \label{tab:performance_dev}
+  \begin{tabular}{lcc|cc|cc|cc}
+    \toprule
+     & \multicolumn{4}{c}{\textbf{DEVELOPMENT SET}} & \multicolumn{4}{c}{\textbf{TEST SET}}\\
+     \cmidrule(lr){2-5} \cmidrule(lr){6-9}
+     & \multicolumn{2}{c}{\textbf{MRR@k (\%)}} & \multicolumn{2}{c}{\textbf{Precision@k (\%)}\phantom{m}}
+     & \multicolumn{2}{c}{\phantom{m}\textbf{MRR@k (\%)}} & \multicolumn{2}{c}{\textbf{Precision@k (\%)}}\\
+     \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+      \textbf{Approach} & \textbf{k=1} & \textbf{k=5} & \textbf{k=30} & \textbf{k=100}& \textbf{k=1} & \textbf{k=5} & \textbf{k=30} & \textbf{k=100} \\
+    \midrule
+    \multicolumn{9}{c}{Lexical Retrieval (BM25)} \\
+    \midrule
+    BM25 baseline & 50.50 & 55.18 & 72.43 & 78.36 & 38.11 & 43.11 & 61.48 & 69.43\\
+    \textbf{BM25 + pre-processing} & \textbf{57.50} & \textbf{62.19} & \textbf{79.86} & \textbf{85.14}  & \textbf{45.57} & \textbf{51.47} & \textbf{71.78} & \textbf{79.25}\\
+    \midrule
+    \multicolumn{9}{c}{Semantic Retrieval (FAISS + cosine)} \\
+    \midrule
+    INF-Retriever-v1 & 58.66 & 65.21 & 86.50 & 92.04  & 47.23 & 54.48 & 79.88 & 87.28\\
+    \textbf{INF-Retriever-v1 + FT} & \textbf{60.86} & \textbf{67.19} & \textbf{87.86} & \textbf{93.12}  & \textbf{49.93} & \textbf{56.72} & \textbf{81.95} & \textbf{89.21}\\
+    \midrule
+    \multicolumn{9}{c}{Entire Pipeline} \\
+    \midrule
+    Elasticsearch with RRF & 63.72 & 69.35 & - & -  & - & - & - & -\\
+    \textbf{Pipeline w. re-ranking} & \textbf{71.92} & \textbf{76.46} & - & -  & \textbf{60.37} & \textbf{66.43} & - & -\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+\paragraph{Lexical Retrieval.}
+Our BM25 retriever with additional normalization and subword tokenization yields an $8.4$-point gain in MRR@5 and a $10.3$-point gain in Precision@30 over the official baseline on the test set, similar to the improvements observed on the development set ($7.0$ points in MRR@5, $7.4$ points in Precision@30). Our preprocessing reduces noise and increases n-gram overlap, leading to better alignment between informal social media posts and formal scientific documents. 
+
+
+\paragraph{Semantic Retrieval.}
+On the development set, employing \texttt{INF-Retriever-v1} yields an absolute improvement of $10.03$ percentage points in MRR@5 over the BM25 baseline. Fine-tuning the retriever further increases MRR@5 by $1.98$ points, reaching a final score of $67.19$\%. In terms of Precision@100, the base model achieves a $13.7$-point gain compared to the BM25 baseline, with fine-tuning contributing an additional $1.1$-point improvement. These gains are similar on the test set: \texttt{INF-Retriever-v1} improves MRR@5 by $11.4$ points over the BM25 baseline, and fine-tuning adds a further $2.2$-point gain, culminating in an MRR@5 of $56.72$\%. Precision@100 follows a similar trend, with respective gains of $17.85$ and $1.93$ percentage points. These consistent improvements across both development and test splits highlight the effectiveness and robustness of semantic retrieval, particularly when fine-tuning is applied.
+We also experimented with data augmentation techniques, including HyDE-generated queries and alternative document variants. However, these did not yield further gains. A discussion on data augmentation is provided in Appendix~\ref{sec:prompt_templates}.
+
+\paragraph{Re-Ranking.}
+Our complete pipeline with \textit{bge-reranker-v2-gemma} as re-ranker achieves an MRR@5 of $76.46$\% on the development set, providing a $+9.3$ percentage points gain over our best individual retrieval method.
+To isolate the effectiveness of our re-ranking approach, we compare it against a hybrid baseline using Elasticsearch (see Appendix~\ref{sec:elastic_search} for implementation details). Similar to our pipeline, this baseline uses BM25 for keyword search and the fine-tuned embedding model for semantic search, followed by reciprocal rank fusion (RRF) for re-ranking \cite{cormack_reciprocal_2009}. Although RRF provides a small boost over standalone retrieval ($+2.2$ percentage points), it underperforms the cross-encoder by $7.1$ percentage points, highlighting the added value of learning-to-rank methods.
+
+On the test set, our pipeline achieves $66.43$\% MRR@5, with the re-ranker achieving similar improvements of $+9.7$ percentage points over the best individual retrieval method, confirming that these gains generalize across datasets.

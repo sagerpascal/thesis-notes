@@ -1,0 +1,51 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,bindingoffset=0.in,left=.8in,right=.8in,top=1in,bottom=1in,
+            footskip=.25in]{geometry}
+\usepackage{tikz-cd}
+
+\begin{document}
+
+We thank the reviewer for the careful, detailed, and valuable input. First, we address the weaknesses raised by the reviewer:
+%
+\\
+%
+\textbf{1.} We acknowledge that we did not evaluate performance on real-world deployments. However, our results demonstrate that symmetric initialization accelerates the training of base models and allows for reaching lower loss values at the end of training. Typically, lower loss implies better downstream performance, although we have not explicitly tested this. Our primary claim is that symmetric initialization improves training speed rather than downstream accuracy. Nevertheless, our results suggest promising benefits for downstream tasks, motivating further investigation in future research.
+%
+\\
+%
+\textbf{2.} We thank the reviewer for highlighting this point. Although we believe that the simplicity of our mathematical derivation is one of its strengths, we agree that the clarity of some notations could be improved. We will revise our proofs accordingly, specifically Proposition A.10.
+%
+\\\\
+%
+Next, we address the questions raised by the reviewer:
+%
+\\
+%
+\textbf{1.} We have conducted symmetric initialization experiments on autoregressive models (4 layers). Our observations indicate that these models quickly lose their initial symmetry, eventually converging to $W_{qk}$ matrices with an average symmetry score of zero. Furthermore, we observed no significant improvement in training speed compared to standard initialization. In contrast, as shown in the manuscript, encoder-only models clearly benefited from symmetric initialization, exhibiting faster training and higher overall symmetry scores.
+%
+\\
+%
+\textbf{2.} We thank the reviewer for raising this interesting point. We have not yet explored how to extend our mathematical framework to cross-attention mechanisms. 
+%Cross-attention, typically used in encoder-decoder models, involves a combination of bidirectional and autoregressive masking, which violates the assumptions underlying Theorems 2.3 and 2.4 in their current form. 
+Nonetheless, our empirical results show that the encoder components of encoder-decoder models consistently exhibit higher symmetry scores than the decoder components, and this difference holds across models of varying sizes. 
+%As noted in the manuscript, the difference in directionality scores between encoder and decoder parts is less evident. 
+This evidence suggests that the mathematical analysis can potentially be extended to cross-attention, at least for the symmetry property. We refer the reviewer to Figure S2 in the supplementary material for further details.
+%
+\\
+%
+\textbf{3.} In the manuscript, we demonstrate that a simple and easy-to-implement modification (applied at the initialization level rather than the architectural level) can significantly accelerate training in encoder-only models.  Additionally, our results highlight that the implicit weight updates of the $W_{qk}$ matrix encode essential structures for Transformer training. We hypothesize that architectural designs that better preserve and reinforce these structures in both the column and row spaces of $W_{qk}$ could further enhance training efficiency.
+%
+\\\\
+%
+On the other comments and suggestions:
+%
+\\
+%
+\textbf{1.} We respectfully ask the reviewer for clarification regarding which additional layers should be visualized. Figures 3 and S4 already show symmetry and directionality scores across all layers of several models trained from scratch on three distinct datasets. %Additionally, we have trained smaller models (4-layer encoder-only and decoder-only), and we can extend Figure S4 to include visualizations of these models if this aligns with the reviewer's suggestion.
+%
+\\
+\textbf{2.} The main goal of our study was to characterize the structures that emerge in self-attention matrices during pretraining. 
+%Our results show that encoder-only models can reach lower loss values with fewer training steps. 
+As discussed above, future work should explore how these symmetric structures can be leveraged to improve pretraining efficiency and token representations, potentially benefiting fine-tuning on downstream tasks. We believe our findings could have important implications for fine-tuning large-scale models.
+%
+\end{document}

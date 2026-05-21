@@ -1,0 +1,39 @@
+%
+%
+Figure~\ref{fig:overview} illustrates our hybrid retrieval pipeline. In the official dataset, each document consists of a title, abstract, and limited metadata (e.g., authors, publication venue), but no full text. For indexing, we represent each document using only the title and abstract, concatenated in the format \texttt{[{Title} \textbackslash n {Abstract}]}, explicitly ignoring metadata fields.
+
+The document corpus is processed along two parallel paths: One path applies lexical preprocessing followed by a BM25-based sparse retriever; the other encodes raw text into dense vectors for semantic retrieval. At query time, the social media post undergoes similar dual processing. Both retrieval branches return ranked candidate sets, which are merged and re-ranked using a cross-encoder. We describe each component in the following.
+
+
+\subsection{Lexical Retrieval} \label{sec:lexical}
+We use BM25 \cite{robertson_relevance_1976, robertson_probabilistic_2009} for sparse retrieval, and rank documents based on n-gram overlap and frequency statistics. Lexical methods are particularly effective for matching query terms to titles and commonly used scientific expressions.
+
+\paragraph{Pre-Processing.}
+In contrast to the baseline BM25 provided by the challenge organizers \cite{clef-checkthat:2025:task4}, we apply additional normalization steps to improve match quality. Our pipeline includes lowercasing, punctuation removal, and subword tokenization using byte pair encoding (BPE) \cite{sennrich_neural_2016}. We chose subword tokenization over lemmatization to maximize n-gram overlaps between informal query terms and formal document vocabulary. Hashtags are removed, while symbols such as percentages (\%) are preserved to maintain scientific meaning.
+This design choice specifically addresses the domain gap between informal social media queries and formal scientific language by increasing the chance of partial term matches.
+We detail additional pre-processing experiments, which were excluded from the pipeline, in Appendix \ref{sec:lexical_exp}.
+
+\paragraph{Retrieval.} At inference time, the BM25 retriever returns the top-$30$ documents ranked by relevance. This candidate set provides strong lexical matches for downstream re-ranking and complements the semantic retriever.
+
+
+\subsection{Semantic Retrieval} \label{sec:semantic}
+To overcome vocabulary mismatches and paraphrasing issues, we implement dense retrieval based on transformer-derived embeddings \cite{vaswani_attention_2017}, capturing semantic similarity between queries and documents.
+
+\paragraph{Embedding Model and Fine-tuning.}
+We initialize our dense retriever with the \texttt{INF-Retriever-v1} model \cite{infly-ai_inf-retriever-v1_nodate}, a fine-tuned variant of \texttt{gte-Qwen2-7B-instruct} \cite{yang_qwen2_2024}, chosen for its strong long-text retrieval performance and open-source availability. 
+We fine-tune it on the CLEF CheckThat! training set using the multiple negatives ranking (MNR) loss \cite{henderson_efficient_2017}, training it to assign higher similarity scores to (social media post, document) pairs with known associations than to random negatives.
+
+Fine-tuning uses a maximum input length of $8,192$ tokens to avoid truncation. Queries and documents are tokenized independently, embeddings use last-token pooling, and LoRA adapters \cite{hu_lora_2022} are applied to the final eight transformer layers to reduce memory and training time \cite{tuggener_so_2024}. We optimize with AdamW \cite{loshchilov_decoupled_2019} using cosine learning rate decay and gradient accumulation. Full details of the fine-tuning setup are provided in Appendix~\ref{sec:details_embedding_ft}.
+
+
+\paragraph{Vector Store.}
+We pre-compute document embeddings and store them in a FAISS index \cite{johnson_billion-scale_2021, douze_faiss_2024}. The embeddings are normalized using the L2 norm, allowing cosine similarity to be computed efficiently via dot products. At inference time, the social media post is encoded into a dense vector using the same model, and the top $100$ most similar documents are retrieved. We avoid chunking abstracts, as empirical results have shown that full-document retrieval performs better.
+
+
+\subsection{Re-Ranking} \label{sec:reranker}
+While dense and sparse retrievers are computationally faster, the subsequent re-ranking process is computationally intensive. Unlike embedding models, which independently embed each document and query into vectors and compute similarity using a distance metric, the re-ranker processes each query-document \emph{pair} jointly to directly output a similarity score. The computational cost of these pairwise comparisons limits re-ranking to small candidate subsets, making the initial retrieval stage essential for filtering documents.
+
+\paragraph{Ranking.}
+We evaluated various re-ranking models (see Appendix~\ref{sec:rerankers}) and selected \texttt{BAAI/bge-reranker-v2-gemma} \cite{li_making_2023, chen_m3-embedding_2024}, an LLM-based cross encoder built on Gemma \cite{gemma_team_gemma_2024}, as it performed best. 
+To balance cost and performance, we re-rank the top $100$ dense and top $30$ BM25 candidates, favoring the former due to stronger individual performance (see Section~\ref{sec:results}). Empirically, increasing the number of BM25 candidates beyond $30$ did not improve re-ranking performance but substantially increased computational cost, whereas increasing the dense candidates to $100$ led to substantial gains.
+After removing duplicates within the $130$ candidates for each query, the re-ranker scores all remaining candidates from scratch, and the top five results are returned as output.

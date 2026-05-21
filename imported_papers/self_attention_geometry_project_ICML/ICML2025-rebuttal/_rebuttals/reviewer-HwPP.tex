@@ -1,0 +1,66 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,bindingoffset=0.in,left=.8in,right=.8in,top=1in,bottom=1in,
+            footskip=.25in]{geometry}
+\usepackage{tikz-cd}
+\usepackage{amsmath}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+\begin{document}
+
+We thank the reviewer for the careful and thoughtful review, and we appreciate the detailed feedback and suggestions. 
+%
+\\\\
+%
+We appreciate the reviewer’s suggestion to improve the clarity of the assumptions and intuitions behind the theorems.
+%
+We respectfully disagree with the statement that the manuscript lacks the prerequisite mathematical rigor for the claims and propositions presented. Below, we explain the reasoning behind our position.
+%
+\\\\
+%
+First, we acknowledge the mistake in Equation S8, but we note that this does not affect any subsequent derivations, nor any of the results. Indeed, following the structure of Equations S6 and S7, S8 was intended to represent a direct factorization of the joint distribution under bidirectional training. However, it was introduced solely to motivate Equation S9 and S10 (the standard Masked Language Modelling (MLM) objective), which we use throughout the paper and which does not depend on S8. We will remove S8 from the Appendix and leave only S9.
+%
+\\\\
+%
+Second, we address the concerns regarding the explanation of our mathematical results, the setup of the theoretical findings, and other unclear statements.
+To improve clarity, we have restructured the presentation of our mathematical framework and results. 
+We believe the manuscript meets the required mathematical rigor, presenting results in a coherent narrative with supporting proofs or derivations in the appendices. 
+Although feedback from other reviewers suggests that the results and intuitions are generally clear and well-grounded, we appreciate the reviewer’s comment. We are confident that the following revisions will further clarify Section 2. Specifically, we plan to restructure it as follows:
+%
+\\
+- Section 2.1: We will keep the standard definition of self-attention and keep Equation (3) to connect it later with Equations (8), (9), and Figure 1. Proposition 2.1 will be removed entirely, and only the essential content needed to link Equation (3) to Proposition 2.2 will be preserved. Given these structural changes, we agree with the reviewer that Proposition 2.1 is not necessary for understanding the subsequent results. We will retain the reference to Section A.1 for relevant definitions and remove the proof of Proposition 2.1.
+%
+\\
+%
+- Section 2.2: We will present a general definition of the negative log-likelihood in Equation (6) without introducing $C_i$ at that point. Then, in Proposition 2.2, we will define both $C_i$ and $P_j$, followed by a clear explanation of how the gradient of $W_{qk}$ can be derived using these two equivalent summations. This will provide the foundation for introducing the two main theorems. 
+%
+\\
+%
+- Section 2.3: We will enhance the explanation of how a token contributes to the gradient when used as context or prediction by explicitly including Proposition A.7 in this section (keeping its proof in Appendix A.4). We will also rename the section to "Effect of context and prediction on implicit updates", and move the theorems to a new Section 2.4. Up to this point, all mathematical results are derived purely from self-attention and do not assume anything about the input data.
+%
+\\
+%
+- Section 2.4: This new section will highlight key differences in token usage under autoregressive and bidirectional training, providing the context for Theorems 2.3 and 2.4. We will also state the main assumptions: (1) token embeddings exhibit partial alignment due to statistical correlations, capturing semantic and predictive structure; (2) entries of $W_{qk}$ are i.i.d. at initialization with finite mean and variance; (3) bidirectional training induces approximately symmetric error signals, that is, the error in predicting token $i$ from $j$ is similar to that of predicting $j$ from $i$. 
+%
+% The first assumption (1) is formalized in Proposition A.8 and Corollary A.9., where we derive the asymmetric growth of rows and columns by assuming that token embeddings are drawn from a distribution with nontrivial covariance,  i.e., $\text{Cov}(\mathbf{x}) \neq \sigma^2 \mathbb{I}$, allowing for partial alignment between embeddings.  Proposition A.10 builds on the same assumption, requiring that the joint distribution of tokens is not trivially the product of independent token probabilities.
+% This is arguably a weak and general assumption that holds for most real-world data (e.g., natural language, images, audio).
+% The second assumption (2) is formalized in Lemma A.11, and is a condition met by all standard initialization schemes in machine learning. Theorem 2.3 follows from Propositions A.8–A.10 and Lemma A.11, and therefore relies on these same assumptions.
+% Theorem 2.4 relies on the first assumption (1) and the third assumption (3).
+%
+Finally, we will conclude this section with a summary of the expected properties of self-attention matrices under autoregressive versus bidirectional training. We believe that the current version of Sections 3 and 4 already clearly demonstrates how these theoretical insights translate to practical experiments with real data.
+%
+\\\\
+Next, we address the questions raised by the reviewer:
+%
+\\\\
+%
+\textbf{1.} Yes, during symmetric initialization, we randomly initialize $W_q$ and set $W_k = W_q$, ensuring $W_qW_k^T$ is symmetric, as we understand the reviewer suggests. We also experimented with a regularization term to enforce symmetry during training, but it did not improve training speed or final loss compared to the baseline. For details, see point 3 in our response to reviewer jKhN.
+%
+\\
+%
+\textbf{2.} We thank the reviewer for raising this point. Our framework shows that, under bidirectional training, each token pair contributes to an approximately symmetric update of $W_{qk}$. However, it does not determine whether a fully symmetric $W_{qk}$ is "ideal," as this would require a precise definition of "ideal" and an analysis of attention matrices at convergence. This is an interesting direction for future work. Additionally, Remark A.15 highlights that, in MLM, only a subset of updates is symmetric. As a result, we naturally expect, and have empirically observed, non-fully symmetric $W_{qk}$, though these still exhibit significantly higher symmetry scores than those from autoregressive training.
+
+
+\end{document}

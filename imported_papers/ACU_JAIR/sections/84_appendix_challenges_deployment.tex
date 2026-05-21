@@ -1,0 +1,70 @@
+
+\section{Challenges for Deployment and Application} \label{sec:considerations_production}
+
+Current research in agents for computer use focuses on enhancing their autonomous capabilities across various domains and benchmarks. However, deploying these agents in production introduces several additional challenges. 
+
+\subsection{Technical Challenges and Considerations} \label{sec:cp-technical-challenges}
+
+A production setting entails a specific environment, such as a business application, that the agent must be able to control.
+%An ACU must be adapted to that production environment either through environment learning (see \cref{sec:environment_adaption}) or prompting (see \cref{sec:episodic_improvement}).
+%Foundation agents with prompting start with impressive out-of-the-box performance (e.g., \citet{zheng_gpt-4vision_2024} achieve 51.1\% task success rate on Mind2Web \citep{deng_mind2web_2023}) but lack a practical way to improve performance to become production-ready.
+%Environment learning techniques provide a path for such improvements but are often too costly, depending on many labeled demonstrations or a controlled environment.
+However, effectively adapting an agent to a production environment remains an open research question.
+Besides efficient environment learning, a production setting holds additional challenges, including diverse user hardware. For instance, ACUs must scope with different screen resolutions, multi-monitor setups, as well as different device configurations, including a wide range of Android distributions, home screen setups, or color schemes \citep{lee_benchmarking_2024}.
+% Additionally, an agent must predict itself when $i$ is reached (to stop execution) \citepeg{wang_mobile-agent_2024} rather than rely on environmental feedback \citepeg{humphreys_data-driven_2022}.
+Additionally, a production environment is \emph{non-stationary} as applications undergo continuous enhancement \citep{humble_continuous_2011}, changing their interfaces and behavior.
+A production-ready agent must be able to handle those ever-changing circumstances, either autonomously or through continuous updates implemented by its developers.
+% There is little work in the current scientific literature on domain adaptation \citep{wilson_survey_2020} and transfer learning \citep{zhu_transfer_2023} for computer agents.
+
+\paragraph{Speed, Cost, and Availability}
+While current research primarily focuses on an agent's autonomous capabilities, practical deployment demands careful consideration of \emph{prediction speed}, \emph{operational costs}, and \emph{availability}.
+Faster prediction time leads to less latency and a better user experience.
+Costs can be monetary through API calls to third-party foundation models or hardware considerations for local agents.
+In terms of potential monetary costs, solving a single task costs roughly \$$0.28$ when assuming to use a state-of-the-art foundation model, processing $765$ image tokens (high-resolution screenshot), $600$ text tokens (agent prompt and user instruction), $1000$ text output tokens (reasoning and action prediction), and $7$ actions per task \citep[as in][]{deng_mind2web_2023} and current API pricing (December 2024).
+% 
+Furthermore, reliance on external resources introduces dependencies that can impact availability, such as requiring a stable internet connection and the reliable operation of third-party services.
+
+\paragraph{Privacy}
+While LLMs can run on local machines \citep{tuggener_so_2024}, many state-of-the-art models such as GPT-4V \citet{openai_gpt-4_2024} are only available through an API.
+Agents relying on external resources, such as proprietary foundation models, introduce privacy concerns.
+Individuals and companies may be reluctant to send screenshots of their applications, which may show sensitive data, to an external server streamed over the internet.
+This raises similar data privacy challenges observed in other foundation model applications \citep{neel_privacy_2024}.
+However, a crucial difference emerges with agents: traditional user education on data-sharing practices becomes insufficient, as users cannot fully control an agent's access to information when it operates autonomously on their devices.
+For example, an agent in financial reporting might inadvertently open, observe, and thus transmit sensitive financial documents without the user's explicit consent and in contradiction to contractual or legal requirements.
+
+\subsection{Safety Considerations} \label{sec:safety}
+
+Despite advances in autonomous agent development, current systems often lack the reliability and comprehensiveness required for safe real-world deployment.
+The consequences of an agent's unintentional, erroneous actions can differ depending on the domain, ranging from minor disruptions, such as playing the wrong music video, to more severe issues, like the unauthorized disclosure of confidential medical records.
+For production, the risk of erroneous actions must be balanced with the agent's capabilities and the benefits of automation.
+This balance can be achieved by adjusting design parameters: The agent's \emph{level of autonomy} and the \emph{scope of its deployment}.
+
+% Here, we do not consider safety considerations for potentially malicious agents.
+% Generally, reducing an agent's level of automation or limiting the production domain reduces an agent's autonomous capabilities but minimizes the probability of a critical error, thus increasing security.
+
+\paragraph{Reducing Automation}
+
+Most ACU research is about \emph{full automation}, meaning the agent is in control, and it is assumed no human is in the loop.
+To decrease the risk of erroneous actions, agents can operate in \emph{conditional automation}, meaning the agent is in control, but it can hand back control to the user for critical actions.
+For example, \citet{li_appagent_2024} let their agent determine critical actions, such as validating payments. However, this approach still risks the agent overlooking critical actions, which can be avoided in use cases like payment by requiring external validation through a separate payment processing system inaccessible to the agent.
+In contrast, \citet{wang_enabling_2023} also allows agent-initiated conversations, allowing them to solicit information.
+A further restriction would be running the agent in \emph{partial automation}, meaning the human is in control and hands it to an agent only to fulfill a straightforward sub-task.
+For example, web browsers providing auto-fill functions for typical web forms can be considered partial, non-instruction-based agents for computer use.
+An even further automation restriction is agents only \emph{assisting} users, meaning the human stays in control the whole time while the agent provides only suggestions.
+This design is typical for non-instruction-based agents for computer use like GitHub CoPilot\footnote{\url{https://github.com/features/copilot}} or Grammarly\footnote{\url{https://grammarly.com/}}.
+
+\paragraph{Managing the Scope of the Production Environment} 
+To decrease the risk of erroneous actions, the scope of the production environment can be constrained.
+For a given use case, the action space $\mathcal{A}$ can be restricted by removing high-risk actions, such as disabling critical deletion operations. This can be achieved, for instance, by limiting the agent's file system permissions. Additionally, safety checks can be implemented to autonomously verify the feasibility and safety of actions prior to execution, effectively providing guardrails for the agent \citep{liang_taskmatrixai_2023}.
+% 
+Similarly, the state space $\mathcal{S}$ can be reduced to simplify the operational environment. For example, a web agent’s access could be restricted to a predefined set of curated websites instead of granting access to the entire web. In the context of personal computers, the operational domain could be narrowed to specific applications, such as those within an office productivity suite.
+% 
+These constraints not only limit the agent’s potential behaviors but also simplify environment learning and enable more accurate assessments of the agent's capabilities.
+
+\subsection{Adapting Generally Capable Agents}
+
+Leading AI companies, such as Anthropic, have begun advancing into the realm of ACUs, offering generally capable, out-of-the-box solutions \citep{hu_dawn_2024}. However, we anticipate that truly \emph{general} autonomous instruction-based ACUs -- defined as those with capabilities, resilience, and safety comparable to highly skilled human computer users across most domains -- are unlikely to emerge in the next two years, given the current state-of-the-art, for example, the unavailability of massive and challenging training data.
+
+This projection highlights a critical research question: \textit{How can generally capable agents be effectively adapted to address specific organizational use cases?} For example, enabling an agent to autonomously, safely, and reliably control a unique business application currently requires comprehensive customization. It involves tailoring pre-trained, capable agents to meet the precise needs of a given use case, thereby warranting extensive on-task training experience.
+
+For pure text-based agents, the parallel challenge of adopting a generalist model to organizational needs and know-how is currently approached using retrieval-augmented generation (RAG) strategies, where foundation models are equipped with use-case-specific knowledge by grounding them in internal documents \citep{lewis2020retrieval}. Similarly, the focus in adapting ACUs would lie in achieving robust, organization-specific adaptation starting from a general-purpose, pre-trained agent -- yet a similar process or framework has yet to be developed.

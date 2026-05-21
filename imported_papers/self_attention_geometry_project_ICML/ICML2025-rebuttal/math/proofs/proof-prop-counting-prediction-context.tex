@@ -1,0 +1,120 @@
+\begin{proof}
+%
+Let $\mathcal{V} = \{t_0, \dots, t_V\}$ be a set of tokens.
+%
+Let \( \mathcal{U} = \mathcal{V}^N \) denote the sample space of all possible sequences of \( N \) tokens from the vocabulary \( \mathcal{V} \). 
+%
+Let \( \mathcal{F} = 2^{\mathcal{U}} \) be the \(\sigma\)-algebra given by the power set of \( \mathcal{U} \), and let \( P \) be the probability distribution over \( \mathcal{U} \) that defines the distribution of the random variable sequence \( U \). 
+%
+This defines the probability space \( (\mathcal{U}, \mathcal{F}, P) \).
+%
+For each position $k \in \{1, \dots, N\}$ we let the random variable $T_k$ be $T_k: \mathcal{U} \rightarrow \mathcal{V}$ such that $T_k(U) \equiv t_k$.
+%
+Let $E = \{U \in \mathcal{U}: t_k = t^*\}$ the event of all sequences where the $k$-th token is a fixed token $t^*$. 
+%
+The indicator function $\mathds{1}\{E\}(U)$ is a random variable defined as
+%
+\begin{equation}
+\mathds{1}\{E\}(U) = \mathds{1}\{t_k = t^*\}(U) =
+\begin{cases}
+    1 \,\,\text{if} \,\,t_k = t^*\\
+    0 \,\, \text{otherwise} \,,
+\end{cases}
+\end{equation}
+%
+and as such its expected value over $P$ is
+%
+\begin{equation}
+\mathbb{E}_P\left[\mathds{1}\{t_k = t^*\}(U)\right] = \sum_{U \in \,\mathcal{U}} \mathds{1}\{t_k = t^*\}(U)\Pr[U] = \sum_{U \in \mathcal{U} \,:\, t_k = t^*} \Pr[U] = \Pr[t_k = t^*] \,.
+\end{equation}
+%  
+Let $\mu_c(t^*, U)$ be the random variable quantifying the number of tokens predicted by $t^*$, while $\mu_p(t^*, U)$ is the random variable quantifying the number of tokens predicted by $t^*$.
+%
+We analyzed the case of autoregressive and bidirectional training separately.
+%
+
+During autoregressive training, each time the token $t^*$ appears at position $k$ it is used as context to predict $N-k$ tokens, and it is predicted by $k-1$ tokens.
+%
+It follows that $\mu_c(t^*, U)$ is given by 
+%
+\begin{equation}
+\mu_c(t^*, U) = \sum_{l=2}^N\sum_{k=1}^{l-1} \mathds{1}\{t_k = t^*\} = \sum_{k=1}^N (N-k)\mathds{1}\{t_k = t^*\}\,,
+\end{equation}
+%
+while $\mu_p(t^*, U)$ is given by 
+%
+\begin{equation}
+\mu_p(t^*, U) = \sum_{l=1}^{N-1}\sum_{k=1}^{l-1} \mathds{1}\{t_l = t^*\} = \sum_{k=1}^N (k-1)\mathds{1}\{t_k = t^*\}\,.
+\end{equation}
+%
+Therefore, the expected value of $\mu_c(t^*, U)$ over $P$ is
+%
+\begin{equation}
+\mathbb{E}_P[\mu_c(t^*, U)] = \mathbb{E}_P\left[\sum_{k=1}^N (N-k)\mathds{1}\{t_k = t^*\}\right] =   \sum_{k=1}^N(N-k)\Pr[t_k = t^*]\,,
+\end{equation}
+%
+the expected value of $\mu_p(t^*)$ is
+%
+\begin{equation}
+\mathbb{E}_P[\mu_p(t^*, U)] = \mathbb{E}_P\left[\sum_{k=1}^N (k-1)\mathds{1}\{t_k = t^*\}\right] =   \sum_{k=1}^N(k-1)\Pr[t_k = t^*]\,,
+\end{equation}
+%
+and their ratio is given by
+%
+\begin{equation}
+\label{suppeq:ratio-autoregressive}
+    \frac{\mathbb{E}_P[\mu_c(t^*, U)]}{\mathbb{E}_P[\mu_p(t^*, U)]} = \frac{\sum_{k=1}^N (N-k)\Pr[t_k = t^*]}{\sum_{k=1}^N(k-1)\Pr[t_k = t^*]} \,.
+\end{equation}
+%
+
+During bidirectional training, each time the token $t^*$ is masked at position $k$, it is predicted by $N-1$ tokens.
+%
+We assume that the token $t^*$ significantly contributes to the context of a masked token only if it is itself not masked (see Appendix \ref{supp-math-self-attention-derivation-gradients}).
+%
+Additionally, we assume that the probability $\rho$ of masking any given position $k$ is the same for all positions and does not depend on the specific token $t_k$ at that position.
+%
+As such, we define masking as an independent Bernoulli variable $m_k: \Sigma_k \rightarrow \{0.1\} \sim P_m$ such that $\text{Pr}[m_k = 1] = \rho$, independently of the token and sequence spaces.
+%
+It follows that $\mu_c(t^*, U, m)$ is given by 
+%
+\begin{equation}
+\mu_c(t^*, U, m) = \sum_{k=1}^N\mathds{1}\{t_k = t^*\} \mathds{1}\{m_k = 0\}\sum_{k' \neq k} \mathds{1}\{m_{k'} = 1\}  \,,
+\end{equation}
+%
+while $\mu_p(t^*, U, m)$ is given by 
+%
+\begin{equation}
+\mu_p(t^*, U, m) = \sum_{k=1}^N\mathds{1}\{t_k = t^*\} \mathds{1}\{m_{k} = 1\}\sum_{k' \neq k} \mathds{1}\{m_{k'} = 0\}\,.
+\end{equation}
+%
+Therefore, by taking the expectation with respect to both distributions \( P \) and \( P_m \), their respective expected values are given by
+%
+\begin{equation}
+\begin{split}
+\mathbb{E}_{P,P_m}[\mu_c(t^*, U, m)] 
+& =  \mathbb{E}_{P,P_m} \left[\sum_{k=1}^N\mathds{1}\{t_k = t^*\} \mathds{1}\{m_{k} = 0\}\sum_{k' \neq k} \mathds{1}\{m_{k'} = 1\} \right] \\
+& = \sum_{k=1}^N \mathbb{E}_{P,P_m} \left[\mathds{1}\{t_k = t^*\} \mathds{1}\{m_{k} = 0\}\sum_{k' \neq k} \mathds{1}\{m_{k'} = 1\} \right]\\
+& = \sum_{k=1}^N \mathbb{E}_{P,P_m} \left[\mathds{1}\{t_k = t^*\} \mathds{1}\{m_{k} = 0\}\right]\sum_{k' \neq k} \left[\mathds{1}\{m_{k'} = 1\} \right]\\
+& = \sum_{k=1}^N \text{Pr}(t_k = t^*) \text{Pr}(m_{k} = 0)\sum_{k' \neq k} \text{Pr}(m_{k'} = 1) \\
+& = N\rho(N-1)(1 - \rho) \sum_{k=1}^N \text{Pr}(t_k = t^*)\,,
+\end{split}
+\end{equation}
+%
+and
+%
+\begin{equation}
+\begin{split}
+\mathbb{E}_{P,P_m}[\mu_p(t^*, U, m)] 
+& =  \mathbb{E}_{P,P_m} \left[\sum_{k=1}^N\mathds{1}\{t_k = t^*\} \mathds{1}\{m_{k} = 1\}\sum_{k' \neq k} \mathds{1}\{m_{k'} = 0\} \right] \\
+& = N\rho(N-1)(1 - \rho)\sum_{k=1}^N \text{Pr}(t_k = t^*)  \,,
+\end{split}
+\end{equation}
+%
+and their ratio is
+\begin{equation}
+     \frac{\mathbb{E}_{P}[\mu_c(t^*, U)]}{\mathbb{E}_{P}[\mu_p(t^*, U)]} = 1 \,,
+\end{equation}
+%
+where we omit the dependence on the independent random variable $m$ for simplicity, thus concluding the proof.
+%
+\end{proof}

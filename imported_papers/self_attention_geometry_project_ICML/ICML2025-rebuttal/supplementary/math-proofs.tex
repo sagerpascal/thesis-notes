@@ -1,0 +1,308 @@
+%% PRELIMINARIES
+
+%% (2) background and preliminaries
+\subsection{Preliminaries}
+%
+Following the notation in \citep{vaswaniAttentionAllYou2017, radfordImprovingLanguageUnderstanding2018}, we define a Transformer architecture as,
+%
+\input{ICML2025/math/statements/def-transformer-model}
+%
+Furthermore, we use the following definition of a bilinear form,
+\input{ICML2025/math/statements/def-bilinear-form}
+%
+Finally, we provide the following definition of autoregressive and bidirectional training objectives,
+%
+\input{ICML2025-rebuttal/math/statements/def-objective-functions}
+
+
+
+
+
+%% RELATED REMARKS TO SELF-ATTENTION AND BILINEAR FORM
+\subsection{Related remarks to Section \ref{sec:self-attention-bilinear-form}}
+\label{supp-math-self-attention-bilinear-form}
+%
+\input{ICML2025-rebuttal/math/statements/remark-self-attention-bilinear-form-projection}
+\input{ICML2025-rebuttal/math/statements/remark-self-attention-bilinear-form-multihead}
+
+
+
+
+%% REMARKS ON OBJECTIVE FUNCTION, AUTOREGRESSIVE and BIDIRECTIONAL TRAINING, and BERT MLM
+\subsection{Related remarks to Section \ref{sec:self-attention-derivation-gradient}}
+\label{supp-math-self-attention-derivation-gradients}
+%
+\input{ICML2025-rebuttal/math/statements/remark-likelihood-pseudo-likelihood}
+
+
+
+
+%% PROOF PROPOSITION GRADIENTS AND RANK-1 MATRIX
+\subsection{Proof of Proposition \ref{prop-gradients-self-attention} and related remarks}
+\label{supp-math-gradients-self-attention}
+%
+\input{ICML2025-rebuttal/math/proofs/proof-prop-gradient-self-attention}
+%
+In standard Transformer models, the bilinear form $\bm{W}_{qk}$ is not directly computed, and as such, it is not explicitly updated through gradient descent.
+%
+Nonetheless, $\bm{W}_{qk}$ is implicitly updated with a combination of the weight updates of $\bm{W}_q$ and $\bm{W}_k$ having the same form as in Proposition \ref{prop-gradients-self-attention}, see the following.
+%
+\input{ICML2025/math/statements/remark-self-attention-gradient-WqWk}
+
+
+
+\subsection{Formal proofs of Theorem \ref{theo-gradient-directionality} and \ref{theo-gradients-symmetry}: the connection between objective functions, directionality, and symmetry}
+\label{supp-math-directionality-symmetry}
+%
+In this section, we provide formal proofs of Theorems~\ref{theo-gradient-directionality} and~\ref{theo-gradients-symmetry}, which characterize the directional and symmetric structures that emerge during autoregressive and bidirectional training, respectively.
+%
+To this end, we introduce a series of intermediate Propositions and Lemmas, following these steps:
+
+\begin{enumerate}[noitemsep,nolistsep]
+    \item We begin by showing that when \( t^* \) is used as a context token to predict other tokens, all predicted tokens contribute to the \emph{column space} of \( \bm{W}_{qk} \), while only \( t^* \) contributes to the \emph{row space}.  
+    Conversely, when \( t^* \) is the token being predicted, only \( t^* \) contributes to the column space, whereas all context tokens contribute to the row space (Section \ref{supp-math-prop-gradient-column-rows}).
+%
+    \item Next, we show that under reasonable assumptions about the statistical distribution of token embeddings, these structural properties imply that the expected norm of column updates exceeds that of row updates when \( t^* \) is used as context. In contrast, row updates dominate when \( t^* \) is the predicted token (Section \ref{supp-math-prop-gradient-asymmetric-growth-rows-columns}).
+%
+    \item We then show that in autoregressive training, the expected number of times a token \( t^* \) appears as context can differ from the expected number of times it is predicted, since these two quantities are affected differently by statistical correlations between tokens.
+    %
+    In contrast, under bidirectional training, the expected counts are always equal, regardless of token correlations (Section~\ref{supp-math-prop-counting-prediction-context}).
+%
+    \item Finally, we combine the above results to prove our main theorems:  
+    (1) the weight updates to \( \bm{W}_{qk} \) induce \emph{column dominance} under autoregressive training (Section \ref{supp-math-lemma-tail-probabilities}-\ref{supp-math-theo-gradient-directionality}), and  
+    (2) the weight updates to \( \bm{W}_{qk} \) induce \emph{symmetry} under bidirectional training (Section \ref{supp-math-theo-symmetry-gradients}).
+\end{enumerate}
+%
+
+%
+%% (1) PROPOSITION COLUMN AND ROWS
+%
+\subsubsection{Proof of Proposition \ref{prop-gradient-columns-rows}}
+\label{supp-math-prop-gradient-column-rows}
+%
+First, we show that a token $t^*$ contributes differently to the updates of $\bm{W}_{qk}$ depending on whether it serves as context for predicting other tokens or is itself predicted.
+%
+\input{ICML2025-rebuttal/math/proofs/proof-prop-gradient-columns-rows}
+%
+
+%
+
+
+
+
+
+%%
+%% (2) ASYMMETRIC GROWTH OF COLUMNS AND ROWS
+\subsubsection{Asymmetric growth of rows and columns during weight update}
+\label{supp-math-prop-gradient-asymmetric-growth-rows-columns}
+%
+Next, we demonstrate that under reasonable assumptions about the statistical distribution of token embeddings, the expected norm of column updates exceeds that of row updates when the token \( t^* \) is used as context to predict other tokens.
+%
+Conversely, when $t^*$ is being predicted by other tokens, the row updates become dominant.
+%
+To do so, we make the following assumptions:
+%
+\begin{itemize}[noitemsep,nolistsep]
+%
+    \item The token embeddings $\bm{x}_i$ are independent and identically distributed (i.i.d.) random vectors drawn from a probability distribution $\mathcal{D}$ with zero mean, $\mathbb{E}[\bm{x}_i] = \mathbf{0}$, and covariance matrix $\text{Cov}(\bm{x}_i) = \Sigma$.
+    %
+    This assumption holds at initialization for any Transformer model with learnable embeddings. 
+    %
+    \item The covariance matrix is not isotropic, i.e., $\Sigma \neq \sigma^2 \mathbb{I}$,.
+    %
+    More specifically, we posit that there is partial alignment between the embeddings $\bm{x}_i$ due to the semantic and predictive relationships between tokens, which typically emerge during training.
+%
+\end{itemize}
+%
+Similar to Proposition \ref{prop-gradient-columns-rows}, the scenarios where $t^*$ is used to predict other tokens and where $t^*$ is being predicted by other tokens are complementary. 
+%
+In the following Proposition, we focus solely on the case where $t^*$ serves as context to predict a set of tokens. 
+%
+A formal derivation for the opposite case where $t^*$ is predicted by other tokens is provided in a subsequent Corollary.
+
+\input{ICML2025-rebuttal/math/statements/prop-gradient-asymmetric-growth-rows-columns}
+\input{ICML2025-rebuttal/math/proofs/proof-prop-gradient-asymmetric-growth-rows-columns}
+%
+
+%
+Again, a complementary argument can be made about the asymmetric weight update when a set of tokens $U = \{t_1, \dots, t_N\}$ is used to predict a given token $t^*$. We formalize this in the following Corollary.
+%
+\input{ICML2025-rebuttal/math/statements/corollary-gradient-asymmetric-growth-rows-columns}
+\input{ICML2025-rebuttal/math/proofs/proof-corollary-gradient-asymmetry-growth-rows-columns}
+
+
+
+
+
+
+%
+%% (3) PROPOSITION COUNTING + PROOF
+\subsubsection{Expected contribution for context and prediction and related remarks}
+\label{supp-math-prop-counting-prediction-context}
+%%
+%%
+%% PROVIDE ASSUMPTIONS ON MASKING AND BIDIRECTIONAL TRAINING
+%
+Additionally, we show that in autoregressive training, the expected number of tokens predicted by a given token \( t^* \) can differ from the number of tokens that predict \( t^* \), with this ratio influenced by token correlations, while in bidirectional training, the two quantities are always equal regardless of such correlations, yielding a ratio of 1.
+%
+We formalize this in the following proposition and illustrate, in the subsequent remark, an example from autoregressive training where the expected ratio exceeds 1.
+%
+\input{ICML2025-rebuttal/math/statements/prop-counting-prediction-context}
+\input{ICML2025-rebuttal/math/proofs/proof-prop-counting-prediction-context}
+%
+
+The following remark highlights how, during autoregressive training, the ratio of expected token counts can vary depending on the correlations and conditional dependencies among the tokens.
+%
+\input{ICML2025-rebuttal/math/statements/remark-ratio-autoregressive-training}
+
+% %
+% We provide some examples where tokens that can tend to appear earlier in the sequence.
+% %
+% As a first example, consider a position-biased mixture distribution \( P \), where tokens are independent across positions, but the probability of observing a specific token \( t^* \) depends on the position \( k \). Specifically, \( \Pr[t_k = t^*] = \alpha q_k \), where \( \alpha \in (0,1] \) and \( \{q_k\} \) is a non-increasing sequence in \( k \).
+% %
+% For instance, \( q_k \) may follow a linear decay \( q_k \propto (N + 1 - k) \), or an exponential decay \( q_k \propto e^{-\lambda(k - 1)} \), such that \( q_1 \ge q_2 \ge \cdots \ge q_N \). 
+% %
+% In such cases, any token whose probability decreases with position \( k \) will exhibit an expected count ratio greater than 1.
+% %
+% Next, consider a distribution \( P \) defined by a Zipf-tail model governed by a two-state hidden Markov chain. Assume that in state 0, the token \( t^* \) is emitted with a small probability \( \theta \), while in state 1, it is emitted with a higher probability \( \Theta > \theta \), and the chain remains in state 1 with probability \( \varphi \).
+% %
+% Additionally, suppose that bursts are more likely to begin near the start of the sequence. For example, the initial state is set to 1 with probability \( p_{\mathrm{init}} \propto k^{-\beta} \), decaying with \( k \) according to a Zipf law.
+
+
+%% (5.0) LONG-TAIL DISTRIBUTION AND HIGHER NUMBER OF OUTLIERS
+\subsubsection{Tail probabilities of distributions with equal mean and different variances}
+\label{supp-math-lemma-tail-probabilities}
+%
+Before proving column dominance in the next Theorem, we first establish that a probability distribution with higher variance is more likely to produce large values.  
+%
+Specifically, when two distributions share the same mean but differ in variance, the one with higher variance has a greater probability of generating samples that exceed a given threshold.  
+%
+We formalize this in the following lemma.
+%
+\input{ICML2025-rebuttal/math/statements/lemma-probability_same_mean_different_variance}
+\input{ICML2025-rebuttal/math/proofs/proof_lemma-probability_same_mean_different_variance}
+%
+
+%% (5) THEOREM DIRECTIONALITY
+\subsubsection{Proof of Theorem \ref{theo-gradient-directionality}}
+\label{supp-math-theo-gradient-directionality}
+%
+Here, we show that the weight updates of $\bm{W}_{qk}$ induce column dominance during autoregressive training, leading to the emergence of directionality.
+%
+To do so, we make the following assumptions:
+%
+\begin{itemize}[noitemsep,nolistsep]
+%
+    \item We adopt the same assumptions stated in Propositions~\ref{prop-gradient-asymmetric-growth-rows-columns} and~\ref{prop-counting-prediction-context}.
+    %
+    \item At initialization, the entries of \( \bm{W}_{qk} \) are drawn from a probability distribution \( \mathcal{P} \) with finite mean \( \mu \) and variance \( \sigma^2 \).  
+    This is satisfied by any standard machine learning initialization scheme. This second assumption implies that each $k$-th column $\bm{w}_{\cdot,k}$ and $m$-th row $\bm{w}_{m, \cdot}$ have the same mean $\mu$ and variance $\sigma^2/\sqrt{n}$.
+    %
+    Furthermore, the squared norm of both rows and columns has equal mean $n(\sigma^2 + \mu^2)$ and variance $n(2\sigma^4 + 4\mu^2)$.
+%
+\end{itemize}
+%
+\input{ICML2025-rebuttal/math/proofs/proof-theo-gradient-directionality}
+%
+
+
+
+
+
+
+
+%% THEOREM SYMMETRY
+\subsubsection{Proof of Theorem \ref{theo-gradients-symmetry} and related remarks}
+\label{supp-math-theo-symmetry-gradients}
+%
+Finally, we prove that the weight updates of $\bm{W}_{qk}$ induce symmetry during bidirectional training.
+%
+Importantly, the column dominance is present only during autoregressive training.
+%
+Indeed, it follows from Proposition \ref{prop-counting-prediction-context} that, during bidirectional training, the net increase of the norm of the columns is equal to the net increase of the norm of the rows.
+%
+We formalize this in the following Corollary.
+%
+\input{ICML2025-rebuttal/math/statements/corollary-gradient-directionality}
+\input{ICML2025-rebuttal/math/proofs/proof-corollary-gradient-directionality}
+%
+%
+
+We now prove Theorem~\ref{theo-gradients-symmetry}, showing that the bidirectional training objective induces approximate symmetry in the gradient contributions of each token pair \( (i, j) \).
+%
+Specifically, we assume that predicting token \( t_i \) from \( t_j \) is correlated with predicting \( t_j \) from \( t_i \), that is, the terms \( \beta_{ij} \) and \( \beta_{ji} \) from Proposition~\ref{prop-gradients-self-attention} are correlated, leading to similar contributions in both directions.
+%
+\input{ICML2025-rebuttal/math/proofs/proof-theo-gradient-symmetry}
+%
+Encoder-only models are typically not trained to predict every token in a sequence, but rather a random subset of tokens, and the model can attend to tokens bidirectionally.
+%
+This is usually called Masked Language Modeling (MLM) \citep{devlinBERTPretrainingDeep2019, liuRoBERTaRobustlyOptimized2019, lanALBERTLiteBERT2020, warnerSmarterBetterFaster2024}.
+%
+Therefore, only a subset of terms in the double summation of Equation \eqref{eq:gradients-symmetric-terms} has the symmetric properties described above. 
+%
+We generalize the proof to this case in the following.
+%
+\input{ICML2025/math/statements/remark-gradient-symmetry-MLM}
+%
+Let $|M| = pN$ with $0<p<1$ being the percentage of tokens to be predicted during bidirectional training.
+%
+The total number of pairs in the second term of Equation \eqref{eq:factorization-summation} is given by a binomial coefficient, thus the total number of elements in the summation is $pN(pN - 1)$.
+%
+The total number of elements in the third term is instead the product $pN(N - pN)$.
+%
+Therefore, the percentage of symmetric weight updates from the second term over the total number of updates in the third term is given by
+%
+\begin{equation}
+    \frac{pN(pN - 1)}{pN(N - pN)} \approx \, \frac{pN}{(N - pN)}\,,
+\end{equation}
+%
+in the limit of large $N$.
+%
+In practice, $p$ is set to be around 15\%-30\% \citep{devlinBERTPretrainingDeep2019, liuRoBERTaRobustlyOptimized2019,lanALBERTLiteBERT2020,warnerSmarterBetterFaster2024}, leading to $ \approx 25\%$ of symmetric weight updates on average.
+%
+
+
+
+
+
+%% PROOF PROPERTIES OF SYMMETRY SCORE
+\subsection{Properties of the symmetry score in Definition \ref{def-symmetry-score} and related proofs}
+\label{supp-math-symmetry-score}
+%
+The score $s$ we introduce in Section~\ref{sec-results-pretrained-models} indicates the \emph{degree} of symmetry of a matrix $\bm{M}$ by quantifying the contribution to the Frobenious norm of its symmetric and skew-symmetric parts. 
+%
+In particular, $s$ equals 1 and -1 for a fully symmetric and skew-symmetric matrix.
+%
+Accordingly, positive (negative) values of $s$ indicate the presence of symmetric (skew-symmetric) structures.
+%
+Here, we provide a proof for these properties. 
+%
+First, we show that the Frobenious norm of any square matrix $\bm{M}$ can be decomposed in the sum of the Frobenious norm of its symmetric and skew-symmetric components, as in the following Lemma,
+%
+\input{ICML2025/math/statements/lemma-decomposition-norm-symmetric-skew-symmetric}
+\input{ICML2025/math/proofs/proof-lemma-decomposition-norm-symmetric-skew-symmetric}
+%
+Next, we formulate the properties of the symmetry score as follows,
+%
+\input{ICML2025/math/statements/prop-score-symmetry-properties}
+\input{ICML2025/math/proofs/proof-prop-symmetry-score-properties}
+%
+
+
+
+%% PROOF PROPERTIES OF DIRECTIONALITY SCORE
+\subsection{Properties of the directionality score in Definition \ref{def-directionality-score} and related proofs}
+\label{supp-math-directionality-score}
+%
+The score $d$ we introduce in Section~\ref{sec-results-pretrained-models} quantifies the directional bias of a square matrix $\bm{M}$ by comparing the total norm of the "outliers" rows and columns, that is, that are higher than $\gamma$ times the standard deviations of the norms.
+%
+A directionality score $d$ of 1 indicates the presence of rows with high ``outlier'' norms and the absence of outliers in the distribution of the column norms.  
+%
+The opposite is true for a directionality score $d$ of -1.
+%
+Accordingly, positive (negative) values of $d$ indicate the presence of row (column) dominance in the matrix.
+%
+Here, we provide a proof for these properties.
+%
+\input{ICML2025/math/statements/prop-score-directionality-properties}
+\input{ICML2025/math/proofs/proof-prop-directionality-score-properties}

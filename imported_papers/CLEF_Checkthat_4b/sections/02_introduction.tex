@@ -1,0 +1,27 @@
+%
+%
+In the age of online misinformation, tracing social media claims back to their original scientific sources is crucial for automated fact-checking and evidence-based verification \cite{bruggemann_post-normal_2020, alam_fighting_2021}. However, this task is inherently challenging due to the linguistic and structural gap between informal, user-generated content and formal scientific literature. Social media posts often paraphrase, summarize, or loosely reference scientific findings, rarely using standardized terminology or explicit citations. These ambiguities make it difficult to reliably identify the corresponding scientific publications.
+
+Bridging this gap requires retrieval systems that can handle domain-specific vocabulary, implicit references, and abstract semantics \cite{alam_fighting_2021}. Subtask 4b of the CLEF CheckThat! 2025 competition \cite{hauff_clef-2025_2025, clef-checkthat:2025-lncs, clef-checkthat:2025:task4} exemplifies this challenge, focusing on retrieving scientific sources for social media claims.
+%
+Figure~\ref{fig:motivation} illustrates the task and our proposed solution: A \emph{hybrid retrieval pipeline} designed specifically for cross-domain scientific source retrieval. Our method integrates:
+
+\begin{enumerate}
+    \item \textbf{Lexical retrieval} with BM25 \cite{robertson_relevance_1976, robertson_probabilistic_2009} to capture explicit term overlap (e.g., named entities, keywords);
+    \item \textbf{Semantic retrieval} using a FAISS-based \cite{johnson_billion-scale_2021, douze_faiss_2024} vector store to compare dense embeddings obtained with a fine-tuned INF-Retriever-v1 \cite{infly-ai_inf-retriever-v1_nodate} model, enabling the detection of semantic overlaps;
+    \item \textbf{Re-ranking} with a large language model (LLM)-based cross-encoder \cite{li_making_2023, chen_m3-embedding_2024}, which jointly encodes and scores pairs of social media posts and documents to refine relevance using deep contextual understanding.
+\end{enumerate}
+
+This architecture is designed to harness the complementary strengths of these different retrieval methods.
+
+We evaluate our pipeline on the CheckThat! 2025 Subtask 4b dataset, achieving a Mean Reciprocal Rank at $5$ (MRR@5) of \textbf{$76.46$\%} on the development set (ranked \textbf{1st} on the leaderboard) and \textbf{$66.43$\%} on the test set (ranked \textbf{3rd} on the leaderboard out of $31$ teams), with only a $2$ percentage points lower score than the top-performing team.
+\textbf{Importantly, we achieved this strong score without using any external training data, metadata, external knowledge sources, or closed-source models,} making our approach broadly applicable and easily transferable to other domains and tasks.
+Overall, our main contributions are:
+%
+\begin{enumerate}
+    \item A robust hybrid information retrieval (IR) architecture tailored for scientific source retrieval from informal social media content;
+    \item Empirical evidence demonstrating the effectiveness of embedding fine-tuning and LLM-based re-ranking in bridging informal-to-formal domain gaps;
+    \item A comprehensive experimental analysis, including ablations and a comparison to a commercial baseline.
+\end{enumerate}
+%
+By publishing this well-engineered pipeline, we aim to support efforts to counter misinformation and offer a practical, open-source blueprint for cross-domain document retrieval.

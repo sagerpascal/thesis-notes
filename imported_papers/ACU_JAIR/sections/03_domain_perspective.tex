@@ -1,0 +1,75 @@
+
+\section{Domain Perspective}\label{sec:domain_view}
+The most common domains in the literature are Web, Android, and personal computers.
+Although these domains often overlap in terms of functionality, such as when users access web browsers on Android devices or manage emails via web interfaces on desktop computers, existing research typically distinguishes them based on their primary interaction environment.
+Each domain presents a distinct interaction interface, such as HTML-based pages in the Web, touch screens in Android, and window-based GUIs in desktop environments.
+To bridge these differences, we propose to group these interfaces into common types of observations and actions. 
+These shared abstractions allow us to define a unifying perspective across domains, providing a foundation for transferable methods and cross-domain generalization.
+We categorize domain-specific kinds of observations into the following types:
+%
+    \begin{description}
+        \item[Image screen representation:] 
+           Observations in the form of screenshots—either full screen, partial, or multi-view pixel images—common in all domains \citepeg{niu_screenagent_2024, song_visiontasker_2024, zhang_ufo_2024}.
+        \item[Textual screen representation:] 
+            Structured textual representations of the screen such as HTML markup in the Web domain, the Android view hierarchy, or the UI automation tree in Windows. They allow agents to interact with interfaces at a semantic level \citepeg{kim_language_2023, wen_autodroid_2024, zhang_ufo_2024}.
+        \item[Indirect representation:] 
+            Non-visual observations providing contextual or system-level information beyond what is currently rendered on screen, such as file system contents or network state \citepeg{song_restgpt_2023,wu_os-copilot_2024,guo_pptc_2024}.
+    \end{description}
+%
+Representative examples of each observation type across domains are summarized in Table~\ref{tab:domain_os}.
+
+\begin{table*}
+    \caption{Our classification of \textbf{observation types} across the different domains, along with relevant examples for each domain.}
+    \label{tab:domain_os}
+    \begin{tabular}{>{\raggedright\arraybackslash}p{4cm} >{\raggedright\arraybackslash}p{3.4cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{3.4cm}}
+    \toprule
+    \footnotesize\textbf{Observation types} & \footnotesize \textbf{Web} & \footnotesize \textbf{Android} & \footnotesize \textbf{Personal computer} \\
+    \midrule
+    \footnotesize \textbf{Image screen representation} & {\footnotesize Website \citepeg{niu_screenagent_2024}, browser window \citep{zhou_webarena_2024}} & {\footnotesize Phone screen \citepeg{song_visiontasker_2024}} & {\footnotesize Foreground application \citep{zhang_ufo_2024}, computer screen} \\
+    \footnotesize \textbf{Textual screen representation} & {\footnotesize HTML \citepeg{kim_language_2023}, accessibility tree \citep{zhou_webarena_2024}} & {\footnotesize Android view hierarchy \citepeg{wen_autodroid_2024}, accessibility tree \citepeg{li_uinav_2024}} & {\footnotesize UI automation tree \citepeg{zhang_ufo_2024}} \\
+    \footnotesize \textbf{Indirect representation} & {\footnotesize Network traffic \citepeg{song_restgpt_2023}} & {\footnotesize -} & {\footnotesize Read files \citepeg{guo_pptc_2024}} \\
+    \bottomrule
+    \end{tabular}
+\end{table*}
+
+
+
+Similarly, we group domain-specific action types into:
+%
+    \begin{description}
+        \item[Mouse/touch and keyboard:] 
+            Low-level screen coordinate-based actions such as moving the cursor, tapping on coordinates, or typing text using the keyboard. These simulate typical human input across platforms \citepeg{humphreys_data-driven_2022, wang_mobile-agent_2024, rahman_v-zen_2024}.
+        \item[Direct UI access:]
+            Actions targeted at specific UI elements using structured identifiers (like HTML tags or accessibility IDs) \citepeg{gur_understanding_2023, zhang_appagent_2023, branavan_reinforcement_2009}.
+        \item[Task-tailored actions:]
+            High-level actions that encapsulate multi-step behaviors, such as ``go to home screen'' or ``send email,'' into single commands tailored to specific tasks \citepeg{nakano_webgpt_2022, bonatti_windows_2024, wang_officebench_2024}.
+        \item[Executable code:] 
+            Agents may interact programmatically with their environments by generating code (e.g., Python, Bash, JavaScript) and executing it with a corresponding interpreter \citepeg{sun_adaplanner_2023, gur_real-world_2024, deng_mobile-bench_2024}.
+    \end{description}
+%
+Table~\ref{tab:domain_as} provides cited examples for each action type and domain.
+
+\begin{table*}
+    \centering
+    \caption{Our classification of \textbf{action types} across the different domains, along with relevant examples for each domain.}
+    \label{tab:domain_as}
+    \begin{tabular}{>{\raggedright\arraybackslash}p{3.cm} >{\raggedright\arraybackslash}p{3.7cm} >{\raggedright\arraybackslash}p{3.55cm} >{\raggedright\arraybackslash}p{3.55cm}}
+    \toprule
+   \footnotesize \textbf{Action types} & \footnotesize \textbf{Web} & \footnotesize \textbf{Android} & \footnotesize \textbf{Personal computer} \\
+    \midrule
+    \footnotesize \textbf{Mouse/touch/keyboard} & {\footnotesize Mouse/touch/keyboard \citepeg{humphreys_data-driven_2022}} & {\footnotesize Touch and keyboard \citepeg{wang_mobile-agent_2024}} & {\footnotesize Mouse and keyboard \citepeg{rahman_v-zen_2024}} \\
+    %\hline
+    \footnotesize \textbf{Direct UI access} & {\footnotesize HTML elements \citepeg{gur_understanding_2023}} & {\footnotesize Android elements \citepeg{zhang_appagent_2023}} & {\footnotesize Custom \citepeg{branavan_reinforcement_2009}, UI automation API \citepeg{zhang_ufo_2024}} \\
+    %\hline
+    \footnotesize \textbf{Task-tailored actions} & {\footnotesize Find on page \citep{nakano_webgpt_2022}} & {\footnotesize Go back \citep{zhang_appagent_2023}} & {\footnotesize Switch application \citep{bonatti_windows_2024}, send email \citep{wang_officebench_2024}} \\
+    %\hline
+    \footnotesize \textbf{Executable code} & {\footnotesize JavaScript, Python \citepeg{sun_adaplanner_2023}, Selenium web driver \citepeg{gur_real-world_2024}} & {\footnotesize Android debug bridge \citepeg{deng_mobile-bench_2024}} & {\footnotesize UI automation API \citepeg{wu_os-copilot_2024}, Bash \citepeg{song_mmac-copilot_2024}} \\
+    \bottomrule
+    \end{tabular}
+\end{table*}
+
+
+\subsection{Recommendations}
+Our analysis of the domains of the reviewed agents (see Appendix~\Cref{fig:domain-dist}) reveals that most of the ACU literature focuses on the Web and Android domains.
+In contrast, the personal computer domain, despite its significant practical relevance in workplace automation and productivity applications, remains underexplored: Only $10$ out of our $\numagents$ ACUs target desktop environments.
+We recommend that \textbf{desktop environments should get more attention in research}, as desktop environments not only offer high potential for impactful automation, but also present unique research challenges, such as handling more complex applications, overlapping windows, and orchestrating inter-application workflows reliant on the shared, user-navigable file system.

@@ -1,0 +1,40 @@
+Let \( \mathcal{V} = \{t_1, \dots, t_V\} \) be a vocabulary of tokens, and let \( D \) be a dataset of sequences \( U_u \in \mathcal{V}^N \) of length \( N \), where $D = \left\{ U_u = (x^u_1, \dots, x^u_N) \right\}_{u=1}^D \subset \mathcal{V}^N$.
+%
+For a single sequence \( U_u \) with joint distribution \( p(U_u) \), the chain rule implies that for any permutation \( \sigma \) of \( \{1, \dots, N\} \), the joint probability can be written as,
+\begin{equation}
+p(U_u) = \prod_{t=1}^{N} p\big(x^u_{\sigma(t)} \mid x^u_{\sigma(1)}, \dots, x^u_{\sigma(t-1)}\big).
+\label{eq:chain}
+\end{equation}
+%
+Given a set of conditional parents \( \mathcal{D}_i \subset \{1, \dots, N\} \setminus \{i\} \), define the **local negative log-likelihood** as:
+\begin{equation}
+\mathcal{L}(U; \mathcal{W}) = -\sum_{i=1}^{N} \log p_{\mathcal{W}}(x_i \mid x_{\mathcal{D}_i}),
+\label{eq:localNLL}
+\end{equation}
+where \( \mathcal{W} \) denotes the model parameters.
+%
+Let \( G \) be a directed graph where each edge is \( \mathcal{D}_i \to i \). We distinguish two cases:
+%
+\begin{enumerate}[noitemsep,nolistsep]
+\item 
+If \( G \) is a directed acyclic graph (DAG), then a topological ordering \( \tau \) exists such that \( \mathcal{D}_{\tau(i)} \subseteq \{\tau(1), \dots, \tau(i-1)\} \). In this case, the joint distribution $p_{\mathcal{W}}(x) = \prod_{i=1}^N p_{\mathcal{W}}(x_{\tau(i)} \mid x_{\mathcal{D}_{\tau(i)}})
+$ is properly normalized and the local negative log-likelihood in \eqref{eq:localNLL} is equal to the true negative log-likelihood.
+%
+For example, during autoregressive training, each token is conditioned only on its predecessors, 
+\begin{equation}
+\mathcal{L}(U; \mathcal{W}) = -\sum_{i=1}^N \log p_{\mathcal{W}}(x_i \mid x_1, \dots, x_{i-1}) = -\sum_{i=1}^N \log p_{\mathcal{W}}(x_i \mid x_{<i}).
+\label{eq:ARloss}
+\end{equation}
+
+\item If \( G \) contains directed cycles, the product $\prod_{i=1}^N p_{\mathcal{W}}(x_i \mid x_{\mathcal{D}_i})$ is not guaranteed to be normalized, and thus does not define a proper joint likelihood.
+%
+In this case, one can instead minimize the following pseudo log-likelihood,
+\begin{equation}
+\hat{\mathcal{L}}(U; \mathcal{W}) = -\sum_{i=1}^{N} \log p_{\mathcal{W}}(x_i \mid x_1, \dots, x_{i-1}, x_{i+1}, \dots, x_N) = -\sum_{i=1}^{N} \log p_{\mathcal{W}}(x_i \mid x_{-i}),
+\label{eq:PLL}
+\end{equation}
+where \( x_{-i} \) denotes all tokens in the sequence except \( x_i \).
+%
+Following Besag's theorem \cite{besag1975statistical}, the maximum pseudo-likelihood estimator is consistent under standard regularity conditions, and \eqref{eq:PLL} remains compatible with stochastic-gradient
+optimization even though it is not the true negative log-likelihood \cite{yang2019xlnet}.
+\end{enumerate}

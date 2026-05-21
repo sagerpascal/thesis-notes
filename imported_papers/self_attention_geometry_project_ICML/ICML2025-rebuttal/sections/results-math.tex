@@ -1,0 +1,193 @@
+%
+In this section, we introduce a novel framework that links the self-attention matrices $\bm{W}_{qk}$ to bilinear forms, enabling us to analyze how an objective function influences their structure.
+%
+This approach reveals fundamental patterns in $\bm{W}_{qk}$  that are not apparent when examining $\bm{W}_q$ and $\bm{W}_k$ separately.  
+%
+For example, we prove that autoregressive and bidirectional training induce directional and symmetric structures in the $\bm{W}_{qk}$ matrices.
+%
+In the following sections, we define and formalize these concepts.
+%
+
+
+
+
+
+
+\subsection{Interpreting self-attention with bilinear forms}
+\label{sec:self-attention-bilinear-form}
+%
+Self-attention \citep{vaswaniAttentionAllYou2017,radfordLanguageModelsAre2019} is 
+a type of score function $A: \mathbf{R}^{N,d} \times \mathbf{R}^{N,d} \rightarrow \mathbf{R}^{N,N}$ that maps a sequence of $N$ token embeddings with dimension $d$ into a matrix of attention scores.
+%
+Except for the row-wise softmax function $\sigma(\cdot)$, self-attention is a linear transformation of the embedded tokens.
+%
+In particular, 
+%
+\begin{equation}
+\label{eq:results:self-attention-bilinear-form}
+\begin{split}
+    \bm{A}(\bm{X}) 
+    & = \sigma\left(\frac{1}{\sqrt{d}}\,\hat{\bm{A}}(\bm{X})\right) \\
+    & = \sigma\left(\frac{1}{\sqrt{d}}\,\bm{Q} \bm{K}^T\right) \\
+    & = \sigma\left(\frac{1}{\sqrt{d}}\,\bm{X} \bm{W}_{qk}\bm{X}^T\right) \,,
+\end{split}
+\end{equation}
+%s
+where $\hat{\bm{A}}(\bm{X})$ is the linear part of self-attention (raw unscaled attention scores), $\bm{X} = [\bm{x}^\top_1, \dots, \bm{x}^\top_N] \in \mathbb{R}^{N,d} $ is the sequence of $N$ token embeddings $\bm{x}_i \in \mathbb{R}^d$,  and $\bm{W}_{qk} = \bm{W}_q\bm{W}_k^\top \in \mathbb{R}^{d,d}$.
+%
+This equation shows that the linear transformation $\bm{W}_q$ and $\bm{W}_k$ are always combined to compute attention scores with one single matrix $\bm{W}_{qk}$.
+%
+While the matrices $\bm{W}_q$ and $\bm{W}_k$ are defined separately for computational efficiency, this formulation remains mathematically equivalent \citep[see also][]{elhageMathematicalFrameworkTransformer2021, olssonIncontextLearningInduction2022,darAnalyzingTransformersEmbedding2023}.
+%
+
+We observe that $\bm{X} \bm{W}_{qk}\bm{X}^\top$ corresponds to a bilinear form (see Definition \ref{def-bilinear-form}). 
+%
+Specifically, the entry $\hat{\alpha}_{ij} = [\hat{\bm{A}}]_{ij}$ can be formulated in two equivalent ways: (1) as the canonical dot product between a query $\bm{q}_i$ and a key $\bm{k}_j$  (like in standard Transformer models), or (2) as the dot product between tokens $\bm{x}_i$ and $\bm{x}_j$ under the bilinear form $\bm{W}_{qk}$,
+%
+\begin{equation}
+    \hat{\alpha}_{ij} = \langle \bm{q}_i, \,\bm{k}_j \rangle = \langle \bm{x}_i, \bm{W}_{qk} \bm{x}_j \rangle = \langle \bm{x}_i, \bm{x}_j \rangle_{\bm{W}_{qk}} \,.
+\end{equation}
+%
+Intuitively, this equivalence shows that the matrices $\bm{W}_q$ and $\bm{W}_k$ together define an alternative metric in the embedding space, which quantifies the score of $\bm{x}_i$ and $\bm{x}_j$ without explicitly constructing the query and key vectors.
+%
+Let us consider a specific input token $\bm{x}_i \in \mathbb{R}^d$. 
+%
+The self-attention layer maps it to an updated token $\hat{\bm{x}}_i \in \mathbb{R}^d$ as follows,
+%
+\begin{equation}
+    \hat{\bm{x}}^\top_i = \bm{x}^\top_i + \sum_{j= 1}^N  \hat{\alpha}_{ij}\,\bm{x}_j\bm{W}_v \,,
+\label{eq-prop-self-attention-bilinear-form}
+\end{equation}
+%
+where the coefficients $\{\hat{\alpha}_{ij}\}$ in the second term represent the projection of $\bm{x}_i$ onto $\text{span}\{\bm{X}\}$ (the subspace spanned by $\bm{X} = \{\bm{x}_0^\top, \bm{x}_1^\top, \dots, \bm{x}_N^\top\})$ in the transformed embedding space defined by $\bm{W}_{qk}$,
+%
+\begin{equation}
+    \sum_j\hat{\alpha}_{ij}\, \bm{x}_j =  \sum_j \langle \bm{x}_i, \bm{x}_j \rangle_{\bm{W}_{qk}} \,\bm{x}_j \,.
+\label{eq-proof-self-attention-bilinear-form}
+\end{equation}
+%
+Because the softmax function preserves the order of its input values, the ranking of the raw attention scores $\hat{\alpha}_{ij}$ is maintained in the final normalized scores $\alpha_{ij}$,
+%
+\begin{equation}
+     \alpha_{ij} < \alpha_{ij'} \,  \Leftrightarrow \,\hat{\alpha}_{ij} < \hat{\alpha}_{ij'}\quad \forall i,j, j' \,.
+\end{equation}
+%
+As a result, the attention weights ${\alpha_{ij}}$ define a convex combination of the token vectors ${\bm{x}_j}$, meaning the output lies within the convex hull of the input sequence $\text{Conv}(\bm{X}) \subset \text{span}\{\bm{X}\}$ (see also Appendix \ref{supp-math-self-attention-bilinear-form}).
+%
+We note that $\bm{W}_v$ is a linear transformation that is applied independently to each projection in the sum and thus does not influence our derivation.
+
+% It follows that $\bm{W}_{qk}$ defines the geometric structure that encodes the relevance of the token embedding  $\bm{x}_j$ in predicting $\bm{x}_i$ through projections within the subspace (see Equation \eqref{eq-prop-self-attention-bilinear-form}). 
+% %
+% Therefore, token prediction depends on learning an optimal bilinear form $\bm{W}_{qk}$ to project tokens in the embedding space effectively.
+
+In the following sections, we demonstrate how this equivalent formulation of self-attention provides a useful framework for analyzing the training of Transformer models.
+%
+Specifically, we show that the choice of the objective function such as autoregressive prediction \citep{radfordLanguageModelsAre2019} or bidirectional training \citep{devlinBERTPretrainingDeep2019} produces distinct structural patterns in $\bm{W}_{qk}$.
+%
+
+
+
+
+
+
+\subsection{Deriving the gradients of self-attention with bilinear forms}
+\label{sec:self-attention-derivation-gradient}
+%
+\input{ICML2025/figures/figure-illustration-one-column}
+%%
+%% 
+%
+To show the connection between the objective function and the structures of self-attention matrices, we derive a convenient formulation for the weight update of $\bm{W}_{qk}$.
+%
+We first formulate a sequence modeling problem with self-supervised training as follows. 
+%
+Let \( U = \{t_1, \dots, t_N\} \) be a sequence of \( N \) tokens. 
+%
+For each position \( i \), let \( \mathcal{D}_i \subseteq \{1, 2, \dots, N\} \) denote the \emph{conditioning set}, that is, the set of indices corresponding to the tokens used to predict the token \( t_i \).
+%
+This formulation makes it possible to isolate and analyze the contribution of each token \( t_j \in \mathcal{D}_i \) to the prediction of \( t_i \).
+%
+Let $\mathcal{L}(U)$ be the negative log-likelihood of each token $t_i$, expressed as,
+%
+\begin{equation}
+    \mathcal{L}(U;\mathcal{W}) = \sum_{i=1}^N \mathcal{L}(t_i)=  - \sum_{i=1}^N \log p_{\mathcal{W}}(t_i \,|\, t_{\mathcal{D}_i}) \,,
+\end{equation}
+%
+where $\mathcal{W}$ is the set of trainable parameters, and $p_{\mathcal{W}}(t_i \,|\, t_{\mathcal{D}_i}) $ are the conditional densities parameterized by the model (see also Appendix \ref{supp-math-self-attention-derivation-gradients}).
+%
+
+Here, we demonstrate that the updates to the matrix $\bm{W}_{qk}$ follow a structured pattern: the contribution of the token $t_j $ in the prediction of the embedding $t_i$ results in adding a rank-1 matrix $\bm{K}_{ij}$ to the matrix $\bm{W}_{qk}$.
+%
+As a result, the total weight update to $\bm{W}_{qk}$ is expressed as a linear combination of these rank-1 matrices.
+%
+We formalize this observation in the following proposition.
+%
+\\
+\input{ICML2025-rebuttal/math/statements/prop-gradient-self-attention}
+%
+
+We provide proof for this proposition with related remarks in Appendix \ref{supp-math-gradients-self-attention}, and an illustrative description of the forward and backward pass in Figure \ref{fig-illustration}.
+%
+
+
+\subsection{How context and prediction impact the gradient differently}
+%
+Next, we show how the formulation of $\Delta \bm{W}_{qk}$ enables the analysis of the contribution of any given token $t^*$ to the weight updates and how this affects the properties of $\bm{W}_{qk}$.
+%
+Indeed, Proposition~\ref{prop-gradients-self-attention} indicates that a token $t^*$ impacts the updates of $\bm{W}_{qk}$ differently when serving as context for predicting other tokens or being itself predicted.
+%
+
+When a token $t^*$ serves as context ($t_j = t^*$), the embeddings of all predicted tokens contribute to the column space of $\bm{W}_{qk}$, where the update of every $k$-th column $\bm{w}_{\cdot, k}$ is given by
+%
+\begin{equation}
+    \Delta \bm{w}_{\cdot, k} \Big|_{t_j = t^*}= [\bm{x}_{t^*}]_k \left(\sum_{i \in \mathcal{P}_{t}}\beta_{i*}\bm{x}_i\right)\,.
+\end{equation}
+%
+Only the embedding of $t^*$ is instead added to the row space, where the update of every $m$-th row $\Delta \bm{w}_{m, \cdot}$ is given by
+%
+\begin{equation}
+    \Delta \bm{w}_{m, \cdot} \Big|_{t_i = t^*} = \left(\sum_{i \in \mathcal{P}_{t}}\beta_{i*}[\bm{x}_{i}]_k\right)\bm{x}_{t^*}\,.
+\end{equation}
+%
+Intuitively, using $t^*$ as context increases the dimensionality of the column space proportionally to the embeddings of the predicted tokens, while reducing the row space along the direction of the embedding of $t^*$.
+%
+Conversely, when $t^*$ is being predicted ($t_i = t^*$), all token embeddings from the context are added to the row space of $\bm{W}_{qk}$, while only the embedding of $t^*$ is added to the column space.
+%
+Consequently, the role a token plays during training affects its contribution to the weight update differently.
+%
+We formalize this in the following proposition.
+%
+\input{ICML2025-rebuttal/math/statements/prop-gradient-columns-rows}
+
+%
+We provide proof for this proposition with related remarks in Appendix \ref{supp-math-prop-gradient-column-rows}.
+%
+ Note that all mathematical results derived so far rely solely on the structure of self-attention and make no assumptions about the input data.   
+%
+In the next section, we build on these results to link structural patterns in \( \bm{W}_{qk} \) with the specific form of the objective function.
+
+
+\subsection{The relation between objective functions and structures in self-attention matrices}
+%
+In this final section, we show how to relate these properties to the specific objective function.
+%
+Crucially, the number of times a token \( t^* \) appears as context or as a prediction depends on the training objective.
+%
+Autoregressive training implicitly introduces directionality by predicting each token solely on its preceding tokens. 
+%
+In contrast, bidirectional training uses tokens as context and as predictions symmetrically.
+%
+This fundamental difference affects the weight updates of \( \bm{W}_{qk} \), and consequently, the structures encoded in its rows and columns.
+%
+
+We formalize this relationship in the next two theorems, under the following assumptions:  (a) tokens exhibit statistical correlations, leading to partial alignment in their embeddings; (b) the entries of \( \bm{W}_{qk} \) are i.i.d. at initialization with finite mean and variance; (c) some tokens tend to occur earlier in the sequence and are more predictive of future content; (d) bidirectional training induces approximately symmetric error signals.
+%
+In this setting, we prove how the objective function influences the internal structure encoded by self-attention.
+%
+\input{ICML2025-rebuttal/math/statements/theo-gradient-directionality}
+%
+
+\input{ICML2025-rebuttal/math/statements/theo-gradient-symmetry}
+%
+We provide a proof of these two Theorems, and the related Propositions and Lemmas in Appendix \ref{supp-math-directionality-symmetry}.
+%

@@ -1,0 +1,457 @@
+
+This chapter positions the contributions of this thesis within the broader
+research literature. Because the thesis spans several distinct research areas,
+the related work is organised thematically rather than chronologically. Each
+section introduces the relevant body of prior work, identifies the specific
+limitations or open questions that motivate the contributions of this thesis,
+and explains how those contributions relate to, depart from, or extend the
+existing literature. Detailed discussion of closely related work for each
+individual contribution is deferred to the corresponding chapter, where it
+can be presented in direct relation to the specific technical claims being made.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Autonomous Agents and Computer Use}
+\label{sec:rw_agents}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The idea of automating computer tasks through high-level instruction has a
+long history in human-computer interaction research, from early work on
+programming by demonstration~\cite{cypher_watch, myers_pbd} to the web
+automation systems of the 2000s~\cite{leshed_CoScripter}. These early systems
+operated on structured representations of the interface, such as the
+application's internal state tree or the underlying HTML, and were limited to
+tasks in applications they had been explicitly programmed for.
+
+The introduction of large-scale language models shifted this paradigm
+fundamentally. \cite{nakano_webgpt} demonstrated that language models could
+be fine-tuned to interact with web browsers using text-based observations,
+and \cite{yao_webshop} showed that language-model-based agents could complete
+shopping tasks on a simulated web environment. Subsequent work extended this
+to general desktop environments~\cite{OSWorld, xie_osworld},
+mobile platforms~\cite{rawles_androidworld, zhang_android_eval}, and
+cross-platform settings~\cite{koh_visualwebarena, zhou_webarena}.
+
+The introduction of vision-language models (VLMs) opened a new direction:
+agents that observe the interface as a screenshot rather than as structured
+text. \cite{shaw_pixels} showed that a VLM-based agent could locate interface
+elements from screenshots without access to the underlying accessibility tree,
+and \cite{hong_cogagent} trained a specialised VLM for GUI understanding and
+interaction. \cite{claude_computer_use} and \cite{openai_cua} demonstrated
+capable screenshot-based agents built on large foundation models. The trend
+toward vision-based observation is now dominant in the literature.
+
+On the learning side, the dominant paradigm remains behaviour cloning from
+human demonstrations~\cite{humphreys_data_driven, zheng_synapse}. Approaches
+using reinforcement learning are less common due to the difficulty of
+specifying automatic reward functions for open-ended computer tasks, though
+recent work has explored reward models trained from human
+feedback~\cite{xu_aguvis} and process reward models for step-level
+supervision~\cite{pan_autonomous}.
+
+Despite this progress, systematic evaluations consistently find that current
+ACU systems fail in qualitatively similar ways across platforms and
+architectures~\cite{OSWorld, koh_visualwebarena}. The specific failure
+characterisation, and the argument that these failures have a structural rather
+than an engineering origin, is the contribution of the survey presented in
+Chapter~\ref{chap:acu}. Existing surveys of the field~\cite{durante_agent,
+wang_survey_agents} provide useful taxonomies but do not develop the structural
+argument that connects the observed failures to the properties of the learning
+paradigm. Our survey is distinguished both by its scope, covering 87 papers
+and 33 datasets, and by the analytical framing it imposes on the field.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Efficiency of Large Language Models}
+\label{sec:rw_efficiency}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The computational cost of training and serving large language models has
+motivated an extensive literature on methods for reducing their resource
+requirements. We distinguish three families of approach.
+
+\textbf{Model quantisation} reduces the numerical precision of model weights
+and activations, typically from 32-bit or 16-bit floating point to lower
+bit-width integer or floating-point formats. Post-training quantisation methods
+including GPTQ~\cite{frantar_gptq} and AWQ~\cite{lin_awq} achieve 4-bit
+weight quantisation with limited average benchmark degradation.
+\cite{dettmers_llmint8} introduced 8-bit quantisation with mixed-precision
+decomposition, and \cite{dettmers_qlora} extended this to enable
+quantised fine-tuning. Despite the widespread adoption of these methods and
+their description as near-lossless in the literature, their effect on
+qualitative reasoning capability, as opposed to aggregate benchmark scores,
+has not been systematically studied.
+
+\textbf{Low-rank adaptation} (LoRA)~\cite{hu_lora} fine-tunes a pre-trained
+model by learning low-rank updates to its weight matrices, keeping the
+original weights frozen. This reduces the number of trainable parameters by
+orders of magnitude and makes fine-tuning feasible on consumer hardware.
+Extensions including QLoRA~\cite{dettmers_qlora} combine quantisation with
+low-rank adaptation to further reduce memory requirements.
+
+\textbf{Knowledge distillation}~\cite{hinton_distillation} trains a smaller
+student model to mimic the behaviour of a larger teacher, producing compact
+models with performance closer to the teacher than a model of similar size
+trained from scratch would achieve. Distillation has been applied extensively
+to language models~\cite{sanh_distilbert, gu_minillm}.
+
+The benchmark presented in Chapter~\ref{chap:contextual} evaluates seven
+methods from the quantisation and low-rank adaptation families against a
+common protocol that includes both quantitative benchmarks and a structured
+qualitative human evaluation. The key finding, that quantisation methods
+marketed as lossless produce measurable qualitative degradation in reasoning
+and text quality that standard benchmarks fail to detect, is not established
+by any prior work. This finding has direct implications for the ACU literature,
+where reasoning quality rather than average benchmark performance is the
+operationally relevant measure.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Compositional Generalisation}
+\label{sec:rw_compositionality}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The question of whether neural networks can learn compositional representations
+has been debated since the earliest critiques of connectionist
+systems~\cite{fodor_connectionism}. Empirical investigation began in earnest
+with the SCAN benchmark~\cite{lake_scan}, which tests whether
+sequence-to-sequence models can generalise a set of compositional rules to
+novel combinations. Subsequent work introduced more controlled benchmarks
+including COGS~\cite{kim_cogs} for language, CLEVR~\cite{johnson_clevr} for
+visual reasoning, and gSCAN~\cite{ruis_benchmark} for grounded instruction
+following.
+
+A consistent finding across these benchmarks is that standard neural
+architectures, including Transformers of varying sizes, fail to generalise
+systematically when test combinations differ from training combinations, even
+when all individual components have been seen during training. This failure
+is robust: it persists across architectures, training procedures, and data
+augmentation strategies~\cite{dziri_faith, ontanon_making}.
+
+Architectural responses to the compositional generalisation gap have taken
+several directions. Modular architectures~\cite{andreas_neural, akyurek_dn}
+explicitly decompose the computation into reusable modules, one per semantic
+primitive, which are assembled at inference time. Disentangled
+representations~\cite{higgins_beta, locatello_disentangling} attempt to
+separate the factors of variation in the input into independent latent
+dimensions. Graph neural networks~\cite{battaglia_relational} impose a
+relational inductive bias suited to structured reasoning over object-attribute
+pairs.
+
+Despite these efforts, the gap remains open. Even architectures specifically
+designed with compositional inductive biases continue to fail on novel
+combinations that require applying a rule to objects or settings not seen in
+training~\cite{bahdanau_scan}. The COGITAO framework, presented in
+Chapter~\ref{chap:contextual}, addresses a significant limitation of prior
+benchmarks: the combinatorial depth of existing evaluations is shallow,
+and the number of unique task rules is small relative to the scale of the
+models being evaluated. COGITAO generates millions of unique task rules at
+adjustable composition depth, enabling a more stringent evaluation than
+existing benchmarks and revealing failure modes that shallower evaluations
+do not expose.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Mechanistic Interpretability of Transformers}
+\label{sec:rw_interpretability}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Understanding what Transformer models learn and how they represent information
+internally has become a significant subfield of machine learning research,
+commonly described as mechanistic interpretability. The goals of this research
+are both scientific, advancing understanding of how learned representations
+are organised, and practical, enabling more reliable and predictable model
+behaviour.
+
+Early work focused on probing: training lightweight classifiers on top of
+frozen model representations to test whether specific types of information,
+such as syntactic structure or semantic roles, are linearly decodable from
+the representations~\cite{ettinger_probing, tenney_bert_linguistics,
+clark_bert_attention}. This work established that Transformer representations
+contain substantial structured information about their input, but the probing
+methodology has been criticised for conflating what information is present in
+the representation with what information the model actually uses during
+inference~\cite{belinkov_probing}.
+
+Attention visualisation, which inspects the attention weight matrix $A$ as a
+direct window into the model's internal computation, became popular early but
+has been shown to be an unreliable guide to the model's actual information
+routing~\cite{jain_attention, wiegreffe_attention}. The attention weights
+reflect the query-key similarities after softmax normalisation; they do not
+directly reflect the causal influence of each position on the output.
+
+More recent mechanistic work has focused on identifying circuits, subgraphs
+of the attention and MLP components that implement specific
+computations~\cite{olsson_context, wang_interpretability, elhage_circuits}.
+This approach has produced detailed accounts of specific behaviours, such as
+induction heads that implement in-context learning and name-mover heads that
+track entity references across long sequences, but does not yet provide a
+general account of how information is organised across the full model.
+
+The mathematical framework developed in Chapter~\ref{chap:selfattention}
+approaches the interpretability question from a different direction. Rather
+than identifying circuits or probing for specific information, we derive the
+structural properties of the attention weight matrices that are predicted by
+the gradient dynamics of different training objectives. This is a
+theory-first approach: we prove what structure the training process must
+produce, then verify it empirically. This distinguishes our contribution from
+the empirical-first approaches that dominate the mechanistic interpretability
+literature, and it produces theoretical guarantees rather than empirical
+observations. The result, that bidirectional objectives induce symmetry and
+autoregressive objectives induce directionality and column dominance, is
+not established by any prior work.
+
+Related work on the geometry of learned representations includes studies of
+the rank structure of attention weight matrices~\cite{chen_bert_rank,
+guo_parameter}, the emergence of linear representations of
+structure~\cite{park_linear, nanda_progress}, and analyses of how different
+layers contribute differently to the representation of
+syntax and semantics~\cite{jawahar_what}. Our work complements these by
+providing a theoretical account of why specific geometric properties arise,
+grounded in the mathematics of the training process itself.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{World Models and Predictive Representation Learning}
+\label{sec:rw_worldmodels}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The idea that an intelligent agent should maintain an internal model of its
+environment, which it uses to simulate the consequences of its actions before
+executing them, has deep roots in both cognitive science~\cite{tolman_maps}
+and reinforcement learning~\cite{sutton_dyna}. The operationalisation of this
+idea in modern deep learning has taken several directions.
+
+\textbf{Model-based reinforcement learning.} Systems such as
+DreamerV3~\cite{hafner_dreamer3}, MBPO~\cite{janner_when}, and
+TD-MPC2~\cite{hansen_tdmpc2} learn a world model jointly with a policy and
+a value function, using the world model to generate synthetic rollouts for
+policy improvement. These systems achieve state-of-the-art sample efficiency
+on a range of continuous control benchmarks. However, they rely on generative
+world models that predict in observation space, which is computationally
+expensive and allocates model capacity to predicting irrelevant surface detail.
+
+\textbf{Latent-space world models.} An alternative approach learns the world
+model in a compressed latent space rather than in observation space. RSSM, the
+recurrent state space model used in DreamerV3~\cite{hafner_dreamer3}, learns
+a latent transition model alongside a decoder for optional reconstruction.
+\cite{hafner_mastering} demonstrated that latent-space models can achieve
+superhuman performance on Atari. A key limitation of these approaches is that
+the latent space is not constrained to have any particular structure, and the
+transition function is a learned nonlinear function without stability guarantees.
+
+\textbf{Self-supervised and contrastive world models.} Recent work has moved
+toward learning world models through self-supervised objectives that do not
+require pixel-level reconstruction. \cite{guo_byol_explore} used a
+bootstrapped self-supervised objective for exploration. \cite{schwarzer_spr}
+showed that training on future latent state predictions with a momentum
+encoder improves sample efficiency in model-free RL. The JEPA framework of
+\cite{lecun_jepa} and its visual instantiation in~\cite{assran_ijepa}
+demonstrated that predicting in representation space rather than observation
+space yields more semantically structured representations.
+
+Koopman-JEPA, presented in Chapter~\ref{chap:koopman}, builds on the JEPA
+framework and addresses a specific limitation that none of the above works
+resolves: the exponential accumulation of prediction errors in multi-step
+rollouts. Prior work on Koopman-based world models~\cite{lusch_deep_koopman,
+morton_deep_variational, wehmeyer_time} has established the value of the
+linear lifting approach for dynamical systems analysis, but these works use
+reconstruction-based objectives, do not study the stability of the learned
+transition operator systematically, and have not been applied to the
+multi-step prediction problem in visual model-based RL. The combination of
+the JEPA objective with progressively constrained Koopman parameterisations,
+and the formal connection to discrete-time LQR via the stabilisability
+analysis, constitute the novel contributions of Chapter~\ref{chap:koopman}.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Koopman Operator Methods in Machine Learning}
+\label{sec:rw_koopman}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The application of Koopman operator theory to data-driven dynamical systems
+modelling began with dynamic mode decomposition (DMD)~\cite{schmid_dmd} and
+its extension to nonlinear observables in extended DMD
+(EDMD)~\cite{williams_edmd}. These methods compute a linear approximation of
+the Koopman operator from a finite dictionary of basis functions and have been
+applied to fluid dynamics~\cite{rowley_spectral}, power
+systems~\cite{susuki_koopman}, and robotic locomotion~\cite{shi_deep_koopman}.
+
+The integration of Koopman operator theory with deep learning was proposed
+by~\cite{lusch_deep_koopman}, who jointly learned the lifting function and
+the transition matrix using a deep autoencoder with a Koopman-structured latent
+dynamics model. Subsequent work explored auxiliary networks for eigenvalue
+prediction~\cite{li_learning_koopman}, variational formulations for
+uncertainty quantification~\cite{morton_deep_variational}, and applications
+to control~\cite{shi_deep_koopman, han_deep_koopman_control}.
+
+Spectral constraints on the Koopman transition matrix have been studied in the
+context of stability. \cite{mamakoukas_derivative} enforces stable eigenvalues
+through constrained optimisation. \cite{azencot_forecasting} parameterises the
+transition matrix as a product of Householder reflections to enforce
+orthogonality. Our Cayley parameterisation achieves the same orthogonality
+guarantee through a different algebraic construction that is both differentiable
+and compatible with standard optimisation, and we provide the first analysis
+connecting the spectral properties of the learned Koopman matrix to the
+stabilisability precondition of discrete-time LQR.
+
+Koopman methods have also been applied to reinforcement learning as a tool for
+improving the sample efficiency of model-based planning~\cite{bevanda_koopman,
+weissenbacher_koopman}. These works use the linear structure of the Koopman
+latent space to enable efficient trajectory optimisation but do not address
+the error accumulation problem or the stability of long-horizon rollouts.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Inductive Biases and Structured Learning}
+\label{sec:rw_inductive}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The role of inductive biases in enabling generalisation from limited data is
+one of the oldest questions in machine learning, formalised by
+\cite{mitchell_bias} and given a principled Bayesian treatment by
+\cite{wolpert_no_free_lunch}. The resurgence of interest in inductive biases
+in the deep learning era has been driven by the observation that universal
+approximation ability does not imply appropriate generalisation: a model that
+can fit any function is not guaranteed to fit the right one from limited data.
+
+\textbf{Architectural inductive biases} include translational equivariance
+in convolutional networks~\cite{lecun_convnet}, permutation equivariance in
+graph networks~\cite{battaglia_relational}, and equivariance to broader
+symmetry groups in geometric deep learning~\cite{bronstein_geometric}. These
+encode prior knowledge about the invariances that are relevant for a class of
+tasks, and they have been shown to dramatically improve sample efficiency
+when correctly matched to the task structure.
+
+\textbf{Domain-knowledge biases} encode task-specific prior knowledge that is
+not naturally expressed as an architectural symmetry. \cite{raissi_physics}
+introduced physics-informed neural networks, which add terms to the training
+loss that penalise violations of known physical laws. \cite{gu_structured}
+incorporated structured state-space models with specific stability properties
+into sequence models, improving their ability to capture long-range
+dependencies. These approaches share the principle that known structure in
+the domain should be reflected in the model, rather than being left to be
+discovered from data.
+
+The Hounsfield unit masking approach presented in Chapter~\ref{chap:constraints}
+belongs to the domain-knowledge bias family, encoding the biophysics of X-ray
+attenuation as a hard constraint on the model's input representation. The
+prior work most closely related to this contribution is the use of domain
+knowledge in medical image segmentation~\cite{taghanaki_deep_semantic,
+chen_deep_anatomy}, which has largely focused on anatomical structure priors
+rather than physical measurement constraints.
+
+\textbf{Retrieval-based approaches} augment a parametric model with a
+non-parametric external memory, grounding the model's outputs in retrieved
+documents or knowledge. Retrieval-augmented generation
+(RAG)~\cite{lewis_rag} concatenates retrieved passages with the model's
+input and has been shown to improve factual accuracy and reduce
+hallucination. \cite{borgeaud_retro} trained a language model from scratch
+with retrieval, showing that retrieval enables smaller parametric models to
+match the performance of much larger ones on knowledge-intensive tasks.
+The hybrid retrieval pipeline presented in Chapter~\ref{chap:constraints}
+extends this line of work to the scientific literature retrieval setting, where
+the informal-to-formal language gap between social media posts and academic
+abstracts requires both lexical precision and dense semantic generalisation.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Neuro-Inspired Architectures}
+\label{sec:rw_neuroinspired}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The relationship between biological neural computation and artificial neural
+networks has been a source of both inspiration and controversy throughout the
+history of the field. The perceptron~\cite{rosenblatt_perceptron} and the
+multilayer perceptron~\cite{rumelhart_learning} were explicitly motivated by
+simplified models of biological neurons, but subsequent developments in deep
+learning have moved away from biological plausibility as an explicit design
+criterion. The success of architectures with no direct biological counterpart,
+such as Transformers and convolutional networks with batch normalisation, has
+led many practitioners to treat biological plausibility as an aesthetic
+preference rather than a scientific constraint.
+
+We take a different view. The specific neuro-inspired principles that motivate
+the contributions of Part~\ref{part:paradigm} are not appeals to biology as
+an aesthetic; they are motivated by the concrete representational properties
+that biological systems possess and artificial systems currently lack:
+compositional organisation, robustness to input variation, and local learning
+rules that do not require a globally propagated error signal. We survey the
+relevant literature with this motivation in mind.
+
+\textbf{Capsule networks and structured assemblies.} \cite{hinton_capsules}
+proposed capsule networks as a departure from the scalar activation of standard
+neurons toward structured representations that encode the pose and
+configuration of objects. Subsequent work including
+CapsNet~\cite{sabour_capsnet} and EM routing~\cite{hinton_em_routing}
+demonstrated promising results on small-scale object recognition tasks, but
+scaling to natural image benchmarks has proved difficult. The Cooperative
+Network Architecture presented in Chapter~\ref{chap:cna} shares the motivation
+of encoding structural relationships explicitly but takes a different approach,
+using dynamically assembled nets rather than capsule routing, and learning
+fragments from local statistics without supervision.
+
+\textbf{Sparse coding and dictionary learning.} \cite{olshausen_sparse}
+showed that optimising for sparse representations of natural images produces
+oriented Gabor-like filters closely resembling the receptive fields of
+primary visual cortex neurons. This result established a computational
+principle, sparsity, that explains a structural property of biological
+representations from first principles. Subsequent work extended sparse coding
+to hierarchical settings~\cite{lee_sparse_deep} and connected it to
+deep learning through dictionary learning~\cite{sulam_multi_layer}. The net
+fragments of CNA are learned from local statistical regularities in a manner
+conceptually related to dictionary learning, but the assembly mechanism and
+the recurrent connectivity within nets are novel.
+
+\textbf{Biologically plausible learning rules.} A substantial literature has
+investigated learning rules that are local in the sense required by biological
+plausibility, including contrastive Hebbian learning~\cite{movellan_contrastive},
+equilibrium propagation~\cite{scellier_equilibrium}, predictive coding with
+local updates~\cite{rao_predictive, millidge_predictive_coding}, and
+forward-forward algorithms~\cite{hinton_forward_forward}. These approaches
+avoid the non-locality of backpropagation and, in some cases, perform
+comparably on simple benchmarks. Deep Feedback Control~\cite{dfc}, discussed
+in Chapter~\ref{chap:dfc}, belongs to this family, proposing a feedback
+control interpretation of the layer-wise update problem.
+
+\textbf{Liquid neural networks and continuous-time dynamics.}
+\cite{hasani_liquid} introduced liquid time-constant networks, a class of
+recurrent networks with dynamics governed by ordinary differential equations
+inspired by the nematode nervous system. These networks exhibit compact
+representations and robust extrapolation to out-of-distribution inputs,
+properties that share motivation with the CNA contribution. The key difference
+is that liquid networks achieve these properties through differential equation
+dynamics over fixed network topologies, while CNA achieves them through the
+dynamic assembly of network topology itself.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Positioning This Thesis}
+\label{sec:rw_positioning}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The preceding sections have introduced the research areas that this thesis
+intersects and identified the specific open questions that motivate its
+contributions. We close this chapter by making the positioning of the thesis
+explicit along three dimensions.
+
+\textbf{Diagnosis before solution.} The majority of the works surveyed above
+propose solutions to specific observed failures without providing a theoretical
+account of why those failures occur. This thesis takes the diagnosis seriously
+as a research contribution in its own right. The mathematical framework for
+self-attention geometry in Chapter~\ref{chap:selfattention} is not a stepping
+stone to a proposed fix; it is an account of what the current training paradigm
+produces, from which the class of appropriate responses can be derived. This
+distinguishes the thesis from the bulk of the architectural and training
+literature, which addresses failure modes individually and empirically.
+
+\textbf{The constraint-paradigm distinction.} Among the neuro-inspired and
+structured learning works surveyed above, there is a tendency to frame
+biological plausibility and engineering tractability as competing objectives.
+This thesis argues for a more nuanced view: constraint-based approaches within
+the current paradigm and paradigm-level reconception are complementary, not
+competing, and the appropriate choice depends on how well the structure of the
+failure mode can be characterised in advance. This framing, and the taxonomy
+of constraint regimes it implies, is not present in the prior literature.
+
+\textbf{Theoretical grounding across contributions.} The contributions of this
+thesis are unusually diverse in their technical domains, spanning survey
+methodology, mathematical analysis of attention geometry, Koopman operator
+theory applied to self-supervised learning, domain knowledge integration in
+clinical segmentation, information retrieval, and neuro-inspired architecture
+design. What connects them is not a shared technique but a shared argument:
+that the failures of current AI systems are structurally grounded and admit
+structurally grounded responses. No existing work makes this argument across
+this range of domains, and the synthesis of the contributions within a single
+coherent framework is itself a contribution of the thesis.

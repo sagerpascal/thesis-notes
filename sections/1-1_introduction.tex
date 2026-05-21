@@ -1,0 +1,523 @@
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The Gap Between Competence and Understanding}
+\label{sec:intro_gap}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The past decade of machine learning research has been defined by a striking
+asymmetry. Progress on benchmarks has been rapid and measurable. Progress on
+the underlying question of what learned representations actually encode has
+been slow and contested. The two trajectories have now diverged to a degree
+that demands explanation.
+
+Contemporary deep learning systems achieve results that would have seemed
+implausible a decade ago. Large language models pass professional licensing
+examinations, synthesise code from natural-language specifications, and
+produce coherent text across domains that require substantial world
+knowledge~\cite{brown_gpt3, wei_emergent}. Vision systems trained on
+internet-scale data match or exceed human performance on curated image
+classification benchmarks~\cite{dosovitskiy_vit, zhai_scaling}. Reinforcement
+learning agents master games of enormous strategic depth, from Go to
+StarCraft~\cite{silver_alphago, vinyals_starcraft}. By the standard measures
+of the field, progress has been exceptional.
+
+Yet when these same systems are placed outside the conditions under which they
+were evaluated, a different picture emerges. An agent that reliably completes
+multi-step tasks on familiar software interfaces fails when the interface
+changes, when the task sequence is novel, or when an unexpected state requires
+a response not present in its training distribution~\cite{acu_survey}. A
+language model that solves competition-level mathematics cannot reliably apply
+a simple spatial rule to a grid of objects it has not seen
+before~\cite{cogitao}. A world model that accurately predicts one step ahead
+diverges catastrophically over a ten-step horizon, accumulating errors that
+render its predictions useless for planning~\cite{koopman_jepa}. These are not
+isolated failures attributable to insufficient data or model capacity. They
+form a pattern.
+
+The pattern is this: current deep learning systems exhibit high competence
+within the statistical regime of their training distribution and brittle
+behaviour outside it. They are sensitive to surface features in ways that
+suggest their internal representations do not encode the structural properties
+of their environment. They fail at tasks that require composing learned
+concepts in configurations not encountered during training. And they degrade
+under distribution shift in ways that are disproportionate to the magnitude
+of the shift. These observations are not new, and individual instances of them
+have been documented extensively in the
+literature~\cite{geirhos_shortcut, lake_generalization, marcus_deep_learning}.
+What has been lacking is a unifying account of why they occur and what, if
+anything, can be done about them.
+
+This thesis provides such an account. We argue that the failures listed above
+are not incidental consequences of imperfect training or insufficient scale.
+They are structural consequences of what gradient-based optimisation on a
+fixed objective actually produces: representations whose geometry is
+determined by the statistical structure of the training signal rather than
+by the causal structure of the world. This claim is not merely
+programmatic. In Chapter~\ref{chap:selfattention} we establish it
+mathematically for the case of self-attention, the representational mechanism
+at the core of modern Transformer architectures, and validate it empirically
+across multiple model families and input modalities. From this diagnosis,
+two distinct lines of response follow, each explored in depth in the
+chapters that follow.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The Standard Explanation and Why It Is Insufficient}
+\label{sec:intro_scaling}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The dominant response to the observed failure modes has been to appeal to
+scale. The empirical scaling laws of~\cite{kaplan_scaling, hoffmann_chinchilla}
+show that model performance on standard benchmarks improves predictably with
+increases in parameter count, dataset size, and compute budget. Under this
+view, the failures described above are temporary artefacts of systems that are
+not yet large enough: with sufficient scale, generalisation will follow.
+
+We take this argument seriously. The empirical evidence for scaling is
+substantial, and dismissing it would be intellectually dishonest. The question
+is not whether scale produces improvements, but whether it addresses the
+specific class of failures that motivates this thesis. We argue that it does
+not, and we present two bodies of evidence in support of this claim.
+
+The first concerns the relationship between model capacity and practical
+usability. The compression methods currently required to deploy large models in
+resource-constrained settings, including quantisation and low-rank
+adaptation~\cite{dettmers_qlora, hu_lora}, do not merely reduce a model's
+memory footprint. They degrade its reasoning capabilities in ways that are
+disproportionate to the degree of compression applied~\cite{private_llm}. In a
+systematic benchmark covering seven methods across two major families of
+efficient inference technique, we find that quantised models exhibit
+qualitative deterioration in text quality and structured reasoning that is
+detectable both by automated metrics and by human evaluators, even at
+quantisation levels that are routinely described as lossless in the
+literature~\cite{private_llm}. This finding matters for the scaling argument
+because it reveals that the capabilities produced by large-scale training are
+not robustly encoded: they are sensitive to the precise arithmetic used to
+represent the weights. A representation that encodes genuine structural
+knowledge of its domain should not be so fragile.
+
+The second body of evidence concerns compositional generalisation. If the
+failures observed in deployed systems were primarily a scale problem, one would
+expect them to diminish as model capacity increases, and to be
+particularly severe in architectures that lack specific structural inductive
+biases. We find the opposite. Using the COGITAO framework~\cite{cogitao},
+a controlled evaluation environment for compositional and systematic
+generalisation in object-centric visual reasoning, we test architectures that
+incorporate precisely the inductive biases that compositionality is thought to
+require: diffusion-based Transformers and recurrent architectures with
+adaptive computation time. Despite strong in-domain performance, these models
+fail systematically when task rules are composed in configurations not seen
+during training~\cite{cogitao}. The failure is not ameliorated by the
+inductive biases; it appears to be a deeper property of how gradient-based
+learning encodes multi-step relational structure.
+
+Taken together, these findings suggest that the failures are not primarily
+a quantitative shortfall in scale or a qualitative shortfall in architecture
+design. They point instead to something more fundamental: a mismatch between
+what gradient-based optimisation on a fixed objective produces and what is
+required for reliable performance on tasks that demand structured understanding.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{A Structural Diagnosis: Training Objectives Shape Representations}
+\label{sec:intro_diagnosis}
+% ─────────────────────────────────────────────────────────────────────────────
+
+To understand the source of these failures, it is necessary to examine what
+backpropagation-trained systems actually learn. The standard account describes
+learning as function approximation: given a dataset and a loss function, gradient
+descent finds parameters that minimise the loss, and the resulting function
+generalises to new inputs to the extent that those inputs are drawn from the
+same distribution as the training data. This account is accurate as far as it
+goes. The question it leaves open is what structure the learned function has
+beyond its loss value, and whether that structure is appropriate for the tasks
+to which the system will be applied.
+
+We address this question directly in Chapter~\ref{chap:selfattention}, where we
+develop a mathematical framework for analysing the internal structure of
+self-attention matrices in trained Transformer models. Self-attention is not
+merely a component of modern architectures; it is the primary mechanism by
+which these models organise and retrieve information, and understanding its
+representational geometry is essential for understanding what these models
+know and how they know it.
+
+Our central finding is the following. The structural properties of learned
+self-attention weight matrices are determined by the training objective, not
+by the content of the training data. Bidirectional training objectives, of the
+kind used in encoder models such as BERT and ModernBERT, induce symmetry in the
+self-attention weight matrices. Autoregressive training objectives, of the kind
+used in decoder models such as GPT, LLaMA, and Mistral, induce directionality
+and column dominance. These structural signatures are not noise; they are
+mathematically derivable from the gradient flow induced by each objective, and
+they are empirically consistent across model families and across input
+modalities including text, vision, and audio~\cite{selfattention_structures}.
+
+The implication of this result for the question of generalisation is direct.
+If the geometry of a model's representations is determined by the structure
+of its training objective, then the representations encode the statistical
+patterns that the objective is sensitive to, not the causal or structural
+properties of the domain from which the training data was drawn. A model
+trained with a next-token prediction objective does not, as a consequence of
+that training, learn that objects in the world have stable identities, that
+causes precede effects, or that rules compose in a specific algebraic
+structure. It learns to predict the next token. The representations it develops
+are optimised for that task and are well-calibrated within the statistical
+regime where that task is well-defined. Outside that regime, they carry no
+guarantees.
+
+This diagnosis is not a claim that Transformer models are useless or that they
+learn nothing of value. They clearly do learn a great deal. The claim is more
+specific: the structure of what they learn is shaped by the objective, and
+the failure modes observed empirically are predictable consequences of this
+shaping. Compositional generalisation fails because the training objective does
+not make the model sensitive to compositional structure; it makes the model
+sensitive to co-occurrence statistics. Long-horizon planning fails because no
+standard training objective rewards the model for maintaining internally
+consistent predictions over extended sequences of interactions. Distributional
+robustness fails because the representations are calibrated to the training
+distribution, not to the underlying generative process that produced it.
+
+This diagnosis raises a precise research question: given that these failures
+are structural properties of what gradient-based learning on standard objectives
+produces, what can be done? We pursue two distinct lines of response in this
+thesis, which we introduce in the following section.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Two Lines of Response}
+\label{sec:intro_responses}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The diagnosis of Section~\ref{sec:intro_diagnosis} admits two logically
+distinct responses. The first accepts the basic framework of gradient-based
+learning on fixed objectives and asks whether hard mathematical constraints,
+imposed architecturally or through domain knowledge, can correct specific
+failure modes before they manifest. The second asks whether the representational
+substrate must itself change: whether the class of architectures that
+gradient-based learning is applied to needs to be fundamentally reconceived.
+We pursue both, and we are explicit about what each can and cannot achieve.
+
+\subsection{Hard Constraints as Structural Corrections}
+\label{subsec:intro_constraints}
+
+If a failure mode can be identified precisely enough to be formalised, it can
+often be corrected by imposing a constraint that prevents it. This is the
+principle underlying the first line of response, and we instantiate it
+across three domains in Chapters~\ref{chap:koopman}
+and~\ref{chap:constraints}.
+
+The most precise instance concerns multi-step prediction in learned world
+models. In any nonlinear world model, approximation errors compound across
+rollout steps: each step applies a function with some Lipschitz constant
+greater than one, and errors at each step are amplified by that constant in
+subsequent steps, producing exponential divergence over long
+horizons~\cite{koopman_jepa}. This failure is not a consequence of
+insufficient model capacity or imperfect training. It is a mathematical
+property of nonlinear function composition. It cannot be corrected by scaling
+or by improved optimisation, because it is structural.
+
+We address this failure in Chapter~\ref{chap:koopman} by introducing
+Koopman-JEPA, a self-supervised world model that lifts complex visual
+observations into a latent space where the dynamics of the environment are
+represented by a globally linear operator. In this lifted space, multi-step
+prediction reduces to iterated matrix multiplication, and error accumulation
+is bounded to grow linearly with horizon rather than exponentially. We develop
+three variants with progressively stronger spectral constraints on the
+transition matrix, culminating in a Cayley parameterisation that
+architecturally enforces strict stability and satisfies the stabilisability
+precondition of discrete-time linear quadratic regulation. The empirical
+results are correspondingly precise: Koopman variants reduce long-horizon
+prediction error by up to 99\% on action-free tasks and 91\% on
+action-conditioned tasks at a ten-step horizon, compared to a baseline that
+diverges catastrophically at the same horizon~\cite{koopman_jepa}.
+
+The constraint principle is not limited to dynamics. In Chapter~\ref{chap:constraints},
+we examine two further cases where structural knowledge, encoded as a hard
+constraint, compensates for what unconstrained gradient-based learning fails
+to recover. In the domain of clinical image segmentation, encoding
+tissue-specific Hounsfield unit ranges as binary input masks, a constraint
+derived directly from the biophysics of X-ray attenuation documented in the
+medical literature, improves segmentation accuracy by up to 5\% on
+intramuscular adipose tissue and enables a model trained on 50\% of the
+available data to match the performance of one trained on the
+full dataset~\cite{hu_ranges}. In the domain of information retrieval, a
+hybrid pipeline that combines lexical precision, dense semantic retrieval, and
+large-language-model-based re-ranking, effectively grounding inference in a
+structured external knowledge source at test time, achieves first place on the
+CLEF CheckThat! 2025 development leaderboard and third place on the hidden
+test set without any external training data~\cite{deep_retrieval}.
+
+These three cases illustrate different forms of the same principle. In each,
+a specific, identifiable failure mode of unconstrained gradient-based learning
+is corrected by encoding structural knowledge that the training objective is
+not sensitive to. The constraint operates at a different level from the
+objective: it does not change what the model is trained to do, but it changes
+the space of solutions available to it.
+
+We are explicit about the limits of this approach. Constraint engineering
+requires that the structure of the failure mode be known in advance, that it
+be formalised precisely enough to be encoded architecturally or in the input
+representation, and that the constraint be compatible with gradient-based
+optimisation. For many of the most consequential failure modes of current AI
+systems, including generalisation to novel compositional structures and
+reliable behaviour under large distributional shift, these conditions are
+difficult to satisfy. Correcting these failures requires not a better
+constraint but a different kind of representation.
+
+\subsection{Representational Reconception}
+\label{subsec:intro_paradigm}
+
+The second line of response begins from the observation that the failure modes
+are not merely failures of a particular architecture or training procedure.
+They are failures of the representational principle common to virtually all
+current deep learning: the encoding of information in dense, distributed
+activation patterns over unstructured weight matrices, updated globally by
+gradient descent. Systems of this kind can represent anything, in the sense
+that they are universal function approximators. But representational universality
+is not the same as representational appropriateness. A representation that
+can encode any function provides no guarantee that the function it has learned
+is the right one, in the sense of capturing the stable, compositional, invariant
+structure that tasks outside the training distribution require.
+
+Biological neural systems take a different approach. The visual system, to take
+the most studied case, does not represent visual scenes as dense, unstructured
+activation patterns over all its neurons simultaneously. It organises
+representations hierarchically and compositionally, with neurons that respond
+to local features assembled into larger structural units that respond to
+progressively more abstract properties of the
+scene~\cite{hubel_receptive, felleman_hierarchy}. The representations are
+sparse, structured, and invariant to a range of transformations by construction,
+not as a consequence of training on a sufficiently large dataset with a
+sufficiently expressive architecture.
+
+In Chapter~\ref{chap:cna} we introduce the Cooperative Network Architecture
+(CNA), which proposes a fundamental departure from distributed representation
+toward structured assembly. Rather than encoding sensory input as a pattern of
+activation over a fixed weight matrix, CNA represents its input through a
+dynamically assembled network of neurons, termed a \textit{net}, constructed
+from overlapping \textit{net fragments} learned from statistical regularities
+in the input without supervision. Because nets are compositional by
+construction, novel inputs are represented by assembling fragments in new
+configurations rather than by interpolating within a learned embedding space.
+This representational principle produces properties that are absent from
+standard deep learning architectures: figure completion, noise resilience, and
+generalisation to out-of-distribution inputs emerge from the structure of the
+representation rather than from loss engineering~\cite{cna}.
+
+CNA does not inherit the scaling infrastructure of standard deep learning.
+The dynamic assembly of structured networks is not straightforwardly
+expressible as dense matrix multiplication, and it does not currently benefit
+from the hardware and software optimisations that make large-scale gradient
+descent practical. This is a genuine limitation. But it is important not to
+conflate the scalability of an approach with its correctness. The evidence
+presented in this thesis suggests that the approach currently at scale is
+not producing the representational properties required for robust generalisation.
+CNA demonstrates that those properties can be produced by a different
+representational principle, establishing a proof of concept for a class of
+architectures worth developing further.
+
+The relationship between the two lines of response is not competitive.
+Constraint engineering within the current paradigm and representational
+reconception beyond it operate at different timescales and address different
+aspects of the problem. The constraint-based approaches of
+Chapters~\ref{chap:koopman} and~\ref{chap:constraints} offer immediate,
+deployable corrections to specific and well-understood failure modes.
+The architectural approach of Chapter~\ref{chap:cna} addresses the underlying
+representational question that constraint engineering leaves open.
+Both are necessary parts of a serious response to the diagnosis of
+Section~\ref{sec:intro_diagnosis}.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Why This Matters}
+\label{sec:intro_stakes}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The failures described in this thesis are not purely of theoretical interest.
+As AI systems are increasingly deployed in settings where they must act
+autonomously over extended time horizons, on tasks that were not anticipated
+at training time, and in environments that differ from their training conditions,
+the gap between benchmark competence and reliable behaviour becomes consequential.
+
+Our survey of agents for computer use~\cite{acu_survey}, covering 87 research
+papers and 33 benchmark datasets, documents this gap directly. The systems
+that currently achieve the strongest results on ACU benchmarks are evaluated
+under conditions that differ systematically from those of real-world deployment:
+tasks are shorter, interfaces are more uniform, and failure cases are less
+diverse. When deployment conditions are examined, the gap between benchmark
+performance and practical utility is substantial. The six research gaps we
+identify, including insufficient generalisation, limited planning horizons,
+and a disconnect between research evaluation and deployment constraints,
+are not incidental properties of immature technology. They are predictable
+consequences of the structural limitations diagnosed in this thesis.
+
+The stakes extend beyond the computer use setting. In clinical AI, where
+segmentation models are trained on datasets that are expensive to acquire and
+annotate, the inability to generalise from limited data under distributional
+shift has direct consequences for patient outcomes~\cite{hu_ranges}. In
+scientific literature retrieval, where the task requires bridging informal
+natural-language descriptions and formal academic knowledge bases, the failure
+of purely parametric models to ground their outputs in precise, verifiable
+sources limits their utility for high-stakes
+applications~\cite{deep_retrieval}. The argument of this thesis, that these
+failures share a structural cause and admit structured responses, is therefore
+not only of scientific interest. It has implications for the conditions under
+which AI systems can be deployed responsibly.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Research Questions}
+\label{sec:intro_questions}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The preceding sections motivate four research questions that organise the
+contributions of this thesis.
+
+\begin{enumerate}
+
+    \item \textbf{What are the concrete, systematic failure modes of
+    state-of-the-art deep learning systems when deployed in demanding
+    real-world settings?} This question motivates Part~\ref{part:failures},
+    where we survey agents for computer use and examine two independent failure
+    domains to establish an empirical foundation for the rest of the thesis.
+
+    \item \textbf{What structural properties of learned representations
+    underlie these failures?} This question motivates
+    Part~\ref{part:diagnosis}, where we develop a mathematical framework
+    for analysing self-attention geometry and show that the structure of learned
+    representations is determined by the training objective.
+
+    \item \textbf{Can hard inductive constraints, imposed architecturally or
+    through domain knowledge, correct specific failure modes within the existing
+    deep learning paradigm?} This question motivates
+    Part~\ref{part:constraints}, where we introduce Koopman-JEPA and examine
+    two complementary applications of domain-structural constraints.
+
+    \item \textbf{Can neuro-inspired representational principles address the
+    limitations that constraint engineering within the current paradigm cannot?}
+    This question motivates Part~\ref{part:paradigm}, where we introduce the
+    Cooperative Network Architecture and examine the representational properties
+    it produces.
+
+\end{enumerate}
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Contributions of This Thesis}
+\label{sec:intro_contributions}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The primary contributions of this thesis are as follows.
+
+\paragraph{A comprehensive survey and taxonomy of agents for computer use.}
+We survey 87 research papers and 33 benchmark datasets on ACUs, introduce a
+multifaceted taxonomy structured along domain, interaction, and agent
+perspectives, and identify six persistent research gaps that characterise the
+current state of the field~\cite{acu_survey}. Beyond its value as a reference
+for the ACU community, this survey establishes the empirical basis for the
+thesis argument: the identified gaps are symptomatic of structural properties
+of the underlying learning paradigm.
+
+\paragraph{A mathematical framework for analysing self-attention geometry.}
+We derive the structures governing weight updates in self-attention matrices
+under different training objectives, prove that bidirectional training induces
+symmetry and autoregressive training induces directionality and column
+dominance, and validate these theoretical results empirically across
+ModernBERT, GPT, LLaMA3, and Mistral on text, vision, and audio
+modalities~\cite{selfattention_structures}. We further show that symmetric
+initialisation improves encoder performance on language tasks, demonstrating
+that the theoretical analysis yields actionable insights.
+
+\paragraph{Koopman-JEPA: a self-supervised world model with provably linear
+error accumulation.}
+We introduce Koopman-JEPA, which lifts visual observations into a latent space
+governed by a globally linear operator, bounding multi-step prediction error
+to grow linearly with horizon rather than exponentially~\cite{koopman_jepa}.
+We develop three variants with progressively stronger spectral constraints,
+culminating in a Cayley parameterisation that satisfies the stabilisability
+precondition of discrete-time linear quadratic regulation. We provide both
+theoretical bounds and extensive empirical validation, showing up to 99\% and
+91\% reduction in prediction error on action-free and action-conditioned tasks
+respectively, and approximately 16-fold improvement in sample efficiency at
+10\% data availability.
+
+\paragraph{Structured inductive biases for data-efficient learning and
+inference-time grounding.}
+We demonstrate that encoding tissue-specific Hounsfield unit ranges as binary
+input masks improves CT segmentation accuracy and data efficiency in
+resource-constrained clinical settings~\cite{hu_ranges}. We further demonstrate
+that a hybrid retrieval pipeline combining lexical, semantic, and
+cross-encoder re-ranking achieves state-of-the-art performance on scientific
+literature retrieval from informal social media descriptions without external
+training data~\cite{deep_retrieval}. Together with Koopman-JEPA, these
+contributions establish that the constraint principle generalises across
+domains and structural levels.
+
+\paragraph{The Cooperative Network Architecture.}
+We introduce CNA, which represents sensory input through dynamically assembled
+networks of neurons built from compositional fragments learned without
+supervision~\cite{cna}. CNA demonstrates that figure completion, noise
+resilience, and out-of-distribution generalisation can be produced by a
+representational principle rather than by loss engineering, establishing
+a foundation for neuro-inspired architectures that embed structural invariance
+by design.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Thesis Structure}
+\label{sec:intro_structure}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The remainder of this thesis is organised as follows.
+
+Chapter~\ref{chap:background} provides the technical background required to
+follow the subsequent chapters. It covers the foundations of gradient-based
+learning and Transformer architectures, the theory of Koopman operators and
+their relevance to dynamical systems learning, and the neuro-inspired concepts
+that motivate the Cooperative Network Architecture.
+
+\textbf{Part~\ref{part:failures}: Identifying Failures.}
+Chapter~\ref{chap:acu} presents the comprehensive survey and taxonomy of agents
+for computer use, documenting the six research gaps and arguing that they are
+symptomatic of structural limitations in the current learning paradigm.
+Chapter~\ref{chap:contextual} synthesises supporting evidence from two
+independent domains: the benchmark of efficient large language models and the
+evaluation of compositional generalisation using COGITAO.
+
+\textbf{Part~\ref{part:diagnosis}: Diagnosing the Root Cause.}
+Chapter~\ref{chap:selfattention} presents the mathematical framework for
+self-attention geometry, establishes the theoretical results on symmetry and
+directionality, and discusses the implications for understanding what
+gradient-based learning on standard objectives produces.
+
+\textbf{Part~\ref{part:constraints}: Mitigating Failures with Hard Constraints.}
+Chapter~\ref{chap:koopman} introduces Koopman-JEPA, presenting both the
+theoretical analysis of error accumulation in nonlinear world models and the
+full empirical evaluation of the Koopman variants.
+Chapter~\ref{chap:constraints} examines two complementary instantiations of
+the constraint principle: Hounsfield unit masks for clinical segmentation and
+hybrid retrieval for scientific literature grounding.
+
+\textbf{Part~\ref{part:paradigm}: A Change of Paradigm.}
+Chapter~\ref{chap:cna} introduces the Cooperative Network Architecture,
+presents its representational principle, and evaluates the structural
+properties it produces. Chapter~\ref{chap:dfc} presents the second
+neuro-inspired contribution of this thesis~[to be completed].
+
+Chapter~\ref{chap:discussion} synthesises the findings across all four parts,
+discusses the trade-offs between constraint engineering and representational
+reconception, and situates the thesis contributions within the broader
+trajectory of AI research. Chapter~\ref{chap:conclusion} states the
+conclusions of the thesis.
+
+\bigskip
+
+\noindent A note on authorship. This thesis is cumulative: it is based on
+published and submitted research articles produced in collaboration with
+co-authors. All primary contributions, those presented as full chapters, are
+works in which the thesis author holds a first or shared-first authorship
+position. Supporting contributions, presented as shorter sections in
+Chapters~\ref{chap:contextual} and~\ref{chap:constraints}, are works with
+more limited author involvement. In all cases, the specific contribution of
+the thesis author is stated at the opening of the relevant chapter or section.
+The framing, argumentation, and synthesis that connect the individual works
+into the thesis narrative are the sole work of the thesis author.
