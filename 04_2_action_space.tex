@@ -1,0 +1,7 @@
+% Forwarding stub for \input{04_2_action_space} (no prefix).
+% Delegates to the real file under imported_papers/ and is guarded
+% against double-inclusion.
+\expandafter\ifx\csname acuactionspaceloaded\endcsname\relax
+    \expandafter\gdef\csname acuactionspaceloaded\endcsname{}%
+    \input{imported_papers/ACU_JAIR/sections/04_2_action_space}%
+\fi

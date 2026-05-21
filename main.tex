@@ -16,8 +16,14 @@
 
 
 % Packages by Pascal
+% \l@algorithm uses '@' which is not a letter outside \makeatletter.
+% Wrap the redefinition so it parses correctly and clear the conflict
+% with algorithm2e (loaded earlier by kao) before loading the algorithm
+% package.
+\makeatletter
 \let\listofalgorithms\relax
 \let\l@algorithm\relax
+\makeatother
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{tabularx}
