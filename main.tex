@@ -56,9 +56,17 @@
 \newcommand{\lowroman}[1]{\romannumeral#1\relax}
 
 % Citation aliases — biblatex equivalents
-% Only define if not already defined by kaobiblio
-\providecommand{\citet}[1]{\textcite{#1}}
-\providecommand{\citep}[1]{\parencite{#1}}
+% Natbib-style \citet[pre][post]{key} and \citep[pre][post]{key}
+\providecommand{\citet}{}
+\providecommand{\citep}{}
+\RenewDocumentCommand{\citet}{o o m}{%
+    \IfNoValueTF{#1}{\textcite{#3}}{%
+        \IfNoValueTF{#2}{\textcite[#1]{#3}}{\textcite[#1][#2]{#3}}}%
+}
+\RenewDocumentCommand{\citep}{o o m}{%
+    \IfNoValueTF{#1}{\parencite{#3}}{%
+        \IfNoValueTF{#2}{\parencite[#1]{#3}}{\parencite[#1][#2]{#3}}}%
+}
 
 % \citepeg{key} → (e.g., Author 20XX)
 \NewDocumentCommand{\citepeg}{m}{%
