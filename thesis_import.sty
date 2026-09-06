@@ -203,6 +203,33 @@
     \pdfstringdefDisableCommands{\let\ip@withprefix\@secondoftwo}}%
 }
 
+% Wide tables are what actually overruns the measure. The figures are clamped
+% by \setkeys{Gin} above, but a tabular has no width to clamp: it is as wide as
+% its columns make it, and the papers sized their columns for a two column
+% template. Wrapping each outermost tabular in an adjustbox shrinks only those
+% that do not fit and leaves the rest alone.
+%
+% The counter is global because an environment is a group, so a nested tabular
+% would otherwise not see the outer one and each level would add its own box.
+\newcount\ip@tabdepth
+\newcommand{\ip@clamptables}{%
+  \let\ip@old@tabular\tabular
+  \let\ip@old@endtabular\endtabular
+  \renewenvironment{tabular}{%
+    \global\advance\ip@tabdepth\@ne
+    \ifnum\ip@tabdepth=\@ne
+      \begin{adjustbox}{max width=\linewidth}%
+    \fi
+    \ip@old@tabular
+  }{%
+    \ip@old@endtabular
+    \ifnum\ip@tabdepth=\@ne
+      \end{adjustbox}%
+    \fi
+    \global\advance\ip@tabdepth\m@ne
+  }%
+}
+
 % Swap one command for its patched twin, if the command exists at all.
 \newcommand{\ip@patch}[1]{%
   \@ifundefined{#1}{}{%
@@ -275,6 +302,20 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   % but it also exhausts TeX's main memory in kaobook's output routine partway
   % through the COGITAO appendix and produces no PDF at all. The overflow is
   % cosmetic, a failed build is not.
+  % The papers were typeset for wider templates, so their figures are sized
+  % for a measure this thesis does not have. Clamping here is the one place it
+  % can be done: the \includegraphics calls are inside the papers and those we
+  % do not touch. An explicit width in the paper still applies, this only
+  % stops it exceeding the text block.
+  \setkeys{Gin}{max width=\linewidth, max totalheight=0.85\textheight,
+    keepaspectratio}%
+  % Citations need no patching. kaobiblio sets citestyle=numeric-comp, so
+  % \cite, \citep and \parencite all render as [12] and the papers already
+  % cite alike whichever command they were written with. \citet stays as it is,
+  % because "Smith [12] showed" is a grammatical choice and not a style one.
+  % If the thesis ever moves to an author-year style this stops being true and
+  % \cite would have to be mapped to \parencite here.
+  \ip@clamptables
   % Papers built with the subfiles package.
   \let\ip@save@subfile\subfile
   \let\subfile\ip@subfile
