@@ -30,9 +30,9 @@ trajectory.
 
 The project originated with the thesis author, who identified the absence of
 a technology-agnostic, theoretically grounded taxonomy as a gap in the existing
-ACU literature and initiated the survey independently. The initial structure of
-the taxonomy and the selection of the three analytical perspectives — domain,
-interaction, and agent — were proposed in a first draft by the thesis author.
+ACU literature and initiated the survey independently. The thesis author proposed the initial
+structure of the taxonomy in a first draft, together with the selection of the
+three analytical perspectives: domain, interaction, and agent.
 Benjamin Meyer subsequently refined the taxonomy structure substantially,
 improving its internal consistency and the precision of its category boundaries,
 after which the thesis author revised the framework again. The final taxonomy
@@ -49,11 +49,11 @@ first authors and with input from the senior authors Ahmed Abdulkadir,
 Benjamin Grewe, and Thilo Stadelmann.
 
 The framing of the survey's findings within the broader thesis argument
-presented in this chapter — specifically, the interpretation of the six
-research gaps as symptoms of structural limitations in the learning paradigm
-rather than as incidental engineering shortcomings — is the intellectual
-contribution of the thesis author and was developed in the context of this
-thesis rather than the original paper.
+presented in this chapter is the intellectual contribution of the thesis
+author, and was developed in the context of this thesis rather than the
+original paper. That framing reads the six research gaps as symptoms of
+structural limitations in the learning paradigm rather than as incidental
+engineering shortcomings.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -66,7 +66,7 @@ empirical claim: that the failures of current deep learning systems are not
 distributed randomly across applications but form a consistent pattern,
 one that is predictable from the structural properties of what
 gradient-based learning produces. Establishing this claim requires an
-empirical anchor — a domain in which the failure modes can be observed
+empirical anchor, a domain in which the failure modes can be observed
 concretely, measured systematically, and connected to the underlying learning
 paradigm. Agents for computer use (ACUs) provide precisely this anchor.
 
@@ -84,11 +84,11 @@ the gap that motivates the rest of this thesis.
 The contribution of this chapter is a comprehensive survey and taxonomy of the
 ACU literature, covering 87 original research papers and 33 datasets published
 between 2018 and 2024. We structure the literature using a three-perspective
-taxonomy grounded in established agent theory — domain, interaction, and agent
-perspectives — and apply it to identify six persistent research gaps. These
-gaps are not presented here merely as a field-specific finding; they serve as
-the empirical foundation for the structural diagnosis developed in
-Part~\ref{part:diagnosis}.
+taxonomy grounded in established agent theory, taking the domain, the
+interaction and the agent in turn, and apply it to identify six persistent
+research gaps. These gaps are not presented here merely as a field-specific
+finding. They are the empirical foundation for the structural diagnosis
+developed in Part~\ref{part:diagnosis}.
 
 Section~\ref{sec:acu_methodology} describes the survey methodology.
 Sections~\ref{acu:sec:field} through~\ref{acu:sec:evaluation_agent} constitute the
@@ -100,37 +100,9 @@ survey findings for the thesis argument.
 A note on scope: the broader literature on ACUs and the prior surveys in this
 space are reviewed in Chapter~\ref{chap:relatedwork}, Section~\ref{sec:rw_agents}.
 The methodology section below discusses methodological prior work specifically
-relevant to the survey design; general contextualisation of the ACU field in
+relevant to the survey design. General contextualisation of the ACU field in
 the literature is not repeated here.
 
-
-% ─────────────────────────────────────────────────────────────────────────────
-%
-%   ██████╗ ██████╗ ██████╗ ███████╗    ██████╗  ██████╗ ██████╗ ██╗   ██╗
-%  ██╔════╝██╔═══██╗██╔══██╗██╔════╝    ██╔══██╗██╔═══██╗██╔══██╗╚██╗ ██╔╝
-%  ██║     ██║   ██║██████╔╝█████╗      ██████╔╝██║   ██║██║  ██║ ╚████╔╝
-%  ██║     ██║   ██║██╔══██╗██╔══╝      ██╔══██╗██║   ██║██║  ██║  ╚██╔╝
-%  ╚██████╗╚██████╔╝██║  ██║███████╗    ██████╔╝╚██████╔╝██████╔╝   ██║
-%   ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝   ╚═════╝  ╚═════╝ ╚═════╝    ╚═╝
-%
-%   ═══════════════════════════════════════════════════════════════════════
-%   INSERT SECTIONS 2–9 OF THE PUBLISHED PAPER HERE
-%   (from \section{Formalizing the Problem} / \label{sec:field}
-%    through \section{Evaluation} / \label{sec:evaluation_agent})
-%
-%   Renumber all figures and tables to the thesis scheme:
-%     Figure 1  →  Figure~\ref{fig:acu_example}   (prefix: acu_)
-%     Table 1   →  Table~\ref{tab:acu_...}         (prefix: acu_)
-%
-%   Replace all \cref{sec:X} with \ref{sec:X} if using cleveref,
-%   or adjust cross-reference style to match thesis preamble.
-%
-%   The Appendix material from the paper (Appendix A1–A3 and the
-%   supplementary tables) should be placed in the thesis Appendix
-%   chapter, referenced here as Appendix~\ref{app:acu}.
-%   ═══════════════════════════════════════════════════════════════════════
-%
-% ─────────────────────────────────────────────────────────────────────────────
 
 
 \begin{importedpaper}{acu}
@@ -179,15 +151,16 @@ corresponding to the main differentiating aspects:
 
 This chapter has presented a comprehensive survey and taxonomy of agents for
 computer use, covering 87 original research papers and 33 benchmark datasets
-spanning the period 2018 to 2024. The three-perspective taxonomy — domain,
-interaction, and agent — provides a technology-agnostic organisational
+spanning the period 2018 to 2024. The three-perspective taxonomy, which takes the
+domain, the interaction and the agent in turn, provides a technology-agnostic
+organisational
 framework that bridges the previously fragmented literatures on
 reinforcement-learning-based agents and foundation-model-based agents, enabling
 systematic comparison across architectures and training paradigms.
 
 Three structural trends characterise the current state of the field. The field
 is transitioning from specialised, task-specific agents toward foundation-model-based
-agents that leverage pre-trained vision-language models for open-ended reasoning.
+agents built on pre-trained vision-language models for open-ended reasoning.
 The dominant observation modality is shifting from structured text
 representations, such as HTML and accessibility trees, toward raw screenshots,
 reflecting both the fragility of text-based observations and the improving
@@ -235,8 +208,8 @@ training procedure, or platform:
     systems are developed and evaluated in static, deterministic, idealised
     environments. Real-world deployment introduces dynamic interfaces,
     non-stationarity from software updates, privacy constraints, and the need
-    for conditional rather than full autonomy — properties that are absent from
-    virtually all existing research settings.
+    for conditional rather than full autonomy, and these properties are absent
+    from virtually all existing research settings.
 \end{enumerate}
 
 These six gaps are not independent failures of individual systems. They are
@@ -253,8 +226,8 @@ the largest and most capable foundation models currently evaluated on ACU
 benchmarks. The benchmark complexity gap is not narrowing: as benchmarks
 become more realistic, the gap between evaluated performance and the minimum
 required for practical deployment remains substantial. And the disconnect
-between research conditions and deployment conditions is structural — it
-reflects assumptions baked into experimental design, not a shortfall in
+between research conditions and deployment conditions is structural. It
+reflects assumptions built into experimental design, not a shortfall in
 model capacity that additional compute can correct.
 
 Part~\ref{part:diagnosis} takes up the question of what these failures do
@@ -265,5 +238,5 @@ of the training signal rather than by the causal structure of the world.
 The six gaps identified here are, under this account, predictable consequences
 of a learning paradigm that encodes statistical correlations rather than
 invariant structure. This reframing has direct implications for what kinds of
-interventions can address the gaps — a question taken up in Parts~\ref{part:constraints}
-and~\ref{part:paradigm}.
+interventions can address the gaps, a question taken up in
+Parts~\ref{part:constraints} and~\ref{part:paradigm}.

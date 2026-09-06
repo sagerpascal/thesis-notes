@@ -24,17 +24,32 @@
 \chapter{COGITAO}
 \label{app:cogitao}
 
+% In the order 6_appendix/main.tex gives them, which is the order the paper
+% was published in. That file is dropped because it is nothing but \subfile
+% calls, so the order lives here instead. Experiments.tex leaves its outermost
+% itemize open, and the optional argument closes it; check_imports.py works
+% out what is needed and fails if this stops matching.
 \begin{importedpaper}{cogitao}
-\importsection{6_appendix/COGITAO_details.tex}
-\importsection{6_appendix/Metrics.tex}
-\importsection{6_appendix/Models.tex}
-\importsection{6_appendix/Results.tex}
-\importsection{6_appendix/Training.tex}
-\importsection{6_appendix/cogitao_learning_regime.tex}
-\importsection{6_appendix/llm_results.tex}
-\importsection{6_appendix/naturalistic_COGITAO.tex}
 \importsection{6_appendix/sequential_COGITAO.tex}
+\importsection{6_appendix/naturalistic_COGITAO.tex}
+\importsection{6_appendix/llm_results.tex}
+\importsection{6_appendix/COGITAO_details.tex}
 \importsection{6_appendix/transformation_learnability.tex}
+\importsection[\end{itemize}]{6_appendix/Experiments.tex}
+\importsection{6_appendix/Metrics.tex}
+\importsection{6_appendix/cogitao_learning_regime.tex}
+\importsection{6_appendix/Models.tex}
+\importsection{6_appendix/Training.tex}
+\importsection{6_appendix/Results.tex}
+
+% 6_appendix/LLM_Prompts.tex cannot be included, and the manifest says why.
+% The paper's body refers to it, so the reference is answered here instead of
+% printing ??. The label is written plainly rather than through
+% \importedlabel, because inside the block \label already adds the prefix.
+\section{LLM Prompts}
+\label{appendix:Prompt_Details}
+The prompts given to the language models run to several pages of verbatim
+text. They are reproduced in the published paper rather than here.
 \end{importedpaper}
 
 \chapter{The Learning Rule and the Layout}

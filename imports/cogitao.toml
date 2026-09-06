@@ -27,9 +27,8 @@ graphics = ["Figures"]
 "deprecated/**" = "an earlier NeurIPS version kept only as a backup"
 
 [drop]
-"6_appendix/LLM_Prompts.tex" = "147 lines of raw LLM prompts in lstlisting. kaobook's margin-aware output routine exhausts TeX's main memory partway through them and the build produces no PDF. Restore it if the prompts are shortened or moved out of a listing."
+"6_appendix/LLM_Prompts.tex" = "177 lines of raw LLM prompts in six lstlisting environments. kaobook's output routine holds the whole listing in \\@outputbox and exhausts TeX's main memory partway through, and the build then produces no PDF at all. It compiles on its own in a short document, so a test outside the thesis proves nothing. Restore it if the prompts are shortened or moved out of a listing."
 "6_appendix/main.tex" = "only a list of \\subfile calls, one of which is the broken Experiments.tex. The thesis appendix includes its children directly and supplies its own heading."
-"6_appendix/Experiments.tex" = "the outermost \\begin{itemize} on line 9 is never closed, which swallows the rest of the thesis. Restore this once it is fixed upstream."
 "main.tex"                = "the paper's own root file, replaced by the chapter wrapper"
 "iclr2026_conference.tex" = "the ICLR template's own sample document, not the paper"
 "abstract_ICLR.tex"       = "the thesis has its own abstract"

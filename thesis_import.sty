@@ -72,15 +72,21 @@
 % carry its own \documentclass wrapper and it would fight kaobook. Tracking the
 % directory ourselves is enough, and \filename@parse is the kernel's own path
 % splitter. The group keeps \ip@cwd correct as the nesting unwinds.
-\newcommand{\ip@subfile}[1]{%
+\newcommand{\ip@subfileclose}[2]{%
   \begingroup
     \filename@parse{#1}%
     \edef\ip@cwd{\ip@cwd\filename@area}%
     \edef\ip@target{\ip@dir/\ip@cwd\filename@base
       \ifx\filename@ext\relax\else.\filename@ext\fi}%
     \expandafter\input\expandafter{\ip@target}%
+    % Anything the file opens and does not close has to be closed here, before
+    % \endgroup. A file that leaves an \begin{itemize} open otherwise takes
+    % this group's \endgroup as its own, \ip@cwd is never restored, and the
+    % next \importsection resolves against a doubled path.
+    #2%
   \endgroup
 }
+\newcommand{\ip@subfile}[1]{\ip@subfileclose{#1}{}}
 \newif\ifip@inside
 \providecommand*\input@path{}
 
@@ -299,6 +305,19 @@
 \newcommand{\ip@allcommands}{label,label@in@display,ref,pageref,nameref,%
 autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
 
+% Defining one of a paper's labels from thesis owned text, outside any block.
+%
+% When a chapter drops the paper's discussion and writes its own summary, the
+% paper's body still says "as we discuss in Section~\ref{sec:discussion}", and
+% the section that reference wants is now the chapter summary. This puts the
+% paper's label there. It is not a full importedpaper block, because that ends
+% with a \clearpage and would break the page in the middle of a chapter.
+%
+% Use it only where the thesis owned text really is the replacement for what
+% the paper labelled. It is a claim about content, not a way to silence a
+% warning.
+\newcommand{\importedlabel}[2]{\label{#1:#2}}
+
 % Reaching a thesis label from inside a block.
 \NewDocumentCommand{\thesisref}{sm}{%
   \IfBooleanTF{#1}{\ip@plain@ref*{#2}}{\ip@plain@ref{#2}}%
@@ -394,7 +413,12 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
 
 % One section of the current paper, named relative to the paper's root. For a
 % paper that arrived as split section files.
-\newcommand{\importsection}[1]{%
+% The optional argument closes what the file leaves open. A published paper
+% is not always balanced, and this is how the thesis includes an unbalanced
+% one without editing it. scripts/check_imports.py works out what is missing
+% and fails if the two disagree, in either direction, so the day the paper is
+% fixed upstream the stale closer is reported rather than silently breaking.
+\NewDocumentCommand{\importsection}{om}{%
   \ifip@inside\else
     \PackageError{thesis_import}%
       {\string\importsection\space outside an importedpaper environment}{}%
@@ -402,7 +426,7 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   % Routed through \ip@subfile so that \ip@cwd is set to this file's own
   % directory. A paper using \subfile nests relative to the including file, so
   % the tracking has to start here rather than at the first \subfile.
-  \ip@subfile{#1}%
+  \IfNoValueTF{#1}{\ip@subfileclose{#2}{}}{\ip@subfileclose{#2}{#1}}%
 }
 
 % One part of a paper that arrived as a single file. scripts/split_paper.py

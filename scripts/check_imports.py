@@ -392,6 +392,34 @@ def check_monolithic(m: Manifest, report: Report) -> None:
             f"not a generated part")
 
 
+CLOSER = re.compile(
+    r"\\importsection(?:rotated)?\[(.*?)\]\{([^}]*)\}")
+
+
+def importsection_closers(m: Manifest) -> dict[str, dict[str, int]]:
+    """What each \\importsection's optional argument closes, per file.
+
+    A published paper is not always balanced, and the thesis closes what one
+    leaves open from the chapter rather than by editing the paper. This reads
+    those closers back so check_balanced can hold them to what the file
+    actually needs, in both directions: a missing one swallows the document,
+    a stale one breaks the build the day the paper is fixed.
+    """
+    out: dict[str, dict[str, int]] = {}
+    for entry in (m.chapter, APPENDIX_FILE):
+        if not entry.is_file():
+            continue
+        text = strip_comments(entry.read_text(encoding="utf-8", errors="replace"))
+        for arg, target in CLOSER.findall(text):
+            rel = target.strip()
+            if rel.startswith("./"):
+                rel = rel[2:]
+            per = out.setdefault(rel, {})
+            for name in re.findall(r"\\end\{([^}]*)\}", arg):
+                per[name] = per.get(name, 0) + 1
+    return out
+
+
 def check_balanced(m: Manifest, report: Report) -> None:
     """Every included file closes what it opens.
 
@@ -402,6 +430,7 @@ def check_balanced(m: Manifest, report: Report) -> None:
     """
     from collections import Counter
     comment = re.compile(r"(?<!\\)%.*")
+    closers = importsection_closers(m)
     for path in sorted(m.dir.rglob("*.tex")):
         rel = str(path.relative_to(m.dir))
         if matches_any(rel, m.exclude) or rel in m.drop:
@@ -412,10 +441,25 @@ def check_balanced(m: Manifest, report: Report) -> None:
         for name in sorted(set(opened) | set(closed)):
             if name == "document" or opened[name] == closed[name]:
                 continue
+            need = opened[name] - closed[name]
+            if need > 0 and closers.get(rel, {}).get(name) == need:
+                report.notes.append(
+                    f"{m.slug}: {rel} leaves {need} `{name}` open and the "
+                    f"chapter closes it with \\importsection's optional "
+                    f"argument. Drop that argument the day it is fixed "
+                    f"upstream.")
+                continue
+            if need > 0:
+                report.errors.append(
+                    f"{m.slug}: {rel} opens {opened[name]} `{name}` and closes "
+                    f"{closed[name]}. An unbalanced environment swallows the "
+                    f"rest of the thesis. Close it from the chapter with "
+                    f"\\importsection[\\end{{{name}}}]{{{rel}}}, fix it "
+                    f"upstream, or drop the file.")
+                continue
             report.errors.append(
-                f"{m.slug}: {rel} opens {opened[name]} `{name}` and closes "
-                f"{closed[name]}. An unbalanced environment swallows the rest "
-                f"of the thesis. Fix it upstream, or drop the file.")
+                f"{m.slug}: {rel} closes {closed[name]} `{name}` and opens "
+                f"only {opened[name]}. Fix it upstream, or drop the file.")
 
 
 REF_CMD = re.compile(
