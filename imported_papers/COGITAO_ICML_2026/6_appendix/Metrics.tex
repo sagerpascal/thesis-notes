@@ -1,0 +1,125 @@
+\section{Metrics}\label{appendix:metrics}
+
+We chose to exact grid accuracy to maintain consistency in the field, as this is what has been standard for a lot of ARC-like datasets (to mention a few \cite{arc_vit, cholletARC}). However, we acknowledge the strictness of "Exact Grid Match." To address this, we have expanded our evaluation suite to include:
+Per-Pixel Accuracy (PPA): Accuracy over all grid pixels.
+Object-PPA: Accuracy calculated only on non-background pixels (to prevent high scores from empty space).
+ID-Predicted (Novel Metric): This measures "stubbornness." It calculates the percentage of OOD tasks where the model predicted a transformation sequence seen during training (ID) instead of the correct novel sequence.
+
+We report results on all these metrics in our Learning Regime experiments (see appendix \ref{appendix:cogitao_learning_regime}), and find that in many failure cases, ID-Predicted is high, indicating models are over-fitting to the training distribution's compositional structures rather than learning the underlying rules of composition.
+
+We below present the detailed equations of each metric.
+
+\subsection{Metric 1: Perfect Grid Accuracy (GA)}
+
+The perfect \textbf{grid accuracy} is computed as a percentage of perfectly reconstructed grids. Specifically, given predicted grid $\hat{\mathbf{Y}}_k$ and ground truth grid $\mathbf{Y}_k$ 
+
+$$\text{Perfect Grid Accuracy Indicator: } \quad \mathbb{I}(\hat{\mathbf{Y}}_k = \mathbf{Y}_k) = 
+\begin{cases} 
+1 & \text{if all pixels in } \hat{\mathbf{Y}}_k \text{ match } \mathbf{Y}_k \\
+0 & \text{otherwise}
+\end{cases}
+$$
+
+$$\text{GA} = \frac{1}{N} \sum_{k=1}^{N} \mathbb{I}(\hat{\mathbf{Y}}_k = \mathbf{Y}_k) \times 100\%$$
+
+\subsection{Metric 2: Per Pixel Accuracy (PPA)}
+
+The \textbf{Per Pixel Accuracy} informs us on the percentage of wrongly predicted pixels.
+
+As the model’s output layer always produces a fixed grid of size $(m \times n)$ (with $m$ and $n$ possibly changing per experiments) each grid is flattened into a vector in $\mathbb{R}^{mn}$.  
+Thus, every predicted grid $\hat{\mathbf{Y}}_k \in \mathbb{R}^{mn}$ and ground-truth grid $\mathbf{Y}_k \in \mathbb{R}^{mn}$ have exactly \(P = mn\) pixels, regardless of the original (unpadded) grid size.
+
+We can thus calculate the per-pixel accuracy for sample $k$ as follows:
+
+$$
+\text{Per-Pixel Accuracy}_k
+= \frac{1}{mn} \sum_{i=1}^{mn} 
+\mathbb{I}\big( \hat{\mathbf{Y}}_{k,i} = \mathbf{Y}_{k,i} \big).
+$$
+
+The overall per-pixel accuracy across \(N\) samples is:
+
+$$
+\text{PPA}
+= \frac{1}{N} \sum_{k=1}^{N} 
+\left( \frac{1}{mn} \sum_{i=1}^{mn} 
+\mathbb{I}\big( \hat{\mathbf{Y}}_{k,i} = \mathbf{Y}_{k,i} \big) \right)
+\times 100\%.
+$$
+\subsection{Metric 3: Object Accuracy} 
+
+The \textbf{Per Object Pixel Accuracy} metric that informs us on the extent to which objects were mispredicted.
+
+For each sample $k$, let the predicted grid be  $\hat{\mathbf{Y}}_k \in \mathbb{R}^{mn}$ and the ground-truth grid $\mathbf{Y}_k \in \mathbb{R}^{mn}$, where each pixel can be either zero (background) or a non-zero object label.
+
+The \textbf{object accuracy} counts mismatches \textbf{only on pixels $i$ where at least one of the grids is non-zero}. 
+
+$$
+\text{ObjectError}_k
+= \sum_{i=1}^{mn}
+\mathbb{I}\!\left(
+\begin{aligned}
+&(\hat{\mathbf{Y}}_{k,i} \neq 0 \;\lor\; \mathbf{Y}_{k,i} \neq 0) \\ 
+&\quad\land\; \hat{\mathbf{Y}}_{k,i} = \mathbf{Y}_{k,i}
+\end{aligned}
+\right)
+$$
+
+The \textbf{per-object accuracy} for sample $k$ is then:
+
+$$
+\text{Object Accuracy}_k
+= \frac{\text{ObjectError}_k}{mn}.
+$$
+
+Averaged across \(N\) samples:
+
+$$
+\text{Obj-PPA}
+= \frac{1}{N} \sum_{k=1}^{N}
+\text{Object Accuracy}_k
+\times 100\%.
+$$
+
+\subsection{Metric 4: Model "Stubborness" (STBN)}
+
+As it is difficult from the previous metrics to evaluate the precise failure modes of models, we introduce a new metric, which we term "Model *Stubborness*". Model stubborness is specifically introduced for the CompGen out-of-distribution (OOD) test settings, for which models need to predict a grid following a different transformation sequence than seen during in-distribution (ID) training.
+
+We hypothesize that models may behave in a *stubborn* manner at test time - i.e., despite facing a novel transformation sequence, they may still produce an output grid consistent with one of the ID (in-distribution) training transformation sequences.
+
+Formally, let:
+\begin{itemize}
+    \item $T_{\text{ID}} = \{ \tau^{ID}_1, \tau^{ID}_2, \dots, \tau^{ID}_M \}$ denote the set of all ID transformation sequences, which is **disjoint** from the OOD transformation set $T_{\text{OOD}} = \{ \tau^{OOD}_1, \tau^{OOD}_2, \dots, \tau^{OOD}_M \}$, i.e., $T_{\text{ID}} \cap T_{\text{OOD}} = \emptyset$.
+    \item $\mathbf{X}_k^{\text{OOD}}$ be an input grid which should be transformed following a   given transformation sequence $\tau^{OOD}_{\lambda}$
+    \item $\hat{\mathbf{Y}}_k$ be the model prediction for sample $k$,
+    \item and let $\tau(\cdot)$ denote the deterministic application of a transformation sequence.
+\end{itemize}
+
+We say the model is \textbf{stubborn} on sample $\mathbf{X}_k^{\text{OOD}}$ if:
+
+$$
+\exists\, \tau \in T_{\text{ID}} \quad \text{s.t.} \quad 
+\hat{\mathbf{Y}}_k = \tau(\mathbf{X}_k^{\text{OOD}}).
+$$
+
+The stubbornness indicator is defined as:
+
+$$
+\mathbb{I}_{\text{stubborn}}(k) =
+\begin{cases}
+1 & \text{if } \exists\, \tau \in T_{\text{ID}} :\ 
+\hat{\mathbf{Y}}_k = \tau(\mathbf{X}_k^{\text{OOD}}), \\[6pt]
+0 & \text{otherwise.}
+\end{cases}
+$$
+
+The \textbf{Model Stubbornness Metric} over $N$ OOD samples is:
+
+$$
+\mathcal{STBN}
+= \frac{1}{N} 
+\sum_{k=1}^{N} \mathbb{I}_{\text{stubborn}}(k)
+\times 100\%.
+$$
+
+Intuitively, the metric measures how often the model ignores the novel OOD transformation sequence and instead outputs a grid that could have been produced by an ID transformation rule.

@@ -1,0 +1,650 @@
+\section{Results}
+We present a set of results for each model and each of the 40 individual experiments considered in the studies of CompGen and EnvGen. The results reported are the average of three runs with different random seeds. A few experiments showed a high sensitivity to the random seed, up to a 15\% difference, while the others yielded similar results for different runs. Tables ~\ref{tab:compositionality_grid_acc_with_sem_resnet_vanillavit}~\ref{tab:compositionality_grid_acc_with_sem_gridvit_llada}~\ref{tab:sys-gen_grid_acc_with_sem_resnet_vanillavit}~\ref{tab:sys-gen_grid_acc_with_sem_gridvit_llada} display the in-domain (ID) and out-of-domain (OOD) test grid accuracies (i.e., the predicted grid and the ground-truth target grid, both padded to a max. size, should perfectly match) for all models considered across all the experiment settings (i.e., C1-C3 and G1-G5). While the main paper provides a summary in the form of averaged results over each setting for clarity and space constraints, the exhaustive results here enable a more granular understanding of model behavior given different transformations and compositions thereof.
+
+We include here results of a ResNet-like model baseline, which is omitted from the main text table and discussion. As a standard convolutional neural network performing well on vision tasks - even when it includes a level of reasoning \citep{cvr2022}, ResNet is poorly designed for compositionality tasks, and is more sample efficient than Transformer-based architectures \citep{cvr2022}. Consequently, it was not deemed to be of focus in this paper, alth-ough it could provide few insights. Its inclusion here also serves to put into perspective the performance of models with clearly different inductive biases. In the main paper, we focus on models better designed for abstraction and generalization, with a Vanilla-TF as starting point, followed by Grid-TF, PL-TF and LLaDA models.
+
+The results clearly highlight that compositional generalization remains a major challenge, which \generatorName \; allows to explore. Across most CompGen experiments, models perform poorly in the OOD setting. Notably, some transformations stand out as yielding easier or more difficult tasks. For example, \texttt{translate\_up} is by far the easier transformation followed for example by \texttt{extend\_contours\_same} and \texttt{crop\_top\_side}. More difficult transformations include \texttt{mirror\_horizontal} and \texttt{rotate90} which empirically, but also intuitively, are seen to be more complex. A transformation such as \texttt{crop\_top\_side} may be easier as it mainly introduces localized changes, allowing models, especially those with strong inductive biases for locality, to generalize more effectively. In contrast, transformations such as \texttt{mirror\_horizontal} and \texttt{rotate90} result in drastic spatial reconfigurations of visual features, which can severely disrupt learned representations, in particular when not explicitly trained on such variations.
+
+In the \textit{EnvGen} experiments, ResNet performed competitively, and even better for settings focused on changes of grid size and number of objects. These experiments involve systematic variations of properties of the grid environment and scene (e.g., the grid size, the number of objects, their spatial distribution) which can still be captured through localized pixel/symbol statistics and spatial patterns that do not require compositional abilities. ResNet's strong performance here could be attributed to its architectural inductive biases: overlapping receptive fields, translation invariance from convolutions, and the ability to encode detailed local structures without aggressive downsampling (as per our implementation). We suspect that these properties enable it to effectively maintain useful representations when the domain shift involves more spatially coherent variations, as opposed to more abstract ones based on a compositional prior.
+
+These detailed tables serve not only as a complement to the averaged results in the main paper, but also as a valuable diagnostic tool for evaluating the specific generalization challenges posed by different transformations. They reinforce the necessity of designing models and training regimes that can robustly handle a wide range of compositional and systematic shifts in visual input with respect to diverse transformations implying fundamentally different types of changes in the grid. Consequently, an exhaustive table with more experiments for all the transformations enabled by \generatorName \; would be a natural extension of those results.
+
+% \begin{table}[htbp] \label{compositionality_table}
+%   \centering
+%   \caption{ID and OOD test grid accuracy for the Compositionality experiments part of settings C1-C3 and the models considered.}
+%   \label{tab:compositionality_grid_acc}
+
+%   \begin{tabular}{l l S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]}
+%     \toprule
+%     & & \multicolumn{2}{c}{\textbf{ResNet}} & \multicolumn{2}{c}{\textbf{Vanilla-ViT}} & \multicolumn{2}{c}{\textbf{Grid-ViT}} & \multicolumn{2}{c}{\textbf{LLaDA}} \\
+%     \cmidrule(lr){3-4}
+%     \cmidrule(lr){5-6}
+%     \cmidrule(lr){7-8}
+%     \cmidrule(lr){9-10}
+%     \textbf{Setting} & \textbf{Experiment} & \textbf{ID} & \textbf{OOD} & \textbf{ID} & \textbf{OOD} & \textbf{ID} & \textbf{OOD} & \textbf{ID} & \textbf{OOD} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C1}} & experiment-1 & 0.1 & 0.0 & 23.3 & 0.0 & 43.5 & 0.0 & 27.7 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 8.9 & 0.0 & 22.7 & 0.0 & 47.2 & 0.0 & 67.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 1.0 & 0.0 & 5.4 & 0.0 & 56.7 & 0.0 & 33.3 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 0.1 & 0.0 & 89.5 & 76.6 & 98.6 & 95.6 & 87.7 & 70.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 0.6 & 0.0 & 14.4 & 0.0 & 59.7 & 0.0 & 32.6 & 0.0 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C2}} & experiment-1 & 0.7 & 0.0 & 26.8 & 0.0 & 56.2 & 0.0 & 31.2 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 12.2 & 0.0 & 14.6 & 0.0 & 94.3 & 0.0 & 72.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 0.6 & 0.0 & 8.8 & 0.0 & 56.6 & 0.0 & 27.2 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 0.4 & 0.0 & 88.6 & 72.3 & 98.2 & 95.0 & 89.6 & 75.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 0.2 & 0.0 & 21.6 & 0.0 & 42.9 & 0.0 & 32.2 & 0.0 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C3}} & experiment-1 & 0.0 & 0.0 & 13.8 & 0.8 & 40.5 & 1.2 & 91.7 & 1.2 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 10.4 & 3.2 & 37.4 & 5.5 & 68.1 & 15.0 & 98.4 & 24.5 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 3.0 & 0.1 & 12.6 & 1.1 & 51.4 & 2.6 & 82.7 & 5.5 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 0.0 & 0.0 & 16.3 & 0.4 & 67.7 & 0.4 & 51.2 & 0.3 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 0.1 & 0.0 & 15.1 & 0.3 & 66.7 & 0.6 & 84.3 & 1.8 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+
+
+
+
+
+% \begin{table}[htbp] \label{generalization_table}
+%   \centering
+%   \caption{ID and OOD test grid accuracy for the Systematic-Generalization experiments part of settings G1-G5 and the models considered.}
+%   \label{tab:sys-gen_grid_acc}
+
+%   \begin{tabular}{l l S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]}
+%     \toprule
+%     & & \multicolumn{2}{c}{\textbf{ResNet}} & \multicolumn{2}{c}{\textbf{Vanilla-ViT}} & \multicolumn{2}{c}{\textbf{Grid-ViT}} & \multicolumn{2}{c}{\textbf{LLaDA}} \\
+%     \cmidrule(lr){3-4}
+%     \cmidrule(lr){5-6}
+%     \cmidrule(lr){7-8}
+%     \cmidrule(lr){9-10}
+%     \textbf{Setting} & \textbf{Experiment} & \textbf{ID} & \textbf{OOD} & \textbf{ID} & \textbf{OOD} & \textbf{ID} & \textbf{OOD} & \textbf{ID} & \textbf{OOD} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G1}} & experiment-1 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 & 99.9 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 99.8 & 96.5 & 97.3 & 55.4 & 99.7 & 92.7 & 99.0 & 83.5 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 99.8 & 98.5 & 97.5 & 77.5 & 99.8 & 95.3 & 99.1 & 84.2 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 100.0 & 99.9 & 98.9 & 77.9 & 99.2 & 88.5 & 99.6 & 88.9 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 99.9 & 99.3 & 98.2 & 83.7 & 97.8 & 73.9 & 99.8 & 94.1 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G2}} & experiment-1 & 100.0 & 99.9 & 98.7 & 1.9 & 100.0 & 90.5 & 100.0 & 60.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 88.9 & 78.2 & 57.1 & 0.2 & 97.1 & 68.5 & 95.5 & 45.3 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 99.3 & 98.2 & 81.1 & 8.2 & 97.9 & 90.6 & 97.7 & 47.8 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 100.0 & 100.0 & 96.3 & 0.0 & 99.5 & 94.2 & 99.7 & 89.7 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 100.0 & 100.0 & 76.9 & 0.2 & 95.6 & 41.4 & 99.6 & 68.7 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G3}} & experiment-1 & 100.0 & 100.0 & 100.0 & 88.6 & 100.0 & 99.7 & 100.0 & 99.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 93.7 & 0.0 & 0.0 & 0.0 & 33.4 & 0.0 & 18.8 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 96.2 & 0.1 & 2.3 & 0.1 & 97.5 & 0.1 & 96.8 & 0.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 98.9 & 0.0 & 93.0 & 0.0 & 98.2 & 0.0 & 97.2 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 99.4 & 35.3 & 92.6 & 23.8 & 95.7 & 33.1 & 99.2 & 34.7 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G4}} & experiment-1 & 100.0 & 23.7 & 100.0 & 90.6 & 100.0 & 79.4 & 100.0 & 99.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 30.7 & 0.0 & 3.8 & 0.0 & 79.6 & 0.0 & 28.3 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 58.8 & 0.1 & 14.8 & 0.0 & 61.8 & 0.0 & 88.5 & 0.9 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 95.2 & 64.1 & 51.9 & 9.0 & 97.0 & 15.2 & 91.6 & 24.7 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 97.1 & 36.9 & 60.4 & 9.4 & 96.0 & 0.1 & 98.3 & 34.7 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G5}} & experiment-1 & 100.0 & 9.1 & 97.7 & 0.0 & 100.0 & 1.1 & 99.9 & 50.4 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 98.3 & 0.0 & 91.9 & 0.0 & 77.8 & 0.0 & 12.6 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 98.3 & 0.0 & 32.7 & 0.0 & 98.8 & 0.0 & 43.3 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 100.0 & 0.0 & 98.3 & 0.0 & 100.0 & 0.0 & 95.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 99.7 & 0.6 & 41.9 & 0.0 & 98.3 & 0.0 & 99.3 & 0.0 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+
+
+
+
+
+%%%%%% NEW tables
+
+%% CompGen: ResNet + Vanilla with SEM
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{l l S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1]}
+    \toprule
+    & & \multicolumn{4}{c}{\textbf{ResNet}} & \multicolumn{4}{c}{\textbf{Vanilla-TF}} \\
+    \cmidrule(lr){3-6}
+    \cmidrule(lr){7-10}
+    \textbf{Setting} & \textbf{Experiment}  & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+    \midrule
+    \multirow{5}{*}{\textbf{C1}} & experiment-1 & 0.1 & 0.1 & 0.0 & 0.0 & 23.3 & 5.6 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 8.9 & 3.1 & 0.0 & 0.0 & 22.7 & 3.1 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 1.0 & 0.1 & 0.0 & 0.0 & 5.4 & 0.7 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 2.3 & 0.9 & 0.0 & 0.0 & 16.7 & 5.3 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 0.6 & 0.3 & 0.0 & 0.0 & 14.4 & 0.4 & 0.0 & 0.0 \\
+    \midrule
+    \multirow{5}{*}{\textbf{C2}} & experiment-1 & 0.7 & 0.2 & 0.0 & 0.0 & 26.8 & 0.5 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 12.2 & 6.5 & 0.0 & 0.0 & 14.6 & 0.5 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 0.6 & 0.2 & 0.0 & 0.0 & 8.8 & 1.2 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 7.7 & 2.0 & 0.0 & 0.0 & 17.3 & 0.3 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 0.2 & 0.1 & 0.0 & 0.0 & 21.6 & 1.5 & 0.0 & 0.0 \\
+    \midrule
+    \multirow{5}{*}{\textbf{C3}} & experiment-1 & 0.0 & 0.0 & 0.0 & 0.0 & 13.8 & 1.2 & 0.8 & 0.1 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 10.4 & 3.2 & 3.2 & 1.1 & 37.4 & 5.8 & 5.5 & 2.1 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 3.0 & 0.6 & 0.1 & 0.0 & 12.6 & 2.0 & 1.1 & 0.3 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 0.7 & 0.3 & 0.0 & 0.0 & 68.3 & 8.1 & 12.3 & 3.3 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 0.1 & 0.1 & 0.0 & 0.0 & 15.1 & 6.1 & 0.3 & 0.1 \\
+    \bottomrule
+  \end{tabular}
+  \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) for the \textit{CompGen} experiments (C1--C3) across the models ResNet and Vanilla-TF.}
+\label{tab:compositionality_grid_acc_with_sem_resnet_vanillavit}
+\end{table}
+
+
+%% CompGen: Grid-TF, PL-TF, LLaDA with SEM
+\begin{table}[htbp]
+  \centering
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{l l S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1]}
+    \toprule
+    & & \multicolumn{4}{c}{\textbf{Grid-TF}} & \multicolumn{4}{c}{\textbf{PL-TF}} & \multicolumn{4}{c}{\textbf{LLaDA}} \\
+    \cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14}
+    \textbf{Setting} & \textbf{Experiment} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+    \midrule
+    \multirow{5}{*}{\textbf{C1}} & experiment-1 & 43.5 & 16.9 & 0.0 & 0.0 & 65.8 & 1.0 & 0.3 & 0.2 & 27.7 & 1.4 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 47.2 & 18.6 & 0.0 & 0.0 & 82.8 & 0.6 & 0.0 & 0.0 & 67.0 & 0.4 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 56.7 & 7.7 & 0.0 & 0.0 & 83.7 & 1.3 & 0.0 & 0.0 & 33.3 & 2.5 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 91.7 & 0.3 & 0.0 & 0.0 & 89.0 & 1.5 & 0.0 & 0.0 & 64.0 & 29.1 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 59.7 & 11.9 & 0.0 & 0.0 & 83.7 & 0.5 & 0.0 & 0.0 & 32.6 & 7.5 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \multirow{5}{*}{\textbf{C2}} & experiment-1 & 56.2 & 5.8 & 0.0 & 0.0 & 59.3 & 1.0 & 0.5 & 0.5 & 31.2 & 0.8 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 94.3 & 1.5 & 0.0 & 0.0 & 76.1 & 12.8 & 0.0 & 0.0 & 72.0 & 1.2 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 56.6 & 5.8 & 0.0 & 0.0 & 87.4 & 0.7 & 0.0 & 0.0 & 27.2 & 1.2 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 92.3 & 2.2 & 0.0 & 0.0 & 86.3 & 3.5 & 0.0 & 0.0 & 68.3 & 22.6 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 42.9 & 9.6 & 0.0 & 0.0 & 86.1 & 1.0 & 0.0 & 0.0 & 32.2 & 3.6 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \multirow{5}{*}{\textbf{C3}} & experiment-1 & 40.5 & 18.8 & 1.2 & 0.5 & 85.1 & 1.6 & 1.8 & 0.1 & 91.7 & 3.3 & 1.2 & 0.1 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 68.1 & 29.5 & 15.0 & 7.5 & 79.0 & 4.7 & 19.8 & 1.8 & 98.4 & 0.6 & 24.5 & 1.1 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 51.4 & 1.2 & 2.6 & 0.4 & 77.5 & 3.2 & 2.6 & 0.3 & 82.7 & 5.9 & 5.5 & 0.8 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 89.7 & 8.9 & 22.0 & 4.7 & 85.3 & 1.5 & 11.3 & 1.5 & 63.3 & 10.3 & 6.0 & 4.6 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 66.7 & 14.1 & 0.6 & 0.3 & 82.9 & 3.2 & 0.5 & 0.0 & 84.3 & 9.9 & 1.8 & 0.7 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \bottomrule
+  \end{tabular}
+}
+  \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) for the \textit{CompGen} experiments (C1--C3) across the models Grid-TF, PL-TF, and LLaDA.}
+\label{tab:compositionality_grid_acc_with_sem_gridvit_llada}
+\end{table}
+
+
+
+%% EnvGen: ResNet + Vanilla with SEM
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{l l S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1]}
+    \toprule
+    & & \multicolumn{4}{c}{\textbf{ResNet}} & \multicolumn{4}{c}{\textbf{Vanilla-TF}} \\
+    \cmidrule(lr){3-6}
+    \cmidrule(lr){7-10}
+    \textbf{Setting} & \textbf{Experiment}  & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+    \midrule
+    \multirow{5}{*}{\textbf{G1}} & experiment-1 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 99.8 & 0.0 & 96.5 & 0.1 & 97.3 & 0.2 & 55.4 & 6.6 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 99.8 & 0.1 & 98.5 & 0.2 & 97.5 & 0.6 & 77.5 & 3.4 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 100.0 & 0.0 & 99.9 & 0.0 & 98.9 & 0.6 & 77.9 & 3.5 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 99.9 & 0.1 & 99.3 & 0.1 & 98.2 & 0.3 & 83.7 & 1.4 \\
+    \midrule
+    \multirow{5}{*}{\textbf{G2}} & experiment-1 & 100.0 & 0.0 & 99.9 & 0.1 & 98.7 & 0.3 & 1.9 & 1.9 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 88.9 & 1.3 & 78.2 & 7.2 & 57.1 & 21.5 & 0.2 & 0.2 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 99.3 & 0.3 & 98.2 & 0.8 & 81.1 & 11.3 & 8.2 & 5.4 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 100.0 & 0.0 & 100.0 & 0.0 & 96.3 & 1.5 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 100.0 & 0.0 & 100.0 & 0.0 & 76.9 & 2.3 & 0.2 & 0.2 \\
+    \midrule
+    \multirow{5}{*}{\textbf{G3}} & experiment-1 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 88.6 & 9.6 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 93.7 & 0.5 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 96.2 & 1.9 & 0.1 & 0.1 & 2.3 & 0.3 & 0.1 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 98.9 & 1.0 & 0.0 & 0.0 & 93.0 & 2.2 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 99.4 & 0.0 & 35.3 & 2.7 & 92.6 & 1.4 & 23.8 & 3.3 \\
+    \midrule
+    \multirow{5}{*}{\textbf{G4}} & experiment-1 & 100.0 & 0.0 & 23.7 & 5.8 & 100.0 & 0.0 & 90.6 & 0.9 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 30.7 & 1.2 & 0.0 & 0.0 & 3.8 & 2.9 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 58.8 & 2.9 & 0.1 & 0.1 & 14.8 & 1.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 95.2 & 0.6 & 64.1 & 4.0 & 51.9 & 2.8 & 9.0 & 1.4 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 97.1 & 0.9 & 36.9 & 0.5 & 60.4 & 14.7 & 9.4 & 2.3 \\
+    \midrule
+    \multirow{5}{*}{\textbf{G5}} & experiment-1 & 100.0 & 0.0 & 9.1 & 2.0 & 97.7 & 0.2 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-2 & 98.3 & 0.3 & 0.0 & 0.0 & 91.9 & 3.3 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-3 & 98.3 & 0.6 & 0.0 & 0.0 & 32.7 & 14.5 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-4 & 100.0 & 0.0 & 0.0 & 0.0 & 98.3 & 0.9 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-10}
+     & experiment-5 & 99.7 & 0.2 & 0.6 & 0.2 & 41.9 & 18.4 & 0.0 & 0.0 \\
+    \bottomrule
+  \end{tabular}
+  \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) as error bars for the \textit{EnvGen} experiments (G1--G5) across the models ResNet and Vanilla-TF.}
+  \label{tab:sys-gen_grid_acc_with_sem_resnet_vanillavit}
+\end{table}
+
+
+%% EnvGen: Grid-TF, PL-TF, LLaDA with SEM
+\begin{table}[htbp]
+  \centering
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{l l S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1] S[table-format=3.1]@{${}\mathbin{\pm}{}$}S[table-format=2.1]}
+    \toprule
+    & & \multicolumn{4}{c}{\textbf{Grid-TF}} & \multicolumn{4}{c}{\textbf{PL-TF}} & \multicolumn{4}{c}{\textbf{LLaDA}} \\
+    \cmidrule(lr){3-6} \cmidrule(lr){7-10} \cmidrule(lr){11-14}
+    \textbf{Setting} & \textbf{Experiment} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+    \midrule
+    \multirow{5}{*}{\textbf{G1}} & experiment-1 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 99.9 & 0.1 & 100.0 & 0.0 & 99.9 & 0.1 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 99.7 & 0.0 & 92.7 & 1.3 & 90.2 & 5.0 & 90.0 & 4.2 & 99.0 & 0.3 & 83.5 & 3.6 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 99.8 & 0.1 & 95.3 & 0.4 & 84.1 & 1.7 & 82.0 & 1.4 & 99.1 & 0.1 & 84.2 & 2.6 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 99.2 & 0.1 & 88.5 & 2.5 & 96.7 & 1.3 & 72.5 & 9.6 & 99.6 & 0.0 & 88.9 & 1.4 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 97.8 & 0.5 & 73.9 & 4.9 & 98.0 & 0.8 & 82.9 & 2.2 & 99.8 & 0.1 & 94.1 & 1.5 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \multirow{5}{*}{\textbf{G2}} & experiment-1 & 100.0 & 0.0 & 90.5 & 4.9 & 100.0 & 0.0 & 38.4 & 11.2 & 100.0 & 0.0 & 60.6 & 6.6 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 97.1 & 1.8 & 68.5 & 3.6 & 96.4 & 3.4 & 75.9 & 2.8 & 95.5 & 1.3 & 45.3 & 3.4 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 97.9 & 2.1 & 90.6 & 5.8 & 85.7 & 7.3 & 65.4 & 17.3 & 97.7 & 1.8 & 47.8 & 16.8 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 99.5 & 0.2 & 94.2 & 1.1 & 98.5 & 1.1 & 67.2 & 5.0 & 99.7 & 0.1 & 89.7 & 1.2 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 95.6 & 1.1 & 41.4 & 6.2 & 82.2 & 4.1 & 27.7 & 6.1 & 99.6 & 0.2 & 68.7 & 7.8 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \multirow{5}{*}{\textbf{G3}} & experiment-1 & 100.0 & 0.0 & 99.7 & 0.3 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 99.1 & 0.5 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 33.4 & 33.2 & 0.0 & 0.0 & 90.0 & 1.1 & 0.0 & 0.0 & 18.8 & 18.5 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 97.5 & 0.3 & 0.1 & 0.0 & 83.1 & 10.9 & 0.1 & 0.1 & 96.8 & 0.6 & 0.1 & 0.1 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 98.2 & 1.0 & 0.0 & 0.0 & 98.4 & 0.6 & 0.0 & 0.0 & 97.2 & 1.3 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 95.7 & 1.4 & 33.1 & 2.4 & 88.3 & 5.8 & 35.9 & 3.1 & 99.2 & 0.5 & 34.7 & 0.8 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \multirow{5}{*}{\textbf{G4}} & experiment-1 & 100.0 & 0.0 & 79.4 & 9.2 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 99.6 & 0.3 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 79.6 & 5.2 & 0.0 & 0.0 & 87.5 & 1.4 & 0.1 & 0.1 & 28.3 & 28.2 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 61.8 & 30.9 & 0.0 & 0.0 & 86.0 & 0.7 & 19.3 & 4.2 & 88.5 & 3.6 & 0.9 & 0.2 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 97.0 & 1.0 & 15.2 & 6.3 & 82.3 & 0.4 & 35.8 & 3.5 & 91.6 & 2.2 & 24.7 & 2.9 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 96.0 & 0.8 & 0.1 & 0.1 & 78.0 & 10.3 & 32.3 & 10.0 & 98.3 & 0.7 & 34.7 & 6.7 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \multirow{5}{*}{\textbf{G5}} & experiment-1 & 100.0 & 0.0 & 1.1 & 0.5 & 100.0 & 0.0 & 44.4 & 12.7 & 99.9 & 0.1 & 50.4 & 11.1 \\
+    \cmidrule(lr){2-14}
+     & experiment-2 & 77.8 & 13.6 & 0.0 & 0.0 & 57.8 & 25.9 & 0.0 & 0.0 & 12.6 & 8.3 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-3 & 98.8 & 0.4 & 0.0 & 0.0 & 56.0 & 25.7 & 0.0 & 0.0 & 43.3 & 10.3 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-4 & 100.0 & 0.0 & 0.0 & 0.0 & 98.1 & 0.8 & 0.0 & 0.0 & 95.0 & 1.4 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+     & experiment-5 & 98.3 & 0.5 & 0.0 & 0.0 & 91.6 & 0.4 & 0.0 & 0.0 & 99.3 & 0.4 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-14}
+    \midrule
+    \bottomrule
+  \end{tabular}
+}
+  \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) for the \textit{EnvGen} experiments (G1--G5) across the models Grid-TF, PL-TF, and LLaDA.}
+  \label{tab:sys-gen_grid_acc_with_sem_gridvit_llada}
+\end{table}
+
+
+
+
+%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%
+%%%%%% OLD tables
+
+% \begin{table}[htbp]
+%   \centering
+%   \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) as error bars for the \textit{CompGen} experiments part of settings C1-C3 and for the ResNet and Vanilla-TF models.}
+%   \label{tab:compositionality_grid_acc_with_sem_resnet_vanillavit}
+
+%   \begin{tabular}{l l S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1]}
+%     \toprule
+%     & & \multicolumn{4}{c}{\textbf{ResNet}} & \multicolumn{4}{c}{\textbf{Vanilla-TF}} \\
+%     \cmidrule(lr){3-6}
+%     \cmidrule(lr){7-10}
+%     \textbf{Setting} & \textbf{Experiment} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C1}} & experiment-1 & 0.1 & 0.1 & 0.0 & 0.0 & 23.3 & 5.6 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 8.9 & 3.1 & 0.0 & 0.0 & 22.7 & 3.1 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 1.0 & 0.1 & 0.0 & 0.0 & 5.4 & 0.7 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 0.1 & 0.0 & 0.0 & 0.0 & 89.5 & 2.1 & 76.6 & 5.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 0.6 & 0.3 & 0.0 & 0.0 & 14.4 & 0.4 & 0.0 & 0.0 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C2}} & experiment-1 & 0.7 & 0.2 & 0.0 & 0.0 & 26.8 & 0.5 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 12.2 & 6.5 & 0.0 & 0.0 & 14.6 & 0.5 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 0.6 & 0.2 & 0.0 & 0.0 & 8.8 & 1.2 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 0.4 & 0.0 & 0.0 & 0.0 & 88.6 & 5.2 & 72.3 & 10.8 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 0.2 & 0.1 & 0.0 & 0.0 & 21.6 & 1.5 & 0.0 & 0.0 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C3}} & experiment-1 & 0.0 & 0.0 & 0.0 & 0.0 & 13.8 & 1.2 & 0.8 & 0.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 10.4 & 3.2 & 3.2 & 1.1 & 37.4 & 5.8 & 5.5 & 2.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 3.0 & 0.6 & 0.1 & 0.0 & 12.6 & 2.0 & 1.1 & 0.3 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 0.0 & 0.0 & 0.0 & 0.0 & 16.3 & 1.6 & 0.4 & 0.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 0.1 & 0.1 & 0.0 & 0.0 & 15.1 & 6.1 & 0.3 & 0.1 \\
+
+%       %% NEW C5
+%     \midrule
+%     \multirow{5}{*}{\textbf{C5}} & experiment-1 &  &  &  &  &  &  &  &  \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 &  &  &  &  &  &  &  &  \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 &  &  &  &  &  &  &  &  \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 &  &  &  &  &  &  &  &  \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 &  &  &  &  &  &  &  &  \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+
+
+% \begin{table}[htbp]
+%   \centering
+%   \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) as error bars for the \textit{CompGen} experiments part of settings C1-C3 and for the Grid-TF and LLaDA models.}
+%   \label{tab:compositionality_grid_acc_with_sem_gridvit_llada}
+
+%   \begin{tabular}{l l S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1]}
+%     \toprule
+%     & & \multicolumn{4}{c}{\textbf{Grid-TF}} & \multicolumn{4}{c}{\textbf{LLaDA}} \\
+%     \cmidrule(lr){3-6}
+%     \cmidrule(lr){7-10}
+%     \textbf{Setting} & \textbf{Experiment} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C1}} & experiment-1 & 43.5 & 16.9 & 0.0 & 0.0 & 27.7 & 1.4 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 47.2 & 18.6 & 0.0 & 0.0 & 67.0 & 0.4 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 56.7 & 7.7 & 0.0 & 0.0 & 33.3 & 2.5 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 98.6 & 0.1 & 95.6 & 1.2 & 64.0 & 29.1 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 59.7 & 11.9 & 0.0 & 0.0 & 32.6 & 7.5 & 0.0 & 0.0 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C2}} & experiment-1 & 56.2 & 5.8 & 0.0 & 0.0 & 31.2 & 0.8 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 94.3 & 1.5 & 0.0 & 0.0 & 72.0 & 1.2 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 56.6 & 5.8 & 0.0 & 0.0 & 27.2 & 1.2 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 98.2 & 0.4 & 95.0 & 1.1 & 68.3 & 22.6 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 42.9 & 9.6 & 0.0 & 0.0 & 32.2 & 3.6 & 0.0 & 0.0 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{C3}} & experiment-1 & 40.5 & 18.8 & 1.2 & 0.5 & 91.7 & 3.3 & 1.2 & 0.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 68.1 & 29.5 & 15.0 & 7.5 & 98.4 & 0.6 & 24.5 & 1.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 51.4 & 1.2 & 2.6 & 0.4 & 82.7 & 5.9 & 5.5 & 0.8 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 67.7 & 6.5 & 0.4 & 0.1 & 63.3 & 10.3 & 6.0 & 4.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 66.7 & 14.1 & 0.6 & 0.3 & 84.3 & 9.9 & 1.8 & 0.7 \\
+
+%      %% NEW C5
+%     \midrule
+%     \multirow{5}{*}{\textbf{C5}} & experiment-1 &  &  &  &  & 87.3 & 3.8 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 &  &  &  &  & 76.6 & 5.6 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 &  &  &  &  & 60.3 & 5.1 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 &  &  &  &  & 68.0 & 4.5 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 &  &  &  &  & 66.3 & 3.2 & 0.0 & 0.0 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+
+% \begin{table}[htbp]
+%   \centering
+%   \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) as error bars for the \textit{EnvGen} experiments part of settings G1-G5 and for the ResNet and Vanilla-TF models.}
+%   \label{tab:sys-gen_grid_acc_with_sem_resnet_vanillavit}
+
+%   \begin{tabular}{l l S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1]}
+%     \toprule
+%     & & \multicolumn{4}{c}{\textbf{ResNet}} & \multicolumn{4}{c}{\textbf{Vanilla-TF}} \\
+%     \cmidrule(lr){3-6}
+%     \cmidrule(lr){7-10}
+%     \textbf{Setting} & \textbf{Experiment} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G1}} & experiment-1 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 99.8 & 0.0 & 96.5 & 0.1 & 97.3 & 0.2 & 55.4 & 6.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 99.8 & 0.1 & 98.5 & 0.2 & 97.5 & 0.6 & 77.5 & 3.4 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 100.0 & 0.0 & 99.9 & 0.0 & 98.9 & 0.6 & 77.9 & 3.5 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 99.9 & 0.1 & 99.3 & 0.1 & 98.2 & 0.3 & 83.7 & 1.4 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G2}} & experiment-1 & 100.0 & 0.0 & 99.9 & 0.1 & 98.7 & 0.3 & 1.9 & 1.9 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 88.9 & 1.3 & 78.2 & 7.2 & 57.1 & 21.5 & 0.2 & 0.2 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 99.3 & 0.3 & 98.2 & 0.8 & 81.1 & 11.3 & 8.2 & 5.4 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 100.0 & 0.0 & 100.0 & 0.0 & 96.3 & 1.5 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 100.0 & 0.0 & 100.0 & 0.0 & 76.9 & 2.3 & 0.2 & 0.2 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G3}} & experiment-1 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 88.6 & 9.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 93.7 & 0.5 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 96.2 & 1.9 & 0.1 & 0.1 & 2.3 & 0.3 & 0.1 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 98.9 & 1.0 & 0.0 & 0.0 & 93.0 & 2.2 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 99.4 & 0.0 & 35.3 & 2.7 & 92.6 & 1.4 & 23.8 & 3.3 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G4}} & experiment-1 & 100.0 & 0.0 & 23.7 & 5.8 & 100.0 & 0.0 & 90.6 & 0.9 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 30.7 & 1.2 & 0.0 & 0.0 & 3.8 & 2.9 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 58.8 & 2.9 & 0.1 & 0.1 & 14.8 & 1.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 95.2 & 0.6 & 64.1 & 4.0 & 51.9 & 2.8 & 9.0 & 1.4 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 97.1 & 0.9 & 36.9 & 0.5 & 60.4 & 14.7 & 9.4 & 2.3 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G5}} & experiment-1 & 100.0 & 0.0 & 9.1 & 2.0 & 97.7 & 0.2 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 98.3 & 0.3 & 0.0 & 0.0 & 91.9 & 3.3 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 98.3 & 0.6 & 0.0 & 0.0 & 32.7 & 14.5 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 100.0 & 0.0 & 0.0 & 0.0 & 98.3 & 0.9 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 99.7 & 0.2 & 0.6 & 0.2 & 41.9 & 18.4 & 0.0 & 0.0 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+
+
+% \begin{table}[htbp]
+%   \centering
+%   \caption{ID and OOD test grid accuracy with SEM (Standard Error of the Mean) as error bars for the \textit{EnvGen} experiments part of settings G1-G5 and for the Grid-TF and LLaDA models.}
+%   \label{tab:sys-gen_grid_acc_with_sem_gridvit_llada}
+
+%   \begin{tabular}{l l S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1] S[table-format=2.1]@{${}\mathbin{\pm}{}$}S[table-format=1.1]}
+%     \toprule
+%     & & \multicolumn{4}{c}{\textbf{Grid-TF}} & \multicolumn{4}{c}{\textbf{LLaDA}} \\
+%     \cmidrule(lr){3-6}
+%     \cmidrule(lr){7-10}
+%     \textbf{Setting} & \textbf{Experiment} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} & \multicolumn{2}{c}{\textbf{ID}} & \multicolumn{2}{c}{\textbf{OOD}} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G1}} & experiment-1 & 100.0 & 0.0 & 100.0 & 0.0 & 100.0 & 0.0 & 99.9 & 0.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 99.7 & 0.0 & 92.7 & 1.3 & 99.0 & 0.3 & 83.5 & 3.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 99.8 & 0.1 & 95.3 & 0.4 & 99.1 & 0.1 & 84.2 & 2.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 99.2 & 0.1 & 88.5 & 2.5 & 99.6 & 0.0 & 88.9 & 1.4 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 97.8 & 0.5 & 73.9 & 4.9 & 99.8 & 0.1 & 94.1 & 1.5 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G2}} & experiment-1 & 100.0 & 0.0 & 90.5 & 4.9 & 100.0 & 0.0 & 60.6 & 6.6 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 97.1 & 1.8 & 68.5 & 3.6 & 95.5 & 1.3 & 45.3 & 3.4 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 97.9 & 2.1 & 90.6 & 5.8 & 97.7 & 1.8 & 47.8 & 16.8 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 99.5 & 0.2 & 94.2 & 1.1 & 99.7 & 0.1 & 89.7 & 1.2 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 95.6 & 1.1 & 41.4 & 6.2 & 99.6 & 0.2 & 68.7 & 7.8 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G3}} & experiment-1 & 100.0 & 0.0 & 99.7 & 0.3 & 100.0 & 0.0 & 99.1 & 0.5 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 33.4 & 33.2 & 0.0 & 0.0 & 18.8 & 18.5 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 97.5 & 0.3 & 0.1 & 0.0 & 96.8 & 0.6 & 0.1 & 0.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 98.2 & 1.0 & 0.0 & 0.0 & 97.2 & 1.3 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 95.7 & 1.4 & 33.1 & 2.4 & 99.2 & 0.5 & 34.7 & 0.8 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G4}} & experiment-1 & 100.0 & 0.0 & 79.4 & 9.2 & 100.0 & 0.0 & 99.6 & 0.3 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 79.6 & 5.2 & 0.0 & 0.0 & 28.3 & 28.2 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 61.8 & 30.9 & 0.0 & 0.0 & 88.5 & 3.6 & 0.9 & 0.2 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 97.0 & 1.0 & 15.2 & 6.3 & 91.6 & 2.2 & 24.7 & 2.9 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 96.0 & 0.8 & 0.1 & 0.1 & 98.3 & 0.7 & 34.7 & 6.7 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{G5}} & experiment-1 & 100.0 & 0.0 & 1.1 & 0.5 & 99.9 & 0.1 & 50.4 & 11.1 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-2 & 77.8 & 13.6 & 0.0 & 0.0 & 12.6 & 8.3 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-3 & 98.8 & 0.4 & 0.0 & 0.0 & 43.3 & 10.3 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-4 & 100.0 & 0.0 & 0.0 & 0.0 & 95.0 & 1.4 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-10}
+%      & experiment-5 & 98.3 & 0.5 & 0.0 & 0.0 & 99.3 & 0.4 & 0.0 & 0.0 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+%%%%%%

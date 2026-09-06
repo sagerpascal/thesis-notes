@@ -1,0 +1,78 @@
+\section{In-Context Learning of COGITAO with Frontier Models}\label{appendix:llm_results}
+
+We conducted supplementary experiments to evaluate how frontier LLMs performed on tasks akin to COGITAO's various experiment settings. We remind the reader that  COGITAO's goal is to evaluate how models solve task \textit{in light of a specific training distribution}, which is unfortunately not possible with frontier models given the opacity of the exact training data as well the lack of information on specific aspects of models. However, we believe interesting to evaluate how these models perform on tasks similar to COGITAO. As such, we have conducted In-Context Learning (ICL) experiments on frontier models to provide a reference baseline. 
+
+\subsection{Experimental Setup}
+
+We prompted frontier LLMs in different conditions which resemble the various experiment settings we have. Specifically, we gave 5 in-context examples to various LLMs, as well as an input example that it must apply the novel transformation on. We do so according to the following ID/OOD control splits:
+
+\begin{itemize}
+    \item \textbf{CompGen-ID1:} context built of a set of 5 transformations (simple + composed). Test on one of the composed ones seen during training.
+    \item \textbf{CompGen-ID2:} context built of a set of 5 transformations (composed only). Test on one of the composed ones seen during training.
+    \item \textbf{CompGen-OOD1:} context with a set of 5 transformations (simple + composed). Test on a composition not seen during training.
+    \item \textbf{CompGen-OOD2:} context built of a set of 5 transformations (composed only). Test on a composition not seen during training.
+    \item \textbf{CompGen-OOD3:} context built of a set of 5 transformations (simple + composed). Test on a deeper compositions not seen during training.
+    \item \textbf{EnvGen-Object:} context built of 5 examples with the same simple transformation and 1-2 objects. Test on the same transformation but 3-4 objects.
+    \item \textbf{EnvGen-Grid:} context built of 5 examples with 10x10--15x15 grids. Test on the same transformation but 16x16--20x20 grids.
+\end{itemize}
+
+We followed the same transformation combinations (5 transformation combinations) as presented in our main experiments (see \ref{appendix:experiment_details}), with 10 unique examples per experiment. As such, there were $5 \times 10 =  50$ different unique prompts per setting. Each prompt was only sent to models once due to cost constraints \footnote{We ran all experiments through the OpenRouter API for a total cost of 314 USD.}.
+
+\subsubsection{Prompting}
+
+We tested two prompting regimes:
+
+\begin{description}
+    \item [\textbf{Explicit:}] Task codes reveal the transformation name (e.g., ["translate\_up", "rotate90"]).
+    \item [\textbf{Coded:}] Task codes are abstract (e.g., ["t1", "t2"]), requiring the model to infer the rule from context.
+\end{description}
+
+To account for the differences between the different experiment settings, we crafted 4 different "base prompts" - all inspired by previous work on ARC-AGI grids and LLMs \cite{Greenblatt_2024}. Each "base prompt" was used for its relevant "category" of experiment setting; we present these in details, as well as a full example prompt in \ref{appendix:Prompt_Details}
+
+
+\subsection{Results} 
+
+\subsubsection{Perfect Match Rate With "Explicit" Task Embedding}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lccccc}
+\hline
+ & deepseek-r1t2 & openai gpt-4.1-mini & openai o3 & x-ai/grok-code-fast-1 & gemini-3-pro-preview \\
+\hline
+CompGen-ID1 & 8 / 50 & 1 / 50 & 19 / 50 & 7 / 48 & 39 / 50 \\
+CompGen-ID2 & 10 / 50 & 5 / 50 & 18 / 50 & 11 / 50 & 35 / 50 \\
+CompGen-OOD1 & 0 / 50 & 0 / 50 & 4 / 50 & 0 / 47 & 14 / 50 \\
+CompGen-OOD2 & 0 / 50 & 0 / 50 & 0 / 50 & 0 / 48 & 11 / 50 \\
+CompGen-OOD3 & 1 / 50 & 0 / 49 & 6 / 50 & 2 / 50 & 24 / 50 \\
+envGen-size & 10 / 50 & 0 / 49 & 19 / 50 & 6 / 50 & 34 / 50 \\
+envGen-objects & 8 / 50 & 1 / 50 & 13 / 50 & 7 / 48 & 33 / 50 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Perfect Match Rate With "coded" Task Embedding}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lccccc}
+\hline
+ & deepseek-r1t2 & openai gpt-4.1-mini & openai o3 & x-ai/grok-code-fast-1 & gemini-3-pro-preview \\
+\hline
+CompGen-ID1 & 5 / 50 & 1 / 50 & 13 / 50 & 1 / 49 & 28 / 50 \\
+CompGen-ID2 & 11 / 49 & 2 / 50 & 20 / 50 & 5 / 49 & 27 / 50 \\
+CompGen-OOD1 & 0 / 50 & 0 / 50 & 8 / 50 & 0 / 46 & 18 / 50 \\
+CompGen-OOD2 & 0 / 50 & 0 / 50 & 1 / 50 & 0 / 47 & 4 / 49 \\
+CompGen-OOD3 & 1 / 49 & 0 / 50 & 13 / 50 & 0 / 48 & 15 / 50 \\
+envGen-size & 13 / 50 & 1 / 50 & 24 / 50 & 5 / 45 & 36 / 49 \\
+envGen-objects & 13 / 50 & 4 / 50 & 15 / 50 & 5 / 49 & 39 / 50 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Interpretation}
+
+Even state-of-the-art models like Gemini 3 Pro and OpenAI o3 exhibit the exact failure mode COGITAO highlights. While they achieve reasonable performance on In-Distribution (ID) tasks and Environmental Generalization (size/objects), their performance drops precipitously on Out-of-Distribution (OOD) Composition. This confirms that COGITAO is not merely solved by scale; it exposes a fundamental reasoning gap in how current architectures (even frontier ones) decompose and recompose information. 
+
+We also note that the models do significantly better when given explicit task codes as opposed to coded ones, which underlies that trained models perform best when leveraging other internal biases from their training data to solve these tasks. 
+

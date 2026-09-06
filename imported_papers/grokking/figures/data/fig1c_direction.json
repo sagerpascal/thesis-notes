@@ -1,0 +1,101 @@
+{
+  "note": "Figure 1c. Measured by scripts/fig_data_direction_panel.py via DFC_TTT_survival_statistic.run_rule. Not banked.",
+  "p": 31,
+  "epochs": 20000,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "lag_epochs": 4000,
+  "rules": {
+    "bp": {
+      "name": "Backpropagation",
+      "cls": "excluded",
+      "test": 0.9963914354642233,
+      "rel_late": 5.0529833568051965e-08,
+      "rel_early": 6.329710747150268e-08,
+      "persistence": -0.061098542541260785,
+      "surv": 0.58611885404414,
+      "groks": 3,
+      "n_seeds": 3
+    },
+    "knob": {
+      "name": "Knob (beta=1)",
+      "cls": "excluded",
+      "test": 0.9775853355725607,
+      "rel_late": 0.09216448051756397,
+      "rel_early": 0.12482665556578831,
+      "persistence": 0.602631319990391,
+      "surv": 0.5953212899046948,
+      "groks": 3,
+      "n_seeds": 3
+    },
+    "dfc": {
+      "name": "DFC",
+      "cls": "groks",
+      "test": 1.0,
+      "rel_late": 0.03816446512129832,
+      "rel_early": 0.5888491370077588,
+      "persistence": 0.7978628865922942,
+      "surv": 0.11408937790800715,
+      "groks": 3,
+      "n_seeds": 3
+    },
+    "gated": {
+      "name": "Error gated bias",
+      "cls": "groks",
+      "test": 0.9956949353218079,
+      "rel_late": 0.026388216550580518,
+      "rel_early": 0.11915112056912702,
+      "persistence": 0.9949343764420711,
+      "surv": 0.04650329538659518,
+      "groks": 3,
+      "n_seeds": 3
+    },
+    "noise": {
+      "name": "Fresh noise",
+      "cls": "groks",
+      "test": 0.9862219095230103,
+      "rel_late": 0.916515168601222,
+      "rel_early": 0.9165151524794659,
+      "persistence": -9.837808943532332e-05,
+      "surv": 0.8019142065521597,
+      "groks": 3,
+      "n_seeds": 3
+    },
+    "const": {
+      "name": "Fixed bias",
+      "cls": "memorizes",
+      "test": 0.0,
+      "rel_late": 0.9165151569436097,
+      "rel_early": 0.9165151541105061,
+      "persistence": 0.9939945954265016,
+      "surv": 0.8524750505122786,
+      "groks": 0,
+      "n_seeds": 3
+    },
+    "dfa": {
+      "name": "DFA",
+      "cls": "memorizes",
+      "test": 0.0,
+      "rel_late": 0.23332254839715594,
+      "rel_early": 0.3716015321273034,
+      "persistence": 0.9369840431262296,
+      "surv": 0.5457263835350267,
+      "groks": 0,
+      "n_seeds": 3
+    },
+    "fa": {
+      "name": "FA (layerwise)",
+      "cls": "memorizes",
+      "test": 0.0,
+      "rel_late": 0.23464129876910364,
+      "rel_early": 0.36464547236311445,
+      "persistence": 0.927958830532552,
+      "surv": 0.5519660302670242,
+      "groks": 0,
+      "n_seeds": 3
+    }
+  }
+}

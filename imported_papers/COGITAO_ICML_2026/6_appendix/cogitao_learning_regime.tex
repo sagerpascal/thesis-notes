@@ -1,0 +1,72 @@
+\section{COGITAO Learning Regime}\label{appendix:cogitao_learning_regime}
+
+To assess whether the selected training regime of 10 Epochs for 100k samples was reasonable, we conducted two follow up experiments to further justify our choice, as well as the validity of COGITAO's experimental framework and dataset. Specifically, we conducted: 
+
+\begin{enumerate}
+    \item Scaling Experiments with the Grid-TF model through increasing dataset size to 1 Million samples and training for up to 100 epochs on CompGen-C1 and CompGen-C3. 
+    \item Introduction of "Experiment 0", which matches the logic of CompGen-C1 and CompGen-C3, but only uses compositions of \textit{translation} tasks (as opposed to more compelx compositions - see \ref{appendix:experiment_details}) which are trivial to learn individually (as shown in \ref{appendix:transformation_learnability}). This experiment 0 is also run with our Grid-TF on different splits up to 1 millions samples with training for up to 100 epochs.
+\end{enumerate}
+
+We report the complete metrics outlined in \ref{appendix:metrics} for these experiments, which allows us to shed light in specific failure modes and model behavious on the COGITAO dataset, which we discuss below. 
+
+\begin{table}[h]
+    \centering
+    \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{1.12}
+
+    \begin{tabular}{c c c c
+                    S[table-format=1.3] S[table-format=1.3]
+                    S[table-format=1.3] S[table-format=1.3]
+                    S[table-format=1.3] S[table-format=1.3]
+                    S[table-format=1.3]}
+    \toprule
+    \textbf{Setting} & \textbf{Exp} & \textbf{\#Samples} & \textbf{\#Epochs}
+      & \multicolumn{2}{c}{\textbf{GA}}
+      & \multicolumn{2}{c}{\textbf{PPA}}
+      & \multicolumn{2}{c}{\textbf{Obj-PPA}}
+      & \textbf{"Stubborness"} \\
+    \cmidrule(lr){5-6}\cmidrule(lr){7-8}\cmidrule(lr){9-10}
+    & & & & \textbf{ID} & \textbf{OOD}
+      & \textbf{ID} & \textbf{OOD}
+      & \textbf{ID} & \textbf{OOD}
+      & \\
+    \midrule
+    \multirow{8}{*}{\textbf{C1}}
+      & 0 & 100k & 100 & 0.780 & 0.360 & 0.983 & 0.996 & 0.859 & 0.962 & 0.000 \\
+      & 0 & 250k & 50  & 0.713 & 0.507 & 0.982 & 0.997 & 0.860 & 0.970 & 0.000 \\
+      & 0 & 500k & 20  & 0.503 & 0.341 & 0.964 & 0.996 & 0.712 & 0.996 & 0.000 \\
+      & 0 & 1M   & 10  & 0.764 & 0.298 & 0.983 & 0.994 & 0.857 & 0.923 & 0.000 \\
+    \cmidrule(lr){2-11}
+      & 1 & 100k & 100 & 0.537 & 0.000 & 0.984 & 0.916 & 0.836 & 0.293 & 0.118 \\
+      & 1 & 250k & 50  & 0.779 & 0.001 & 0.994 & 0.943 & 0.927 & 0.462 & 0.166 \\
+      & 1 & 500k & 20  & 0.454 & 0.000 & 0.977 & 0.926 & 0.800 & 0.342 & 0.000 \\
+      & 1 & 1M   & 10  & 0.773 & 0.000 & 0.994 & 0.916 & 0.922 & 0.298 & 0.733 \\
+    \midrule
+    \multirow{8}{*}{\textbf{C3}}
+      & 0 & 100k & 100 & 0.791 & 0.178 & 0.985 & 0.940 & 0.876 & 0.503 & 0.888 \\
+      & 0 & 250k & 50  & 0.752 & 0.083 & 0.985 & 0.933 & 0.879 & 0.464 & 0.741 \\
+      & 0 & 500k & 20  & 0.631 & 0.266 & 0.982 & 0.950 & 0.867 & 0.606 & 0.760 \\
+      & 0 & 1M   & 10  & 0.600 & 0.302 & 0.975 & 0.955 & 0.770 & 0.617 & 0.751 \\
+    \cmidrule(lr){2-11}
+      & 1 & 100k & 100 & 0.449 & 0.059 & 0.981 & 0.965 & 0.711 & 0.494 & 0.307 \\
+      & 1 & 250k & 50  & 0.998 & 0.012 & 1.000 & 0.965 & 1.000 & 0.486 & 0.524 \\
+      & 1 & 500k & 20  & 0.672 & 0.009 & 0.991 & 0.963 & 0.860 & 0.468 & 0.610 \\
+      & 1 & 1M   & 10  & 0.462 & 0.036 & 0.983 & 0.965 & 0.758 & 0.490 & 0.514 \\
+    \bottomrule
+    \end{tabular}
+    \caption{CompGen learning regime results and introduction of Experiment 0.}
+    \label{tab:CompGen-regime-results}
+\end{table}
+
+We find that models still fail to systematically compose simple translations OOD compared to ID. Increasing sample size by 10× does not close the generalization gap. The low OOD performance is not a result of insufficient data or under-training, but rather a structural inability of the architecture to generalize compositionally. This is further evident when looking at the incapacity of models to compose despite the simplicity of the translation transformations, as shown in the Experiment 0 results. Importantly, in the newly added Experiment 0 (translation-only, see response to Q1)--which is designed in its configuration to be easier than all the the other CompGen experiments--models do show signs of OOD generalization through OOD performance of 15-50\% compared to the usual near 0\%, even though a significant ID to OOD drop indicating a difficulty in extrapolation remains. This confirms that our experimental framework is sound and that the failures in the other, slightly more difficult experiments--for which training regime scaling did not improve performance--does reflect genuine limitations in compositional reasoning. This also further highlights the pertinence of COGITAO allowing for fine-grained control of tasks difficulty and the interest in experiments with incremental difficulties for which true compositional reasoning should allow great performance at different levels and not only at the more trivial ones.
+
+Looking at the model "stubborness" meta-metric, we can see that indeed, in many cases, the model fails to correctly predict OOD as it still tries to predict in-distribution sequences - highlighting that there is no compositional generalization capacity in the model. Conceptually, we can thus compartementalize failures into two interpretable categories:
+
+\begin{itemize}
+    \item \textbf{ID Bias:} The model applies the transformation it observes during training (e.g., translate\_right) even when the OOD task specifies another transformation (translate\_up).
+    \item \textbf{Structural composition failure:}When moving from depth-1 compositions to depth-2 (CompGen Setting 3), models are able to apply the transformation representing a sequence of atomic transformations–highlighted by a high ID performance–but they fail to decompose such sequences to extract their atomic transformations and recompose them as expected for the OOD case; this again highlights a concrete failure in compositional generalization ability.
+\end{itemize}
+
+Across settings, models retain high pixel-level precision while failing to reorganize familiar components into novel compositions--PPA remains high, Object-PPA moderately high (relatively), while GA collapses OOD (often near-zero). This highlights that models achieve some local correctness yet fail to recover the global transformation--a core capability COGITAO is designed to probe. The “stubbornness” meta metric further shows that OOD predictions frequently mirror ID habits rather than the specified atomic transformations or their order. This distinction is critical: GA strictly identifies whether meaningful compositional reasoning occurred, while PPA and Object-PPA clarify how it failed.
+
+

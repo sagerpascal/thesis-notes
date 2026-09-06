@@ -1,0 +1,552 @@
+\section{COGITAO Transformations Learnability} \label{appendix:transformation_learnability}
+
+To assess the learnability of each transformation introduced, we performed experiments to evaluate how effectively the models in the paper learn to apply transformations to new objects. This was conducted through a "Sample Efficiency" study, where models were given varying amounts of training data to determine the data required to master each transformation. This approach provides direct insights into 1) how easily each model learns each transformation and 2) what models are more efficient at learning given transformations. The latter idea is useful to evaluate the inductive biases of models. 
+
+For this purpose, we designed four experimental settings with different numbers of distinct training samples: 100, 1,000, 10,000, and 100,000 examples. These sample sizes were selected based on the known sample inefficiency of Transformer models. While 100 examples are generally insufficient for Transformers to learn effectively—a limitation not observed in humans—100,000 examples approach a scale where Transformers typically achieve competitive performance.
+
+Each setting involves the same set of tasks, with each task corresponding to an elementary or atomic transformation from one of 10 distinct transformation families (e.g., the \texttt{translate\_up} task represents the "translation" family, which also includes \texttt{translate\_down}, \texttt{translate\_left}, etc.). We conducted 10 experiments per setting, each focusing on a single transformation family, resulting in a comprehensive evaluation across all families. We train for 10 epochs on all experiment settings.  
+The environment for all experiments was standardized: a fixed $15 \times 15$ grid with two objects per grid, each no larger than $6 \times 6$. For evaluation, we tested each model on 1,000 unseen samples of the same transformation used during training, maintaining consistent environment and object parameters.
+
+The experiments are organized into settings labeled S-x-i, where \textit{i} denotes the specific transformation and \textit{x} indicates the number of training samples (e.g., S-1-i for 100 samples, S-2-i for 1,000 samples, S-3-i for 10,000 samples, and S-4-i for 100,000 samples). In the below outline, we keep \textit{x} to denote the varying experiment setting (and number of training samples). Below, we outline the experimental setup for the sample-efficiency study. 
+
+\subsection{Sample-Efficiency Experiments}
+
+\begin{itemize} 
+    \item S-x-1: Train and test on the atomic transformation \texttt{translate\_up} as a proxy for all \texttt{translate} transformation family.
+    
+    \item S-x-2: Train and test on the atomic transformation \texttt{rot\_90} as a proxy for all \texttt{rotate} transformation family.
+
+    \item S-x-3: Train and test on the atomic transformation \texttt{mirror\_horizontal} as a proxy for all \texttt{mirror} transformation family.  
+
+    \item S-x-4: Train and test on the atomic transformation \texttt{extend\_contours\_different\_color} as a proxy for all \texttt{extend} transformation family.  
+
+    \item S-x-5: Train and test on the atomic transformation \texttt{empty\_inside\_pixels} as a proxy for all \texttt{empty} transformation family.  
+
+    \item S-x-6: Train and test on the atomic transformation \texttt{crop\_top\_side} as a proxy for all \texttt{crop} transformation family.  
+
+    \item S-x-7: Train and test on the atomic transformation \texttt{fill\_holes\_different\_color} as a proxy for all \texttt{fill} transformation family.  
+
+    \item S-x-8: Train and test on the atomic transformation \texttt{double\_up} as a proxy for all \texttt{duplicate} transformation family.  
+
+    \item S-x-9: Train and test on the atomic transformation \texttt{change\_shape\_color} as a proxy for all \texttt{change\_color} transformation family.
+
+    \item S-x-10: Train and test on the atomic transformation \texttt{pad\_shape} as a proxy for all \texttt{pad} transformation family.  
+\end{itemize}
+
+For a full list of transformations, we refer the reader back to section \ref{appendix:COGITAO_transformations}. 
+
+In the most constrained setting (S1), all models, including the more sophisticated Transformer-based ones, completely fail to learn and generalize in-domain. All reported test accuracies being 0.0 suggests that it is likely that none of the models possess the ability to truly conceptualize simple spatial transformations in a data-scarce setting; this is unlike humans, who are able to generalize from only a few COGITAO examples. This result may reinforce the well-known \textit{sample-inefficiency} of Deep Learning approaches, and more specifically of Transformers, as they appear to continue to rely on statistical pattern matching, which cannot easily emerge from training on only 100 samples while testing on 1000 samples of high (in-domain) diversity. 
+
+In S2, we begin to observe a divergence in model performance. The models imbued with strong inductive biases greatly increase their performance with more than an additional 50\% accuracy increase. The Vanilla-TF, possessing only a weak inductive bias, achieves only 11.2\%. The worse performance (19.9\%) of LLaDA compared to the other Transformer-based models is possibly due to nature of its diffusion mechanism as well as the lack of a stronger inductive bias such as through the use of visual tokens. 
+
+In S3, the next order of magnitude of 10'000 training examples, all models show a marked improvement. ResNet reaches 96.1\%, and Grid-TF achieves 97.1\%. The PL-TF model shows the beginning of decrease in improvement at 88.2\%, while LLaDA shows a significant gain at 66.5\%. Interestingly, Vanilla-TF also catches up (59.3\%), but still lags behind models with stronger inductive biases. This narrowing of the performance gap indicates that Transformer-based models being to learn well past some threshold of amount of data, at which point they begin to robustly extract structures and create useful representations from symbolic grids. The fact that the Grid-TF model outperforms even the ResNet model at this scale--typically considered far smaller than Transformer data regimes--suggests a benefit of Transformer models enhanced with grid-aware tokens and relational inductive biases through object and relative positional encodings for abstract visual reasoning tasks.
+
+In the highest data regime S4, all models reach high performance. Grid-TF nearly saturates accuracy at 99.9\%, while the simpler baseline models. ResNet and Vanilla-TF, perform even better than the PL-TF and LLaDA. The greater complexity of the learning mechanism of the PL-TF and LLaDA models may partly explain why they slightly underperform compared to the other models. Moreover, the results confirm that Transformer models, even in their vanilla form, can ultimately learn atomic visual transformations when given larger-scale data.
+
+The Sample-Efficiency table in~\ref{tab:se_all_experiments} with all the experiments also shows that some atomic transformations are more difficult to learn than others. For instance, a translation is efficiently learned while a rotation or an extension of contours appears more difficult for all the models.
+
+Overall, the experiments demonstrate that all models are capable of learning all the atomic transformations currently offered by COGITAO. This implies that the individual tasks are not a limitation for the more involved and complex tasks of the experiments part of the other two studies of Systematic Generalization and Compositionality.
+
+
+\begin{table}[htbp]
+  \centering
+  \label{tab:se_all_experiments}
+  \resizebox{0.80\textwidth}{0.48\textheight}{%
+  \begin{tabular}{l l S[table-format=3.1] S[table-format=3.1] S[table-format=3.1] S[table-format=3.1] S[table-format=3.1]}
+    \toprule
+    & & \multicolumn{1}{c}{\textbf{ResNet}} & \multicolumn{1}{c}{\textbf{Vanilla-TF}} & \multicolumn{1}{c}{\textbf{Grid-TF}} & \multicolumn{1}{c}{\textbf{PL-TF}} & \multicolumn{1}{c}{\textbf{LLaDA}} \\
+    \cmidrule(lr){3-3} \cmidrule(lr){4-4} \cmidrule(lr){5-5} \cmidrule(lr){6-6} \cmidrule(lr){7-7}
+    \textbf{Setting} & \textbf{Transf. Family} & \textbf{ID} & \textbf{ID} & \textbf{ID} & \textbf{ID} & \textbf{ID} \\
+    \midrule
+    \multirow{10}{*}{\textbf{S1}} & $\texttt{translate}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{rotate}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{mirror}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{extend}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{empty}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{crop}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{fill}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{duplicate}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{change\_color}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{pad}$ & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \midrule
+    \multirow{10}{*}{\textbf{S2}} & $\texttt{translate}$ & 100.0 & 0.0 & 100.0 & 83.7 & 78.6 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{rotate}$ & 5.7 & 0.0 & 0.0 & 0.0 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{mirror}$ & 27.4 & 2.3 & 2.9 & 4.6 & 0.1 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{extend}$ & 32.0 & 0.0 & 16.1 & 23.1 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{empty}$ & 100.0 & 9.2 & 100.0 & 80.8 & 8.4 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{crop}$ & 97.9 & 0.1 & 94.0 & 84.4 & 34.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{fill}$ & 100.0 & 0.0 & 98.1 & 82.6 & 6.2 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{duplicate}$ & 16.4 & 0.0 & 0.2 & 19.7 & 0.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{change\_color}$ & 100.0 & 100.0 & 100.0 & 100.0 & 79.1 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{pad}$ & 97.1 & 0.0 & 95.3 & 89.0 & 0.0 \\
+    \midrule
+    \multirow{10}{*}{\textbf{S3}} & $\texttt{translate}$ & 100.0 & 100.0 & 100.0 & 100.0 & 99.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{rotate}$ & 94.4 & 0.0 & 96.6 & 88.0 & 28.1 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{mirror}$ & 98.3 & 3.8 & 97.0 & 82.6 & 50.8 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{extend}$ & 95.8 & 36.6 & 80.3 & 79.9 & 28.5 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{empty}$ & 100.0 & 91.2 & 100.0 & 99.5 & 97.7 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{crop}$ & 99.6 & 90.5 & 98.8 & 89.0 & 95.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{fill}$ & 100.0 & 67.8 & 99.9 & 79.2 & 94.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{duplicate}$ & 72.9 & 13.5 & 98.6 & 84.8 & 65.1 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{change\_color}$ & 100.0 & 100.0 & 100.0 & 100.0 & 99.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{pad}$ & 100.0 & 89.6 & 100.0 & 79.5 & 94.0 \\
+    \midrule
+    \multirow{10}{*}{\textbf{S4}} & $\texttt{translate}$ & 100.0 & 100.0 & 100.0 & 99.4 & 100.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{rotate}$ & 99.7 & 96.9 & 99.8 & 98.5 & 99.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{mirror}$ & 99.8 & 98.8 & 100.0 & 99.1 & 98.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{extend}$ & 100.0 & 95.9 & 99.4 & 79.8 & 90.5 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{empty}$ & 100.0 & 99.9 & 100.0 & 100.0 & 99.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{crop}$ & 100.0 & 99.3 & 100.0 & 99.7 & 99.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{fill}$ & 100.0 & 99.6 & 100.0 & 87.4 & 99.9 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{duplicate}$ & 86.3 & 99.1 & 100.0 & 91.7 & 97.8 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{change\_color}$ & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+    \cmidrule(lr){2-7}
+    & $\texttt{pad}$ & 100.0 & 100.0 & 100.0 & 82.2 & 100.0 \\
+    \bottomrule
+  \end{tabular}
+  }
+  \caption{In-domain (ID) test grid accuracy for the Sample-Efficiency settings S1--S4, across the models ResNet, Vanilla-TF, Grid-TF, PL-TF and LLaDA for each transformation family. S1 trains with 100 samples, S2 trains with 1,000 samples, S3 trains with 10,000 samples, and S4 trains with 100,000 samples.}
+\end{table}
+
+
+%% This was in the thesis Appendix in Results
+% % Sample-Efficiency all experiments ResNet, Vanilla-TF, Grid-TF, P-L-TF and LLaDA
+% \begin{table}[htbp]
+%   \centering
+%   \label{tab:se_all_experiments}
+%   \resizebox{0.80\textwidth}{0.48\textheight}{%
+%   \begin{tabular}{l l S[table-format=3.1] S[table-format=3.1] S[table-format=3.1] S[table-format=3.1] S[table-format=3.1]}
+%     \toprule
+%     & & \multicolumn{1}{c}{\textbf{ResNet}} & \multicolumn{1}{c}{\textbf{Vanilla-TF}} & \multicolumn{1}{c}{\textbf{Grid-TF}} & \multicolumn{1}{c}{\textbf{P-L-TF}} & \multicolumn{1}{c}{\textbf{LLaDA}} \\
+%     \cmidrule(lr){3-3} \cmidrule(lr){4-4} \cmidrule(lr){5-5} \cmidrule(lr){6-6} \cmidrule(lr){7-7}
+%     \textbf{Setting} & \textbf{Experiment} & \textbf{ID} & \textbf{ID} & \textbf{ID} & \textbf{ID} & \textbf{ID} \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S1}} & translate & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S2}} & experiment-1 & 100.0 & 0.0 & 100.0 & 83.7 & 88.4 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 5.7 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 27.4 & 2.3 & 2.9 & 4.6 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 32.0 & 0.0 & 16.1 & 23.1 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 100.0 & 9.2 & 100.0 & 80.8 & 8.9 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 97.9 & 0.1 & 94.0 & 84.4 & 41.3 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 100.0 & 0.0 & 98.1 & 82.6 & 0.4 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 16.4 & 0.0 & 0.2 & 19.7 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 100.0 & 100.0 & 100.0 & 100.0 & 60.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 97.1 & 0.0 & 95.3 & 89.0 & 0.0 \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S3}} & experiment-1 & 100.0 & 100.0 & 100.0 & 100.0 & 99.8 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 94.4 & 0.0 & 96.6 & 88.0 & 0.7 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 98.3 & 3.8 & 97.0 & 82.6 & 25.3 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 95.8 & 36.6 & 80.3 & 79.9 & 10.1 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 100.0 & 91.2 & 100.0 & 99.5 & 94.2 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 99.6 & 90.5 & 98.8 & 89.0 & 96.4 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 100.0 & 67.8 & 99.9 & 79.2 & 90.6 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 72.9 & 13.5 & 98.6 & 84.8 & 59.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 100.0 & 100.0 & 100.0 & 100.0 & 99.8 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 100.0 & 89.6 & 100.0 & 79.5 & 89.5 \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S4}} & experiment-1 & 100.0 & 100.0 & 100.0 & 99.4 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 99.7 & 96.9 & 99.8 & 98.5 & 98.1 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 99.8 & 98.8 & 100.0 & 99.1 & 99.1 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 100.0 & 95.9 & 99.4 & 79.8 & 81.7 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 100.0 & 99.9 & 100.0 & 100.0 & 99.5 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 100.0 & 99.3 & 100.0 & 99.7 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 100.0 & 99.6 & 100.0 & 87.4 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 86.3 & 99.1 & 100.0 & 91.7 & 98.7 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 100.0 & 100.0 & 100.0 & 82.2 & 99.9 \\
+%     \bottomrule
+%   \end{tabular}
+%   }
+%   \caption{ID test grid accuracy for sample-efficiency (settings S1–S4), across ResNet, Vanilla-TF, Grid-TF, Pondering-Looped-TF, LLaDA.}
+% \end{table}
+
+
+
+
+
+
+
+
+
+
+
+% Sample-efficiency refers to the ability of learning efficiently and robustly from seeing a
+% limited number of training examples. This property is especially desirable in domains
+% where data is scarce, costly to obtain, or with a frequently changing distribution. Of par-
+% ticular note, human intelligence shows excellent abilities at sample-efficiency, learning
+% abstractions that allow to generalize from just a few examples. Sample-efficiency can
+% be measured at different levels and for different purposes, depending on the task to solve
+% and capabilities evaluated. Achieving high sample-efficiency in artificial and intelligent
+% systems is a key step towards more human-like generalization and adaptability.
+
+% %% This was in Experiments
+% The sample-efficiency study is designed to assess how effectively models can learn different tasks/transformation when provided with a limited number of training examples---as opposed to reaching an apparent convergence when training with a large number of samples. Moreover, we restrict the number of times a same sample is seen to 10 (i.e., a model is trained for at most 10 epochs). This implies that a model may not have reached full convergence during training.\footnote{Resource constraints partly justified this choice.}
+
+
+% % The sample-efficiency experiments shall provide insights into the models' abilities and learning dynamics in data-scarce settings, as well as the post hoc relative complexity of the individual elementary transformations. This is a pertinent study to conduct in order to better interpret the performances of the models in the Compositionality and Systematic Generalization studies, which require more advanced learning abilities and use more complex transformations based on the elementary ones.
+
+% \section{Experiment Details}\label{section:experiment_details}
+% We detail the experiments part of different experiment settings designed in the context of the three different studies of focus.
+
+% \subsection{Sample-Efficiency Experiments}
+
+% \begin{itemize}
+%     \item \textbf{S1 - Limited to 100 training samples}:
+%     We train on 100 examples of a single task and test on 1000 examples of the same task.
+%     \begin{itemize} 
+%         \item S1-1: Train and test on the atomic transformation \texttt{translate\_up}.
+        
+%         \item S1-2: Train and test on the atomic transformation \texttt{rot\_90}.
+
+%         \item S1-3: Train and test on the atomic transformation \texttt{mirror\_horizontal}.  
+
+%         \item S1-4: Train and test on the atomic transformation \texttt{extend\_contours\_different\_color}.  
+
+%         \item S1-5: Train and test on the atomic transformation \texttt{empty\_inside\_pixels}.  
+
+%         \item S1-6: Train and test on the atomic transformation \texttt{crop\_top\_side}.  
+
+%         \item S1-7: Train and test on the atomic transformation \texttt{fill\_holes\_different\_color}.  
+
+%         \item S1-8: Train and test on the atomic transformation \texttt{double\_up}.  
+
+%         \item S1-9: Train and test on the atomic transformation \texttt{change\_shape\_color}.
+
+%         \item S1-10: Train and test on the atomic transformation \texttt{pad\_shape}.  
+%     \end{itemize}
+    
+%     \vspace{1em}
+    
+%     \item \textbf{S2 - Limited to 1000 training samples}:  
+%     We train on 1000 examples of a single task and test on 1000 examples of the same task.
+%     \begin{itemize} 
+%         \item S2-1: Train and test on the atomic transformation \texttt{translate\_up}.
+        
+%         \item S2-2: Train and test on the atomic transformation \texttt{rot\_90}.
+
+%         \item S2-3: Train and test on the atomic transformation \texttt{mirror\_horizontal}.  
+
+%         \item S2-4: Train and test on the atomic transformation \texttt{extend\_contours\_different\_color}.  
+
+%         \item S2-5: Train and test on the atomic transformation \texttt{empty\_inside\_pixels}.  
+
+%         \item S2-6: Train and test on the atomic transformation \texttt{crop\_top\_side}.  
+
+%         \item S2-7: Train and test on the atomic transformation \texttt{fill\_holes\_different\_color}.  
+
+%         \item S2-8: Train and test on the atomic transformation \texttt{double\_up}.  
+
+%         \item S2-9: Train and test on the atomic transformation \texttt{change\_shape\_color}.
+
+%         \item S2-10: Train and test on the atomic transformation \texttt{pad\_shape}.  
+%     \end{itemize} 
+    
+%     \vspace{1em}
+    
+%     \item \textbf{S3 - Limited to 10'000 training samples}:
+%     We train on 10'000 examples of a single task and test on 1000 examples of the same task.
+%     \begin{itemize} 
+%         \item S3-1: Train and test on the atomic transformation \texttt{translate\_up}.
+        
+%         \item S3-2: Train and test on the atomic transformation \texttt{rot\_90}.
+
+%         \item S3-3: Train and test on the atomic transformation \texttt{mirror\_horizontal}.  
+
+%         \item S3-4: Train and test on the atomic transformation \texttt{extend\_contours\_different\_color}.  
+
+%         \item S3-5: Train and test on the atomic transformation \texttt{empty\_inside\_pixels}.  
+
+%         \item S3-6: Train and test on the atomic transformation \texttt{crop\_top\_side}.  
+
+%         \item S3-7: Train and test on the atomic transformation \texttt{fill\_holes\_different\_color}.  
+
+%         \item S3-8: Train and test on the atomic transformation \texttt{double\_up}.  
+
+%         \item S3-9: Train and test on the atomic transformation \texttt{change\_shape\_color}.
+
+%         \item S3-10: Train and test on the atomic transformation \texttt{pad\_shape}.  
+%     \end{itemize}
+
+
+%     \item \textbf{S4 - Limited to 100'000 training samples}:
+%     We train on 100'000 examples of a single task and test on 1000 examples of the same task.
+%     \begin{itemize} 
+%         \item S4-1: Train and test on the atomic transformation \texttt{translate\_up}.
+        
+%         \item S4-2: Train and test on the atomic transformation \texttt{rot\_90}.
+
+%         \item S4-3: Train and test on the atomic transformation \texttt{mirror\_horizontal}.  
+
+%         \item S4-4: Train and test on the atomic transformation \texttt{extend\_contours\_different\_color}.  
+
+%         \item S4-5: Train and test on the atomic transformation \texttt{empty\_inside\_pixels}.  
+
+%         \item S4-6: Train and test on the atomic transformation \texttt{crop\_top\_side}.  
+
+%         \item S4-7: Train and test on the atomic transformation \texttt{fill\_holes\_different\_color}.  
+
+%         \item S4-8: Train and test on the atomic transformation \texttt{double\_up}.  
+
+%         \item S4-9: Train and test on the atomic transformation \texttt{change\_shape\_color}.
+
+%         \item S4-10: Train and test on the atomic transformation \texttt{pad\_shape}.  
+%     \end{itemize} 
+% \end{itemize}
+
+%% This was in Results
+% The sample-efficiency experiments summarized in Tables ~\ref{tab:cogitao_resnet_vanillavit_grid_acc_results} and ~\ref{tab:cogitao_gridvit_plvit_llada_grid_acc_results} provide a detailed comparison of the models' ability to learn and generalize tasks tied to diverse fundamental atomic transformations of grid scenes.
+
+% In the most constrained setting (S1), all models, including the more sophisticated Transformer-based ones, completely fail to learn and generalize in-domain. All reported test accuracies being 0.0 suggests that it is likely that none of the models possess the ability to truly conceptualize simple spatial transformations in a data-scarce setting; this is unlike humans, who are able to generalize from only a few COGITAO examples. This result may reinforce the well-known \textit{sample-inefficiency} of Deep Learning approaches, and more specifically of Transformers, as they appear to continue to rely on statistical pattern matching, which cannot easily emerge from training on only 100 samples while testing on 1000 samples of high (in-domain) diversity.
+
+% In S2, we begin to observe a divergence in model performance. The models imbued with strong inductive biases greatly increase their performance with more than an additional 50\% accuracy increase. The Vanilla-TF, possessing only a weak inductive bias, achieves only 11.2\%. The worse performance (19.9\%) of LLaDA compared to the other Transformer-based models is possibly due to nature of its diffusion mechanism as well as the lack of a stronger inductive bias such as through the use of visual tokens.
+
+% In the next order of magnitude of 10'000 training examples, all models show a marked improvement. ResNet reaches 96.1\%, and Grid-TF achieves 97.1\%. The P-L-TF model shows the beginning of decrease in improvement at 88.2\%, while LLaDA shows a significant gain at 66.5\%. Interestingly, Vanilla-TF also catches up (59.3\%), but still lags behind models with stronger inductive biases. This narrowing of the performance gap indicates that Transformer-based models being to learn well past some threshold of amount of data, at which point they begin to robustly extract structures and create useful representations from symbolic grids. The fact that the Grid-TF model outperforms even the ResNet model at this scale--typically considered far smaller than Transformer data regimes--suggests a benefit of Transformer models enhanced with grid-aware tokens and relational inductive biases through object and relative positional encodings for abstract visual reasoning tasks.
+
+% In the highest data regime S4, all models reach reasonably high performance. Grid-TF nearly saturates accuracy at 99.9\%, while the simpler baseline models. ResNet and Vanilla-TF, perform even better than the Pondering Looped TF and LLaDA. The greater complexity of the learning mechanism of the Pondering Looped TF and LLaDA models may partly explain why they slightly underperform compared to the other models. Moreover, the results confirm that Transformer models, even in their vanilla form, can ultimately learn atomic visual transformations when given larger-scale data.
+
+% The Sample-Efficiency table in~\ref{tab:se_all_experiments} with all the experiments also shows that some atomic transformations are more difficult to learn than others. For instance, a translation is efficiently learned while a rotation or an extension of contours appears more difficult for all the models.
+
+% Overall, the experiments demonstrate that all the models are capable of learning relatively well all the atomic transformations currently offered by COGITAO. This implies that the individual tasks are not a limitation for the more involved and complex tasks of the experiments part of the other two studies of Systematic Generalization and Compositionality.
+
+% %% This was in the thesis Appendix in Results
+% % Sample-Efficiency all experiments ResNet, Vanilla-TF, Grid-TF, P-L-TF and LLaDA
+% \begin{table}[htbp]
+%   \centering
+%   \label{tab:se_all_experiments}
+%   \resizebox{0.80\textwidth}{0.48\textheight}{%
+%   \begin{tabular}{l l S[table-format=3.1] S[table-format=3.1] S[table-format=3.1] S[table-format=3.1] S[table-format=3.1]}
+%     \toprule
+%     & & \multicolumn{1}{c}{\textbf{ResNet}} & \multicolumn{1}{c}{\textbf{Vanilla-TF}} & \multicolumn{1}{c}{\textbf{Grid-TF}} & \multicolumn{1}{c}{\textbf{P-L-TF}} & \multicolumn{1}{c}{\textbf{LLaDA}} \\
+%     \cmidrule(lr){3-3} \cmidrule(lr){4-4} \cmidrule(lr){5-5} \cmidrule(lr){6-6} \cmidrule(lr){7-7}
+%     \textbf{Setting} & \textbf{Experiment} & \textbf{ID} & \textbf{ID} & \textbf{ID} & \textbf{ID} & \textbf{ID} \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S1}} & experiment-1 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S2}} & experiment-1 & 100.0 & 0.0 & 100.0 & 83.7 & 88.4 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 5.7 & 0.0 & 0.0 & 0.0 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 27.4 & 2.3 & 2.9 & 4.6 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 32.0 & 0.0 & 16.1 & 23.1 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 100.0 & 9.2 & 100.0 & 80.8 & 8.9 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 97.9 & 0.1 & 94.0 & 84.4 & 41.3 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 100.0 & 0.0 & 98.1 & 82.6 & 0.4 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 16.4 & 0.0 & 0.2 & 19.7 & 0.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 100.0 & 100.0 & 100.0 & 100.0 & 60.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 97.1 & 0.0 & 95.3 & 89.0 & 0.0 \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S3}} & experiment-1 & 100.0 & 100.0 & 100.0 & 100.0 & 99.8 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 94.4 & 0.0 & 96.6 & 88.0 & 0.7 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 98.3 & 3.8 & 97.0 & 82.6 & 25.3 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 95.8 & 36.6 & 80.3 & 79.9 & 10.1 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 100.0 & 91.2 & 100.0 & 99.5 & 94.2 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 99.6 & 90.5 & 98.8 & 89.0 & 96.4 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 100.0 & 67.8 & 99.9 & 79.2 & 90.6 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 72.9 & 13.5 & 98.6 & 84.8 & 59.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 100.0 & 100.0 & 100.0 & 100.0 & 99.8 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 100.0 & 89.6 & 100.0 & 79.5 & 89.5 \\
+%     \midrule
+%     \multirow{10}{*}{\textbf{S4}} & experiment-1 & 100.0 & 100.0 & 100.0 & 99.4 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-2 & 99.7 & 96.9 & 99.8 & 98.5 & 98.1 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-3 & 99.8 & 98.8 & 100.0 & 99.1 & 99.1 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-4 & 100.0 & 95.9 & 99.4 & 79.8 & 81.7 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-5 & 100.0 & 99.9 & 100.0 & 100.0 & 99.5 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-6 & 100.0 & 99.3 & 100.0 & 99.7 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-7 & 100.0 & 99.6 & 100.0 & 87.4 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-8 & 86.3 & 99.1 & 100.0 & 91.7 & 98.7 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-9 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+%     \cmidrule(lr){2-7}
+%     & experiment-10 & 100.0 & 100.0 & 100.0 & 82.2 & 99.9 \\
+%     \bottomrule
+%   \end{tabular}
+%   }
+%   \caption{ID test grid accuracy for sample-efficiency (settings S1–S4), across ResNet, Vanilla-TF, Grid-TF, Pondering-Looped-TF, LLaDA.}
+% \end{table}
+
+
+
+% \subsection{Sample-Efficiency plots}
+% %% Sample-Efficiency plots
+% \begin{figure}[htbp]
+%   \centering
+  
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp1.png}
+%   \end{minipage}
+%   \hfill
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp2.png}
+%   \end{minipage}
+
+%   \vspace{2em}
+
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp3.png}
+%   \end{minipage}
+%   \hfill
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp4.png}
+%   \end{minipage}
+
+%   \vspace{2em}
+  
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp5.png}
+%   \end{minipage}
+%   \hfill
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp6.png}
+%   \end{minipage}
+
+%   \caption{Sample-Efficiency experiments 1-6 of all settings.}
+%   \label{fig:sample-efficiency_exp_1-6}
+% \end{figure}
+
+
+% \begin{figure}[htbp]
+%   \centering
+
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp7.png}
+%   \end{minipage}
+%   \hfill
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp8.png}
+%   \end{minipage}
+
+%   \vspace{2em}
+
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp9.png}
+%   \end{minipage}
+%   \hfill
+%   \begin{minipage}[b]{0.48\textwidth}
+%     \includegraphics[width=\linewidth]{figures/sample-efficiency_exp10.png}
+%   \end{minipage}
+
+%   \caption{Sample-Efficiency experiments 7-10 of all settings.}
+%   \label{fig:sample-efficiency_exp_7-10}
+% \end{figure}

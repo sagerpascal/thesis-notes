@@ -1,0 +1,44 @@
+\subsection{Data Environment Configuarations}
+
+\subsubsection{Before-ARC}
+
+The Before-ARC data environment follows a generation output format - that is, given an input grid, models must generate the corresponding output grid. As we do not consider in-context learning in this work, we do not provide any "demonstration examples" to the model. For compositionality settings, where multiple tasks are mixed within a train/test group, instead of providing demonstration examples, we provide a task code which indicates to the model which tasks it should perform. This is inline with what was proposed in CVR \cite{cvr2022}. 
+
+\paragraph{Transformations:} A transformation is associated to a task. A transformation is either a primitive (i.e., Translate-Up, Rot-90, Mirror-Horizontal) or a composition of primitive transformations. For a complete set of transformations, refer to the appendix \ref{transformationList}. 
+
+\paragraph{Task Codes:} 
+
+For the Before-ARC data environment, in the compositionality study, since there are several tasks which the model must learn in parallel, which might also vary between train and test time, we append a task code to the input sequence. This task code is an indication of which task the model must perform. For instance, if for a given example, the task is to apply the "translate\_up" transformation followed by the "rotate\_90" transformation twice, we simply append these transformations (as unique tokens) to the end of the sequence, in the order in which they must be applied. This enables us to always specifiy the transformation, even in cases where the exact composition of transformation at test time is not seen during train time. 
+
+
+
+\paragraph{Constrains of the Before-ARC environment maintained uniformly across all experiment settings:}
+\begin{itemize}
+    \item Shapes size is smaller than 6 pixels per rows and columns.
+    \item Shapes are single colored.
+    \item Shapes can be "8-connected" (i.e., they can be connected to their neighbors in 8 directions, as opposed to "4-connected").
+    \item Shapes are not allowed to touch or overlap.
+\end{itemize}
+
+\paragraph{Considered Varying Parameters:} TO PUT IN THE EXPERIMENTS DIRECTLY? 
+
+\subsubsection{CVR}
+
+For the CVR data environment \cite{benchmark_for_compositional_visual_reasoning}, we consider a \textit{classification} output mode, which the authors call "odd-one-out". In this framework, a sample contrains $k=4$ RGB input images following an AVR rule, and the output is a categorical value indicating which of the $k$ images is the odd one. We note that CVR theoretically also allows for the creation of problems such as binary classification, few-shot binary classification as well as a format similar to Raven's Progressive Matrices, but we solely focus on the odd-one-out classification task. 
+
+A rule is associated to a task. There are elementary rules and composite ones. The composite rules are either roughly the result of a combination (e.g., task\_pos\_contact or task\_size\_count\_2), or they are a "standalone" more complex rule (e.g., task\_sym\_mir).
+
+\subsubsection{RE-ARC} \label{rearc}
+
+For the RE-ARC data environment \cite{reverse_engineer_hodel}, we consider, similarly to the Before-ARC data environment setting, a \textit{generation} output mode. The RE-ARC dataset, is a dataset that allows to generate a large number of input-output pairs that follow each of the 400 training tasks from the original ARC dataset \cite{cholletARC}. Inspired by the work of \cite{arc_vit}, we randomly sample 10 tasks out of the 400 possible tasks, and conduct our various experiments on those. We generate tasks accross the full range of complexity level (i.e., from 0 to 1) as allowed on the RE-ARC generator. 
+
+\textcolor{red}{TODO: create a table with the list of RE-ARC tasks considered.}
+
+\paragraph{Considered Varying Parameters:} TO PUT IN THE EXPERIMENTS DIRECTLY? 
+
+\paragraph{Constrains of the Before-ARC environment maintained uniformly across all experiment settings:}
+\begin{itemize}
+    \item Maximum grid size allowed is 30x30. 
+    \item The maximum number of shapes per grid is 10.
+    \item The maximum number of colors per grid is 10. 
+\end{itemize}

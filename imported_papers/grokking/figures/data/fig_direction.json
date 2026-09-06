@@ -1,0 +1,38 @@
+{
+  "note": "tab:twoaxis, p=31. test accuracy and per-neuron periodicity per rule. DFA/FA rows from research-log 31-32b, others from 17-18 and 41.",
+  "rules": [
+    "Backprop",
+    "Knob $\\beta$=1",
+    "DFC",
+    "DFA",
+    "FA"
+  ],
+  "test": [
+    0.996,
+    0.975,
+    1.0,
+    0.0,
+    0.0
+  ],
+  "periodicity": [
+    0.63,
+    0.88,
+    0.89,
+    0.25,
+    0.35
+  ],
+  "credit_pr": [
+    0.59,
+    1.0,
+    0.94,
+    0.98,
+    0.96
+  ],
+  "groks": [
+    true,
+    true,
+    true,
+    false,
+    false
+  ]
+}

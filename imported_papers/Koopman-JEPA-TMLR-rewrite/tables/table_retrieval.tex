@@ -1,0 +1,30 @@
+\begin{table}[t]
+\caption{The same rollouts under two readouts, clean backgrounds at full data, mean over 10 seeds. \emph{Probe} decodes the physical state from the rolled-out latent; \emph{retrieval} matches the latent to the nearest encoded held-out frame and scores that frame's true state (Section~\ref{sec:measurements}). The ratio is the factor by which the probe reads worse than retrieval on identical rollouts. \textbf{Bold} = best learned model in the block under that readout. Persistence is included as an internal check: it does not drift in norm, and the two readouts agree on it to within one percent.}
+\label{tab:retrieval}
+\centering
+\small
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Configuration} & \multicolumn{3}{c}{$T{=}10$} & \multicolumn{3}{c}{$T{=}20$} \\
+ & \textbf{probe} & \textbf{retr.} & \textbf{ratio} & \textbf{probe} & \textbf{retr.} & \textbf{ratio} \\
+\midrule
+\multicolumn{7}{c}{\textbf{Pendulum}} \\
+\midrule
+Koopman~(Stable)         & $5.62$ & $6.93$ & $0.811$ & $\mathbf{3.68}$ & $\mathbf{4.05}$ & $0.908$ \\
+Koopman~(Soft)           & $\mathbf{4.22}$ & $7.72$ & $0.546$ & $20.3$ & $4.72$ & $4.30$ \\
+Koopman~(Unconstrained)  & $131$ & $7.19$ & $18.3$ & $8.6{\times}10^{5}$ & $5.61$ & $1.5{\times}10^{5}$ \\
+MLP-JEPA baseline        & $9.19$ & $\mathbf{6.36}$ & $1.44$ & $6354$ & $4.90$ & $1297$ \\
+\midrule
+\emph{Persistence}             & $5.44$ & $10.5$ & $0.519$ & $1.66$ & $1.60$ & $1.04$ \\
+\midrule
+\multicolumn{7}{c}{\textbf{Cartpole}} \\
+\midrule
+Koopman~(Stable)         & $0.843$ & $0.569$ & $1.48$ & $24.7$ & $1.49$ & $16.6$ \\
+Koopman~(Soft)           & $\mathbf{0.609}$ & $\mathbf{0.485}$ & $1.26$ & $\mathbf{13.5}$ & $\mathbf{1.12}$ & $12.1$ \\
+Koopman~(Unconstrained)  & $1.42$ & $0.554$ & $2.57$ & $399$ & $1.54$ & $259$ \\
+MLP-JEPA baseline        & $2.72$ & $0.634$ & $4.30$ & $1874$ & $1.68$ & $1117$ \\
+\midrule
+\emph{Persistence}             & $0.461$ & $0.565$ & $0.817$ & $1.03$ & $1.13$ & $0.914$ \\
+\bottomrule
+\end{tabular}
+\end{table}

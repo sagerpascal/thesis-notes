@@ -1,0 +1,21 @@
+\subsection{Generation objectives}
+
+
+
+
+We developed a generator specifically designed to train models on the Core Knowledge Principles \cite{cholletARC}, which form the foundation of the ARC dataset. Below, we specify the concepts we aimed to incorporate into our generation process.
+
+\begin{itemize}
+    \item Objectness priors:  The generator should enable generating objects in a grid, similar to the ARC data set, subject to the concepts of cohesion, persistence, and contrast. These objects should be able to change color, bump into one another, move disappear, multiply, etc...  
+    \item Goal-directedness priors: The generator should make "goals" possible to characterize, with a start and end states to processes involving intentionality. 
+    \item Numbers and counting priors: The generator should enable the generation of grids of various sizes, and exemplify basic mathematical operations related to counting and basic arithmetic. 
+    \item Basic geometry and topology priors: The generator should allow exemplification of the concepts of symmetry, orientation, angle, and distance. 
+\end{itemize}
+
+Another strong motivation for the design of this generator is to enable studying generalization, compositionality and sample efficiency. 
+
+Regarding generalization, our generator needed to be capable of generating problems at varying levels of difficulty, with different set of parameters to enable training and testing on different grid configuration. For instance, if a task consists in translating some objects by 1 pixel to the right, we could train only on tasks containing <= 2 objects and which are always smaller than 10x10 grids. A human test taker, trained on such a task, could perfectly generalize to instances with more than 2 objects and different grid size - as such, we should be able to test on different grid size and number of objects than originally trained upon. 
+
+Regarding sample efficiency, our generator needed to be capable of generating arbitrarily many examples of task(s) to study which models learn the tasks using less data. Inspired by the Meta-Learning literature \cite{kirsch2022general}, we also know that sample efficiency in the meta-learning framework is directly correlated to the variety of tasks that models were initially trained on. This led us to attempt putting is as much variety as possible within the generator. 
+
+Finally, regarding compositionality, our generator needed to be able to compose multiple "primitive" concepts. Human intelligence works so well on ARC because humans are capable of freely re-using and composing distinct concepts that they have learned in different circumstances within their lives - state-of-the-art machine learning models still cannot do so \cite{Faith_Fate}. 

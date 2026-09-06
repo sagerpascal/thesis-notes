@@ -1,0 +1,278 @@
+\subsection{Experiment Results}
+
+%% Someone's past text
+% Below we present a summary table of the results obtained on the experiments. While we conduct each experiment with different parametrizations (see \ref{experiment_details}), we summarize the results in a single table where we simply report the average performance accross parametrizations.
+
+To provide robust empirical baselines for the COGITAO benchmark and to systematically evaluate the compositional and generalization capabilities of different model architectures, we evaluate the models on all the experiments of the three \textit{CompGen} settings (\emph{C1–C3}) and the five \textit{EnvGen} settings (\emph{G1–G5}) described in Section~\ref{sec:experiment_details}.
+
+%
+
+Table~\ref{tab:beforearc_grid_acc_results} provides an overview of the results across these settings, reporting both in-domain (ID) and out-of-domain (OOD) grid accuracy. Grid accuracy is defined as the percentage of samples for which the predicted grid structure matches the ground truth exactly (i.e., the entire grid is predicted correctly). We present further details on metrics in Appendix \ref{appendix:metrics}.  Performance values are averaged across 5 variations of the experiment setting (i.e., different transformation sequences; see \ref{appendix:experiment_details} for more details) with 3 seeds each. 
+
+%Table~\ref{tab:beforearc_grid_acc_results} summarizes the main results, showing both in-domain (ID) and out-of-domain (OOD) Grid accuracy, defined as the percentage of exact grid matches, averaged over all experiments within each experimental setting. The table compares the four models described in section~\ref{subsec:models}: ResNet, Vanilla-TF, Grid-TF, and LLaDA. The per-experiment results are provided in the Appendix *ADD REF*.
+
+
+%%%%% NEW table
+\begin{table}[htbp]
+  \centering
+
+  \sisetup{detect-weight=true,detect-inline-weight=math}
+
+  \begin{tabular}{l
+    S[table-format=3.1] S[table-format=3.1] S[table-format=3.1]
+    S[table-format=3.1] S[table-format=3.1] S[table-format=3.1]
+    S[table-format=3.1] S[table-format=3.1] S[table-format=3.1]
+    S[table-format=3.1] S[table-format=3.1] S[table-format=3.1]
+  }
+    \toprule
+    & \multicolumn{3}{c}{\textbf{Vanilla-TF}} 
+      & \multicolumn{3}{c}{\textbf{Grid-TF}} 
+      & \multicolumn{3}{c}{\textbf{PL-TF}} 
+      & \multicolumn{3}{c}{\textbf{LLaDA}} \\
+    
+    \cmidrule(lr){2-4} 
+    \cmidrule(lr){5-7} 
+    \cmidrule(lr){8-10} 
+    \cmidrule(lr){11-13} 
+    
+    \textbf{ES}
+    & \textbf{ID} & \textbf{OOD} & \textbf{$\boldsymbol{\Delta}$}
+    & \textbf{ID} & \textbf{OOD} & \textbf{$\boldsymbol{\Delta}$}
+    & \textbf{ID} & \textbf{OOD} & \textbf{$\boldsymbol{\Delta}$}
+    & \textbf{ID} & \textbf{OOD} & \textbf{$\boldsymbol{\Delta}$} \\
+    \midrule
+    C1 & 16.5 & 0.0 & 16.5 & 59.8 & 0.0 & 59.8 & \textbf{81.0} & \textbf{0.1} & 80.9 & 44.9 & 0.0 & 44.9 \\
+    C2 & 17.8 & 0.0 & 17.8 & 68.5 & 0.0 & 68.5 & \textbf{79.0} & \textbf{0.1} & 78.9 & 46.2 & 0.0 & 46.2 \\
+    C3 & 29.4 & 4.0 & 25.4 & 63.3 & \textbf{8.3} & 55.0 & 82.0 & 7.2 & 74.8 & \textbf{84.1} & 7.8 & 76.3 \\
+    \midrule
+    G1 & 98.4 & 78.9 & 19.5 & 99.3 & \textbf{90.1} & 9.2 & 93.8 & 85.5 & 8.3 & \textbf{99.5} & \textbf{90.1} & 9.4 \\
+    G2 & 82.0 & 2.1 & 79.9 & 98.0 & \textbf{77.0} & 21.0 & 92.6 & 54.9 & 37.6 & \textbf{98.5} & 62.4 & 36.1 \\
+    G3 & 57.6 & 22.5 & 35.1 & 85.0 & 26.6 & 58.4 & \textbf{92.0} & \textbf{27.2} & 64.8 & 82.4 & 26.8 & 55.6 \\
+    G4 & 46.2 & 21.8 & 24.4 & \textbf{86.9} & 19.0 & 67.9 & 86.8 & \textbf{37.5} & 49.3 & 81.3 & 32.0 & 49.3 \\
+    G5 & 72.5 & 0.0 & 72.5 & \textbf{95.0} & 0.2 & 94.8 & 80.7 & 8.9 & 71.8 & 70.0 & \textbf{10.1} & 60.0 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Performance of models on experiments across experiment settings (ES) of the main studies. We report the ID (in-domain) and OOD (out-of-domain) results for test grid accuracy (i.e., \% of perfect matches) and the ID to OOD relative drop $\Delta$ averaged over all experiments within the experiment setting.}
+  \label{tab:beforearc_grid_acc_results}
+\end{table}
+
+%%%%%
+
+
+%%%%%% OLD table with old Eperiments
+%% Table WITHOUT ResNet and with Delta
+% \begin{table}[htbp]
+%   \centering
+%   \caption{Performance of models on COGITAO experiments for the \textit{CompGen} and \textit{EnvGen} studies across different experiment settings (ES). We report the ID (in-domain) and OOD (out-of-domain) results for Grid accuracy (i.e., percentage of perfect match) and the relative drop ($\Delta$ = ID - OOD) averaged over all the experiments within the experiment setting.}
+%   \label{tab:beforearc_grid_acc_results}
+
+%   \begin{tabular}{l l
+%     S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]
+%     S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]
+%     S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]
+%   }
+%     \toprule
+%     & & \multicolumn{3}{c}{\textbf{Vanilla-TF}} 
+%       & \multicolumn{3}{c}{\textbf{Grid-TF}} 
+%       & \multicolumn{3}{c}{\textbf{LLaDA}} \\
+    
+%     \cmidrule(lr){3-5} 
+%     \cmidrule(lr){6-8} 
+%     \cmidrule(lr){9-11} 
+    
+%     \textbf{Study} & \textbf{ES}
+%     & \textbf{ID} & \textbf{OOD} & \textbf{$\boldsymbol{\Delta}$}
+%     & \textbf{ID} & \textbf{OOD} & \textbf{$\boldsymbol{\Delta}$}
+%     & \textbf{ID} & \textbf{OOD} & \textbf{$\boldsymbol{\Delta}$} \\
+%     \midrule
+%     \multirow{3}{*}{\textbf{CompGen}}
+%     & C1 & 28.4 & 15.7 & 12.7 & \textbf{71.1} & \textbf{18.7} & 52.4 & 44.9 & 0.0 & 44.9 \\
+%     \cmidrule(lr){2-11}
+%     & C2 & 34.0 & 15.6 & 18.4 & \textbf{69.0} & \textbf{18.6} & 50.4 & 46.2 & 0.0 & 46.2 \\
+%     \cmidrule(lr){2-11}
+%     & C3 & 15.1 & 1.0 & 14.1 & 75.6 & 5.1 & 70.5 & \textbf{84.1} & \textbf{7.8} & 76.3 \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{EnvGen}}
+%     & G1 & 98.3 & 76.7 & 21.6 & 99.2 & \textbf{90.0} & 9.2 & \textbf{99.5} & 90.1 & 9.4 \\
+%     \cmidrule(lr){2-11}
+%     & G2 & 68.1 & 0.0 & 68.1 & 97.0 & \textbf{73.0} & 24.0 & \textbf{98.5} & 62.4 & 36.1 \\
+%     \cmidrule(lr){2-11}
+%     & G3 & 57.1 & 17.5 & 39.6 & 78.5 & \textbf{27.2} & 51.3 & \textbf{82.4} & 26.8 & 55.6 \\
+%     \cmidrule(lr){2-11}
+%     & G4 & 47.6 & 21.3 & 26.3 & 75.2 & 13.8 & 61.4 & \textbf{81.3} & \textbf{32.0} & 49.3 \\
+%     \cmidrule(lr){2-11}
+%     & G5 & 70.0 & 0.0 & 70.0 & \textbf{98.0} & 0.2 & 97.8 & 70.0 & \textbf{10.1} & 60.0 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+% %%%%%
+
+%% Table with ResNet
+% We could not keep the relative difference as the table becomes too wide.
+% \begin{table}[htbp]
+%   \centering
+%   \caption{Performance of models on COGITAO experiments for Compositionality (Comp) and Systematic Generalization (Gen) studies across different experiment settings (ES). We report the ID (in-domain) and OOD (out-of-domain) results for Grid accuracy (i.e., percentage of perfect match) averaged over all the experiments within the experiment setting.}
+%   \label{tab:beforearc_grid_acc_results}
+
+%   \begin{tabular}{l l
+%     S[table-format=2.1] S[table-format=2.1]
+%     S[table-format=2.1] S[table-format=2.1]
+%     S[table-format=2.1] S[table-format=2.1]
+%     S[table-format=2.1] S[table-format=2.1]
+%   }
+%     \toprule
+%     & & \multicolumn{2}{c}{\textbf{ResNet}} 
+%       & \multicolumn{2}{c}{\textbf{Vanilla-TF}} 
+%       & \multicolumn{2}{c}{\textbf{Grid-TF}} 
+%       & \multicolumn{2}{c}{\textbf{LLaDA}} \\
+    
+%     \cmidrule(lr){3-4} 
+%     \cmidrule(lr){5-6} 
+%     \cmidrule(lr){7-8} 
+%     \cmidrule(lr){9-10} 
+    
+%     \textbf{Study} & \textbf{ES}
+%     & \textbf{ID} & \textbf{OOD}
+%     & \textbf{ID} & \textbf{OOD}
+%     & \textbf{ID} & \textbf{OOD}
+%     & \textbf{ID} & \textbf{OOD} \\
+%     \midrule
+%     \multirow{3}{*}{\textbf{COGITAO-Comp}}
+%     & C1 & 3.5 & 0.0 & 28.4 & 15.7 & \textbf{71.1} & 18.7 & 54.2 & \textbf{26.2} \\
+%     \cmidrule(lr){2-10}
+%     & C2 & 1.5 & 0.0 & 34.0 & 15.6 & \textbf{69.0} & \textbf{18.6} & 49.2 & 15.2 \\
+%     \cmidrule(lr){2-10}
+%     & C3 & 3.8 & 0.7 & 15.1 & 1.0 & 75.6 & 5.1 & \textbf{78.9} & \textbf{6.4} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{COGITAO-Gen}}
+%     & G1 & \textbf{99.9} & \textbf{98.8} & 98.3 & 76.7 & 99.2 & 90.0 & 99.4 & 89.1 \\
+%     \cmidrule(lr){2-10}
+%     & G2 & 98.2 & \textbf{98.4} & 68.1 & 0.0 & 97.0 & 73.0 & \textbf{99.3} & 64.3 \\
+%     \cmidrule(lr){2-10}
+%     & G3 & \textbf{98.4} & \textbf{28.1} & 57.1 & 17.5 & 78.5 & 27.2 & 76.9 & 27.2 \\
+%     \cmidrule(lr){2-10}
+%     & G4 & 76.0 & 23.5 & 47.6 & 21.3 & 75.2 & 13.8 & \textbf{76.3} & \textbf{35.6} \\
+%     \cmidrule(lr){2-10}
+%     & G5 & \textbf{99.1} & 1.2 & 70.0 & 0.0 & 98.0 & 0.2 & 71.0 & \textbf{14.0} \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+
+
+
+
+% \begin{table}[htbp]
+%   \centering
+%   \caption{Performance of models on COGITAO experiments for Compositionality (Comp) and Systematic Generalization (Gen) studies across different experiment settings (ES). We report the ID (in-domain) and OOD (out-of-domain) results for Grid accuracy (i.e., percentage of perfect match) averaged over all the experiments within the experiment setting.}
+%   \label{tab:beforearc_grid_acc_results}
+
+%   \begin{tabular}{l l
+%     S[table-format=2.1] 
+%     S[table-format=2.1]
+%     S[table-format=2.1] 
+%     S[table-format=2.1]
+%     S[table-format=2.1] 
+%     S[table-format=2.1]
+%     S[table-format=2.1] 
+%     S[table-format=2.1]
+%   }
+%     \toprule
+%     & & \multicolumn{2}{c}{\textbf{ResNet}} 
+%     & \multicolumn{2}{c}{\textbf{Vanilla-TF}} 
+%     & \multicolumn{2}{c}{\textbf{Grid-TF}} 
+%     & \multicolumn{2}{c}{\textbf{LLaDA}} \\
+    
+%     \cmidrule(lr){3-4} 
+%     \cmidrule(lr){5-6} 
+%     \cmidrule(lr){7-8} 
+%     \cmidrule(lr){9-10}
+    
+%     \textbf{Study} & \textbf{ES}
+%     & \textbf{ID} & \textbf{OOD} 
+%     & \textbf{ID} & \textbf{OOD} 
+%     & \textbf{ID} & \textbf{OOD} 
+%     & \textbf{ID} & \textbf{OOD} \\
+%     \midrule
+%     \multirow{3}{*}{\textbf{COGITAO-Comp}}
+% & C1 & 0.0 & 0.0 & 28.4 & 15.7 & \textbf{71.1} & 18.7 & 54.2 & \textbf{26.2} \\
+%     \cmidrule(lr){2-10}
+%     & C2 & 0.0 & 0.0 & 34.0 & 15.6 & \textbf{69.0} & \textbf{18.6} & 49.2 & 15.2 \\
+%     \cmidrule(lr){2-10}
+%     & C3 & 0.0 & 0.0 & 15.1 & 1.0 & 75.6 & 5.1 & \textbf{78.9} & \textbf{6.4} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{COGITAO-Gen}}
+% & G1 & 0.0 & 0.0 & 98.3 & 76.7 & 99.2 & \textbf{90.0} & \textbf{99.4} & 89.1 \\
+%     \cmidrule(lr){2-10}
+%     & G2 & 0.0 & 0.0 & 68.1 & 0.0 & 97.0 & \textbf{73.0} & \textbf{99.3} & 64.3 \\
+%     \cmidrule(lr){2-10}
+%     & G3 & 0.0 & 0.0 & 57.1 & 17.5 & \textbf{78.5} & \textbf{27.2} & 76.9 & \textbf{27.2} \\
+%     \cmidrule(lr){2-10}
+%     & G4 & 0.0 & 0.0 & 47.6 & 21.3 & 75.2 & 13.8 & \textbf{76.3} & \textbf{35.6} \\
+%     \cmidrule(lr){2-10}
+%     & G5 & 0.0 & 0.0 & 70.0 & 0.0 & \textbf{98.0} & 0.2 & 71.0 & \textbf{14.0} \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+
+%%% Yassine's past table below
+% \begin{table}[h]
+%     \centering
+%     \caption{In-distribution (ID) and out-of-distribution (OOD) performance across models and experiments.}
+%     \label{tab:id_ood_results}
+%     \begin{tabular}{lcccccc}
+%     \toprule
+%     \textbf{Study} & \textbf{Experiment} & \textbf{ResNet} & \textbf{TF} & \textbf{Object TF} & \textbf{Looped-Tf} & \textbf{Diffusion-Tf} \\
+%     \midrule
+%     \multirow{3}{*}{\textbf{Comp.}} 
+%     & C1 & \makecell{ID: 98.7 \\ OOD: 76.5} & \makecell{ID: 98.7 \\ OOD: 76.6} & \makecell{ID: 98.7 \\ OOD: 76.7} & \makecell{ID: 98.7 \\ OOD: 76.8} & \makecell{ID: 99.7 \\ OOD: 87.9} \\
+%     & C2 & \makecell{ID: 98.7 \\ OOD: 76.6} & \makecell{ID: 98.7 \\ OOD: 76.7} & \makecell{ID: 98.7 \\ OOD: 76.8} & \makecell{ID: 98.7 \\ OOD: 76.9} & \makecell{ID: 99.2 \\ OOD: 83.10} \\
+%     & C3 & \makecell{ID: 98.7 \\ OOD: 76.7} & \makecell{ID: 98.7 \\ OOD: 76.8} & \makecell{ID: 98.7 \\ OOD: 76.9} & \makecell{ID: 98.7 \\ OOD: 76.10} & \makecell{ID: 86.7 \\ OOD: 86.11} \\
+%     \midrule
+%     \multirow{5}{*}{\textbf{Gen.}} 
+%     & G1 & \makecell{ID: 98.7 \\ OOD: 76.8} & \makecell{ID: 98.7 \\ OOD: 76.9} & \makecell{ID: 98.7 \\ OOD: 76.10} & \makecell{ID: 98.7 \\ OOD: 76.11} & \makecell{ID: 99.7 \\ OOD: 78.12} \\
+%     & G2 & \makecell{ID: 98.7 \\ OOD: 76.9} & \makecell{ID: 98.7 \\ OOD: 76.10} & \makecell{ID: 98.7 \\ OOD: 76.11} & \makecell{ID: 98.7 \\ OOD: 76.12} & \makecell{ID: 99.9 \\ OOD: 65.13} \\
+%     & G3 & \makecell{ID: 98.7 \\ OOD: 76.10} & \makecell{ID: 98.7 \\ OOD: 76.11} & \makecell{ID: 98.7 \\ OOD: 76.12} & \makecell{ID: 98.7 \\ OOD: 76.13} & \makecell{ID: 99.7 \\ OOD: 30.3} \\
+%     & G4 & \makecell{ID: 98.7 \\ OOD: 76.11} & \makecell{ID: 98.7 \\ OOD: 76.12} & \makecell{ID: 98.7 \\ OOD: 76.13} & \makecell{ID: 98.7 \\ OOD: 76.14} & \makecell{ID: 99.9 \\ OOD: 46.15} \\
+%     & G5 & \makecell{ID: 98.7 \\ OOD: 76.12} & \makecell{ID: 98.7 \\ OOD: 76.13} & \makecell{ID: 98.7 \\ OOD: 76.14} & \makecell{ID: 98.7 \\ OOD: 76.15} & \makecell{ID: 99.7 \\ OOD: 5.42} \\
+%     \bottomrule
+%     \end{tabular}
+%     \end{table}
+%%%
+
+%% TODO: This should be rewritten (e.g., Grid-TF is not really our proposed model, and it should also include PL-TF and LLaDA since Grid-TF does not shine more than those two. However, the three models that incorporate stronger inductive biases performed better than the two general-purpose baselines.).
+
+
+The experimental results reveal several key trends (Table \ref{tab:beforearc_grid_acc_results}).
+Grid-TF, our grid-specialized transformer, provides strong in-domain (ID) accuracy across most settings and remains the most stable baseline overall - particularly in the \textit{EnvGen} study. However, the PL-TF model consistently matches or surpasses Grid-TF in several critical out-of-domain (OOD) tests. In the \textit{CompGen} study, PL-TF attains the best ID accuracy in C1 and C2 and competitive OOD performance in C3. It is the only model that solves a task on C1 and C2 OOD. Within the \textit{EnvGen} settings, PL-TF delivers the best OOD scores in G3 (27.2) and G4 (37.5), and strong ID results in G3–G4, indicating improved robustness to object scale and complexity changes. LLaDA remains a strong performer, achieving the highest OOD accuracy in G1 and competitive results in G2 and G5,. Vanilla-TF, by contrast, performs pooly, with sharp ID–OOD drops across nearly all tasks. Overall, these findings underscore both the difficulty of the \generatorName\ benchmark and the promise of PL-TF’s architectural choices for compositional and environmental generalization, while confirming that no current model fully solves the challenge.
+
+Our complementary analysis reveal two important failure modes for which models fail to generalize. 
+
+\begin{itemize}
+    \item \textbf{ID Bias:} The model applies the transformation it observes during training (e.g., translate\_right) even when the OOD task specifies another transformation (translate\_up).
+    \item \textbf{Structural Composition Failure:} When moving from depth-1 compositions to depth-2 (CompGen Setting 3), models are able to apply the transformation representing a sequence of atomic transformations–highlighted by a high ID performance–but they fail to decompose such sequences to extract their atomic transformations and recompose them as expected for the OOD case; this again highlights a concrete failure in compositional generalization ability.
+\end{itemize}
+
+We refer the reader to our appendix \ref{appendix:cogitao_learning_regime}, where we present further analysis that sheds light on these issues.
+
+
+% \textcolor{red}{The experimental results reveal several important trends. \textbf{Grid-TF}, our proposed model, achieves the strongest in-domain performance across nearly all experimental settings, demonstrating its robustness in compositional reasoning tasks. Its performance improvements over Vanilla-TF across both ID and OOD scenarios highlight the effectiveness of the introduced inductive biases tailored to grid-based relational structures. Notably, in certain settings, such as C3 and G1, \textbf{LLaDA} performs on par with or marginally better than Grid-TF, particularly in terms of out-of-domain generalization. In fact, LLaDA achieves the highest OOD accuracy in several configurations (e.g., G4, and G5), suggesting its potential for systematic generalization. \textbf{Vanilla-TF} shows moderate in-domain competence in some settings (e.g., G1 and G2), but its performance degrades substantially under distribution shifts, indicating limited capacity for generalization beyond the training distribution.} 
+% Overall, these findings confirm the challenging nature of the \generatorName\ benchmark and highlight the need for architectures that are versed in compositionality and systematic generalization.
+
+
+%ResNet, in contrast, consistently fails to learn meaningful representations, with near-zero accuracy in both ID and OOD conditions. This result underscores the limitations of standard convolutional architectures in handling compositional and relational reasoning tasks and further emphasises the importance of incorporating structured inductive biases.
+
+%\paragraph{Insights.}
+%We observe several key trends that could provide directions for further investigations.
+%\begin{itemize}
+%    \item Grid-TF achieves the strongest overall in-domain (ID) performance across nearly all settings. When LLaDA does outperform it in C3, G1, G2 and G4, their performance is relatively on par.
+%
+%    \item LLaDA exhibits superior generalization in multiple settings, particularly in C1, G4 and G5, thus hinting at its potential in systematic generalization tasks.
+%
+%    \item Vanilla-TF can learn to solve in-domain tasks (e.g., G1) to some extent, but struggles to generalize, with consistently poor OOD scores across all configurations.
+%
+%    \item ResNet fails to learn effectively in all settings, yielding near-zero performance in both ID and OOD metrics. This suggests that classical convolutional architectures lack the necessary inductive biases or require a different modeling approach for compositional reasoning in COGITAO.
+%\end{itemize}
+%These results validate the challenging nature of the two studies conducted with the COGITAO benchmark and highlight the performance gap between standard architectures and ones better designed to compose and generalize in a grid environment.

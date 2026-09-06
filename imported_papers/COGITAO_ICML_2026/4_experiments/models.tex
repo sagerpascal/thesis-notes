@@ -1,0 +1,46 @@
+\subsection{Models}
+\label{subsec:models}
+
+We evaluate four encoder architectures, each paired with a two-layer MLP head for grid tokens classification. All models are of comparable size (approximately $1$ million parameters) to ensure a fair evaluation. Empirically, increasing the model size did not substantially improve generalization.
+
+\begin{itemize}
+    % TODO: Uncomment if ResNet approved.
+    % \item \textbf{ResNet}: To benchmark against established convolutional approaches and serve as a critical reference in the evaluation of conventional inductive biases in contrast to attention-based models, we include a ResNet \citep{he2015deepresiduallearningimage} encoder---a widely adopted baseline for visual tasks.
+
+    \item \textbf{Vanilla TF}: We use a standard Vanilla Transformer (TF)\citep{dosovitskiy2021an} with learned absolute positional encodings \citep{vaswani2017attention}. Vision transformers are considered state-of-the-art for vision tasks and offer a strong baseline for \generatorName\ tasks.
+
+    \item \textbf{Grid TF}: To better capture the structure of grid-based reasoning tasks, we introduce a Grid TF, an adapted version of ViTARC \citep{arc_vit} that incorporates task-specific biases: object positional encoding (OPE) \citep{arc_vit}, PEMixer modules \citep{arc_vit}, register tokens \cite{darcet2024vision}, and modified positional encoding schemes \citep{Shaw_Uszkoreit_Vaswani_2018, Su_RoFormer_2024}. These additions are designed to support spatial reasoning over structured grid-based data.
+
+    \item \textbf{Pondering Looped TF (PL-TF)}: Based on PonderNet \cite{banino2021pondernet, dehghani2019universaltransformers}, we evaluate a Transformer architecture that incorporates recurrence through iterative weight sharing and adaptive computation time. This architecture aims to reflect an inductive bias towards iterative reasoning and composition through multi-step transformations, making it particularly well suited for compositional tasks.
+    
+    \item \textbf{LLaDA}: In addition to vision-like and grid-specific architectures, as well as models with a recurrent architecture, we investigate the performance of language models. Specifically, we evaluate LLaDA \citep{Nie_LLaDA_2025}, a diffusion-based language model yielding state-of-the-art performance on symbolic and logical tasks.
+\end{itemize}
+
+%%\paragraph{ResNet}
+%%We employ a standard ResNet-18 architecture \citep{resnet}, a widely used convolutional model for visual tasks. ResNet serves as a strong baseline \emph{without} attention mechanisms and is known to perform robustly under data-scarce settings.
+
+%\paragraph{Vanilla ViT}
+%We use a standard Vision Transformer (ViT) \citep{dosovitskiy2021an} with learned absolute positional encodings \citep{vaswani2017attention}.
+%%Together with ResNet, vanilla ViT offers a strong reference of popular vision models applied to \texttt{\generatorName} tasks.
+%Vision transformers are considered state-of-the-art for vision tasks and offer a strong baseline for \texttt{\generatorName} tasks.
+
+%\paragraph{Grid ViT}
+%To better capture the structure of grid-based reasoning tasks, we introduce Grid ViT, an adapted version of ViTARC \citep{arc_vit} that incorporates task-specific biases: object positional encoding (OPE) \citep{arc_vit}, PEMixer modules \citep{arc_vit}, register tokens \cite{darcet2024vision}, and modified positional encoding schemes \citep{Shaw_Uszkoreit_Vaswani_2018, Su_RoFormer_2024}. These additions are designed to support spatial reasoning over structured grid inputs.
+
+%\paragraph{LLaDA}
+%Besides vision and grid-specific architectures, we investigate the performance of language models. Specifically, we evaluate LLaDA \citep{Nie_LLaDA_2025}, a diffusion-based language model yielding state-of-the-art performance on symbolic and logical tasks.
+
+%The selected models represent a broad range of architectural paradigms, encompassing convolutional and transformer-based architectures, general-purpose and inductively biased designs, as well as both vision-centric and language-based models, reflecting the diverse computational demands of AVR tasks.
+The selected models encompass a diverse set of architectural paradigms based on the current state-of-the-art in both vision and sequence modeling. This selection is designed to address the heterogeneous computational requirements of abstract visual reasoning tasks and spans a wide spectrum of modeling characteristics, thus providing baselines for \generatorName. Comprehensive architectural details are provided in Appendix~\ref{appendix:models}.
+
+
+\subsection{Training}
+\label{subsec:training}
+
+All models are trained\footnote{Training of the Vanilla and Grid-TF models was performed using an NVIDIA GeForce RTX 3090 GPU. Traiing of PL-TF was performed on NVIDIA A100 GPU. Training of LLaDA used an NVIDIA V100 GPU.} from scratch using supervised learning.
+For each experiment, we evaluate and test in-domain (ID) and out-of-domain (OOD) data. We aim to train all models as similar as possible for a fairer comparison among them. The models are trained for $10$ epochs on the 100K samples (except for LLaDA, which is trained for $20$ epochs, as on average $50\%$ of the tokens are masked). We found that neither increasing the number of training steps, nor the number of unique samples improved generalization performance (see Appendix \ref{appendix:cogitao_learning_regime} for more details).
+% We select the best models based on their performance on the validation OOD split before evaluating them on the test sets.
+
+All models are trained using the AdamW optimizer \citep{Loshchilov_AdamW_2019} with a linear warm-up for 200 steps, followed by cosine annealing of the learning rate.
+We use a batch size of 64 for training and 50 for evaluation and testing.
+Further training details for all models are provided in Appendix~\ref{appendix:training_procedure}.

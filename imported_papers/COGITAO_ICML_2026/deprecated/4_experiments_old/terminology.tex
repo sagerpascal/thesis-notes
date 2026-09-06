@@ -1,0 +1,11 @@
+\subsection{Terminology}
+
+\paragraph{Data environment:} We define a data environment as an environment of visual reasoning tasks with its own properties and constraints. In this work, we perform experiments accross 3 distinct data environments: Before-ARC, CVR and RE-ARC.
+
+\paragraph{Study:} We define a study as a set of experiments targeted towards one of the 2 \textit{abilities} we are interested in studying: compositionality and generalization. Each study leverages the data environment in a specific way (when possible) to enable the study of this ability. 
+
+\paragraph{Experiment Setting:} We define an experiment setting as a specific configuration of the data environment, study, model and evaluation metric. Each experiment setting is designed to test a specific hypothesis related to the study. For example, in the generalization study, we can have different experiment settings which enable focusing on generalization capabilities accross different parameters (e.g. number of shapes per grid, or size of the grid). 
+
+\paragraph{Experiment:} An experiment is a specific instance of an experiment setting. For each experiment setting, there can be multiple experiments that allow testing the same hypothesis, but in different ways. 
+
+\paragraph{Models:} We train several models on the various data environments, to investigate their capacities accross the different studies. Specifically, we use different different models: a ResNet \cite{resnet}, a Vision Transformer (ViT) [CITE], a Vision Transformer with adapted for object centric learning \cite{arc_vit}, a Looped Transformer [CITE], and a Diffusion Transformer [CITE]. These are presented in greater depth in a dedicated section \ref{models}.

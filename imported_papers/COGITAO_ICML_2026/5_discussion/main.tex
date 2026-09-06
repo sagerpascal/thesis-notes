@@ -1,0 +1,42 @@
+\section{Discussion}
+
+\paragraph{Summary}
+
+\generatorName\ offers a controlled and targeted framework for studying compositional and systematic generalization, specifically in object-centric environments. With millions of possible tasks and abundant training samples, \generatorName\ provides an unmatched degree of compositional control in abstract visual domains.
+By leveraging simple grid-based environments and object-centric transformations, it enables isolating core compositional capabilities while avoiding the visual and data complexity of more naturalistic datasets. Indeed, our core hypothesis is that models that cannot exhibit compositional generalization in this controlled, simple and abstract environment  are unlikely to succeed in the far noisier and less structured settings of real-world vision. Nevertheless, to bridge the gap to real-world vision, we provide an RGB extension to \generatorName\ onto which both the \textit{CompGen} and \textit{EnvGen} benchmarks can be applied. 
+
+Unlike classification-based benchmarks such as CVR \cite{cvr2022}, RPM \cite{raven2003raven}, SVRT \cite{fleuret2011comparing}, and PGM \cite{barrett2018measuring}, our generator requires models to \emph{generate} output grids - a real test of compositional understanding. It aligns more closely with challenges like ARC-AGI \cite{cholletARC} and its successors \cite{reverse_engineer_hodel, mondorf2025enabling, conceptarc2023, generator:assouel2022object}. We also extend our input-output generation framework to a sequential framework (Appendix \ref{appendix:sequential_COGITAO}), with set of frames and object-centric "actions", thus making it highly relevant sequential manipulation tasks.
+
+
+In our benchmark experiments, we evaluate Vanilla TF, Grid TF, Pondering Looped TF, and LLaDA across the \generatorName\ tasks. These models were chosen to represent the state-of-the-art in vision and sequence modeling, including both general-purpose and grid-specialized architectures. While they provide a diverse and strong baseline, future work should explore additional architectures. The experiments reveal a consistent trend: while these models perform well on in-domain tasks, they fail dramatically in out-of-distribution scenarios requiring compositional understanding. In our \textit{CompGen} study, while models "learned to learn" ID transformations sequences, they all failed when faced with unseen OOD transformation sequences. Similarly, \textit{EnvGen} performance degrades significantly with increased task complexity. These results support growing evidence that current state-of-the-art sequence and vision models rely heavily on pattern recognition rather than systematic compositional reasoning \cite{geirhos2020shortcut}. \generatorName\ provides a controlled environment to diagnose these fundamental limitations and guide the development of more robust, generalizable architectures and inductive biases.
+
+\paragraph{Future Work}
+
+\generatorName\ offers a compelling platform for driving progress in compositional generalization, and it supports several promising research directions.
+First, extending the framework to \emph{in-context learning}, for example, by providing demonstration examples, could allow evaluation of generalization in settings known to benefit from longer contexts \cite{cole_osman_deep_learning_for_arc}, particularly in large foundation models \cite{an2023context, zhang2025understanding, lampinen2025generalization}.
+Second, due to its controllable environment and adjustable difficulty, \generatorName\ is well-suited for \emph{curriculum learning,} where task complexity is gradually increased to guide learning.
+Third, analyzing \emph{internal model representations} trained on \generatorName\ may reveal whether and how models develop object-centric or transformation-centric abstractions.
+
+\paragraph{Outlook}
+
+
+Mastering the existing hardest \generatorName\ settings would be a significant milestone toward genuinely compositional architectures.
+Furthermore, doing so using only generator-produced data would show that a model can identify primitive operations, apply them sequentially, and recombine them in novel settings---akin to a core human cognition \cite{fodor1988connectionism}.
+
+%Solving the COGITAO would be a remarkable leap forward for models - particularly when trained from scratch only on \generatorName\ data. Indeed, it would demonstrate the capacity of models to isolate individual operations, iteratively perform them, and do so in changing environments. This capacity is key to human intelligence, and is well characterized by Lake \& Baroni: "Once a person learns the meaning of a new verb
+%’dax,’ he or she can immediately understand the meaning of ’dax twice’ or ’sing and dax’.” \cite{SCAN_lake_baroni}. 
+%
+
+% We acknowledge, however, that \generatorName\ is abstract and synthetic, and lacks grounding in real-world data. While many tasks are conceptually straightforward for humans, transformation sequences with large depth can be cognitively demanding. Moreover, although the task space is large, some transformations do not differ drastically in structure or complexity. Nevertheless, we believe that mastering such structured, synthetic benchmarks is a necessary next step for progress in visual reasoning.
+
+%We note however that \generatorName\ is highly abstract and synthetic, and lacks any grounding in real-world data or problems. Furthermore, while it is conceptually easy for humans, many transformation sequences - particularly with large depth - become very complex for humans, especially if needing pixel-perfect accurate output-grid construction. Finally, while we allow a large amount of tasks, the community may argue that they are not so different in their nature, as some transformations, are similar in nature and complexity.
+
+
+
+%We believe that \generatorName\ provides great support to the development of novel models which can reliably perform compositional task - and do so solely based on the benchmark experiment we provide. There are also other avenues which we believe to be possible to explore with our generator, and of potential great interest. First, extending the framework to other modalities, such as in-context learning (by providing demonstration examples for each task) could be an interesting avenue - as longer contexts have been shown to help improve generalization capabilities \cite{cole_osman_deep_learning_for_arc}, particularly in foundation models and large language models \cite{
+%an2023context, zhang2025understanding, lampinen2025generalization}. Second, COGITAO’s highly controllable environment and adjustable difficulty is ideally suited for exploring curriculum learning, where tasks of increasing complexity are introduced to guide models toward robust generalization. Third, investigating the internal representations of models trained on \generatorName\ tasks could provide insights into how neural networks encode compositional rules and whether they develop object-centric or transformation-centric abstractions. Finally, we could also extend the complexity of our generator by introducing conditional transformations — such as applying transformation A only if an object is of a certain property - this would increase task complexity and better emulate real-world reasoning scenarios. 
+
+% TO ADD 
+
+%% Difficulty Levels to add.
+%% More complex instance of the dataset. 

@@ -1,0 +1,10 @@
+\subsection{Formats}\label{formats}
+
+We allow multiple formats for our dataset, to allow for different types of models to be tested - a \textit{classification} and \textit{generation}. For each format, the same algorithm is used to generate the data, but the data is presented in different ways. For each format, it is possible to parametrize the number of demonstration examples, the grid size, the number and type of objects, the transformations and conditionals to be used (and whether conditionals are to be used together).  
+
+\begin{itemize}
+    \item \textbf{Generation}: In this format, we generate a set of input-output pairs, where the input is a grid with objects and the output is a grid with transformed objects. The task is to generate the output grid given the input grid and the transformation applied. The generation format is similar to the original ARC challenge \cite{cholletARC}, where the task is to generate the output grid given the input grid and the transformation applied.
+    \item \textbf{Classification}: In this format, we generate, as in the generation format, a series of input-output grids as demonstrations, as well as a test input, to which we couple an arbitrary set of candidate test output grids which the agent should classify from. To ensure reasonable complexity, we generate the candidate test grids based on a single mutation in the rule from the composition of transformation and object properties that were applied. We chose to include this format as we acknowledge that \textit{generating} the output grids is a complex task in machine learning, and we wanted to provide a simpler task for models to solve, in alignment with previous work on compositionality \cite{cvr2022}. 
+\end{itemize}
+
+In this work, we however only focus on the generation format, although the classification format is accessible through our codebase. 

@@ -1,0 +1,30 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdv
+# Build output PDF (regenerated from source; comment out if you track it)
+main.pdf
+# macOS
+.DS_Store
+# pdftotext output, used to count pages during the rewrite
+main.txt
+
+# latexdiff output against the approved version
+diff_vs_approved.tex
+diff_vs_approved.pdf

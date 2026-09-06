@@ -1,0 +1,16 @@
+%
+The ability to compose learned concepts and apply them in novel settings is key to human intelligence, but remains a persistent limitation in state-of-the-art machine learning models.
+%
+To address this issue, we introduce \generatorName, a modular and extensible data generation framework and benchmark designed to systematically study compositionality and generalization in visual domains. 
+%
+Drawing inspiration from ARC-AGI's problem-setting, \generatorName\ constructs rule-based tasks which apply a set of transformations to objects in grid-like environments. 
+%
+It supports composition, at adjustable depth, over a set of $28$ interoperable transformations, along with extensive control over grid parametrization and object properties. 
+%
+This flexibility enables the creation of millions of unique task rules -- surpassing concurrent datasets by several orders of magnitude -- across a wide range of difficulties, while allowing virtually unlimited sample generation per rule.
+%
+% The extensive control that \generatorName\ provides enables the generation of tasks accross a broad range of complexities, thereby making it uniquely suited for systematic study of compositionality and generalization through many different lenses.`'
+%
+We provide baseline experiments using state-of-the-art vision models, highlighting their consistent failures to generalize to novel combinations of familiar elements, despite strong in-domain performance. 
+%
+\generatorName\ is fully open-sourced, including all code and datasets, to support continued research in this field. \footnote{We open source the code on GitHub (\url{https://github.com/yassinetb/COGITAO}) as well as the benchmark datasets we propose in this paper (\url{https://huggingface.co/datasets/yassinetb/COGITAO}).}

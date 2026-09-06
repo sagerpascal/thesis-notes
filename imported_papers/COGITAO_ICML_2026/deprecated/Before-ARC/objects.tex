@@ -1,0 +1,23 @@
+\subsubsection{Object Generation}
+
+A critical part of our generator is the object generation strategy, which can generate a high number of ARC-like objects with a range of different possible properties.
+
+\begin{itemize}
+    \item \textbf{Size:} Generates an object smaller or equal in size than specified size.
+    \item \textbf{Symmetry}: Several symmetries are possible: horizontal, vertical, diagonal, point, and no symmetry. 
+    \item \textbf{Connectivity}: "4 connected" (only connected through adjacent edges), "8 connected" (only connected through adjacent or diagonal edges), "distance" (object can be composed of unconnected blocks), and "no" (object cannot present any connectivity between pixels).
+    \item \textbf{Colors}: Specific colors allowed. Can be constrained to a single or set of colors. 
+    \item \textbf{Color Pattern}: Uniform (single color), column stripes, row stripes, diagonal stripes, top-bottom coloring (object split in two colors), right-left coloring (object split in two colors), or random. 
+    \item \textbf{Footprints}: object can be in the form of a rectangle, disk, square, diamond or ellipse. 
+\end{itemize}
+
+\begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.4\columnwidth]{Figures/Shape_Examples.png}
+    \caption{Examples of objects from the object Generator}
+    \label{fig:ARC_objects}
+\end{figure}
+
+As can be seen in figure \ref{fig:ARC_objects}, a wide and diverse range of objects can be generated, much of which would not necessarily work in any kind of ARC tasks. This further motivated our choice of including \textit{Conditionals} \footnote{a better name for this would have been "properties", however since transforms are often applied if a condition is satisfied or not, we chose to keep the term condition.} to filter out through objects when designing a task. 
+
+Also, while we can generate objects with specific constraints, our shape-generation process contains some randomness (for instance, we cannot in the current implementation obtain a minimum size, but only a maximum). Another issue is that not all object configurations are possible, and growing objects on demand can be buggy and lead to issues. This is why we have decided to generate a high amount of objects (100 thousand) and compute the set of \textit{Conditional} for all objects and filter through them on demand depending on our needs during generation. This strategy was faster and led to fewer issues. Moreover, this allowed a seamless integration to our conditional transform Schemata, where many transformations are subject to single-object conditionals.

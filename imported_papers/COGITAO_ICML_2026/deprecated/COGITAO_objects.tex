@@ -1,0 +1,81 @@
+% \section{COGITAO} \label{appendix:cogitao}
+
+% In this section, we give further details on \generatorName\, the design choices we have taken and the advantages it present compared to other generators.
+
+% \subsection{Comparison With Other Generators}
+
+% We compare various compositionality datasets which share commonalities with ours, and demonstrate the high flexibility of \generatorName\ compared to these datasets. Specifically, we look at SVRT \cite{fleuret2011comparing}, PGM \cite{barrett2018measuring}, RAVEN \cite{raven2003raven}, dSprites \cite{multiDsprites}, CLEVR \cite{clevr}, SCAN \cite{SCAN_lake_baroni}, CVR \cite{cvr2022} and ARC-AGI \cite{cholletARC}. 
+
+% \begin{table*}[h!]
+% \centering
+% \caption{Comparison of datasets/generators across key characteristics.}
+% \label{tab:dataset_comparison_flipped}
+% \resizebox{\textwidth}{!}{%
+% \begin{tabular}{lccccc}
+% \toprule
+% \textbf{Dataset} & \textbf{Training Samples} & \textbf{Task Range} & \textbf{Env} & \textbf{Config. Control} & \textbf{Reasoning Range} \\
+% \midrule
+% SVRT  & \textbf{Very Large} & 23 tasks & B/W shapes & Low & Object Relations \\
+% PGM & $10^7$ images & 400 configurations & Symbolic patterns & No & Analogical rules \\
+% RAVEN & 70k puzzles & 7 configs & Colored figures & Moderate & Layout-based \\
+% dSprites & 70k puzzles & 7 configs & Colored figures & Moderate & Layout-based \\
+% CLEVR & \textbf{Unlimited} & 90+ types & \textbf{3D scenes} & High & Multi-step logic \\
+% SCAN & \textbf{Unlimited} & 20+ commands & Minimalist & High & Command parsing \\
+% CVR & $10^6+$ & 14+ & 2D objects & High & Compositional logic \\
+% ARC & 800 total & 400 tasks & Pixel grids & None & Varies widely \\
+% \midrule
+% \textbf{COGITAO} & \textbf{Unlimited} & \textbf{Unlimited} & Pixel grids & \textbf{Extensive} & \textbf{Blablabla} \\
+% \bottomrule
+% \end{tabular}
+% }
+% \end{table*}
+
+
+
+
+
+
+
+% As shown in figure \ref{fig:cogitao}, each input-output pair follows a different transformation sequence and \textit{image}/object parametrization. Task A: pad\_shape. Task B: mirror\_horizontal - empty\_inside. Task C: duplicate\_down - rotate\_90 - change\_shape\_color.}
+
+% \subsection{Details on Transformations} \label{appendix:transformations}
+
+% \subsubsection{DEPRECATED - Complete List Of Transformations} 
+
+% Things I should mention 
+
+% \begin{itemize}
+%     \item Some transformations applied twice won't change the object - e.g. fill\_objects twice in a row. However if we do fill\_objects, empty, and fill\_objects again, it will change the object.
+%     \item Some transformations have object constraints to ensure that the transformation application is not buggy or ambiguous. For instance, if the transformation to be applied is "crop\_top\_side", all objects samples must be of height strictly greater than 1. 
+%     \item 
+% \end{itemize}
+
+% \begin{itemize}
+%     \item \textbf{Translate}: Variations available: Up, Down, Left and Right. Translates the entire object by one pixel in any of the 4 dimensions. 
+%     \item \textbf{Mirror}: Variations available: Horizontal and Vertical. Mirrors the object with respect to vertical or horizontal symmetry axis. 
+%     \item \textbf{Rotate}: Variations available: 90 degrees. Rotates the object by 90 degrees. Other rotation degrees (e.g. 180 and 270) not provided since they are equivalent to applying the 90 degree rotation multiple times. Degrees not dividable by 90 degrees are not possible since the environment is grid like.     
+%     \item \textbf{Crop}: Variations available: Top Side, Bottom Side, Right Side, Left Side. object dimension must be > 1 pixel in the cropped axis. If object dimension $n$ in any of the axis is odd, the cropping yields a dimension $\frac{n+1}{2}$. 
+%     \item \textbf{Change Color}: Variations available: Mod+1. Changes the color of the object to $\texttt{new\_color} = \texttt{original\_color} \texttt{ mod } 9 + 1$ (e.g. if the object's color is 7, it will be changed to the color 8).
+%     \item \textbf{Filling}: Variations available: Same Color, Different Color. Fills holes of the object. When using the same color variation, the contours of the object are extended with the object's color. When using the different color variation, the contours of the objects are extended as follows: $\texttt{new\_color} = \texttt{original\_color} \texttt{ mod } 9 + 1$ (e.g. if the object's color is 7, it will be extended with the color 8). object must contain holes for the transformation to be applied.
+%     \item \textbf{Emptying}: Variations available: Empty inside. Empties inside of the object, and leaves contours. object must not be hollow for the transformation to be applied. Function cannot be applied twice. 
+%     \item \textbf{Extending}: Variations available: Same Color, Different Color. When using the same color variation, the contours of the object are extended with the object's color. When using the different color variation, the contours of the objects are extended as follows: $\texttt{new\_color} = \texttt{original\_color} \texttt{ mod } 9 + 1$ (e.g. if the object's color is 7, it will be extended with the color 8). This transformation simply extends the outermost pixels of the object in the x or y axis, depending on whether they are x or y outermost pixels. 
+% \end{itemize}
+
+% This gives us a total of 15 functions, which can be combined in arbitrary depth.  
+
+% \subsubsection{Transformations Compatibility}
+
+% For each transformations provided, we specify \textit{object constraints}. The object constraints ensure that the objects sampled enbale the transformation to be correctly applied. For instance, if the transformation to be applied is "crop\_top\_side", all objects samples must be of height strictly greater than 1. 
+
+% % Similarly, we also specify compatible transforms, to ensure that the sequence of transformation sampled is reasonable. For instance, if the transformation "translate_up" is sampled, we remove "translate_down" from the eligible transformations to subsequently sampled. While this having both sampled would technically be valid and would just yield an identity (which is useful to learn)  
+
+% \subsection{Comparison to Existing Work}
+
+
+
+
+
+% \subfile{experiments.tex}
+
+
+

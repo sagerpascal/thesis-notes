@@ -1,0 +1,72 @@
+\section{Training Procedure} \label{appendix:training_procedure}
+To ensure a fairer comparison across different models, we adopted a consistent training and evaluation framework whenever possible. Key aspects are detailed as follows:
+\begin{itemize}
+    \item Training Procedure and Data: All models were trained from scratch using supervised learning. We used a dataset of 100,000 unique samples. Training proceeded for 10 epochs with a batch size of 64, meaning each model saw a total of 1,000,000 samples, This implies a sample-efficient mode of experimentation, as observed through the training learning curves hinting at a non-terminal convergence for several experiments and considering the typical quantity of samples that Transformer-based models require.
+
+    \vspace{1em}
+    \item Validation and Testing: Model performance was monitored during training on a validation set of 1,000 samples. After training, models were evaluated on a distinct held-out test set of 1,000 samples. We always compute the performance on ID \textit{and} OOD val/test sets.
+
+    \vspace{1em}
+    \item Modeling Strategy:
+    \begin{itemize}
+        \item An input grid with shape \texttt{[H, W]} is converted to an artificial image of shape \texttt{[C, H, W]} by the creation of a channel dimension through one-hot encoding of the categories of tokens that can be predicted.
+        \vspace{1em}
+
+        \item For the experiments within the \textit{CompGen} study, the transformations sequence vary within the trainin set (and w.r.t. the OOD sets). We therefore provide the model with some context in the form of a task embedding in order to inform it of what task it should perform given the input grid. For that purpose, we considered two approaches: task tokens and in-context example. We decided to use the first approach, where we provide the model with a sequence of tokens representing the atomic transformations composing the task to perform. The second approach was to provide the model with an example (i.e., an input-output pair of grids) of the task to perform. However, it was not experimented with due to time and resource constraints.
+    \end{itemize}
+    
+
+    \vspace{1em}
+    \item Early Stopping and Model Selection: No early stopping was performed as the number of epochs was restricted and in most experiments the models showed steady convergence throughout the 10 epochs. The checkpoint used for final testing was chosen based on the best (lowest) validation loss achieved on the OOD validation set.
+
+    \vspace{1em}
+    \item Loss Function: We employed a pixel-wise cross-entropy loss, calculated between the entire predicted token grid and the ground-truth target grid, both padded to a maximum size equal to the largest grid size within the dataset.
+
+    \vspace{1em}
+    \item Evaluation Metric: The primary metric for reporting performance is grid accuracy. This is the percentage of predicted grids that perfectly match the ground-truth target grids. Both grids were padded to the maximum grid size observed in the dataset before comparison. The padding is either composing of usual padding tokens or of special padding tokens named "Visual Tokens" (VTs)\citep{arc_vit}. This means that when VTs are used as part of the modeling strategy for Transformer-based models, the model has to predict correctly the whole padded grid, with its special padding tokens, in order to perform well since the metric computation does not discard the tokens/pixels outside of the boundaries denoted by the true grid size.
+    
+    \vspace{1em}
+    \item Optimizer and Learning Rate: The AdamW optimizer \citep{Loshchilov_AdamW_2019} was used, with a learning rate following a Cosine Annealing schedule that monitors the OOD validation loss at each epoch.
+
+    \vspace{1em}
+    \item Weight Initialization: Model weights were initialized from a truncated normal distribution.
+
+    \vspace{1em}
+    \item Training Precision: Training was conducted using FP16 mixed precision.
+    
+    \vspace{1em}
+    \item Training Duration: A training run lasted between 7 minutes and several hours depending on the model, hardware and specific experiment.
+
+\end{itemize}
+
+
+\subsection{ResNet}
+\label{sec:resnet_training_details_appendix}
+The learning rate and weight decay used for ResNet are of 1e-3, same as for the Vanilla-TF and Grid-TF models.
+
+ResNet is trained without Visual Tokens, as their purpose is mainly to mitigate the loss of the 2D spatial structure when going from a 2D grid to a flattened sequence, as it is the case for Transformer models, as well as defining more explicit grid boundaries.
+
+For the Compositionality experiments, the task embedding is appended (along the spatial dimension) to the spatially flattened output of the ResNet encoder network. This means that the task embedding only enters the input transformation process at a late stage, similar to what is done in \citep{cvr2022}, compared to how the task embedding is used with the Transformer-based models working with sequences. Practically, it is the MLP head that has to leverage the information provided by the task embedding in order to make better-informed predictions.
+
+\subsection{Vanilla-TF \& Grid-TF} \label{sec:vit_training_details_appendix}
+The two transformer models use exactly the same hyperparameters. The learning rate and weight decay are 1e-3. Before the initial learning rate is set to change with the Cosine Annealing schedule, a linear warm-up phase takes place for 200 steps.
+
+A key difference between the Vanilla-TF and the Grid-TF is that the latter uses Visual Tokens while the former does not.
+
+The input sequence to the transformer results from the one-hot encoding of the input grid for which embedding patches are created using a 2D convolution with patch size of 1 and stride of 1.
+
+For the Compositionality experiments, the task embedding is appended (along the spatial dimension) to the input sequence \textit{before} being encoded by the Transformer encoder. This provides the full task context at the start of the processing of the input by the model, thus increasing the information about the task to perform propagated through the model.
+
+
+\subsection{Pondering Looped TF} \label{sec:pl-tf_training_details_appendix}
+The PL-TF is trained similarly to the two previous transformer models and follows the PonderNet paper (e.g., with regard to the update of the reconstruction and regularization losses). It mainly uses the same hyperparameters as the aforementioned models, but with a smaller batch size of 32 due to the possible increase in computations and resource constraints. It uses data modeled with Visual Tokens as for the Grid-TF.
+
+
+\subsection{LLaDA} \label{sec:llada_training_details_appendix}
+We train the LLaDA model using the same hyperparameter configuration as that employed for the vision transformer baselines, including the Vanilla ViT and Grid ViT architectures. However, we introduce two key modifications:
+Firstly, while retaining the AdamW optimizer \citep{Loshchilov_AdamW_2019}, we reduce the learning rate to $2 \times 10^{-4}$ and set the weight decay to $0.01$. Empirically, this lower learning rate leads to significantly faster convergence for LLaDA during training.
+Second, we extend the training schedule to 20 epochs, doubling the number of training epochs compared to the baseline setup. This adjustment compensates for the fact that LLaDA masks only approximately 50\% of the target tokens on average, thereby ensuring that all models are trained to predict a comparable total number of tokens and enabling a fair evaluation.
+
+%Optimization is performed using the AdamW optimizer \citep{Loshchilov_AdamW_2019} with a learning rate of $2 \times 10^{-4}$ and a weight decay of $0.01$. A cosine annealing learning rate schedule is used, preceded by a linear warmup over the first $200$ steps. Training is conducted in FP16 mixed precision, and weights are initialized via the Mitchell method with a standard deviati for $20$ epochs with a batch size of $64$ for training and $50$ for validation and testing.
+
+

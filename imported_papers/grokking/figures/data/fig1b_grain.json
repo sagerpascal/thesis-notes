@@ -1,0 +1,135 @@
+{
+  "note": "Figure 1b. Trained by scripts/fig_data_grain_panel.py. Grain categories fixed before the run. Not banked.",
+  "p": 31,
+  "epochs": 20000,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "columns": [
+    "none",
+    "per layer",
+    "per matrix",
+    "factored",
+    "layer x param",
+    "per parameter",
+    "per unit"
+  ],
+  "plain_flow_band": [
+    0.4805736144383748,
+    0.5990739862124125
+  ],
+  "rules": {
+    "bp": {
+      "name": "Backpropagation",
+      "grain": "none",
+      "col": 0,
+      "test": 0.9973351756731669,
+      "credit": 0.603996396586299,
+      "pr": 0.6133137345314026,
+      "pr_std": 0.015586243810203088,
+      "kind": "rescaling"
+    },
+    "lars": {
+      "name": "LARS",
+      "grain": "per layer",
+      "col": 1,
+      "test": 0.9661282698313395,
+      "credit": 0.5078569923962156,
+      "pr": 0.5990739862124125,
+      "pr_std": 0.04169709013946024,
+      "kind": "rescaling"
+    },
+    "muon": {
+      "name": "Muon",
+      "grain": "per matrix",
+      "col": 2,
+      "test": 0.9974720080693563,
+      "credit": 0.47816220795114833,
+      "pr": 0.5220840871334076,
+      "pr_std": 0.044112782094049854,
+      "kind": "rescaling"
+    },
+    "shampoo": {
+      "name": "Shampoo",
+      "grain": "per matrix",
+      "col": 2,
+      "test": 0.9834746519724528,
+      "credit": 0.5251479582736889,
+      "pr": 0.5601062377293905,
+      "pr_std": 0.042595798824315564,
+      "kind": "rescaling"
+    },
+    "adafactor": {
+      "name": "Adafactor",
+      "grain": "factored",
+      "col": 3,
+      "test": 0.986274778842926,
+      "credit": 0.836538814206918,
+      "pr": 0.5150309403737386,
+      "pr_std": 0.04095574251792474,
+      "kind": "rescaling"
+    },
+    "lamb": {
+      "name": "LAMB",
+      "grain": "layer x param",
+      "col": 4,
+      "test": 0.9982229272524515,
+      "credit": 0.7709787771602472,
+      "pr": 0.5340883533159891,
+      "pr_std": 0.02129494552717246,
+      "kind": "rescaling"
+    },
+    "rmsprop": {
+      "name": "RMSProp",
+      "grain": "per parameter",
+      "col": 5,
+      "test": 0.9947232206662496,
+      "credit": 0.7848220530649025,
+      "pr": 0.4805736144383748,
+      "pr_std": 0.027792968532842275,
+      "kind": "rescaling"
+    },
+    "lion": {
+      "name": "Lion",
+      "grain": "per parameter",
+      "col": 5,
+      "test": 0.9896096785863241,
+      "credit": 1.0,
+      "pr": 0.5375987390677134,
+      "pr_std": 0.031447273222002,
+      "kind": "rescaling"
+    },
+    "nero": {
+      "name": "Nero",
+      "grain": "per unit",
+      "col": 6,
+      "test": 0.8202197750409445,
+      "credit": 1.0,
+      "pr": 0.9597750107447306,
+      "pr_std": 0.0017446049816817687,
+      "kind": "rescaling"
+    },
+    "knob": {
+      "name": "Knob (beta=1)",
+      "grain": "per unit",
+      "col": 6,
+      "test": 0.9745643933614095,
+      "credit": 0.9999999997764825,
+      "pr": 0.9898284276326498,
+      "pr_std": 0.0032633717616053,
+      "kind": "rescaling"
+    },
+    "dfc": {
+      "name": "DFC",
+      "grain": "per unit",
+      "col": 6,
+      "test": 1.0,
+      "credit": 0.9261992461979389,
+      "pr": 0.9263163010279337,
+      "pr_std": 0.002746379184002227,
+      "kind": "controller"
+    }
+  }
+}

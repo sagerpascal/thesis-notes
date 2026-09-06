@@ -1,0 +1,31 @@
+\section{Introduction}
+
+%%%%%%%%%% INTRO %%%%%%%%%
+
+Compositional and Systematic Generalization  are foundational principles of human cognition \cite{fodor1988connectionism}. From observing a few examples of given ``atomic'' concepts, humans can effortlessly combine these in exponentially many novel ways, and do so in radically different contexts from those in which they were learned. In the words of Lake \& Baroni \cite{SCAN_lake_baroni}: ''Once a person learns the meaning of a new verb 'dax,' he or she can immediately understand the meaning of 'dax twice' or 'sing and dax'.''.
+%
+Machine learning systems still struggle with these forms of generalization, which have become a major focus of research \cite{galke2024deep, besold2016generality, wiedemer2023compositional, lake_baroni_2023, keysers2019measuring, xu2022compositional}. 
+%
+To date, several benchmarks have been proposed to direct the community's efforts on the problem of compositional generalization — both in language \cite{SCAN_lake_baroni, schug2023discovering, keysers2019measuring} and in vision \cite{clevr, cvr2022, barrett2018measuring, fleuret2011comparing}. However, in the vision domain, these benchmarks fall short in flexibility and scope compared to their language counterparts. They offer less control over compositional structure and priors, a narrower range of tasks, and a systematic conflation of visual complexity with relational structure - ultimately diverting attention away from true compositional generalization. 
+%
+To fill this gap, we introduce the procedural, object-centric and grid-based framework of \textbf{CO}mpositional \textbf{G}eneralization \textbf{I}n \textbf{T}ransformations \textbf{A}nd \textbf{O}bjects: \textbf{\generatorName}.  It is designed to generate simple, object-centric data to precisely gauge the compositional generalization abilities of machine learning methods. Specifically, we propose a parametrizable generator able to generate tasks which apply a sequence of atomic transformations onto random objects positioned in grids (see Figure \ref{fig:task_examples}). Our generator's strength stems from its capacity to freely compose, at arbitrary depth, a set of \ntransforms\ atomic transformations -- thus enabling the creation of millions of unique transformation sequences, with virtually infinite amount of task samples, across a wide range of difficulties. 
+
+In our \generatorName\ framework, models are expected to learn to apply the sequence of object-transformations in order to predict output grids given input grids and transformation sequences. Furthermore, models do so in different variations of the environment (e.g., varying number or type of objects, or grid dimensions). Our framework becomes valuable when varying the transformation sequences and environment parametrizations between training and testing sets -- which is how we propose to gauge models' capabilities to compositionally generalize. Similar to Lake and Baroni's "dax twice" and "sing and dax" analogy \cite{SCAN_lake_baroni}, we suggest that visual models trained to "rotate" objects once should know how to "rotate twice", as well as "rotate and translate" - provided both rotate and translate transformations were seen during training.
+%
+While we deliberately adopt a minimalist, grid-based and abstract environment, we argue that COGITAO is directly relevant to vision-like domains, as the operations studied in COGITAO (e.g., selectively modifying or relocating an object while preserving the rest of the scene) mirror essential visual reasoning skills required in practice. Many real-world tasks such as image editing, visual planning, and especially robotics involve precisely such object-centric manipulations. In robotics, for example, agents must transfer skills to novel objects, recompose known skills for unseen tasks, and plan long-horizon interactions (e.g., assembly, tool use) that depend on understanding discrete objects and their transformations.
+%
+We also take a step towards real-world transfer and applicability, and extend our COGITAO framework and benchmark with naturalistic RGB rendering (Appendix \ref{appendix:naturalistic_cogitao}). Our central hypothesis however remains: if models cannot exhibit compositional generalization in this deliberately simplified environment, they are unlikely to systematically and compositionally generalize in the far noisier, less structured settings of real-world vision. 
+%
+In all, We posit that COGITAO is not merely a static image benchmark but an image-and-action framework, explicitly linking perception to interactions. This action-conditioned structure is directly relevant to embodied AI and planning, where success depends on reasoning over objects, transformations, and causal effects of actions in a scene.
+
+%%%%%%%%%%% EXPERIMENTS %%%%%%%%%%%
+
+To immediately demonstrate our generator's utility, and to facilitate further research, we release a concrete set of benchmark datasets built from different configurations of \generatorName. We train various state-of-the-art models -- known to exhibit strong systematic and compositional generalization capabilities -- on the proposed benchmark tasks. We find that models consistently fail to generalize to novel combinations of familiar visual elements — despite good performance on training-like examples. These findings reinforce the urgency for methods that can move beyond simple pattern recognition to structured, compositional understanding.
+
+%%%%%%%%%%% CONTRIBUTION %%%%%%%%%%%
+
+\textcolor{red}{ADD HOW WE ARE INTERESTED HERE IN STUDYING ABILITIES OF SIMPLE NETWORKS, TRAINED FROM SCRATCH (i.e. not LLMs) TO PERFORM THIS KIND OF GENERALIZATION}
+
+%
+
+%

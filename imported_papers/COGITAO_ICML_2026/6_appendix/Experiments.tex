@@ -1,0 +1,195 @@
+\section{Experiment Details}\label{appendix:experiment_details}
+
+We designed our benchmark experiment to exemplify the use of our generator, and show how state-of-the-art vision models still consistently fail at such elementary tasks as they require compositionality. We provide in this appendix further details into each experiment. 
+
+\paragraph{Compositional Generalization Study (CompGen)} 
+
+For all the \textit{CompGen} study, we fix the number of objects to 2, the grid size to 20x20, the object dimension to be smaller or equal to 6x6, and all objects to be fully connected (no unconnected parts; see \ref{appendix:objects} "Connectivity"). For each CompGen experiment setting, we generate 100,000 training samples, 1000 in-distribution (ID) validation samples, 1000 out-of-distribution (OOD) validation samples, 1000 ID test samples, and 1000 OOD test samples. The results we report are based on the two aforementioned test sets. Based on these parameters, we then design all experiment settings in such a way that the training and testing sets are built from different "transformation sequences" (i.e. sequence of transformations). In the \textit{CompGen} study, the transformation sequence varies within and between data samples. We thus provide the model with information on which transformation sequence it must apply by appending a task code to the input sequence. The task code is a sequence of tokens that indicates to the model the transformations it must apply (in the correct order). To account for varying "depth" of transformation sequence, we simply pad the input sequence with "identity transformation" tokens--as such, we always append a task code of depth 4--which is the maximum depth of transformation sequence we consider in the entirety of our experiments. We chose the transformations sequences to be from different transformation families, and to be easily composable with one another within the constrained object and grid dimensions. The following is a detailed summary of our experiment settings and experiments.  
+
+\begin{itemize}
+    \item \textbf{C1 - From Restricted Composite Tasks and Atomic Tasks to Unseen Composite}: We train on a set of composite tasks made of some atomic transformations, and test on composite tasks of the same depth, but not seen during training
+    \begin{itemize} 
+        \item C1-1: Train on the atomic transformations \texttt{translate\_up}, \texttt{rotate90}, \texttt{mirror\_horizontal} and all of their mutual  compositions (depth $d=2$), except the specific  composition $\texttt{translate\_up} - \texttt{rotate90}$ (and its commutable reverse), which we leave for OOD testing.
+        
+        \item C1-2: Train on the atomic transformations \texttt{change\_object\_color}, \texttt{pad\_right}, \texttt{fill\_holes\_different\_color} and all of their mutual  compositions (depth $d=2$), except the specific  composition $\texttt{change\_object\_color} - \texttt{pad\_right}$, which we leave for OOD testing.
+        
+        \item C1-3: Train on the atomic transformations \texttt{crop\_bottom\_side}, \texttt{rotate\_90}, \texttt{pad\_top} and all of their mutual  compositions (depth $d=2$), except the specific  composition $\texttt{rotate\_90} - \texttt{crop\_bottom\_side}$, which we leave for OOD testing.
+
+        \item C1-4: Train on the atomic transformations \texttt{double\_right}, \texttt{crop\_contours}, \texttt{change\_shape\_color} and all of their mutual compositions (depth $d=2$), except the specific  composition $\texttt{double\_right} - \texttt{crop\_contours}$, which we leave for OOD testing.
+        
+        \item C1-5: Train on the atomic transformations \texttt{extend\_contours\_same\_color}, \texttt{mirror\_vertical}, \texttt{pad\_left} and all of their mutual  compositions (depth $d=2$), except the specific  composition $\texttt{pad\_left} - \texttt{extend\_contours\_same\_color}$, which we leave for OOD testing.
+    \end{itemize}
+    
+    \vspace{1em}
+    \item \textbf{C2 - From Restricted Composite Tasks to Unseen Composite}:  
+    We train on a set of composite tasks made of some atomic transformations, and test on composite tasks of the same depth, but not seen during training.
+    \begin{itemize} 
+        \item C2-1: Train on all the mutual compositions (depth $d=2$) of \texttt{translate\_up}, \texttt{rotate90}, \texttt{mirror\_horizontal}, except the specific  composition $\texttt{translate\_up} - \texttt{rotate90}$ (and its commutable reverse), which we leave for OOD testing.
+        
+        \item C2-2: Train on all the mutual compositions (depth $d=2$) of  \texttt{change\_object\_color}, \texttt{pad\_right}, \texttt{fill\_holes\_different\_color}, except the specific  composition $\texttt{change\_object\_color} - \texttt{pad\_right}$, which we leave for OOD testing.
+        
+        \item C2-3: Train on all the mutual compositions (depth $d=2$) of  \texttt{crop\_bottom\_side}, \texttt{rotate\_90}, \texttt{pad\_top}, except the specific composition $\texttt{rotate\_90} - \texttt{crop\_bottom\_side}$, which we leave for OOD testing.
+
+        \item C2-4: Train on the mutual compositions (depth $d=2$ transformations \texttt{double\_right}, \texttt{crop\_contours}, \texttt{change\_shape\_color}, except the specific  composition $\texttt{double\_right} - \texttt{crop\_contours}$, which we leave for OOD testing.
+        
+        \item C2-5: Train on all the mutual compositions (depth $d=2$) of  \texttt{extend\_contours\_same\_color}, \texttt{mirror\_vertical}, \texttt{pad\_left}, except the specific composition $\texttt{pad\_left} - \texttt{extend\_contours\_same\_color}$, which we leave for OOD testing.
+    \end{itemize} 
+    
+    \vspace{1em}
+    \item \textbf{C3 - From Composite Tasks to Deeper Composite Tasks}: We train on a set of composite tasks made of some atomic transformations, and test on composite tasks with the same transformations, but with one additional level of depth.
+    \begin{itemize} 
+        \item C3-1: Train on all the atomic transformations and mutual compositions (depth $d=2$) of \texttt{translate\_up}, \texttt{rotate90}, \texttt{mirror\_horizontal}, and OOD test on all the compositions of depth $d=3$ of these transformations.
+        
+        \item C3-2: Train on all the atomic transformations and mutual compositions (depth $d=2$) of \texttt{change\_object\_color}, \texttt{pad\_right}, \texttt{fill\_holes\_different\_color}, and OOD test on all the compositions of depth $d=3$ of these transformations..
+        
+        \item C3-3: Train on all the atomic transformations and mutual compositions (depth $d=2$) of \texttt{crop\_bottom\_side}, \texttt{rotate\_90}, \texttt{pad\_top}, and OOD test on all the compositions of depth $d=3$ of these transformations.
+
+        \item C3-4: Train on all the atomic transformations and mutual compositions (depth $d=2$) of \texttt{double\_right}, \texttt{crop\_contours}, \texttt{change\_shape\_color}, and OOD test on all the compositions of depth $d=3$ of these transformations.    
+        
+        \item C3-5: Train on all the atomic transformations and mutual compositions (depth $d=2$) of \texttt{extend\_contours\_same\_color}, \texttt{mirror\_vertical}, \texttt{pad\_left}, and OOD test on all the compositions of depth $d=3$ of these transformations.
+    \end{itemize} 
+
+    \vspace{1em}
+    
+% \item \textbf{C4 – From Growing Restricted Composite Tasks and Atomic Tasks to Unseen Composite}:
+%     We train on a growing pool of atomic transformations and all of their single and double mutual compositions (depth $d=2$), and test on an unseen double composition. The hypothesis is that the more variety a model sees during training, the more it would learn to compose. Specifically, for each experiment we exclude the composition \texttt{double\_right}–\texttt{rot90} (and its commutable reverse) from the training set and reserve it for OOD testing. The transformation pool grows with each experiment:
+%     \begin{itemize}
+%         \item C4-1: Train on \texttt{mirror\_horizontal}, \texttt{rot90}, \texttt{double\_right} and all their single/double compositions except \texttt{double\_right}–\texttt{rot90}.
+    
+%         \item C4-2: Extend the pool to 6 transformations by adding \texttt{translate\_up}, \texttt{crop\_top\_side}, \texttt{mirror\_vertical}.
+       
+%         \item C4-3: Extend to 9 transformations by further adding \texttt{pad\_top}, \texttt{translate\_right}, \texttt{pad\_right}.
+       
+%         \item C4-4: Extend to 12 transformations by adding \texttt{fill\_holes\_same\_color}, \texttt{fill\_holes\_different\_color}, \texttt{change\_shape\_color}.
+       
+%         \item C4-5: Extend to 15 transformations by adding \texttt{empty\_inside\_pixels}, \texttt{double\_down}, \texttt{extend\_contours\_same\_color}.
+%     \end{itemize}
+% \end{itemize}
+
+\paragraph{Environment Generalization Study (EnvGen)}
+For each \textit{EnvGen} experiment setting, we generate 100,000 training samples, 1000 in-distribution (ID) validation samples, 1000 out-of-distribution (OOD) validation samples, 1000 ID test samples, and 1000 OOD test samples. The results we report are based on the two aforementioned test sets. For each \textit{EnvGen} experiment, we fix the transformation sequence (as described below depending on the experiment) and vary some parameters, such as the grid size, the number of objects, the object dimensions or the object properties. The varying parameters constitutes what changes between the in-distribution and OOD testing sets, and forms the basis of the "generalization" experiment. As opposed to the \textit{CompGen} setting, where there are multiple transformation sequences per set, we do not need to provide a task code to the model, but only a single grid on which it must perform the transformation based on the grid settings. To account for varying grid sizes in some of the experiments, we simply pad the the input sequence to the max size which can be observed during the experiment. 
+
+\begin{itemize}
+    \item \textbf{G1 - Number of Objects Difficulty}: We train on grids with 1 or 2 objects, and OOD test on grids with 3 or 4 objects. We fix the grid size to 15x15. 
+        \begin{itemize}
+            \item G1-1: Perform experiment with the \texttt{translate\_up} transformation.
+            \item G1-2: Perform experiment with the \texttt{rotate\_90} transformation.
+            \item G1-3: Perform experiment with the \texttt{mirror\_horizontal} transformation.
+            \item G1-4: Perform experiment with the \texttt{crop\_top\_side} transformation.
+            \item G1-5: Perform experiment with the \texttt{extend\_contours\_same\_color} transformation.
+        \end{itemize}
+    \vspace{1em}
+    \item \textbf{G2 - Grid Size Difficulty}: We train on grid sizes between 10x10 and 15x15, and OOD test on grid sizes between 16x16 and 20x20. We fix the number of objects to 2. 
+        \begin{itemize}
+            \item G2-1: Perform experiment with the \texttt{translate\_up} transformation.
+            \item G2-2: Perform experiment with the \texttt{rotate\_90} transformation.
+            \item G2-3: Perform experiment with the \texttt{mirror\_horizontal} transformation.
+            \item G2-4: Perform experiment with the \texttt{crop\_top\_side} transformation.
+            \item G2-5: Perform experiment with the \texttt{extend\_contours\_same\_color} transformation.
+        \end{itemize}
+    \vspace{1em}
+    \item \textbf{G3 - Object Dimension Difficulty}. We train on grids with objects of size between 1x1 and 5x5, and OOD test on grids with objects of size between 6x6 and 10x10. 
+    \begin{itemize}
+            \item G3-1: Perform experiment with the \texttt{translate\_up} transformation.
+            \item G3-2: Perform experiment with the \texttt{rotate\_90} transformation.
+            \item G3-3: Perform experiment with the \texttt{mirror\_horizontal} transformation.
+            \item G3-4: Perform experiment with the \texttt{crop\_top\_side} transformation.
+            \item G3-5: Perform experiment with the \texttt{extend\_contours\_same\_color} transformation.
+        \end{itemize}
+    \vspace{1em}
+    \item \textbf{G4 - Object Complexity Difficulty} We train on grids with symmetric and single-colored objects, and OOD test on grids with asymmetric and multi-colored objects. We fix the number of objects to 2, the grid size to 15x15, and the object dimension to smaller than 6x6. 
+    \begin{itemize}
+            \item G4-1: Perform experiment with the \texttt{translate\_up} transformation.
+            \item G4-2: Perform experiment with the \texttt{rotate\_90} transformation.
+            \item G4-3: Perform experiment with the \texttt{mirror\_horizontal} transformation.
+            \item G4-4: Perform experiment with the \texttt{crop\_top\_side} transformation.
+            \item G4-5: Perform experiment with the \texttt{extend\_contours\_same\_color} transformation.
+        \end{itemize}
+    \vspace{1em}
+    \item \textbf{G5 - All Difficulties Combined} We train on grids with symmetric, single-colored objects of size between 1x1 and 5x5, with 1 or 2 objects, and grid sizes between 10x10 and 15x15. We OOD test on grids with asymmetric, multi-colored objects of size between 6x6 and 10x10, with 3 or 4 objects, and grid sizes between 16x16 and 20x20. 
+    \begin{itemize}
+            \item G5-1: Perform experiment with the \texttt{translate\_up} transformation.
+            \item G5-2: Perform experiment with the \texttt{rotate\_90} transformation.
+            \item G5-3: Perform experiment with the \texttt{mirror\_horizontal} transformation.
+            \item G5-4: Perform experiment with the \texttt{crop\_top\_side} transformation.
+            \item G5-5: Perform experiment with the \texttt{extend\_contours\_same\_color} transformation.
+        \end{itemize}
+\end{itemize}
+
+
+
+% \subsubsection{CVR Experiments}
+
+% The CVR data environment is a odd-one-out classification task. Specifically, a sample contains $k=4$ RGB input images which follow a specific rule. For each experiment setting, similarly to the Before-ARC data environment, we generate 100000 samples for training, 1000 in-distribution validation samples, 1000 out-of-distribution validation samples and 1000 test samples. 
+
+% \paragraph{Compositionality}
+
+% For the Compositionality study, we consider 4 out of the 9 elementary rules proposed in CVR, as well as a composite pair for eah of the elementary rules. CVR only allows composites up to a depth of 1 (i.e. a composition of 2 elementary concepts). The elementary rules considered are \texttt{Pos}, \texttt{Rot}, \texttt{Count} and \texttt{Color}. The composite rules are the 6  compositions of these elementary rules (as order does not matter), yielding a total of 10 possible rules. As such, we design 3 experiment settings, similar to the first three compositional experiment settings of Before-ARC, and perfom these accorss 10 experiments - each corresponding to one of the 10 rules. Similarly to Before-ARC, we need to provide a task embedding to the model, and we do so as described in the CVR paper \cite{cvr2022}. 
+
+% \begin{itemize}
+%     \item \textbf{CVR-C-ES-1}: Composition from Elementary Tasks to Composite. In this experiment setting, we train on a 2 elementary tasks and test the composite rule of 2 elementary tasks seen during training. We perform this experiment setting accross 6 experiments, where we simply vary the basic transformations to apply - exactly like in the previous experiment setting.
+%         \begin{itemize}
+%             \item CVR-C-ES-1-1: Train on \texttt{Pos} and \texttt{Rot} and test on \texttt{Pos-Rot}.
+%             \item CVR-C-ES-1-2: Train on \texttt{Pos} and \texttt{Count} and test on \texttt{Pos-Count}.
+%             \item CVR-C-ES-1-3: Train on \texttt{Pos} and \texttt{Color} and test on \texttt{Pos-Color}.
+%             \item CVR-C-ES-1-4: Train on \texttt{Rot} and \texttt{Count} and test on \texttt{Rot-Count}.
+%             \item CVR-C-ES-1-5: Train on \texttt{Rot} and \texttt{Color} and test on \texttt{Rot-Color}.
+%             \item CVR-C-ES-1-6: Train on \texttt{Count} and \texttt{Color} and test on \texttt{Count-Color}.
+%         \end{itemize}
+%     \item \textbf{CVR-C-ES-2}: Decomposition from Composite to Elementary Tasks. In this experiment setting, we train on a composite rule and test on the 2 elementary tasks that compose it. We perform this experiment setting accross 6 experiments, where we simply vary the basic transformations to apply - exactly like in the previous experiment setting.
+%         \begin{itemize}
+%             \item CVR-C-ES-2-1: Train on \texttt{Pos-Rot} and test on \texttt{Pos} and \texttt{Rot}.
+%             \item CVR-C-ES-2-2: Train on \texttt{Pos-Count} and test on \texttt{Pos} and \texttt{Count}.
+%             \item CVR-C-ES-2-3: Train on \texttt{Pos-Color} and test on \texttt{Pos} and \texttt{Color}.
+%             \item CVR-C-ES-2-4: Train on \texttt{Rot-Count} and test on \texttt{Rot} and \texttt{Count}.
+%             \item CVR-C-ES-2-5: Train on \texttt{Rot-Color} and test on \texttt{Rot} and \texttt{Color}.
+%             \item CVR-C-ES-2-6: Train on \texttt{Count-Color} and test on \texttt{Count} and \texttt{Color}.
+%         \end{itemize}
+%     \item \textbf{CVR-C-ES-3}: From Composite Tasks to Unseen Composite. For each composite task that is depth 1 composition of two elementary rules, we train on all the relevant composite except one, and test on the one that was not seen during training. 
+%         \begin{itemize}
+%             \item CVR-C-ES-3-1: Train on \texttt{Pos-Rot}, \texttt{Pos-Count}, \texttt{Pos-Color} and \texttt{Rot-Count} and test on \texttt{Rot-Color}.
+%             \item CVR-C-ES-3-2: Train on \texttt{Pos-Rot}, \texttt{Pos-Count}, \texttt{Pos-Color} and \texttt{Rot-Color} and test on \texttt{Rot-Count}.
+%             \item CVR-C-ES-3-3: Train on \texttt{Pos-Rot}, \texttt{Pos-Count}, \texttt{Rot-Count} and \texttt{Rot-Color} and test on \texttt{Pos-Color}.
+%             \item CVR-C-ES-3-4: Train on \texttt{Pos-Rot}, \texttt{Pos-Count}, \texttt{Rot-Count} and \texttt{Pos-Color} and test on \texttt{Rot-Color}.
+%             \item CVR-C-ES-3-5: Train on \texttt{Pos-Rot}, \texttt{Rot-Count}, \texttt{Rot-Color} and \texttt{Pos-Color} and test on \texttt{Pos-Count}.
+%             \item CVR-C-ES-3-6: Train on \texttt{Pos-Count}, \texttt{Rot-Count}, \texttt{Rot-Color} and \texttt{Pos-Color} and test on \texttt{Pos-Rot}.
+%         \end{itemize}
+% \end{itemize}
+
+% \paragraph{Generalization}
+
+% For the Generalization study, we consider the same the 2 elementary rules of \texttt{Pos} and \texttt{Rot} (we did not consider more for compute constraints purposes). CVR does not allow a straightforward controlled modification of the level of difficulty/complexity of the generated samples. However, it it possible to generate data said to be of higher difficulty by using their published code. The authors of CVR state that "A higher number of random parameters results in a higher difficulty.". Thus, they allow to create a Systematic Generalization test set by using the generalization\_tasks.py file where the sets of fixed and random parameters are changed compared to that in tasks.py used for standard in-domain testing (i.e., where the samples seen during training are of same difficulty as those seen at test time). Consequently, there is no direct or simple way to generate samples for the Systematic Generalization study for a difficulty-split based on the number of objects (there is no explicit and consistent parameter for that across all the tasks) or the grid size (image dimension in this case, which can in fact easily be defined but does not seem relevant due to how Vision Transformers would process such images with patches leading to downsampling and thus a somehwat useless change of image size). As such, we only consider a single experiment setting where we vary the set of random parameters as recommended in their work. 
+
+% \begin{itemize}
+%     \item \textbf{CVR-G-ES-1}: Various Parameters Randomness Difficulty. In this experiment setting, we train on a difficulty level where we randomize a set of parameters, and test on a more difficult level where we randomize a larger set of parameters. We perform this experiment setting accross 2 experiments, where we simply vary the basic transformations to apply - exactly like in the previous experiment setting.
+%         \begin{itemize}
+%             \item CVR-G-ES-1-1: Perform experiment with the \texttt{Rot} rule. 
+%             \item CVR-G-ES-1-2: Perform experiment with the \texttt{Pos} rule.
+%         \end{itemize}
+% \end{itemize}
+
+% \subsubsection{RE-ARC}
+
+% For the RE-ARC data environment \cite{reverse_engineer_hodel}, we randomly sampled 10 tasks from the 400 tasks available in the RE-ARC dataset, and performed the experiment, similarly to the generalization setting of the Before-ARC data environemnt, with 100000 training samples, 1000 in-distribution and out-of-distribution test samples, and 1000 test samples. As described in section \cite{reverse_engineer_hodel}, we only consider the generalization study, as there is no systematic way to perform compositionality study. 
+
+% \paragraph{Generalization}
+
+% We train on a specific difficulty interval ([0-0.7]) and test on a higher difficulty interval ([0.7-1]), as allowed in the RE-ARC codebase. The difficulty interval will be characterized differently on each tasks.
+
+% \begin{itemize}
+%     \item \textbf{RA-G-ES-1}: Parameters Cardinality Difficulty. In this experiment setting, we train on task instances of difficulty level [0, 0.7], and test on difficulty level [0.7, 1].
+%     \begin{itemize}
+%         \item RA-G-ES-1-1: Perform on task \texttt{5daaa586}
+%         \item RA-G-ES-1-2: Perform on task \texttt{2bcee788}
+%         \item RA-G-ES-1-3: Perform on task \texttt{f15e1fac}
+%         \item RA-G-ES-1-4: Perform on task \texttt{6d0160f0}
+%         \item RA-G-ES-1-5: Perform on task \texttt{e9afcf9a}
+%         \item RA-G-ES-1-6: Perform on task \texttt{d9f24cd1}
+%         \item RA-G-ES-1-7: Perform on task \texttt{4be741c5}
+%         \item RA-G-ES-1-8: Perform on task \texttt{5521c0d9}
+%         \item RA-G-ES-1-9: Perform on task \texttt{f8b3ba0a}
+%         \item RA-G-ES-1-10: Perform on task \texttt{d406998b}
+%     \end{itemize}
+% \end{itemize}
+
+% \subsection{Results}

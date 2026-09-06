@@ -1,0 +1,126 @@
+\subsection{Models}
+\label{subsec:models}
+\textcolor{blue}{TODO: Klim (WIP)}.
+
+%% Someone's past text
+% We train several models on the various data environments, to investigate their capacities accross the different studies. Specifically, we use different different models: a ResNet \cite{resnet}, a Vision Transformer (ViT) \cite{vit}, a Vision Transformer with adapted for object centric learning \cite{arc_vit}, a Looped Transformer \cite{looped_transformer}, and a Diffusion Transformer \cite{diffusion_transformer}.
+
+
+In all the experiments, we consider four models that differ only in their encoder: a standard ResNet *ADD CITATIONS*, a Vanilla Vision Transformer (ViT) *ADD CITATIONS*, a grid-suited ViT similar to ViTARC *ADD CITATIONS*, and a LLaDA *ADD CITATIONS* network, adapted to the AVR tasks considered. The decoder or head is a simple 2-layer MLP, and is used for all models. This unified decoder design allows to isolate the encoders’ performance as well as avoid optimization overhead and reduce the computation resources compared to using a more complex decoder such as an auto-regressive Transformer *ADD CITATIONS*.
+
+Table~\ref{tab:encoder_networks_summary} summarizes the architectural and modeling choices made for the different encoders. Below, we describe each model in more detail, with the key architectural and modeling choices made. Further modeling and implementation details can be found in Appendix *ADD REF*.
+
+We choose a relatively small model size of ~2 Million parameters for the Transformer-based models. This decision stems from several scaling experiments indicating that model size was not the primary performance bottleneck---the generalization ability remained limited regardless of parameter count. Consequently, we focus on model designs and architectural inductive biases rather than size scaling.
+
+Although our selection of models does not include all competitive baselines, it is intentionally diverse: it spans convolutional and Transformer-based architectures, includes both general-purpose and structured inductive designs, and incorporates models with reasoning capabilities potentially well-suited to the complexities of AVR tasks. While future work could extend (e.g., by including models such as a Looped-Pondering Transformer *ADD CITATIONS (?)* or other strong AVR-specific baselines *ADD CITATIONS*) the models' comparison and evaluation, our chosen set of models still offers a valuable perspective of the generalization and compositionality challenges posed by the COGITAO benchmark.
+
+\begin{table}[htbp]
+  \centering % Center the table horizontally
+  \caption{Overview of the encoder networks for the different architectural and modeling techniques considered. APE: Absolute Positional Encoding. OPE: Object Positional Encoding. RPE: Relative Positional Encoding. VT: Visual Tokens. Registers: Register tokens. PEMixer: Positional Encoding Mixer.}
+  \label{tab:encoder_networks_summary}
+  % (\ref{tab:encoder_networks_summary})
+\begin{tabular}{lccccc} % {lccccc} = 1 left-aligned column, 5 centered columns
+  \toprule
+  % Spanning headers for Architecture and Modeling categories
+  & \multicolumn{3}{c}{Architectural} & \multicolumn{2}{c}{Modeling} \\
+  \cmidrule(lr){2-4} \cmidrule(lr){5-6} % Rules under the spanning headers only
+  Encoder             & APE                 & RPE   & PEMixer      & VT    & Registers           \\
+  \midrule
+  ResNet        & \textemdash             & \textemdash & \textemdash          & \textemdash  & \textemdash   \\
+  Vanilla ViT        & learned             & \textemdash & sum          & \textemdash  & \textemdash   \\
+  Grid ViT           & 2D-sincos w/OPE          & RoPE  & weighted sum          & \checkmark   & \checkmark    \\
+  LLaDA           & \textemdash           & RoPE  & \textemdash          & \checkmark   & \textemdash    \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+%% Klim's initial table if Looped ViT and Pondering were implemented
+% \begin{table}[htbp]
+%   \centering % Center the table horizontally
+%   \caption{Overview of the encoder networks for the different architectural and modeling techniques considered. APE: Absolute Positional Encoding. OPE: Object Positional Encoding. RPE: Relative Positional Encoding. VT: Visual Tokens. Registers: Register tokens. PEMixer: Positional Encoding Mixer. Ponder: adaptive computing based on PonderNet.}
+%   \label{tab:encoder_networks_summary}
+%   % (\ref{tab:encoder_networks_summary})
+%   \begin{tabular}{lcccccc} % {lcccccc} = 1 left-aligned column, 6 centered columns
+%     \toprule
+%     % Spanning headers for Architecture and Modeling categories
+%     & \multicolumn{3}{c}{Architectural} & \multicolumn{3}{c}{Modeling} \\
+%     \cmidrule(lr){2-4} \cmidrule(lr){5-7} % Rules under the spanning headers only
+%     Encoder             & APE                 & RPE   & PEMixer      & VT    & Registers           & Ponder    \\
+%     \midrule
+%     ResNet        & \textemdash             & \textemdash & \textemdash          & \textemdash  & \textemdash   & \textemdash  \\
+%     ViT-vanilla        & learned             & \textemdash & sum          & \textemdash  & \textemdash   & \textemdash  \\
+%     ViT-vitarc         & 2D-sincos w/ OPE    & Alibi & weighted sum & \checkmark  & \textemdash   & \textemdash  \\
+%     ViT-ours           & 2D-sincos           & RoPE  & sum          & \checkmark   & \checkmark   & \checkmark  \\
+%     Looped-ViT           & 2D-sincos           & RoPE  & sum          & \checkmark   & \checkmark   & \checkmark  \\
+%     Diffusion-ViT        & ??             & ?? & ??          & ??  & ??   & ??  \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+% \subsubsection{ResNet}
+\paragraph{ResNet}
+We use a standard ResNet-18 *ADD CITATIONS*, a widely adopted convolutional encoder baseline for Vision tasks, from which we extract features after the last convolutional layer, upsample them and project them to the embedding dimension of the decoder. ResNet serves as a strong reference point for conventional visual feature extractors \textit{without} attention mechanisms, and with its own inductive bias.
+
+% \subsubsection{Vanilla ViT}
+\paragraph{Vanilla ViT}
+The Vanilla ViT model mainly follows the original Vision Transformer architecture *ADD CITATIONS*. We use 1D learned absolute positional encodings (APE) and no architectural modifications for grid reasoning or 2D spatial locality. The embedding dimension is 128, the number of attention heads is 4, the feed-forward dimension is four times the embedding dimension, and the number of layers is 6. This model provides a minimal Transformer baseline.
+
+% \subsubsection{Grid ViT}
+\paragraph{Grid ViT}
+We design a ViT that is more suited to the data environment of COGITAO, named "Grid ViT". We essentially adapt the modeling approach of ViTARC *ADD CITATIONS*, introducing special visual tokens, an object positional encoding (OPE) within the APE, and a PEMixer to combine the input embeddings and the positional embeddings through a vector-weighted sum. Spatial inductive biases are also present through fixed 2D sinusoidal APE and RoPE *ADD CITATIONS* Relative Positional Encodings (RPE) in attention layers. Furthermore, to reduce noise in learning the relative dependencies between grid pixels, we prepend a small number of learnable register tokens (without spatical location) to the grid tokens input sequence *ADD CITATIONS (ViT needs registers and Slot Attention?)*. The network's dimensions are the same as for the Vanilla ViT.
+
+% \subsubsection{LLaDA}
+\paragraph{LLaDA}
+% Some motivations why we chose LLaDA
+We include LLaDA \citep{Nie_LLaDA_2025} in our set of models due to its demonstrated strength on logical and arithmetic tasks. LLaDA operates non-autoregressively and exploits bidirectional dependencies over masked target sequences, making it well-suited for structured input-output mappings. We adapt the original LLaDA setup by using a 6-layer encoder-only architecture, skipping pretraining and training it from scratch via supervised learning. Each instance of input data is represented as a flattened concatenation of a task embedding, input sequence, and a partially masked target sequence. During training, a random portion of target tokens is masked (mask ratio sampled uniformly in $[0,1]$), and the model is trained to reconstruct the masked tokens. At inference, the target is fully masked, and reconstruction proceeds over 32 denoising steps, each resolving a fraction of the masked tokens based on confidence.
+
+%%% Pascal's writing to incorporate in the text above
+% \subsubsection{Diffusion Transformer}
+% % Some motivations why we chose LLaDA
+% We train LLaDA \citep{Nie_LLaDA_2025} on the COGITAO dataset due to its strong capabilities in reasoning and mathematical tasks. Unlike traditional autoregressive models that predict tokens sequentially from left to right, LLaDA leverages bidirectional dependencies, enabling a more holistic understanding of input-output mappings. This makes it particularly well-suited for logical tasks requiring compositionality and generalization.
+
+% In contrast to the original LLaDA setup, we use a smaller $6$-layer architecture and skip the pre-training phase, directly applying supervised fine-tuning (see Appendix~\ref{sec:llada_details_appendix} for architecture and training details).
+% Input and target sequences are first flattened, and a random subset of target tokens is masked using a probability drawn uniformly from the interval $[0,1]$. The task embedding, input sequence, and partially masked target sequence are concatenated and passed to the model, which is trained to recover the masked tokens.
+% At inference time, the task embedding and input sequence are combined as during training, but the target sequence is initialized with mask tokens only. The model performs iterative denoising over $32$ diffusion steps: in each step, it replaces \texttt{num\_tokens}/$32$ of the most confidently predicted masked tokens. This process repeats until all tokens in the target sequence are resolved.
+
+
+\subsubsection{Modeling details}
+We detail some considerations impacting the effect of the different modeling techniques and architectural components used. 
+
+\paragraph{Visual Tokens}
+Following ViTARC *ADD CITATIONS*, four types of special Visual Tokens are added to the original input grid: x-, y-, xy-border tokens, and newline tokens. The grid is also padded to reach a maximum grid size, defined as the largest dimensions within the dataset considered. This gives a clearer structure to the sequence and improves spatial information, virtually maintaining the 2D structure of the grid after the patches have been created.
+
+\paragraph{Input Embeddings}
+For the Vanilla ViT and Grid ViT, input embeddings are created from the input grid by one-hot-encoding the grid symbols into feature maps through the channel dimension, and then using a 2D convolution with patch size 1 and stride 1 to then flatten the grid into a sequence, effectively maintaining pixel-level information.
+
+For LLaDA, the grid input is simply flattened in a raster order.
+
+\paragraph{APE with OPE}
+The OPE is only used as part of the APE, where half of the embedding dimension is dedicated to the 2D positions of the objects in the grid. The OPE is computed for the grid \textit{after} the visual tokens and padding have been added.
+
+\paragraph{RPE}
+The RPE used is RoPE *ADD CITATIONS*, instead of ALiBi *ADD CITATIONS* as in ViTARC. ...
+
+\paragraph{PEMixer}
+The Positional Encoding Mixer allows to combine more flexibly the input and positional embeddings. It is especially useful when OPE is used within APE, in order for the model to better leverage the information provided by each part of the positional embedding when a task requires for example a more object-centric understanding.
+
+\paragraph{Register Tokens}
+ For models using RPE, additional tokens such as registers are attended by attention, do not receive APE, and do not participate in the relative position computations in attention layers.
+
+\paragraph{Task Embedding}
+For the Compositionality study, it is required to inform the model of what task it has to performance when predicting the output grid. Consequently, before encoding, we append at the end of the input sequence a vector of embeddings representing the sequence of elementary transformations yielding the task transformation.
+Since ResNet does not operate with sequences, we add the task embedding information to the encoded input, before passing it to the decoder, similar to the task embedding approach from CVR *ADD CITATIONS*.
+We note that we also explored a task embedding approach where an input-output pair example was provided in-context to the encoder, but this did not yield great improvements with respect to the added computation overhead coming from the processed sequence tripling in size.
+
+
+\subsection{Training}
+
+All models are trained from scratch (i.e., without any pretraining) and using supervised learning. For each experimental setting, we create the following data splits: $train$, $val$, $val\_ood$, $test$, $test\_ood$, where "ood" signifies that the split is OOD while the other splits are in-domain. The train split has 100'000 different samples while the evaluation splits have 1000 samples. Models are trained for a maximum of 10 epochs, regardless of convergence, which implies a sample-efficient mode of comparison of models' performance. The best model checkpoint is selected based on the OOD validation loss.
+
+We use the AdamW optimizer *ADD CITATIONS* with a linear warm-up of 200 steps, followed by cosine annealing of the learning rate *ADD CITATIONS* from an initial learning rate of 1e-3 and weight decay of 1e-3.
+
+All Transformer-based models are designed to be approximately equal in parameter count (~2M), except for ResNet-18, which is used in its standard configuration. We aim for fair architectural comparisons with minimal hyperparameter tuning, and therefore use the same hyper-parameters across models when possible. 
+
+% We use the truncated normal model weights initialization (instead of common alternatives such as Kaiming uniform) without justification except that another weights initialization did not yield better performance on a few experiments as model learned similarly from initialization and CVR used truncated normal so I started with that. 
+
+Further training and implementation details can be found in Appendix *ADD REF*.

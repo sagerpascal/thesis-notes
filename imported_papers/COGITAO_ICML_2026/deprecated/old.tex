@@ -1,0 +1,77 @@
+The advent of Large Language Models and transformer architectures has put a bright spotlight on the problem of reasoning, and all its subsequent components, still crucially lacking from frontier models. 
+%
+François Chollet proposed the Abstraction and Reasoning Corpus (ARC) as a benchmark on which both humans and AI systems can fairly compete, specifically designed to measure a "human-like form of general fluid intelligence" \cite{cholletARC}. ARC is particularly challenging for traditional deep learning models due to the high diversity of tasks in contrast to the few-shot learning format. This holds true even though all tasks fall within a known and defined set of "core knowledge systems" relating to objects, actions, numbers, and space \cite{cholletARC, CoreKnowledgePrinciples}. Furthermore, ARC is known to require a form of step-by-step reasoning and planning, which is fundamental to human intelligence \cite{simon1971human}, and which is known to represent a significant challenge for traditional AI systems.
+
+While the 4 core knowledge priors that make up the challenge (Objectness, Goal-directedness, Numbers, and Geometry) are defined in the original ARC paper \cite{cholletARC}, it remains challenging to exhaustively list all of the computational primitive possibly encompassed by the priors, and even more so the combination of these primitives. In fact, the challenge is purposely designed to prevent test-takers from foreseeing these computational operations- thus preventing \textit{memorization}. Nevertheless, humans do very well on the ARC Challenge, with an average performance of more than 85\% \cite{galper2013status}, despite never having seen such tasks prior. Indeed, humans rely on previously acquired knowledge from different contexts, which they can fluidly compose; this is precisely what makes them do so well in the challenge - and what makes humans intelligent, according to Chollet \cite{cholletARC}. In turn, deep learning algorithms, which are known to excel at tasks where some form of memorization is possible, struggle to navigate these novel instances of computational operations - even if these have individually been observed before in different contexts. 
+
+TODO: GIVE DEFINITON OF COMPOSITIONALITY AND GENERALIZATION AND EXPLAINED HOW, WHILE BOTH OF THEM ARE HEAVILY INTERTWINED, WE CONSIDER THEM SEPARATELY IN OUR WORK.
+
+TODO: HAVE A FIGURE ANALOGUOUS TO THE ONE IN THE CVR PAPER.
+
+In this work, we present "before-ARC", a highly versatile generator in an ARC-like format designed to facilitate research on compositionality and generalization - which are of primary aspects of the ARC challenge, as well as any reasoning problems. Specifically, we propose a parametrizable generator where researchers can generate arbitrarily many examples of tasks with specific primitive rules, as well as a combination of different primitive rules. We focus on a scheme of task generation, where random shapes are positioned in the grid and transformed based on a set of available transformations (Which researchers can easily extend from our codebase). The proposed iteration of our generator is built out of 10 primitive functions, which can be combined to an arbitrary depth - thus allowing generations of millions of different task rules. 
+As such, we provide a set of primitive transformations and primitive conditionals, which yields a set of more than 400 possibles tasks. The user can easily extend these primitives, as well as combine them with one another to extend the set of 400 possible tasks. We Open Source the code on Github:  \url{https://github.com/yassinetb/before-arc}.
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.2} % Adjust row height for readability
+    \begin{tabular}{l p{2cm} p{2cm} p{2cm} p{2cm} p{2cm}}
+        \toprule
+        & \centering Generalization 
+        & \centering Compositionality 
+        & \centering Sample Efficiency 
+        & \centering In-Context Learning 
+        & \centering Output Mode 
+        \tabularnewline
+        \midrule
+        CVR        & \centering \xmark
+                   & \centering \approxmark   
+                   & \centering \cmark  
+                   & \centering \xmark  
+                   & \centering Class.  
+        \tabularnewline
+        RE-ARC     & \centering \cmark  
+                   & \centering \xmark  
+                   & \centering \cmark  
+                   & \centering \cmark  
+                   & \centering Gen.  
+        \tabularnewline
+        Before-ARC & \centering \cmark  
+                   & \centering \cmark  
+                   & \centering \cmark  
+                   & \centering \cmark  
+                   & \centering Class. + Gen.  
+        \tabularnewline
+        \bottomrule
+    \end{tabular}
+    \vspace{5pt}
+    \caption{Comparison between our Before-ARC dataset and other State-Of-The-Art visual reasoning datasets on generalization, compositionality, sample efficiency, in-context learning capabilities. Output mode is either classification ("Class.") or generation ("Gen."), or both ("Class. + Gen.")}.
+    \label{tab:comparison}
+\end{table}
+
+
+The three key ideas of the paper - its essence, which make it interesting and cannot be removed, are the following.
+
+\begin{itemize}
+    \item It's a very simple dataset - very easy for humans, but very hard for machines. It combines ideas from visual reasoning datasets with other types of problems which have grown in popularity with the advent of large language models. 
+    \item It's a very versatile dataset, which can be parametrized in different ways to test generalization and compositionality 
+    \item The way it allows to test compositionality is unique - where there are both \textit{depth} and \textit{width} of concepts within the dataset that are freely accessible - at will.   
+\end{itemize}
+
+
+\subsection{Some Classic Papers that I should cite}
+
+\begin{itemize}
+    \item Fodor and Pylyshyn \cite{fodor1988connectionism} - "Fodor and Pylyshyn (1988) highlighted the intrinsic connection between the ability to produce and
+    understand different sentences that are made up
+    of the same building blocks, such as John loves
+    Mary and Mary loves John. This connection, which
+    they refer to as systematicity, derives from a combinatorial mechanism that constructs the meaning
+    of a complex expression from its parts: understanding John loves Mary and Mary loves John
+    involves combining the same primitives using the
+    same rules. The question of whether neural networks can display human-like systematicity has a
+    long history. In a review of early work, Hadley
+    (1994) argued that none of the connectionist models he examined displayed the degree of systematicity that humans do."
+    \item "the meaning of the whole is a function of the meanings of its parts" \cite{cresswell2016logics}
+    \item Chomsky - "make infinite use of finite means" \cite{chomsky2014aspects}
+    \cite{besold2016generality} We argue that combinatorial generalization must be a top priority for AI to achieve human-like abilities, and that structured representations and computations are key to realizing this objective
+\end{itemize}

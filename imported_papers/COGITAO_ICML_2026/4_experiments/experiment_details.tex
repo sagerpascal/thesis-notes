@@ -1,0 +1,81 @@
+\subsection{Experiment details} \label{sec:experiment_details}
+
+We outline two "studies" - one focusing on the composition of transformations, the \textbf{Compositional Generalization} \textit{(CompGen)} study, and the other on environment variations (with fixed transformation sequence): the \textbf{Environmental Generalization} \textit{(EnvGen)} study. In each case, we measure the capacity of models to perform tasks that differ in some way from the tasks seen during training---either with respect to transformation composition in the \textit{CompGen} study or with respect to environment parametrization in the \textit{EnvGen} study.
+
+For both studies, we define different \textit{experiment settings} which focus on different aspects of compositional and systematic generalization. For each \textit{experiment setting} we create 5 "experiments": they are different instances of the \textit{experiment settings} in which we only vary the transformation sequences. This is to ensure that the results we report are robust across different transformation combinations (e.g., translation-based transformation sequences might be easier than rotation-based ones; see Appendix \ref{appendix:transformation_learnability}).
+
+For each experiment, we train on 100,000 unique training samples, and test on two unique and distinct sets of 1,000 samples; one test-set follows the same distribution (i.e., in-domain (ID) set) as the training set, and the other is out-of-distribution (OOD), from which we evaluate generalization.  
+
+In the \textit{CompGen} study, we train and test a model on multiple transformation sequences within a single experiment. This contrasts with the \textit{EnvGen} study, where models are trained on only a single transformation per experiment. To handle this complexity, we provide context that indicates to the model which sequence to perform. We do so by appending a task embedding to the input sequence, similar to the approach in CVR \cite{cvr2022}. This embedding is a sequence of tokens that specifies the transformations in the correct order. For example, the task “translate\_up-rotate\_90” would have an embedding like ['T', 'R'], while the inverse task "rotate\_90-translate\_up" would be ['R', 'T'].
+For OOD testing, the models may be evaluated on new or longer sequences of these transformations. However, every individual token would have been seen during training. 
+
+We provide below an outline of each experiment setting for each of our two studies, and refer the reader to the Appendix \ref{appendix:experiment_details} for more details.
+
+\newpage
+\paragraph{\textit{CompGen} – Compositional Generalization}
+    \begin{itemize}
+        \item \textit{C1 – Atomic + Composite → Unseen Composite}: Train on atomic (depth 1) and composite (depth 2) tasks; test on unseen depth 2 composites built out of the same atomic transformations as training.
+        \item \textit{C2 – Restricted Composite → Unseen Composite}: Train only on a subset of composites (depth 2); test on unseen depth 2 composites built out of the same atomic as training.
+        \item \textit{C3 – Atomic + Composite → Deeper Composite}: Train on atomic and depth 2 composites; test on depth 3 composites built out of the same atomics as training.
+    \end{itemize}
+
+\paragraph{\textit{EnvGen} – Environmental Generalization}
+\begin{itemize}
+    \item \textit{G1 – More Objects}: Train with 1–2 objects; test with 3–4 objects (fixed grid size and object complexity).
+    \item \textit{G2 – Larger Grids}: Train on 10×10–15×15 grids; test on 16×16–20×20 grids (fixed object number and complexity).
+    \item \textit{G3 – Larger Objects}: Train on objects sized 1×1–5×5; test on objects sized 6×6–10×10 (fixed grid size and number of objects).
+    \item \textit{G4 – More Complex Objects}: Train on symmetric, single-colored objects; test on asymmetric, multi-colored (fixed grid size and number of objects).
+    \item \textit{G5 – Combined}: Train on simple cases (1–2 objects, 10×10–15×15 grids, symmetric single-colored 1×1–5×5 objects); test on all harder variants simultaneously (3-4 objects, 16x16-20x20 grids, multi-colored asymmetric objects).
+\end{itemize}
+
+
+% \subsubsection{CompGen: Compositionality Generalization}\label{experiments:CompGen}
+
+% For the compositionality study, we perform experiments within the following settings: 
+
+% \begin{itemize}
+%     \item \textbf{C1 – Atomic + Composite → Unseen Composite}: Train on atomic (depth 1) and composite (depth 2) tasks; test on novel depth 2 composites. Tests generalization to new compositions.
+%     \item \textbf{C2 – Restricted Composite → Unseen Composite}: Train only on a subset of depth 2 composites; test on novel depth 2 composites. Tests generalization from limited composite examples.
+%     \item \textbf{C3 – Atomic + Composite → Deeper Composite}: Train on atomic and depth 2 composites; test on depth 3 composites. Tests generalization to greater compositional depth.
+% \end{itemize}
+
+% \subsubsection{EnvGen: Environmental Generalization}\label{experiments:EnvGen}
+
+% For the generalization study, we perform experiments within the following settings: 
+
+% \begin{itemize}
+%     \item \textbf{G1 – More Objects}: Train on 15×15 grids with 1–2 objects; test with 3–4 objects.
+%     \item \textbf{G2 – Larger Grids}: Train on 10×10–15×15 grids; test on 16×16–20×20, with 2 objects.
+%     \item \textbf{G3 – Larger Objects}: Train on objects sized 1×1–5×5; test on 6×6–10×10.
+%     \item \textbf{G4 – More Complex Objects}: Train on symmetric, single-colored objects; test on asymmetric, multi-colored (2 objects, 15×15 grid, <6×6 size).
+%     \item \textbf{G5 – Combined}: Train on simple cases (1–2 objects, 10×10–15×15 grids, symmetric single-colored 1×1–5×5 objects); test on all harder variants simultaneously.
+% \end{itemize}
+
+
+
+% For the compositionality study, we perform experiments within the following settings: 
+
+% \begin{itemize}
+%     \item \textbf{C1 - From Atomic and Composite Tasks to Unseen Composite}: Models are trained on a \textit{mix of individual atomic tasks (depth = 1) and composite tasks (depth = 2)}. The OOD test set consists of unseen composite tasks (depth = 2) composed of the same atomic transformations in novel orders. This setting evaluates whether models can generalize to new compositions when trained on both atomic and composite examples.
+%     \item \textbf{C2 - From Restricted Composite Tasks to Unseen Composite}: Models are trained \textit{solely on a restricted set of composite tasks (depth = 2)}. The OOD test set consists of unseen composite tasks (depth = 2) composed of the same atomic transformations in novel orders. This setting evaluates whether models can generalize to new compositions when trained only on other composite examples.
+%     \item \textbf{C3 - From Composite Tasks to Deeper Composite Tasks}: Models are trained on \textit{mix of individual atomic tasks (depth = 1) and composite tasks (depth = 2)}. The OOD test set consists of deeper composite tasks (depth = 3) composed of the same atomic transformations. This setting evaluates whether models can generalize to compositions of greater depth than those seen during training.
+% \end{itemize}
+
+% \subsubsection{EnvGen: Environmental Generalization Study}\label{experiments:EnvGen}
+
+% For the generalization study, we perform experiments within the following settings: 
+
+% \begin{itemize}
+%     \item \textbf{G1 - Generalization to More Objects}: Models are trained on 15x15 grids containing \textit{1 or 2 objects}. The OOD test set consists of grids of the same size containing \textit{3 or 4 objects}. This setting evaluates whether models can generalize to a greater number of objects.
+
+%     \item \textbf{G2 - Generalization to Larger Grids}: Models are trained on grids with sizes ranging from \textit{10x10 to 15x15}. The OOD test set consists of grids with larger sizes, from \textit{16x16 to 20x20}. This setting evaluates whether models can generalize to larger spatial environments while the number of objects is held constant at 2.
+
+%     \item \textbf{G3 - Generalization to Larger Objects}: Models are trained on grids containing objects with dimensions ranging from \textit{1x1 to 5x5}. The OOD test set consists of grids containing objects with larger dimensions, from \textit{6x6 to 10x10}. This setting evaluates whether models can generalize to objects of a significantly different scale.
+
+%     \item \textbf{G4 - Generalization to More Complex Objects}: Models are trained on grids containing \textit{symmetric and single-colored objects}. The OOD test set consists of grids containing \textit{asymmetric and multi-colored objects}. For both sets, all other parameters (2 objects, 15x15 grid size, object dimensions < 6x6) are fixed. This setting evaluates whether models can generalize from simple object features to more complex ones.
+
+%     \item \textbf{G5 - Combined Generalization}: Models are trained on grids with a combination of simple properties: \textit{1-2 objects}, grid sizes from \textit{10x10-15x15}, and objects that are \textit{symmetric, single-colored, and 1x1-5x5}. The OOD test set consists of grids where all properties are more complex: \textit{3-4 objects}, grid sizes from \textit{16x16-20x20}, and objects that are \textit{asymmetric, multi-colored, and 6x6-10x10}. This setting evaluates robust generalization across multiple difficulty axes simultaneously.
+% \end{itemize}
+
+
+

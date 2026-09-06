@@ -1,0 +1,21 @@
+\begin{table}[t]
+\caption{Probe state MSE at $T{=}20$ ($\downarrow$) for every condition on pendulum-swingup, mean over 10 seeds. The first four columns vary the training data fraction at clean backgrounds, the last three vary the distraction level at full data. The two controls are those of Section~\ref{sec:measurements} and use each model's own encoder and probe. \textbf{Bold} marks the best entry in the column, controls included.}
+\label{tab:full_controls_pendulum}
+\centering
+\small
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\textbf{Configuration} & \multicolumn{4}{c}{\textbf{data fraction (clean)}} & \multicolumn{3}{c}{\textbf{distraction (full data)}} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-8}
+ & 10\% & 25\% & 50\% & 100\% & easy & medium & hard \\
+\midrule
+Koopman~(Stable)                   & $3.74$ & $4.13$ & $7.93$ & $3.68$ & $6.83$ & $4.48$ & $4.60$ \\
+Koopman~(Soft)                     & $8.98$ & $117$ & $25.2$ & $20.3$ & $14.5$ & $25.7$ & $93.3$ \\
+Koopman~(Unconstrained)            & $2785$ & $2.5{\times}10^{4}$ & $4.9{\times}10^{5}$ & $8.6{\times}10^{5}$ & $8.8{\times}10^{5}$ & $1.7{\times}10^{6}$ & $2.3{\times}10^{6}$ \\
+MLP-JEPA baseline                  & $175$ & $269$ & $3038$ & $6354$ & $2529$ & $35.0$ & $164$ \\
+\midrule
+\emph{Persistence} (copy $\z_t$)   & $\mathbf{1.66}$ & $\mathbf{1.62}$ & $\mathbf{1.64}$ & $\mathbf{1.66}$ & $\mathbf{1.64}$ & $\mathbf{1.62}$ & $\mathbf{1.65}$ \\
+\emph{Mean-state} (dataset mean)   & $2.51$ & $2.51$ & $2.51$ & $2.51$ & $2.51$ & $2.51$ & $2.51$ \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,26 @@
+\section{Before-ARC Generator}
+
+In this section, we will introduce our ARC Generator, built with Python, and introduce the design decisions we have taken, in light of the set of Core Knowledge Principles introduced by Chollet \cite{cholletARC}, as well as the aim of designing a data generator suitable for studying generalization, compositionality, and sample efficiency.
+
+\subfile{motivation.tex}
+\subfile{generator.tex}
+\subfile{limitations.tex}
+
+
+
+% NEED TO WRITE: 
+
+% * What was the aim in this
+% -- Get inspired from core knowledge principles, in order to train a model to reach a "ARC World Model"
+% -- Allow sample efficiency, generalization and compositionality study 
+
+% * What we did, explaining the terminology and the logic of the algorithm
+% -- Creating the objects 
+% -- "Conditional Transform" logic. Why this actually fits all the core knowledge principles. 
+
+% * How it actually works
+% -- The stats and the PseudoCode
+
+% * Limitations and difficulties 
+% -- A ARC world model would probably need more data and more data diversity. We have generated more but choose not to present them here for consistency
+% -- Some grid configurations may lead to overdetermined or underdetermined tasks. 

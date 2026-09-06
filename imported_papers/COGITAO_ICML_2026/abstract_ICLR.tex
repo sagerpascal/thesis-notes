@@ -1,0 +1,15 @@
+The ability to compose learned concepts and apply them in novel settings is key to human intelligence, but remains a key challenge in state-of-the-art machine learning models.
+%
+To address this issue, we introduce COGITAO, a modulable data-generation framework to evaluate compositional and systematic generalization in object-centric domains.
+%
+Drawing inspiration from ARC-AGI's environment and problem-setting, \generatorName\ constructs rule-based tasks to be solved by applying a set of transformations to objects in grid-based environments. 
+%
+It supports composition over a set of $28$ interoperable transformations, at adjustable composition-depth, along with extensive control over grid parametrization and object properties. 
+%
+This flexibility enables the creation of millions of unique task rules -- surpassing existing datasets by several orders of magnitude -- across a broad range of difficulties, while allowing virtually unlimited sample generation per rule.
+%
+Alongside open-sourcing our flexible data-generation framework, we release benchmark datasets and provide baseline results with several state-of-the-art architectures that incorporate inductive biases well-suited for compositionality, such as diffusion-based Transformers (LLaDA) or recurrent Transformers with Adaptive Computation Time (Universal Transformer/PonderNet).
+%
+Despite strong in-domain performance, these models consistently fail to generalize to novel combinations of familiar elements -- highlighting a persistent challenge in compositional and systematic generalization, which COGITAO allows to precisely characterize.  
+%
+% \footnote{We open source the code on GitHub (\url{https://github.com/yassinetb/COGITAO}) as well as the benchmark datasets we propose in this paper (\url{https://huggingface.co/datasets/yassinetb/COGITAO}).}
