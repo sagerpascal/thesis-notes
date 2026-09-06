@@ -37,8 +37,8 @@ BUILD_DIR = ROOT / "build" / "compilecheck"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_imports import (  # noqa: E402
-    Manifest, Report, collect_reachable, load_manifests, matches_any,
-    strip_comments,
+    Manifest, Report, collect_reachable, importsection_closers, load_manifests,
+    matches_any, strip_comments,
 )
 
 TEXBIN = Path("/usr/local/texlive/2025/bin/universal-darwin/pdflatex")
@@ -85,8 +85,15 @@ def body_for(m: Manifest, report: Report) -> tuple[str, list[str]]:
             lines.append(f"\\importpart{{{part.stem}}}")
             included.append(part.stem)
     else:
+        # A file that leaves an environment open needs the same closer the
+        # chapter gives it, or the include's group unwinds and every later
+        # path in this paper resolves against a doubled directory.
+        closers = importsection_closers(m)
         for rel in top_level_files(m, report):
-            lines.append(f"\\importsection{{{rel}}}")
+            close = "".join(f"\\end{{{name}}}" * n
+                            for name, n in sorted(closers.get(rel, {}).items()))
+            opt = f"[{close}]" if close else ""
+            lines.append(f"\\importsection{opt}{{{rel}}}")
             included.append(rel)
     lines.append("\\end{importedpaper}")
     return "\n".join(lines), included

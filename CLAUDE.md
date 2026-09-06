@@ -49,7 +49,9 @@ errors and the first missing bibliography keys. Use `errors` by default.
 Gates before every commit that touches the text:
 
 - The build reaches the end, and the last pass reports zero LaTeX errors.
-- Zero undefined references and zero duplicate labels.
+- Zero undefined references and zero duplicate labels. Count them in the PDF,
+  not in the log: the log reports each label once, the PDF prints one `??` per
+  use, and `scripts/check_layout.py --pdf` gives every hole with its page.
 - Zero missing bibliography keys in `build-biber.log`.
 - Zero banned words and zero em dashes in thesis owned files (Section 3.10).
 - After any trim, no number, citation key or label was lost. Compare the sets of
@@ -409,6 +411,30 @@ If a chapter ever needs another reference command, add it to `\ip@allcommands`
 and check whether the package that defines it takes a private copy of `\label`
 the way amsmath does.
 
+Three variations on `\importsection`, each for a problem a published paper
+can present and the thesis cannot fix by editing it.
+
+An unbalanced file. `\importsection[\end{itemize}]{...}` runs the closing
+`\end` inside the include's own group, which is where it has to go. Putting it
+after the include instead closes the group that tracks the paper's working
+directory, `\ip@cwd` is never restored, and the next include resolves against
+a doubled path. `check_imports.py` works out what each file leaves open and
+holds the closers to it in both directions, so a missing one is an error and a
+stale one is reported the day the paper is fixed upstream. COGITAO's
+`6_appendix/Experiments.tex` needs one.
+
+A file whose tables will not fit. `\importsectionrotated{...}` sets the file
+on turned pages. Section 4.5 explains why rotation is declared per file and
+not per table.
+
+A label the chapter has taken over. `\importedlabel{slug}{name}` defines one
+of a paper's labels from thesis owned text, outside any block, without the
+`\clearpage` that ending a block would cause. When a chapter drops the paper's
+discussion and writes its own summary, the paper's body still says "as we
+discuss in Section~\ref{sec:discussion}", and the section it wants is that
+summary. Use it only where the thesis owned text really is the replacement.
+It is a claim about content, not a way to silence a warning.
+
 Monolithic papers. Three papers arrived as one file, so the parts a chapter
 wants have to be made into files first:
 
@@ -489,6 +515,26 @@ resolves relative to the including file rather than the document root.
 Figures are the one thing `.gitignore` gets wrong by default. The blanket
 `*.pdf` rule is aimed at build output, and exceptions keep every vendored and
 converted figure tracked.
+
+**Its tables may be too wide, and a longtable cannot be scaled.** Every
+other table is wrapped in an adjustbox and shrunk to the measure. A longtable
+breaks across pages, so it is never one box, and it measures against the page
+rather than `\linewidth`, so kaobook's `widepar` does not reach it either. The
+ACU survey's three agent tables, fifteen columns each, ran 182pt past a 304pt
+measure.
+
+Turning the page fixes it, with two corrections to `lscape`, both in
+`thesis_import.sty`. It sets the rotated column to the old `\textwidth`, only
+304pt here because the margin column takes another 153pt, and rotated that
+margin is not a margin but unused paper, so the margin is added back to give
+458pt. And the rotated block is set down from the text block's own left edge,
+which on a verso page sits beyond the margin column, so it is shifted back by
+the margin width there.
+
+Rotation is declared per file, with `\importsectionrotated`, not wrapped
+around each longtable. Turning the page is a `\clearpage` at each end, so
+rotating three tables in one file left each of their subsection headings alone
+on an otherwise empty upright page.
 
 **Its bibliography may be inline.** A journal often wants the references pasted
 into the manuscript, and the CNA paper arrived that way, as `\bibitem` entries
@@ -732,6 +778,12 @@ Full citation of the paper, ending in its \cite key.
 
 `check_imports.py` checks that each chapter has both.
 
+Float pages are top aligned. LaTeX centres them, because `\@fptop` and
+`\@fpbot` are both infinitely stretchable, and a single table on such a page
+then floats a third of the way down with white above and below it and reads as
+an accident. `\@fptop` is 0pt, so a float page starts where the text block
+starts on every other page.
+
 Fonts are kaobook's and are not overridden. The class chooses them with its
 `fontmethod` option: `tex`, the default, gives Palatino through newpxtext and
 newpxmath, and `modern` gives Libertinus through fontspec but needs XeLaTeX or
@@ -754,12 +806,12 @@ something is done, delete its entry rather than marking it done, so the list
 stays short enough to read every session. Anything that has become permanent
 knowledge belongs in the sections above, not here.
 
-The thesis builds: 324 pages, zero LaTeX errors, zero duplicate labels, a
-working bibliography of 376 entries, and every one of the nine papers included
-with its appendix. `check_compile.py` reports zero errors across all nine.
-Machinery that works is not listed here: `build.sh`, `thesis_style.tex`,
-`thesis_import.sty`, the nine manifests, the `references/` and `generated/`
-trees, and all seven scripts.
+The thesis builds: 347 pages, zero LaTeX errors, zero duplicate labels, a
+working bibliography, and every one of the nine papers included with its
+appendix. `check_compile.py` reports zero errors across all nine, and
+`check_imports.py` zero. Machinery that works is not listed here: `build.sh`,
+`thesis_style.tex`, `thesis_import.sty`, the nine manifests, the `references/`
+and `generated/` trees, and all seven scripts.
 
 ### Blocking the thesis
 
@@ -768,11 +820,19 @@ trees, and all seven scripts.
    summary, and all of them say "Placeholder". The imported bodies below them
    are real and compile. Write the framing prose, then flip each manifest to
    `status = "wired"`.
+
+   Two of them carry a specific obligation, marked `TODO(story)` in the file.
+   The grokking chapter introduction has to define the twelve rules the
+   chapter tests, because the paper defines them in a subsection of the
+   background section the chapter drops, and `\importedlabel` points the
+   paper's own back references at that introduction. The CNA chapter summary
+   is where the paper's discussion label now lives, for the same reason.
 2. **105 citations in thesis owned prose resolve to nothing.** All of them are
    in `1-1_introduction` and `2-1_related_work`, which still argue the old
    story and cite invented keys. No imported paper has a missing citation any
    more. Rewrite those two chapters and add the real entries to
-   `references/manual.bib`.
+   `references/manual.bib`. Those two files also hold the last three
+   semicolons in thesis owned prose, which go with the rewrite.
 3. **Three papers are not final.** COGITAO, grokking and the Koopman/TMLR
    rewrite are still moving. Run `scripts/reimport.py <slug> <path>`, which
    replaces the directory and reruns everything downstream.
@@ -781,11 +841,15 @@ trees, and all seven scripts.
    and page numbers to check against the published record.
 6. **The title is a working title.** Alternatives are in
    `00_ADMIN/05_thesis_concept.md`.
+7. **The preface argues the old story.** It talks about synthesising two
+   paradigms and about deep generative world models, which is the framing the
+   Koopman paper's rewrite retired.
 
 ### Correctness
 
-7. **16 undefined references, printing 27 `??` in the PDF.** One label used
-   four times is four holes in the text, so count them in the output:
+8. **12 undefined references, printing 20 `??` in the PDF.** One label used
+   three times is three holes in the text, so count them in the output rather
+   than in the log:
 
    ```bash
    uv run --no-project python scripts/check_layout.py --pdf
@@ -797,34 +861,17 @@ trees, and all seven scripts.
    three `part:` references. They go when the introduction and the background
    chapter are rewritten.
 
-   The other six belong to the papers and `check_imports.py` lists them with
-   the file each target lives in. Four point into a file the chapter drops
-   (`cogitao:appendix:experiment_details`, `cogitao:appendix:Prompt_Details`,
-   `cna:sec:discussion`, `grokking:sec:ruleset`),
+   The other two are upstream and cannot be fixed from the thesis.
    `attention:eq:weight-update-bilinear-form-prediction` exists only in the
-   rebuttal variant the thesis does not import, and `tab:se_all_experiments`
-   is issue 10.
-
-   A body that refers back to a figure in the introduction the chapter drops
-   is the recurring case, and it has a fix that does not touch the paper: put
-   the float in the wrapper, inside the `importedpaper` block, under the
-   paper's own label. That is how the ACU taxonomy figure and the Hounsfield
-   overview figure were recovered. `check_imports.py` then notes the
-   reproduction every run, because it is the one place thesis owned text
-   copies published text and so the one place a re import can go stale.
-8. **Part references can never resolve.** `main.tex` uses `\addpart`, which
+   rebuttal variant, which the thesis does not import, and
+   `tab:se_all_experiments` is issue 10. `check_imports.py` reports both, with
+   the file each target lives in.
+9. **Part references can never resolve.** `main.tex` uses `\addpart`, which
    makes parts unnumbered, so there is no number for `\ref` to print. Either
    number the parts or name them by title.
-9. **Three upstream bugs in COGITAO**, all to fix in the paper and then re
-   import. `6_appendix/Experiments.tex` never closes its outermost
-   `\begin{itemize}`, which swallows the rest of the thesis, so the file is
-   dropped. `6_appendix/LLM_Prompts.tex` holds 147 lines of raw prompts in a
-   listing that exhausts TeX's memory, so it is dropped too. And the figure
-   directory is `Figures` while some includes say `figures`, which works on
-   macOS and fails on Overleaf.
-10. **`tab:se_all_experiments` has a `\label` and no `\caption`**, in
-    COGITAO's `transformation_learnability.tex`, so the reference to it cannot
-    resolve. Upstream.
+10. **Two upstream bugs in COGITAO.** `tab:se_all_experiments` in
+    `transformation_learnability.tex` has a `\label` and no `\caption`, so
+    the reference to it cannot resolve.
 
     Its warning names the label without the slug prefix, which looks like the
     prefixing in `thesis_import.sty` has failed. It has not. A `\label` with no
@@ -833,21 +880,42 @@ trees, and all seven scripts.
     comes from that stored string, which was written before prefixing applied.
     The prefix is correct everywhere, including here. Do not go looking for a
     bug in the patching again.
-11. **The CNA bibliography is converted, not real.** Its 52 references came
+
+    And the figure directory is `Figures` while some includes say `figures`,
+    which works on macOS and fails on Overleaf.
+
+    A third, the unclosed `itemize` in `6_appendix/Experiments.tex`, is worked
+    around from the chapter rather than dropped, see Section 4.4. Fixing it
+    upstream means deleting the optional argument there, and the checker says
+    so when that day comes.
+11. **`6_appendix/LLM_Prompts.tex` cannot be included.** Six `lstlisting`
+    environments over 177 lines. kaobook's output routine holds the whole
+    listing in `\@outputbox` and exhausts TeX's main memory partway through,
+    and the build then produces no PDF at all. It compiles on its own in a
+    short document, so testing it outside the thesis proves nothing. The
+    thesis appendix carries a short section in its place. Restore it if the
+    prompts are shortened or taken out of a listing.
+12. **The CNA bibliography is converted, not real.** Its 52 references came
     from `\bibitem` entries, so author and title are as good as a formatted
     string allows. Ask for the paper's original `.bib`.
+13. **Untested on Overleaf.** Linux is case sensitive and has no Python. Every
+    generated artefact is committed, so the build should not need a script,
+    but nobody has run it there. COGITAO's `Figures` against `figures` will
+    fail, see issue 10.
 
 ### Style
 
-12. **153 overfull boxes**, the worst 211pt on a 300pt measure. The papers were
-    typeset for wider templates. Section 4.5 records why the obvious fix does
-    not work.
-13. **Twelve em dashes and two en dashes in `sections/3-1_acu_survey.tex`**, in
-    thesis owned prose.
-14. **Two banned words in thesis owned prose.** "realm" in `preface.tex`,
-    "leverage" in `sections/3-1_acu_survey.tex`.
+14. **61 overfull boxes, one over 100pt.** None is in a table any more:
+    40 are display equations set for a wider measure and 21 are paragraphs.
 
-### Housekeeping
+    ```bash
+    uv run --no-project python scripts/check_layout.py --overfull
+    ```
 
-15. **The root `thesis.bib` is unused.** Delete it once nothing refers to it.
-16. **`\usepackage{blindtext}` in `main.tex`** is left over from the template.
+    reports each with the file and the PDF page it came from.
+    `\emergencystretch` inside the block was tried and changes nothing,
+    because what is left has no legal break to find.
+15. **Twelve captions out of 132 sit in the text block** rather than in the
+    margin, because the float is too wide for a caption beside it and floatrow
+    falls back. It is automatic and it looks right where it happens. Listed
+    only so nobody reports it twice.
