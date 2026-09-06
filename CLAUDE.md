@@ -352,6 +352,16 @@ reference implementation.
 
 The thesis owned parts obey the style guide. The imported body does not.
 
+Dropping the paper's introduction has a cost that only shows in the PDF. The
+body still says "see Figure 1", the figure went with the introduction, and the
+reader gets `??`. Both survey chapters lost their overview figure that way.
+The fix does not touch the paper: reproduce the float in the wrapper, inside
+the `importedpaper` block, under the paper's own label. The block prefixes it
+like any of the paper's own labels, so the body's reference resolves. This is
+the one place thesis owned text copies published text, so `check_imports.py`
+notes every reproduction on every run and a re import has to be checked
+against it.
+
 ### 4.4 Including the body
 
 `thesis_import.sty` does the scoping. Declare each paper once in the preamble
@@ -546,6 +556,15 @@ For every manifest it verifies:
   `scripts/merge_bib.py`, so their references reach the bibliography.
 - Labels defined by more than one paper are listed, as a reminder that the slug
   prefix is what keeps them apart.
+- No kept file refers to a label that only a dropped file, or only an excluded
+  variant of the paper, defines. That is the check that catches a `??` before
+  anybody reads the PDF, and the message names the file the target lives in so
+  the choice is between restoring it and rewording the sentence. Labels are
+  counted however they are spelled, so a `label=` key in an `lstlisting` or an
+  `algorithm` option counts as a definition.
+- Where a wrapper reproduces a float from a dropped file, that is noted every
+  run. It is the one place thesis owned text copies published text, so it is
+  the one place a re import can silently go stale.
 
 Unapplied prunes are warnings rather than errors, because nothing loads those
 files. `--prune` applies them.
@@ -559,10 +578,10 @@ design.
 | --- | --- | --- | --- |
 | `acu` | `imported_papers/ACU_JAIR` | `sections/3-1_acu_survey.tex` | sections |
 | `llmbench` | `imported_papers/Llama2_benchmark_sds` | `sections/3-2_llm_benchmark.tex` | monolithic, `llm_at_home.tex` |
-| `grokking` | `imported_papers/grokking`, paper under `docs/paper/`, no manifest yet | `sections/4-1_grokking.tex` | monolithic, `docs/paper/iclr2027_conference.tex` |
+| `grokking` | `imported_papers/grokking` | `sections/4-1_grokking.tex` | monolithic, `iclr2027_conference_v2.tex` |
 | `attention` | `imported_papers/self_attention_geometry_project_ICML` | `sections/4-2_attention.tex` | sections, under `ICML2025/` |
-| `bounded` | `imported_papers/Koopman-JEPA-TMLR-rewrite`, no manifest yet | `sections/5-1_bounded.tex` | monolithic, `main.tex` |
-| `cogitao` | `imported_papers/COGITAO_ICML_2026`, no manifest yet | `sections/3-3_cogitao.tex` | sections |
+| `bounded` | `imported_papers/Koopman-JEPA-TMLR-rewrite` | `sections/5-1_bounded.tex` | monolithic, `main.tex` |
+| `cogitao` | `imported_papers/COGITAO_ICML_2026` | `sections/3-3_cogitao.tex` | sections |
 | `hounsfield` | `imported_papers/sds_hounsfield_features` | `sections/5-2_hounsfield.tex` | monolithic, `main.tex` |
 | `retrieval` | `imported_papers/CLEF_Checkthat_4b` | `sections/5-3_retrieval.tex` | sections |
 | `cna` | `imported_papers/Neural_Computation__CNA` | `sections/6-1_cna.tex` | monolithic, `NECO-D-24-00304-Source.tex` |
@@ -570,9 +589,7 @@ design.
 `sections/3-2_llm_benchmark.tex` and `sections/3-3_cogitao.tex` share one
 chapter heading, supplied by `main.tex`. Chapters whose wrapper is still empty
 get their heading and label from `main.tex` and lose both once the wrapper is
-written. The grokking, bounded and COGITAO papers are vendored but have no
-manifest yet, and the grokking copy is a whole repository rather than the
-paper, see the open issues.
+written. All nine papers have a manifest.
 
 The self attention project ships three variants. The ICML2025 directory is the
 one with split section files, so it is the import source. The arXiv and rebuttal
@@ -767,13 +784,34 @@ trees, and all seven scripts.
 
 ### Correctness
 
-7. **18 undefined references.** Ten are thesis owned and belong to the old
-   story: `chap:constraints`, `chap:contextual`, `chap:dfc`, `chap:koopman`,
+7. **16 undefined references, printing 27 `??` in the PDF.** One label used
+   four times is four holes in the text, so count them in the output:
+
+   ```bash
+   uv run --no-project python scripts/check_layout.py --pdf
+   ```
+
+   Ten labels, 17 of the holes, are thesis owned and belong to the old story:
+   `chap:constraints`, `chap:contextual`, `chap:dfc`, `chap:koopman`,
    `chap:relatedwork`, `chap:selfattention`, `sec:acu_methodology` and the
-   three `part:` references. The other eight point into paper material the
-   chapters deliberately drop, mostly each paper's own introduction and
-   discussion, and each needs either the section restored or the sentence
-   reworded.
+   three `part:` references. They go when the introduction and the background
+   chapter are rewritten.
+
+   The other six belong to the papers and `check_imports.py` lists them with
+   the file each target lives in. Four point into a file the chapter drops
+   (`cogitao:appendix:experiment_details`, `cogitao:appendix:Prompt_Details`,
+   `cna:sec:discussion`, `grokking:sec:ruleset`),
+   `attention:eq:weight-update-bilinear-form-prediction` exists only in the
+   rebuttal variant the thesis does not import, and `tab:se_all_experiments`
+   is issue 10.
+
+   A body that refers back to a figure in the introduction the chapter drops
+   is the recurring case, and it has a fix that does not touch the paper: put
+   the float in the wrapper, inside the `importedpaper` block, under the
+   paper's own label. That is how the ACU taxonomy figure and the Hounsfield
+   overview figure were recovered. `check_imports.py` then notes the
+   reproduction every run, because it is the one place thesis owned text
+   copies published text and so the one place a re import can go stale.
 8. **Part references can never resolve.** `main.tex` uses `\addpart`, which
    makes parts unnumbered, so there is no number for `\ref` to print. Either
    number the parts or name them by title.
@@ -787,6 +825,14 @@ trees, and all seven scripts.
 10. **`tab:se_all_experiments` has a `\label` and no `\caption`**, in
     COGITAO's `transformation_learnability.tex`, so the reference to it cannot
     resolve. Upstream.
+
+    Its warning names the label without the slug prefix, which looks like the
+    prefixing in `thesis_import.sty` has failed. It has not. A `\label` with no
+    `\caption` makes the caption package store `\caption@xref{tab:se_all_%
+    experiments}{ on input line 53}` as the label's value, and the warning
+    comes from that stored string, which was written before prefixing applied.
+    The prefix is correct everywhere, including here. Do not go looking for a
+    bug in the patching again.
 11. **The CNA bibliography is converted, not real.** Its 52 references came
     from `\bibitem` entries, so author and title are as good as a formatted
     string allows. Ask for the paper's original `.bib`.

@@ -29,6 +29,8 @@ from __future__ import annotations
 
 import argparse
 import re
+import shutil
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
@@ -77,11 +79,55 @@ def overfull_from_log():
         r"Overfull \\hbox \(([\d.]+)pt too wide", text)), reverse=True)
 
 
+def report_pdf() -> int:
+    """Every ?? in the built PDF, which is the only place they are all visible.
+
+    The build log counts each undefined reference once. The PDF prints one ??
+    per use, and a label used eight times is eight holes in the text, so the
+    log understates the damage. This reads the output instead.
+    """
+    pdf = ROOT / "main.pdf"
+    if not pdf.is_file():
+        print("  no main.pdf, run ./build.sh first")
+        return 1
+    for tool in ("/opt/homebrew/bin/pdftotext", "pdftotext"):
+        if shutil.which(tool) or Path(tool).is_file():
+            break
+    else:
+        print("  pdftotext not found, install poppler")
+        return 1
+    out = ROOT / "build" / "pdftext.txt"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([tool, "-layout", str(pdf), str(out)], capture_output=True)
+    pages = out.read_text(encoding="utf-8", errors="replace").split("\f")
+
+    hits = []
+    for n, page in enumerate(pages, 1):
+        for m in re.finditer(r"\?\?", page):
+            lo = max(0, m.start() - 70)
+            hits.append((n, " ".join(page[lo:m.end() + 30].split())))
+    print(f"  {len(hits)} occurrences of ?? on "
+          f"{len({h[0] for h in hits})} pages\n")
+    for n, ctx in hits:
+        print(f"  p{n:<5d} ...{ctx}")
+    if hits:
+        print("\n  Each one is a \\ref, \\Cref or \\eqref whose label does not\n"
+              "  exist. Either the label is in a file the chapter drops, or the\n"
+              "  sentence points at something the thesis has renamed.")
+    out.unlink(missing_ok=True)
+    return 1 if hits else 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--overfull", action="store_true",
                         help="only the overfull box summary")
+    parser.add_argument("--pdf", action="store_true",
+                        help="find every ?? in the built PDF, with its page")
     args = parser.parse_args()
+
+    if args.pdf:
+        return report_pdf()
 
     if not args.overfull:
         rows = []

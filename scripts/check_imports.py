@@ -50,6 +50,19 @@ IMPORT_PART = re.compile(r"\\importpart\{([^}]*)\}")
 # thesis_import.sty aliases it to \input for the same reason.
 INPUT_CMD = re.compile(r"(?<!\\)(?:\\input|\\include|\\subfile)\s*\{([^}]*)\}")
 LABEL_CMD = re.compile(r"\\label\{([^}]*)\}")
+# listings, algorithm2e and tcolorbox take the label as a key in the optional
+# argument instead, so a file can define a label without ever writing \label.
+KEYVAL_LABEL = re.compile(r"(?<![a-zA-Z\\])label\s*=\s*(?:\{([^}]*)\}|([\w:.\-]+))")
+
+
+def labels_in(text: str) -> set[str]:
+    """Every label a chunk of LaTeX defines, however it spells the definition."""
+    found = set(LABEL_CMD.findall(text))
+    for braced, bare in KEYVAL_LABEL.findall(text):
+        name = (braced or bare).strip()
+        if name:
+            found.add(name)
+    return found
 
 # The splitter owns the definition of what a paper's sections are, so import
 # it rather than writing a second regular expression that can disagree.
@@ -403,6 +416,123 @@ def check_balanced(m: Manifest, report: Report) -> None:
                 f"of the thesis. Fix it upstream, or drop the file.")
 
 
+REF_CMD = re.compile(
+    r"\\(?:c|C)?ref(?:range)?\*?\{([^}]*)\}|"
+    r"\\(?:page|name|auto|eq)?ref\*?\{([^}]*)\}")
+
+
+def kept_files(m: Manifest, report: Report) -> set[Path]:
+    """The files a paper actually contributes, chapter and appendix together.
+
+    A paper reaches the thesis through \\importsection, which names a file in
+    the paper, and \\importpart, which names one the splitter wrote under
+    generated/. Both are followed transitively, because a kept file may input
+    another.
+    """
+    found: set[Path] = set()
+    for entry in (m.chapter, APPENDIX_FILE):
+        if not entry.is_file():
+            continue
+        text = strip_comments(entry.read_text(encoding="utf-8", errors="replace"))
+        for block in re.finditer(
+                r"\\begin\{importedpaper\}\{" + re.escape(m.slug)
+                + r"\}(.*?)\\end\{importedpaper\}", text, re.S):
+            body = block.group(1)
+            for target in IMPORT_SECTION.findall(body):
+                resolved = resolve_input(target.strip(), m.dir)
+                if resolved is not None:
+                    found |= collect_reachable(resolved, m.dir, report)
+            for target in IMPORT_PART.findall(body):
+                part = GENERATED_ROOT / m.slug / f"{target.strip()}.tex"
+                if part.is_file():
+                    found |= collect_reachable(part, m.dir, report)
+    return found
+
+
+def check_orphan_refs(m: Manifest, report: Report) -> None:
+    """A kept file may not refer to a label only a dropped file defines.
+
+    Dropping a paper's introduction is the normal case, because the thesis
+    writes its own. The cost is invisible until the PDF is read: the body still
+    says "see Figure 1", the label went with the introduction, and the reader
+    gets ??. Both survey chapters lost their overview figure that way. The fix
+    is to reproduce the float in the wrapper, inside the block and under the
+    paper's own label, which is why the wrapper's own labels count as kept.
+    """
+    kept = kept_files(m, report)
+    if not kept:
+        return
+
+    defined: set[str] = set()
+    used: dict[str, str] = {}
+    for path in sorted(kept):
+        text = strip_comments(path.read_text(encoding="utf-8", errors="replace"))
+        defined |= labels_in(text)
+        rel = str(path.relative_to(ROOT))
+        for group in REF_CMD.findall(text):
+            for names in group:
+                for name in names.split(","):
+                    name = name.strip()
+                    if name:
+                        used.setdefault(name, rel)
+
+    # Labels the wrapper defines inside the block are prefixed like the
+    # paper's own, so they close exactly this gap.
+    reproduced: set[str] = set()
+    if m.chapter.is_file():
+        chapter = strip_comments(m.chapter.read_text(encoding="utf-8"))
+        for block in re.finditer(
+                r"\\begin\{importedpaper\}\{" + re.escape(m.slug)
+                + r"\}(.*?)\\end\{importedpaper\}", chapter, re.S):
+            reproduced |= labels_in(block.group(1))
+    defined |= reproduced
+
+    # Where an orphan does live, so the message says what to restore. A file
+    # the chapter drops is a candidate for restoring. An excluded tree is a
+    # different variant of the same paper, so a label found only there means
+    # the variant the thesis imports never had it.
+    elsewhere: dict[str, str] = {}
+    variant: dict[str, str] = {}
+    for path in m.dir.rglob("*.tex"):
+        if path in kept:
+            continue
+        rel = str(path.relative_to(m.dir))
+        target = variant if matches_any(rel, m.exclude) else elsewhere
+        for name in labels_in(
+                strip_comments(path.read_text(encoding="utf-8", errors="replace"))):
+            target.setdefault(name, rel)
+
+    # A reproduced float is the one place thesis owned text copies published
+    # text, so it is the one place a re import can silently go stale. Say so
+    # every run rather than trusting anyone to remember.
+    for name in sorted(reproduced & set(elsewhere)):
+        report.notes.append(
+            f"{m.slug}: the wrapper reproduces `{name}`, which the dropped "
+            f"{elsewhere[name]} also defines. After a re import, check the "
+            f"reproduction still matches the paper.")
+
+    for name in sorted(set(used) - defined):
+        where = used[name]
+        if name in elsewhere:
+            report.warnings.append(
+                f"{m.slug}: {where} refers to `{name}`, which only "
+                f"{elsewhere[name]} defines, and the chapter leaves that file "
+                f"out. The reference prints ??. Reproduce the float or the "
+                f"statement in the wrapper inside the block, under the same "
+                f"label, or reword the sentence.")
+        elif name in variant:
+            report.warnings.append(
+                f"{m.slug}: {where} refers to `{name}`, which exists only in "
+                f"{variant[name]}, a variant of the paper the thesis does not "
+                f"import. The reference prints ??. The imported variant lost "
+                f"the target, so fix it upstream and re import.")
+        else:
+            report.warnings.append(
+                f"{m.slug}: {where} refers to `{name}`, which no file in the "
+                f"paper defines. The reference prints ??. This one is an "
+                f"upstream bug, so fix it in the paper and re import.")
+
+
 def check_label_collisions(manifests: list[Manifest], report: Report) -> None:
     """Two papers may share a label name only if both are label prefixed."""
     owners: dict[str, list[str]] = {}
@@ -414,8 +544,8 @@ def check_label_collisions(manifests: list[Manifest], report: Report) -> None:
             rel = str(path.relative_to(m.dir))
             if matches_any(rel, m.exclude):
                 continue
-            names |= set(LABEL_CMD.findall(
-                strip_comments(path.read_text(encoding="utf-8", errors="replace"))))
+            names |= labels_in(
+                strip_comments(path.read_text(encoding="utf-8", errors="replace")))
         for name in names:
             owners.setdefault(name, []).append(m.slug)
 
@@ -452,6 +582,7 @@ def main() -> int:
         check_bib_registered(m, report)
         check_shadowing(m, report)
         check_balanced(m, report)
+        check_orphan_refs(m, report)
         if m.layout == "monolithic":
             check_monolithic(m, report)
         elif m.status == "wired":

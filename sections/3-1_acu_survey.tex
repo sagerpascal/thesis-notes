@@ -134,6 +134,34 @@ the literature is not repeated here.
 
 
 \begin{importedpaper}{acu}
+
+% The paper puts its overview figure in the introduction, which this chapter
+% drops, and then refers back to it from the body. Reproducing the float here,
+% inside the block and under the paper's own labels, is what keeps those
+% references resolving. check_imports.py holds it to the original.
+\begin{figure}[t]
+\begin{subfigure}{0.49\linewidth}
+\includegraphics[width=\linewidth]{figures/ACU_example.png}
+\caption{Example of a computer use task.}
+\label{fig:ACU-example}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\linewidth}
+\includegraphics[width=\linewidth]{figures/ACU_taxonomy.png}
+\caption{Proposed taxonomy.}
+\label{fig:ACU-taxonomy}
+\end{subfigure}
+\caption{
+Overview: (a) An example of a task for an ACU: A user specifies a task
+(``propose meeting dates by email'') and the agent executes it.
+(b) We structure the literature on ACUs based on three key \emph{perspectives}
+corresponding to the main differentiating aspects:
+(1) The shared \emph{domain} properties across computer environments (e.g., Web, Android).
+(2) The means of \emph{interaction} between the agent and the environment as manifested in the observation and action spaces.
+(3) The \emph{agent} components: how an agent acts through a policy $\pi$ while tracking the past in memory and how an agent learns to act.}
+\label{fig:intro}
+\end{figure}
+
 \importsection{sections/02_field_of_agents}
 \importsection{sections/03_domain_perspective}
 \importsection{sections/04_interaction_perspective}
