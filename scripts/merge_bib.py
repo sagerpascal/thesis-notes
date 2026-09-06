@@ -1211,7 +1211,9 @@ def write_keymap(path: Path, groups: list[Group]) -> None:
             rows.append((rec.key, rec.source, group.new_key))
     rows.sort()
     with path.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.writer(fh)
+        # \n explicitly: csv defaults to \r\n, which makes the file differ
+        # by platform and breaks the byte identical rerun guarantee.
+        writer = csv.writer(fh, lineterminator="\n")
         writer.writerow(["old_key", "source_file", "new_key"])
         writer.writerows(rows)
 
