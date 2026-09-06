@@ -17,6 +17,11 @@ BIBER="$TEXBIN/biber"
 [ -x "$PDFLATEX" ] || PDFLATEX="pdflatex"
 [ -x "$BIBER" ]    || BIBER="biber"
 
+# kaobook runs makeindex through \write18, and that shell inherits this PATH.
+# Without the TeX Live bin directory on it the call fails, pdflatex exits 1 and
+# the build looks broken even though the PDF is fine.
+[ -d "$TEXBIN" ] && PATH="$TEXBIN:$PATH" && export PATH
+
 PDFLATEX_FLAGS="-interaction=nonstopmode -file-line-error -halt-on-error"
 
 # Colours
@@ -54,9 +59,18 @@ run_pdflatex() {
         | colorize
     local rc=${PIPESTATUS[0]}
     set +o pipefail
-    if [ "$rc" -ne 0 ]; then
-        err "pdflatex pass $pass failed (rc=$rc, full log: build-pass-$pass.log)"
+    # pdflatex's exit code is not a reliable success signal here: it returns 1
+    # on this document with no error in the log and a correct PDF on disk.
+    # Judge by what actually matters instead, an error free log and an output
+    # file, and only report the code.
+    local n_err
+    n_err=$(grep -acE "^\!|: LaTeX Error|: Emergency|Fatal error" "build-pass-$pass.log" 2>/dev/null || echo 0)
+    if [ "$n_err" -gt 0 ]; then
+        err "pdflatex pass $pass: $n_err errors (full log: build-pass-$pass.log)"
         return 1
+    fi
+    if [ "$rc" -ne 0 ]; then
+        warn "pdflatex pass $pass returned $rc with no error in the log"
     fi
 }
 

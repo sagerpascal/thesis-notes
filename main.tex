@@ -140,7 +140,11 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 % so they do not belong here.
 \graphicspath{{images/}{./}{figures/}}
 
-\makeindex[columns=3, title=Alphabetical Index, intoc] % Make LaTeX produce the files required to compile the index
+% No index. There is not one \index{} entry in the thesis, so \makeindex only
+% produced an empty one, and makeindex exits nonzero when it writes nothing,
+% which made every build report failure. Restore these two lines and the
+% \printindex below if an index is ever wanted.
+%\makeindex[columns=3, title=Alphabetical Index, intoc]
 
 % Load custom thesis styles (colors, fonts, etc.)
 \input{thesis_style.tex}
@@ -190,8 +194,21 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %----------------------------------------------------------------------------------------
 
 \chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
 
 \input{preface}
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS AND PUBLICATIONS
+%----------------------------------------------------------------------------------------
+
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+\input{sections/0-3_acknowledgements}
+
+\chapter*{List of Publications}
+\addcontentsline{toc}{chapter}{List of Publications}
+\input{sections/0-4_publications}
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS & LIST OF FIGURES/TABLES
@@ -338,6 +355,19 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %	INDEX
 %----------------------------------------------------------------------------------------
 
-\printindex % Output the index
+%\printindex
+
+%----------------------------------------------------------------------------------------
+%	DECLARATIONS
+%----------------------------------------------------------------------------------------
+
+\input{sections/9-1_declarations}
+
+% A curriculum vitae used to be bound into every doctoral thesis in the German
+% speaking universities and many faculties have since dropped the requirement.
+% Check the current rules for your faculty before adding one. If it is wanted,
+% write sections/9-2_cv.tex and uncomment the next two lines.
+%\chapter*{Curriculum Vitae}
+%\input{sections/9-2_cv}
 
 \end{document}
