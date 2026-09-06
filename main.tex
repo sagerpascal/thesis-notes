@@ -62,6 +62,9 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 % what lets thesis_import.sty clamp every imported figure to the text block
 % without editing a single \includegraphics call.
 \usepackage[export]{adjustbox}
+% A rotated page for the imported longtables. thesis_import.sty explains why
+% they cannot be handled the way every other wide table is.
+\usepackage{pdflscape}
 
 % Scoped inclusion of the published papers under imported_papers/. Declare each
 % one here, then wrap its sections in \begin{importedpaper}{<slug>} in the

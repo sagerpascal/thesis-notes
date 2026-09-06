@@ -71,12 +71,61 @@ def survey(m, report_rows):
 
 
 def overfull_from_log():
+    """Every overfull hbox from the last build, with the file it came from.
+
+    pdflatex writes `(filename` when it opens a file and `)` when it closes
+    one, so the file a warning belongs to is whatever is on top of that stack
+    when the warning is printed. Nothing else in the log says where a box came
+    from, and without it the only way to find one is to page through the PDF.
+    """
     log = ROOT / "build-pass-3.log"
     if not log.is_file():
         return []
-    text = log.read_text(encoding="utf-8", errors="replace")
-    return sorted((float(x) for x in re.findall(
-        r"Overfull \\hbox \(([\d.]+)pt too wide", text)), reverse=True)
+    # pdflatex hard wraps the log at 79 columns and inserts nothing at the
+    # break, so a path can arrive in two pieces. Only a line of exactly 79
+    # characters is a continuation, and joining any other pair would glue the
+    # next message onto the end of a filename and hide it.
+    lines = log.read_text(encoding="utf-8", errors="replace").split("\n")
+    joined, buf = [], ""
+    for line in lines:
+        buf += line
+        if len(line) != 79:
+            joined.append(buf)
+            buf = ""
+    if buf:
+        joined.append(buf)
+
+    box = re.compile(r"^(Over|Under)full \\[hv]box \(([\d.]+)pt")
+    paren = re.compile(r"\(([^\s()]*)|(\))")
+    stack, found, echoing, page = [], [], False, 0
+    for line in joined:
+        m = box.match(line)
+        if m:
+            # TeX echoes the offending material on the lines that follow, and
+            # that text has parens of its own. Counting them unwinds the file
+            # stack and loses the attribution for everything after.
+            echoing = True
+            if m.group(1) == "Over" and "\\hbox" in line:
+                name = next((f for f in reversed(stack) if f), None)
+                found.append((float(m.group(2)), name or "?", page + 1))
+            continue
+        if echoing:
+            if line.strip():
+                continue
+            echoing = False
+        # pdflatex prints [N] as it ships each page out. Counting the markers
+        # rather than reading N gives the page index in the PDF, which is what
+        # you need to open it: N is the printed number and the front matter
+        # makes the two differ by thirty odd pages.
+        page += len(re.findall(r"\[\d+", line))
+        for opened, closed in paren.findall(line):
+            if closed:
+                if stack:
+                    stack.pop()
+            else:
+                stack.append(
+                    opened if re.search(r"\.(tex|sty|cls)$", opened) else None)
+    return sorted(found, reverse=True)
 
 
 def report_pdf() -> int:
@@ -155,10 +204,20 @@ def main() -> int:
     if not ov:
         print("  no build log, run ./build.sh first")
         return 0
+    widths = [w for w, _, _ in ov]
     print(f"  {len(ov)} overfull hboxes in the last build")
-    print(f"    over 100pt {sum(1 for o in ov if o > 100):4d}")
-    print(f"    over  30pt {sum(1 for o in ov if o > 30):4d}")
-    print(f"    worst      {', '.join(str(round(o)) for o in ov[:6])}")
+    print(f"    over 100pt {sum(1 for o in widths if o > 100):4d}")
+    print(f"    over  30pt {sum(1 for o in widths if o > 30):4d}")
+
+    worst: dict[str, list[tuple[float, int]]] = {}
+    for width, where, page in ov:
+        worst.setdefault(where, []).append((width, page))
+    print("\n  worst offenders by file, with the PDF page of the worst one")
+    for where, hits in sorted(
+            worst.items(), key=lambda kv: max(kv[1])[0], reverse=True)[:12]:
+        top, page = max(hits)
+        print(f"    {round(top):4d}pt  x{len(hits):<3d} p{page:<4d} "
+              f"{where.lstrip('./')}")
     print("\n  A tabular that adjustbox shrinks still reports its unscaled\n"
           "  width, so check the page before treating one of these as real.")
     return 0

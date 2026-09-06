@@ -43,7 +43,9 @@ WRAPPER_PARTS = {
 }
 
 IMPORT_ENV = re.compile(r"\\begin\{importedpaper\}\{([^}]*)\}")
-IMPORT_SECTION = re.compile(r"\\importsection\{([^}]*)\}")
+# \importsectionrotated is \importsection on a turned page, so it counts as
+# an include for coverage exactly the same way.
+IMPORT_SECTION = re.compile(r"\\importsection(?:rotated)?\{([^}]*)\}")
 IMPORT_PART = re.compile(r"\\importpart\{([^}]*)\}")
 # \subfile is the subfiles package's include. COGITAO uses it throughout, and
 # its leaves carry no standalone preamble, so it behaves exactly like \input.

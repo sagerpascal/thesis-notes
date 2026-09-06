@@ -185,6 +185,19 @@
 \renewcommand{\floatpagefraction}{0.6}
 \renewcommand{\dblfloatpagefraction}{0.6}
 
+% A page given over to floats is centred vertically by default, because
+% \@fptop and \@fpbot are both infinitely stretchable. One table on such a
+% page then sits a third of the way down with white space above and below it
+% and reads as an accident. Pinning the top and letting the bottom stretch
+% aligns it with the text block on every other page, so a float page looks
+% like a decision. \@fpsep keeps some give, otherwise two floats on one page
+% are jammed together.
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{12pt plus 1fil}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+
 % ---------------------------------------------------------------------------
 % 6. Tables
 %

@@ -230,6 +230,59 @@
   }%
 }
 
+% A longtable is the one table adjustbox cannot help, because it breaks across
+% pages and so is never a single box to scale. The ACU survey ships three of
+% them, fifteen columns of ticks each, sized for a wide journal template, and
+% they ran 182pt past a 304pt measure.
+%
+% Turning the page is what fixes it. A rotated page gives \textheight, 689pt
+% here, which is more than any of them needs, and a rotated appendix table is
+% what a reader expects anyway. \pagelayout{wide} was tried first and is not an
+% option: it exhausts TeX's main memory in kaobook's output routine. widepar is
+% not one either, because longtable measures against the page rather than
+% \linewidth and ignores it.
+%
+% Rotation is declared per file, with \importsectionrotated, rather than
+% wrapped around each longtable. Turning the page is a \clearpage at each end,
+% so rotating three tables in one file left each of the three subsection
+% headings stranded alone on an otherwise empty upright page. Rotating the file
+% puts the headings on the rotated pages where they belong and pays the page
+% break once.
+%
+% This leaves each paper's own \tabcolsep alone. With the full rotated measure
+% there is no need to tighten anything, and the tables keep the spacing they
+% were published with.
+% lscape turns the page by setting \vsize to the old \textwidth, which in
+% kaobook is only 304pt because the margin column takes another 153pt. Rotated,
+% that margin is not a margin any more, it is unused height at the foot of the
+% page, and a long table breaks a third early to avoid it. Adding it back gives
+% 458pt, which is exactly the space between the two side margins, so the
+% rotated block fills the page the same way an upright one does.
+\newlength{\ip@lsextra}
+\newenvironment{ip@landscape}{%
+  \setlength{\ip@lsextra}{\marginparsep}%
+  \addtolength{\ip@lsextra}{\marginparwidth}%
+  \begin{landscape}%
+  % Local, not global. \endlandscape clears the page inside its own group and
+  % then restores \vsize and friends from \textheight, so a global advance
+  % here would leave every upright page in the thesis 153pt taller.
+  \advance\vsize\ip@lsextra
+  \advance\textheight\ip@lsextra
+  \advance\@colroom\ip@lsextra
+  \advance\@colht\ip@lsextra
+  % The rotated block is set down from the text block's own left edge, and on
+  % a verso page that edge is on the far side of the margin column: there is
+  % only \textwidth of paper to the right of it, so the taller block would run
+  % off the trim. Shifting it back by the margin puts it in the same place on
+  % both sides of the spread.
+  \def\LS@rot{\setbox\@outputbox\vbox{\hbox{%
+    \ifodd\c@page\else\kern-\ip@lsextra\fi
+    \rotatebox{90}{\box\@outputbox}}}}%
+}{%
+  \end{landscape}%
+}
+
+
 % Swap one command for its patched twin, if the command exists at all.
 \newcommand{\ip@patch}[1]{%
   \@ifundefined{#1}{}{%
@@ -316,6 +369,12 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   % If the thesis ever moves to an author-year style this stops being true and
   % \cite would have to be mapped to \parencite here.
   \ip@clamptables
+  % The papers were justified for a wider measure, so a line that fitted there
+  % can have no legal break here, and TeX would rather overrun than loosen.
+  % \emergencystretch lets it loosen on the passes where nothing else works.
+  % It applies inside the block only: thesis prose is written for this measure
+  % and should keep failing loudly when a line will not fit.
+  \emergencystretch=3em\relax
   % Papers built with the subfiles package.
   \let\ip@save@subfile\subfile
   \let\subfile\ip@subfile
@@ -350,6 +409,15 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
 % cuts it at its \section boundaries and writes the pieces to
 % generated/imported/<slug>/, which is committed so that Overleaf can build
 % without running Python. Name the part without its .tex.
+% The same, on a rotated page. For a file whose tables were sized for a
+% template far wider than this one. See ip@landscape above for why rotation is
+% declared per file rather than per table.
+\newcommand{\importsectionrotated}[1]{%
+  \begin{ip@landscape}%
+  \importsection{#1}%
+  \end{ip@landscape}%
+}
+
 \newcommand{\importpart}[1]{%
   \ifip@inside\else
     \PackageError{thesis_import}%

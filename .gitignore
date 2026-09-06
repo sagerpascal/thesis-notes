@@ -260,3 +260,7 @@ _compilecheck.*
 
 # JetBrains project files.
 .idea/
+
+# Python bytecode from scripts/
+__pycache__/
+*.pyc

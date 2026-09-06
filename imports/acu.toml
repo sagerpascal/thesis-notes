@@ -26,6 +26,7 @@ graphics = ["figures", "figures/data"]
 "sections/00_authors.tex"      = "replaced by the publication header box and the contribution statement"
 "sections/01_introduction.tex" = "replaced by the chapter introduction, which frames the survey inside the thesis argument"
 "sections/09_conclusion.tex"   = "replaced by the chapter summary, which hands off to the next chapter"
+"sections/80_appendix.tex"     = "an index of five \\input lines and nothing else. sections/appendix.tex lists the five directly, so that the agent tables in 85 can be included rotated."
 
 # Publisher build files removed from the vendored copy. Re-run the prune after
 # every import so the copy stays free of them.
