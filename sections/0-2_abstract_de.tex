@@ -1,1 +1,79 @@
-% Zusammenfassung auf Deutsch
+% Zusammenfassung auf Deutsch. Schweizer Schreibweise, kein Eszett.
+
+Ein Netzwerk, das eine Aufgabe gelernt hat, hätte seine Lösung auf viele Arten
+anordnen können. Dieselbe Funktion kann bei gleichem Verlust von wenigen seiner
+Neuronen getragen werden oder über alle verteilt sein, und die Gewichte, die
+eine Berechnung tragen, können sich auf wenige Richtungen konzentrieren oder
+gleichmässig verteilen. Die Neurowissenschaft streitet seit langem über
+spärliche gegen verteilte Kodierung, und das maschinelle Lernen hat meist
+angenommen, dass die Aufgabe entscheidet, welche Anordnung ein Netzwerk
+erreicht. Diese Arbeit zeigt, dass die Anordnung einer gelernten Lösung durch
+das Trainingsverfahren bestimmt wird, dass sie aus der Aktualisierungsgleichung
+abgelesen und gewählt werden kann, und dass die Wahl Robustheit gegen Schäden
+gegen Anpassungsgeschwindigkeit tauscht. Sie schliesst mit einem Vorschlag für
+Repräsentationen, in denen die Anordnung eingebaut ist, statt der Lernregel
+überlassen zu werden.
+
+Den Einsatz setzt eine Übersicht über $87$ Arbeiten und $33$ Datensätze zu
+Agenten für die Computernutzung. Das Feld baut seine Agenten nach einem
+Rezept, einem vortrainierten Grundlagenmodell, das durch Prompting oder
+Verhaltensklonen angepasst wird, und nennt ineffizientes Lernen und
+unzureichende Generalisierung unter seinen Lücken. Beides sind Eigenschaften
+des trainierten Netzwerks, und die Arbeit fragt, was in diesem Rezept sie
+bestimmt.
+
+Die zentrale Studie hält Aufgabe, Daten, Architektur und Optimierer fest und
+variiert nur die Lernregel, im Grokking, einer Situation, in der ein Netzwerk
+seine Trainingsdaten lange vor der Generalisierung perfekt anpasst und seine
+Lösung Neuron für Neuron gelesen werden kann. Vier von zwölf Regeln
+generalisieren nie, weil ihre Aktualisierung an den Minima des Verlusts nicht
+verschwindet. Unter den übrigen stimmen Verlust, Margin und Gewichtsnorm
+überein, während die Zahl der Neuronen, die die Lösung tragen, von etwa $150$
+bis $250$ von $256$ reicht. Eine Umskalierung des Fehleranteils jedes Neurons,
+die beweisbar das Ziel und jede Aktualisierungsrichtung unverändert lässt,
+bewegt diese Zahl über ihren gesamten Bereich, ob von Beginn an angewandt oder
+erst nach der Generalisierung eingeschaltet, sodass die Anordnung ein Zustand
+ist, den die Regel aufrechterhält. Welche Regeln die Lösung verteilen, lässt
+sich aus ihrer Aktualisierung ablesen. Nur Regeln, die ein Neuron nach dem
+anderen normalisieren, tun es, weil ein gemeinsamer Normalisierer die
+Ungleichheit innerhalb seiner Gruppe unberührt lässt, und diese Vorhersage
+ordnet alle acht geprüften Optimierer richtig ein. Die Anordnung hat einen
+Preis, bewiesen und gemessen. Verteilte Lösungen überstehen das Löschen von
+Neuronen weit besser, mit einer Schwankung, die mit eins durch die Wurzel der
+effektiven Neuronenzahl fällt, und konzentrierte Lösungen passen sich etwa
+doppelt so schnell an eine neue Aufgabe an.
+
+Dieselbe Frage wird an die Gewichte gestellt, die die Aufmerksamkeit in einem
+Transformer tragen. Ihre Aktualisierung ist eine Summe über die Tokenpaare, die
+das Trainingsziel einem Token zur Vorhersage eines anderen erlaubt. Ein
+autoregressives Ziel verwendet jedes Token als Kontext für jedes spätere, aber
+nur einmal als Ziel, sodass wenige Spalten dominieren, und ein bidirektionales
+Ziel nimmt jedes Paar in beiden Reihenfolgen auf, sodass die Aktualisierung
+symmetrisch ist und sich die Struktur verteilt. Beide Anordnungen finden sich
+in ModernBERT, GPT, LLaMA3 und Mistral über Text, Bild und Audio, und eine
+symmetrische Initialisierung beschleunigt das bidirektionale Training.
+
+Drei kürzere Studien liefern Struktur von ausserhalb der Daten: eine spektrale
+Beschränkung der latenten Dynamik eines Weltmodells, aus medizinischem Wissen
+abgeleitete Eingabemasken für die CT Segmentierung und einen externen Index zum
+Auffinden wissenschaftlicher Quellen zu Beiträgen in sozialen Medien. Die
+letzten beiden bestehen ihre Kontrollen. Die erste ist der warnende Fall. Die
+Beschränkung gewinnt unter der üblichen Auslesung um fünf Grössenordnungen und
+unter einer Auslesung, die die latente Skala ignoriert, um nichts, und
+Prädiktoren, die keine Dynamik lernen, schlagen jedes gelernte Modell. Eine
+Eigenschaft, die der Verlust offen lässt, war auferlegt und als Lernen gelesen
+worden.
+
+Wenn die Lernregel die Anordnung bestimmt und die Anordnung einen Preis hat,
+kann die Anordnung stattdessen in der Architektur festgelegt und das Lernen dem
+Füllen ihrer Teile überlassen werden. Die Cooperative Network Architecture ist
+eine erste Umsetzung dieses Vorschlags. Sie repräsentiert ein sensorisches
+Muster durch ein Netz, eine Menge von Neuronen, von denen jedes durch mehrere
+andere gestützt wird, zusammengesetzt aus Fragmenten, die durch Hebbsche
+Plastizität gelernt werden. Weil die Stützung eingebaut ist, wird Rauschen, das
+keine hat, selbst dann herausgefiltert, wenn mehr als die Hälfte der Eingabe
+verfälscht ist, verdeckte Figuren werden vervollständigt, und Fragmente setzen
+sich zu Mustern zusammen, die im Training nie vorkamen. Das Modell skaliert
+noch nicht über Strichzeichnungen hinaus, und die Arbeit endet damit,
+darzulegen, was eine Repräsentation dieser Art bräuchte, um als Zustand des
+Umgebungsmodells eines Agenten zu dienen.

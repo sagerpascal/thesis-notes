@@ -1,0 +1,35 @@
+# CLEF CheckThat! 2025 Task 4b, hybrid retrieval.
+
+slug    = "retrieval"
+dir     = "imported_papers/CLEF_Checkthat_4b"
+chapter = "sections/5-3_retrieval.tex"
+title   = "Inference-Time Grounding via Hybrid Retrieval"
+citation_key = ""           # fill in once the entry is in references/manual.bib
+status  = "pending"
+layout  = "sections"
+source  = "main.tex"
+
+imported_on = "2026-05-21"
+upstream    = ""
+
+bib      = ["sources_cleaned.bib"]
+graphics = ["figures"]
+
+[drop]
+"main.tex"                      = "the paper's own root file, replaced by the chapter wrapper"
+"sections/01_abstract.tex"      = "the thesis has its own abstract"
+"sections/02_introduction.tex"  = "replaced by the chapter introduction"
+
+[prune]
+"ceurart.cls"          = "CEUR template, the thesis uses kaobook"
+"Copyright.txt"        = "CEUR template licence file"
+"Copyright-logo.txt"   = "CEUR template licence file"
+"Copyright.cc-by-sa"   = "CEUR template licence file"
+"Copyright.lppl.txt"   = "CEUR template licence file"
+"cc-by.pdf"            = "CEUR template licence logo"
+"sections/ceurart.cls" = "duplicate of the template inside sections/"
+"sections/cc-by.pdf"   = "duplicate of the licence logo inside sections/"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"sections/10_appendix.tex" = "appendix material of the paper"

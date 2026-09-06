@@ -1,0 +1,47 @@
+# Agents for Computer Use, JAIR 2026.
+#
+# See imports/README.md for the schema. Nothing here may be edited to make a
+# check pass: if the check fails, either the chapter or the vendored copy
+# changed, and the manifest records what was decided about it.
+
+slug    = "acu"
+dir     = "imported_papers/ACU_JAIR"
+chapter = "sections/3-1_acu_survey.tex"
+title   = "A Comprehensive Survey of Agents for Computer Use"
+citation_key = "sager_survey_2026"
+status  = "wired"
+layout  = "sections"
+source  = "main.tex"
+
+imported_on = "2026-05-21"
+upstream    = ""            # Overleaf project URL, fill in at the next import
+
+bib      = ["cleaned_references.bib"]
+graphics = ["figures", "figures/data"]
+
+# Parts of the paper the chapter deliberately does not include.
+[drop]
+"main.tex"                     = "the paper's own root file, replaced by the chapter wrapper. Kept on disk because its preamble defines macros the text uses."
+"sections/00_abstract.tex"     = "the thesis has its own abstract, and the chapter introduction covers what this said"
+"sections/00_authors.tex"      = "replaced by the publication header box and the contribution statement"
+"sections/01_introduction.tex" = "replaced by the chapter introduction, which frames the survey inside the thesis argument"
+"sections/09_conclusion.tex"   = "replaced by the chapter summary, which hands off to the next chapter"
+
+# Publisher build files removed from the vendored copy. Re-run the prune after
+# every import so the copy stays free of them.
+[prune]
+"acmart.cls"        = "ACM template, the thesis uses kaobook"
+"jair.cls"          = "JAIR template, the thesis uses kaobook"
+"preprint.cls"      = "JAIR preprint template"
+"acmauthoryear.bbx" = "ACM biblatex style, the thesis uses kaobiblio"
+"acmauthoryear.cbx" = "ACM biblatex style"
+"acmdatamodel.dbx"  = "ACM biblatex data model"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"sections/80_appendix.tex" = "appendix material of the paper"
+"sections/81_appendix_trends.tex" = "appendix material of the paper"
+"sections/82_appendix_image_vs_text.tex" = "appendix material of the paper"
+"sections/83_appendix_nature_envs.tex" = "appendix material of the paper"
+"sections/84_appendix_challenges_deployment.tex" = "appendix material of the paper"
+"sections/85_appendix_all_agents.tex" = "appendix material of the paper"

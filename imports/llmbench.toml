@@ -1,0 +1,36 @@
+# Benchmarking Llama 2 class models on local hardware, SDS 2024.
+#
+# One file, so the chapter cannot include it section by section. The split is
+# produced by scripts/split_paper.py into generated/imported/llmbench/, and the
+# drop table below names sections by their \section title.
+
+slug    = "llmbench"
+dir     = "imported_papers/Llama2_benchmark_sds"
+chapter = "sections/3-2_llm_benchmark.tex"
+title   = "Limitations of Foundation Models"
+citation_key = ""
+status  = "pending"
+layout  = "monolithic"
+source  = "llm_at_home.tex"
+split   = "section"
+
+imported_on = "2026-05-21"
+upstream    = ""
+
+bib      = ["references.bib"]
+graphics = ["imgs"]
+
+[drop]
+"(front matter)"            = "title, authors and abstract, replaced by the chapter introduction and the publication header box"
+"Introduction"    = "replaced by the chapter introduction"
+"Conclusions"     = "replaced by the chapter summary"
+"Acknowledgments" = "belongs to the paper, not to the thesis"
+
+[prune]
+"IEEEtran.cls"           = "IEEE template, the thesis uses kaobook"
+"IEEEtran_HOWTO.pdf"     = "IEEE template documentation"
+"conference_101719.pdf"  = "IEEE template sample"
+"references_orig.bib"    = "superseded by references.bib"
+"references_sage_zotero.bib" = "superseded by references.bib"
+"introduction_draft_yassine.tex" = "draft superseded by the published introduction"
+"fig1.png"               = "unused draft figure"

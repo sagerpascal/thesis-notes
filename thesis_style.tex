@@ -1,53 +1,266 @@
-% -------------------------------------------------------------
+% ===========================================================================
 % thesis_style.tex
-% This file defines custom style updates for the PhD thesis,
-% including colors and fonts.
-% -------------------------------------------------------------
+%
+% The single home for how the thesis looks. Colours, fonts, headings,
+% captions, links, tables, and the furniture every paper backed chapter opens
+% with. Nothing here changes what the text says, so it is safe to touch
+% without re-reading the style guide in CLAUDE.md.
+%
+% This file is \input at the very end of the preamble in main.tex, after every
+% package has loaded, so anything set here wins.
+% ===========================================================================
 
-% 1. Define custom colors for the document
-% You can change these RGB values to match your university's branding
-\definecolor{ThesisDarkRed}{RGB}{140, 0, 0}
-\definecolor{ThesisAccentRed}{RGB}{210, 0, 0}
-\definecolor{ThesisGray}{RGB}{100, 100, 100}
 
-% 2. Update font formatting for headings using KOMA-Script commands
-% This applies the dark blue color to chapters, sections, etc.
-\addtokomafont{chapter}{\color{ThesisDarkRed}}
-\addtokomafont{section}{\color{ThesisDarkRed}}
-\addtokomafont{subsection}{\color{ThesisAccentRed}}
-\addtokomafont{subsubsection}{\color{ThesisAccentRed}}
-\addtokomafont{paragraph}{\color{ThesisAccentRed}}
-\addtokomafont{captionlabel}{\color{ThesisDarkRed}\bfseries}
-\addtokomafont{pagenumber}{\color{ThesisGray}}
+% ---------------------------------------------------------------------------
+% 1. Palette
+%
+% Five colours carry the whole document. Change them here and everything
+% follows. Slate teal for structure, amber for the things a reader clicks or
+% looks up, grey for anything that should recede.
+% ---------------------------------------------------------------------------
 
-% 3. Update hyperlink colors
-% Here we apply the custom colors to links, citations, and URLs
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    filecolor=black,
-    urlcolor=ThesisDarkRed,
-    citecolor=ThesisDarkRed,
-}
+\definecolor{ThesisPrimary}{HTML}{10403B}   % slate teal, headings and rules
+\definecolor{ThesisSecondary}{HTML}{276A62} % mid teal, subordinate headings
+\definecolor{ThesisAccent}{HTML}{B07A1E}    % amber, citations and URLs
+\definecolor{ThesisGrey}{HTML}{5A6672}      % margin notes, page numbers
+\definecolor{ThesisRule}{HTML}{C9D8D4}      % hairlines inside boxes
+\definecolor{ThesisTint}{HTML}{F1F6F4}      % box backgrounds
 
-% 4. Enable chapter formatting
-% kaobook supports different chapter styles (e.g. kao, plain)
+% Kept so that older text referring to the previous red palette still
+% compiles. Both now point at the current palette.
+\colorlet{ThesisDarkRed}{ThesisPrimary}
+\colorlet{ThesisAccentRed}{ThesisSecondary}
+\colorlet{ThesisGray}{ThesisGrey}
+
+
+% ---------------------------------------------------------------------------
+% 2. Typography
+%
+% The fonts are kaobook's and are deliberately left alone. Its `fontmethod`
+% class option picks them: `tex`, the default, loads Palatino through
+% newpxtext and newpxmath, and `modern` loads Libertinus through fontspec.
+% `modern` needs XeLaTeX or LuaLaTeX, and this thesis builds with pdflatex, so
+% Palatino is what we get. It is a good scientific book face, its maths is
+% excellent, and kao.sty tunes \linespread to 1.07 specifically for it.
+%
+% Do not load a font package here. Loading libertinus or newtx on top of
+% newpxtext leaves the text in Palatino while the maths is split between two
+% families, which looks fine on a page of prose and wrong on a page of
+% equations. Changing the face means changing the class option and the engine.
+%
+% kaobook loads microtype for us.
+% ---------------------------------------------------------------------------
+
+% Let TeX stretch a little further before it reports an overfull line. The
+% alternative is hand breaking paragraphs inside imported papers, which we do
+% not edit.
+\setlength{\emergencystretch}{2em}
+
+
+% ---------------------------------------------------------------------------
+% 3. Headings
+% ---------------------------------------------------------------------------
+
+\addtokomafont{part}{\color{ThesisPrimary}}
+\addtokomafont{partnumber}{\color{ThesisPrimary}}
+\addtokomafont{chapter}{\color{ThesisPrimary}}
+\addtokomafont{section}{\color{ThesisPrimary}}
+\addtokomafont{subsection}{\color{ThesisSecondary}}
+\addtokomafont{subsubsection}{\color{ThesisSecondary}}
+\addtokomafont{paragraph}{\color{ThesisSecondary}}
+\addtokomafont{descriptionlabel}{\color{ThesisSecondary}}
+\addtokomafont{pagenumber}{\color{ThesisGrey}}
+\addtokomafont{pageheadfoot}{\color{ThesisGrey}}
+
 \setchapterstyle{kao}
 
-% 5. Cross-referencing helpers using cleveref
-% This ensures consistent formatting (e.g., "Figure" vs "Fig." etc.) across the document.
-% By default kaobook uses noabbrev for cleveref. If you prefer abbreviations
-% (so \cref outputs Fig. instead of Figure), uncomment the next lines:
-% \crefname{figure}{Fig.}{Figs.}
-% \Crefname{figure}{Fig.}{Figs.}
-% \crefname{equation}{Eq.}{Eqs.}
-% \Crefname{equation}{Eq.}{Eqs.}
-% \crefname{table}{Tab.}{Tabs.}
-% \Crefname{table}{Tab.}{Tabs.}
-% \crefname{section}{Sec.}{Secs.}
-% \Crefname{section}{Sec.}{Secs.}
+% Part pages. KOMA centres the title vertically between \partheadstartvskip
+% and \partheadendvskip and nothing else, which leaves a lot of empty paper.
+% A hairline above and below gives the title something to sit in.
+% \hrule is used rather than \rule because these hooks run in vertical mode.
+% \rule would build an hbox at \linewidth, which on a wide part page overruns
+% the measure and reports an overfull box on every part.
+\renewcommand*{\partheadstartvskip}{%
+    \null\vfil
+    {\color{ThesisRule}\hrule height 0.4pt}%
+    \vspace{1.8\baselineskip}%
+}
+\renewcommand*{\partheadendvskip}{%
+    \vspace{1.8\baselineskip}%
+    {\color{ThesisRule}\hrule height 0.4pt}%
+    \vfil\newpage
+}
 
-% Standardized helper macros bridging to \cref
+
+% ---------------------------------------------------------------------------
+% 4. Captions
+%
+% The label carries the colour, the caption text stays black so it is easy to
+% read.
+%
+% Margin material is deliberately left alone. kaobook drives the margin column
+% through \marginfont, which it points at its own \@margin@par, and the margin
+% table of contents, sidenotes and margin citations all depend on that. Colour
+% them by hand and the layout goes with it.
+% ---------------------------------------------------------------------------
+
+\addtokomafont{captionlabel}{\color{ThesisPrimary}\bfseries}
+\addtokomafont{caption}{\small}
+
+
+% ---------------------------------------------------------------------------
+% 5. Links
+%
+% Internal cross references take the structural colour so they do not shout on
+% a page that is full of them. Citations and URLs, which send the reader
+% somewhere else, take the accent. To make everything amber, set linkcolor to
+% ThesisAccent as well.
+% ---------------------------------------------------------------------------
+
+\hypersetup{
+    colorlinks = true,
+    linkcolor  = ThesisPrimary,
+    citecolor  = ThesisAccent,
+    urlcolor   = ThesisAccent,
+    filecolor  = ThesisAccent,
+}
+
+
+% ---------------------------------------------------------------------------
+% 5a. Old two-letter font commands
+%
+% KOMA turns \rm, \it, \sc and the rest into errors, and the imported papers
+% still use them: the Koopman paper writes $\tau_{\rm EMA}$ and the CNA paper
+% uses \it in a caption. \DeclareOldFontCommand is the kernel's own way to
+% restore them with the right behaviour in text and in maths. It only works in
+% a preamble, so unlike the rest of the import compatibility this cannot be
+% scoped to the imported chapters. Thesis prose should still use \textit and
+% \textsc.
+% ---------------------------------------------------------------------------
+
+\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}
+\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}
+\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}
+\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}
+\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}
+
+% ---------------------------------------------------------------------------
+% 5b. Code listings
+%
+% listings reads its body byte by byte, so a multibyte character inside a
+% listing defeats inputenc and the run dies with "Invalid UTF-8 byte sequence".
+% One such character appears in the imported papers, an en dash in a COGITAO
+% prompt. `literate` is the package's own way of mapping them, and the few
+% extra entries here cover the punctuation a future re import is likely to
+% bring with it.
+% ---------------------------------------------------------------------------
+
+\lstset{
+    extendedchars = true,
+    literate = {–}{{-}}1 {—}{{---}}1 {‘}{{`}}1 {’}{{'}}1
+               {“}{{``}}1 {”}{{''}}1 {…}{{...}}3 {→}{{$\rightarrow$}}1
+               {≤}{{$\leq$}}1 {≥}{{$\geq$}}1 {×}{{$\times$}}1 {−}{{-}}1,
+}
+
+% ---------------------------------------------------------------------------
+% 5c. Float placement
+%
+% The imported papers were written for two column templates with wide text
+% blocks, and they carry a lot of floats: the COGITAO appendix alone has ten
+% wide tables in a row. kaobook's text block is narrower, so LaTeX's default
+% limits of three floats per page and 70 percent of a page fill the deferral
+% queue faster than it drains, and the output routine then spins on the same
+% page forever rather than failing. Relaxing the limits lets the queue drain.
+% ---------------------------------------------------------------------------
+
+\setcounter{topnumber}{5}
+\setcounter{bottomnumber}{3}
+\setcounter{totalnumber}{12}
+\setcounter{dbltopnumber}{5}
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.6}
+\renewcommand{\dblfloatpagefraction}{0.6}
+
+% ---------------------------------------------------------------------------
+% 6. Tables
+%
+% booktabs comes from kaobook. Give the rows room to breathe and make the
+% rules slightly lighter than the default, which is heavy under a serif face.
+% ---------------------------------------------------------------------------
+
+\renewcommand{\arraystretch}{1.18}
+\setlength{\heavyrulewidth}{0.9pt}
+\setlength{\lightrulewidth}{0.4pt}
+\setlength{\aboverulesep}{3pt}
+\setlength{\belowrulesep}{3pt}
+
+% A header row for tables that want one.
+\newcommand{\thead}[1]{\textcolor{ThesisPrimary}{\bfseries #1}}
+
+
+% ---------------------------------------------------------------------------
+% 7. Chapter furniture
+%
+% Every chapter built on a published paper opens the same way: a box naming
+% the publication, then a statement of what the thesis author contributed.
+% Both are defined here so that all seven chapters look identical and a change
+% of mind is a change in one place. CLAUDE.md section 4.3 has the full
+% chapter anatomy, and scripts/check_imports.py checks that each chapter has
+% these parts.
+% ---------------------------------------------------------------------------
+
+% \begin{publicationbasis}{Published}
+%   Full citation of the paper, ending in its \cite key.
+% \end{publicationbasis}
+\newtcolorbox{publicationbasis}[1]{%
+    enhanced,
+    breakable,
+    colback = ThesisTint,
+    frame hidden,
+    arc = 0pt,
+    outer arc = 0pt,
+    % An explicit accent bar. Setting leftrule after boxrule=0pt is unreliable
+    % in tcolorbox, so draw the bar rather than ask the frame for it.
+    borderline west = {2.5pt}{0pt}{ThesisPrimary},
+    left = 14pt, right = 12pt, top = 9pt, bottom = 9pt,
+    fontupper = \small,
+    before skip = 8pt,
+    after skip = 16pt,
+    before upper = {%
+        {\footnotesize\scshape\bfseries\color{ThesisPrimary}%
+            Publication basis of this chapter}%
+        \hfill
+        {\footnotesize\scshape\color{ThesisAccent}#1}%
+        \par\vspace{3pt}%
+        \textcolor{ThesisRule}{\rule{\linewidth}{0.4pt}}%
+        \par\vspace{5pt}%
+    },
+}
+
+% Opens the contribution statement. The prose follows it as ordinary text.
+\newcommand{\contributionstatement}{%
+    \section*{Contribution Statement}%
+    \addcontentsline{toc}{section}{Contribution Statement}%
+}
+
+% A short aside in the margin, for orienting the reader inside a long imported
+% chapter without touching the imported text.
+\newcommand{\thesisnote}[1]{%
+    \marginnote{\textcolor{ThesisPrimary}{\footnotesize #1}}%
+}
+
+
+% ---------------------------------------------------------------------------
+% 8. Cross referencing helpers
+%
+% All of these go through cleveref, so the name of the thing is produced
+% automatically and stays consistent.
+% ---------------------------------------------------------------------------
+
 \newcommand{\figref}[1]{\cref{#1}}
 \newcommand{\tabref}[1]{\cref{#1}}
 \newcommand{\secref}[1]{\cref{#1}}

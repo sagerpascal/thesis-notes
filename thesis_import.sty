@@ -1,0 +1,321 @@
+% thesis_import.sty
+%
+% Scoped inclusion of a published paper that lives under imported_papers/.
+%
+% The papers are never edited, so everything that has to change about them has
+% to change from the outside. This package does that for the three things that
+% break when a paper written as its own project is dropped into a thesis:
+%
+%   1. File paths. A paper's section file says \input{sections/04_1_foo},
+%      relative to the paper's own root. The paper's root is put on LaTeX's
+%      file search path for the duration of the chapter.
+%   2. Figure paths. Same problem, solved with \graphicspath.
+%   3. Label collisions. Six papers carry six sec:introduction labels. Every
+%      label and reference inside the block is prefixed with the paper's slug,
+%      so the paper's fig:overview becomes acu:fig:overview.
+%
+% Usage. Declare each paper once in the preamble:
+%
+%     \DeclareImportedPaper{acu}{imported_papers/ACU_JAIR}{figures}
+%
+% The third argument is a comma separated list of figure subdirectories inside
+% the paper, and may be empty. Then, in the chapter file:
+%
+%     \begin{importedpaper}{acu}
+%       \importsection{sections/02_field_of_agents}
+%       \importsection{sections/03_domain_perspective}
+%     \end{importedpaper}
+%
+% To point at something inside the paper from thesis owned text, use the
+% prefix: \cref{acu:fig:overview}. Inside the block, \thesisref{...} reaches a
+% thesis label without the prefix.
+%
+% One limitation, enforced by scripts/check_imports.py rather than by LaTeX.
+% \input@path is a fallback, not an override: LaTeX looks in the working
+% directory first and only then in the paper. So a thesis file whose path
+% matches one a paper asks for would shadow the paper's file. The thesis and
+% the papers use different naming schemes, and the checker fails if that ever
+% stops being true.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{thesis_import}[2026/09/06 v1.0 Scoped inclusion of imported papers]
+
+\RequirePackage{graphicx}
+
+\makeatletter
+
+% ---------------------------------------------------------------------------
+% Registry
+% ---------------------------------------------------------------------------
+
+\newcommand{\DeclareImportedPaper}[3]{%
+  \@namedef{ip@dir@#1}{#2}%
+  \@namedef{ip@gfx@#1}{#3}%
+}
+
+% ---------------------------------------------------------------------------
+% State
+% ---------------------------------------------------------------------------
+
+\newcommand{\ip@prefix}{}     % expands to `slug:` inside a block, empty outside
+\newcommand{\ip@slug}{}       % the current paper's slug
+\newcommand{\ip@dir}{}        % the current paper's directory, with no trailing /
+\newcommand{\ip@cwd}{}        % directory of the file being read, below \ip@dir
+
+% \subfile, from the subfiles package, resolves its argument relative to the
+% file that calls it rather than to the main document, and a paper written with
+% it nests: the root says \subfile{1_introduction/main.tex} and that file then
+% says \subfile{new_intro.tex}, meaning 1_introduction/new_intro.tex. Aliasing
+% \subfile to \input would look for the second one in the wrong place.
+%
+% We do not load the subfiles package, because it expects each sub-file to
+% carry its own \documentclass wrapper and it would fight kaobook. Tracking the
+% directory ourselves is enough, and \filename@parse is the kernel's own path
+% splitter. The group keeps \ip@cwd correct as the nesting unwinds.
+\newcommand{\ip@subfile}[1]{%
+  \begingroup
+    \filename@parse{#1}%
+    \edef\ip@cwd{\ip@cwd\filename@area}%
+    \edef\ip@target{\ip@dir/\ip@cwd\filename@base
+      \ifx\filename@ext\relax\else.\filename@ext\fi}%
+    \expandafter\input\expandafter{\ip@target}%
+  \endgroup
+}
+\newif\ifip@inside
+\providecommand*\input@path{}
+
+% ---------------------------------------------------------------------------
+% Label and reference rewriting
+%
+% Each patched command is defined once, here, and calls whatever the command
+% meant before the block was entered. \let swaps them in and out, so the
+% originals survive whatever cleveref and hyperref did to them.
+%
+% \eqref is deliberately not patched. amsmath defines it in terms of \ref, so
+% it picks up the prefix through the patched \ref. Patching it too would
+% prefix twice.
+% ---------------------------------------------------------------------------
+
+% Strip spaces from a macro's expansion. The kernel's \zap@space is delimited
+% by a space, so the call has to supply one, which is why this goes through a
+% helper rather than being written inline.
+\newcommand{\ip@zap}[1]{\expandafter\zap@space#1 \@empty}
+
+\newcommand{\ip@maplist}[1]{%
+  % Prefix every name in a comma separated list, leaving the result in \ip@acc.
+  \let\ip@acc\@empty
+  \@for\ip@item:=#1\do{%
+    \edef\ip@item{\ip@zap\ip@item}%
+    \ifx\ip@acc\@empty
+      \edef\ip@acc{\ip@prefix\ip@item}%
+    \else
+      \edef\ip@acc{\ip@acc,\ip@prefix\ip@item}%
+    \fi
+  }%
+}
+
+\NewDocumentCommand{\ip@label}{om}{%
+  \IfNoValueTF{#1}%
+    {\ip@save@label{\ip@prefix#2}}%
+    {\ip@save@label[#1]{\ip@prefix#2}}%
+}
+
+% Inside a display, amsmath replaces \label with \label@in@display, which
+% stashes the name and re-emits it after the display through amsmath's own
+% copy of \label. A patch to \label alone therefore misses every equation
+% label, and the reference to it would then be prefixed while the label was
+% not. Patching the stash is the right level: it still sees the bare name,
+% whether or not cleveref has wrapped the machinery underneath it.
+\NewDocumentCommand{\ip@label@in@display}{om}{%
+  \IfNoValueTF{#1}%
+    {\ip@save@label@in@display{\ip@prefix#2}}%
+    {\ip@save@label@in@display[#1]{\ip@prefix#2}}%
+}
+
+\NewDocumentCommand{\ip@ref}{sm}{%
+  \IfBooleanTF{#1}{\ip@save@ref*{\ip@prefix#2}}{\ip@save@ref{\ip@prefix#2}}%
+}
+
+\NewDocumentCommand{\ip@pageref}{sm}{%
+  \IfBooleanTF{#1}{\ip@save@pageref*{\ip@prefix#2}}{\ip@save@pageref{\ip@prefix#2}}%
+}
+
+\NewDocumentCommand{\ip@nameref}{m}{\ip@save@nameref{\ip@prefix#1}}
+\NewDocumentCommand{\ip@autoref}{sm}{%
+  \IfBooleanTF{#1}{\ip@save@autoref*{\ip@prefix#2}}{\ip@save@autoref{\ip@prefix#2}}%
+}
+
+\NewDocumentCommand{\ip@cref}{sm}{%
+  \ip@maplist{#2}%
+  \IfBooleanTF{#1}{\ip@save@cref*{\ip@acc}}{\ip@save@cref{\ip@acc}}%
+}
+
+\NewDocumentCommand{\ip@Cref}{sm}{%
+  \ip@maplist{#2}%
+  \IfBooleanTF{#1}{\ip@save@Cref*{\ip@acc}}{\ip@save@Cref{\ip@acc}}%
+}
+
+\NewDocumentCommand{\ip@crefrange}{smm}{%
+  \IfBooleanTF{#1}%
+    {\ip@save@crefrange*{\ip@prefix#2}{\ip@prefix#3}}%
+    {\ip@save@crefrange{\ip@prefix#2}{\ip@prefix#3}}%
+}
+
+\NewDocumentCommand{\ip@Crefrange}{smm}{%
+  \IfBooleanTF{#1}%
+    {\ip@save@Crefrange*{\ip@prefix#2}{\ip@prefix#3}}%
+    {\ip@save@Crefrange{\ip@prefix#2}{\ip@prefix#3}}%
+}
+
+% A caption that contains \ref writes that \ref, unprefixed, into the .lof or
+% .lot file. Those files are read back in the front matter, long after the
+% block has closed and the prefix has been cleared, so every such reference
+% came out undefined. Each entry is therefore wrapped in a command that
+% restores the paper's prefix for the length of the entry. The saved commands
+% are re-taken here rather than reused, because \ip@save@ref does not exist any
+% more by the time the list is typeset.
+\newcommand{\ip@withprefix}[2]{{%
+  \def\ip@prefix{#1:}%
+  \let\ip@save@ref\ref
+  \let\ip@save@pageref\pageref
+  \let\ref\ip@ref
+  \let\pageref\ip@pageref
+  \@ifundefined{cref}{}{%
+    \let\ip@save@cref\cref \let\ip@save@Cref\Cref
+    \let\cref\ip@cref \let\Cref\ip@Cref}%
+  #2}}
+
+\newcommand{\ip@acl@wrap}[3]{%
+  \begingroup
+    \edef\ip@acl{\endgroup
+      \noexpand\ip@save@addcontentsline{#1}{#2}%
+        {\noexpand\protect\noexpand\ip@withprefix{\ip@slug}{\unexpanded{#3}}}}%
+  \ip@acl
+}
+\let\ip@addcontentsline\ip@acl@wrap
+
+% Section titles reach the table of contents and also the PDF bookmarks, and
+% hyperref expands the entry to build the bookmark string. It does not know
+% \ip@withprefix and would fail on it, so it is told to take the text and drop
+% the prefix, which is right: a bookmark carries no cross reference anyway.
+\AtBeginDocument{%
+  \@ifundefined{pdfstringdefDisableCommands}{}{%
+    \pdfstringdefDisableCommands{\let\ip@withprefix\@secondoftwo}}%
+}
+
+% Swap one command for its patched twin, if the command exists at all.
+\newcommand{\ip@patch}[1]{%
+  \@ifundefined{#1}{}{%
+    \expandafter\let\csname ip@save@#1\expandafter\endcsname\csname #1\endcsname
+    \expandafter\let\csname #1\expandafter\endcsname\csname ip@#1\endcsname
+  }%
+}
+\newcommand{\ip@unpatch}[1]{%
+  \@ifundefined{ip@save@#1}{}{%
+    \expandafter\let\csname #1\expandafter\endcsname\csname ip@save@#1\endcsname
+  }%
+}
+
+\newcommand{\ip@allcommands}{label,label@in@display,ref,pageref,nameref,%
+autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
+
+% Reaching a thesis label from inside a block.
+\NewDocumentCommand{\thesisref}{sm}{%
+  \IfBooleanTF{#1}{\ip@plain@ref*{#2}}{\ip@plain@ref{#2}}%
+}
+\AtBeginDocument{\let\ip@plain@ref\ref}
+
+% ---------------------------------------------------------------------------
+% The environment
+% ---------------------------------------------------------------------------
+
+\newcommand{\ip@setgraphics}[1]{%
+  % Converted figures come first, so a PDF that scripts/convert_eps.py made
+  % from an EPS wins over the EPS sitting beside it in the paper.
+  \edef\ip@gpath{{generated/imported/\ip@slug/figures/}{\ip@dir/}}%
+  \edef\ip@gfxlist{#1}%
+  \ifx\ip@gfxlist\@empty\else
+    \@for\ip@g:=\ip@gfxlist\do{%
+      \edef\ip@g{\ip@zap\ip@g}%
+      \ifx\ip@g\@empty\else
+        \edef\ip@gpath{\ip@gpath{\ip@dir/\ip@g/}}%
+      \fi
+    }%
+  \fi
+  \expandafter\graphicspath\expandafter{\ip@gpath}%
+}
+
+\newenvironment{importedpaper}[1]{%
+  \ifip@inside
+    \PackageError{thesis_import}{importedpaper cannot be nested}{}%
+  \fi
+  \@ifundefined{ip@dir@#1}{%
+    \PackageError{thesis_import}{Unknown imported paper `#1'}%
+      {Declare it with \string\DeclareImportedPaper\space in the preamble.}%
+  }{}%
+  \ip@insidetrue
+  \edef\ip@dir{\@nameuse{ip@dir@#1}}%
+  \edef\ip@slug{#1}%
+  \edef\ip@prefix{#1:}%
+  % Search the paper's own root for \input, after the working directory.
+  \let\ip@save@inputpath\input@path
+  \edef\input@path{{\ip@dir/}}%
+  % Figures.
+  \let\ip@save@Ginput@path\Ginput@path
+  \ip@setgraphics{\@nameuse{ip@gfx@#1}}%
+  % Labels and references.
+  \@for\ip@c:=\ip@allcommands\do{\expandafter\ip@patch\expandafter{\ip@c}}%
+  % A paper that arrived as one file uses macros its own preamble defined.
+  % scripts/split_paper.py carries them across into _macros.tex. Loading them
+  % here keeps them inside this environment's group, so two papers may define
+  % the same macro name without clashing.
+  \InputIfFileExists{generated/imported/#1/_macros.tex}{}{}%
+  % Tempting, and it does not work: \pagelayout{wide} here cuts the overfull
+  % boxes from 151 to 41, because the papers were typeset for wide templates,
+  % but it also exhausts TeX's main memory in kaobook's output routine partway
+  % through the COGITAO appendix and produces no PDF at all. The overflow is
+  % cosmetic, a failed build is not.
+  % Papers built with the subfiles package.
+  \let\ip@save@subfile\subfile
+  \let\subfile\ip@subfile
+  \renewcommand{\ip@cwd}{}%
+}{%
+  % Flush this paper's floats before the next block starts. Without it one
+  % paper's deferred figures drift into the next paper's pages, and a long
+  % enough queue deadlocks the output routine.
+  \clearpage
+  \let\subfile\ip@save@subfile
+  \@for\ip@c:=\ip@allcommands\do{\expandafter\ip@unpatch\expandafter{\ip@c}}%
+  \let\Ginput@path\ip@save@Ginput@path
+  \let\input@path\ip@save@inputpath
+  \renewcommand{\ip@prefix}{}%
+  \ip@insidefalse
+}
+
+% One section of the current paper, named relative to the paper's root. For a
+% paper that arrived as split section files.
+\newcommand{\importsection}[1]{%
+  \ifip@inside\else
+    \PackageError{thesis_import}%
+      {\string\importsection\space outside an importedpaper environment}{}%
+  \fi
+  % Routed through \ip@subfile so that \ip@cwd is set to this file's own
+  % directory. A paper using \subfile nests relative to the including file, so
+  % the tracking has to start here rather than at the first \subfile.
+  \ip@subfile{#1}%
+}
+
+% One part of a paper that arrived as a single file. scripts/split_paper.py
+% cuts it at its \section boundaries and writes the pieces to
+% generated/imported/<slug>/, which is committed so that Overleaf can build
+% without running Python. Name the part without its .tex.
+\newcommand{\importpart}[1]{%
+  \ifip@inside\else
+    \PackageError{thesis_import}%
+      {\string\importpart\space outside an importedpaper environment}{}%
+  \fi
+  \input{generated/imported/\ip@slug/#1}%
+}
+
+\makeatother
+\endinput

@@ -1,0 +1,161 @@
+% references/manual.bib
+%
+% Thesis owned references: anything cited by the thesis frame that no imported
+% paper already carries. This is the only bibliography we write by hand.
+%
+% Corrections to references that come from an imported paper do not belong
+% here. Put those in references/overrides.toml.
+%
+% This file is an input to scripts/merge_bib.py and is listed first, so its
+% values win when a reference also appears in an imported bibliography.
+
+% The thesis author's own papers, cited by the publication header box of the
+% chapter each one backs. They appear in no imported bibliography, because a
+% paper does not cite itself.
+
+@article{acu_survey,
+  author  = {Sager, Pascal J. and Meyer, Benjamin and Yan, Ping and von Wartburg-Kottler, Rebekka and Etaiwi, Layan and Enayati, Aref and Nobel, Gabriel and Abdulkadir, Ahmed and Grewe, Benjamin F. and Stadelmann, Thilo},
+  title   = {A Comprehensive Survey of Agents for Computer Use: Foundations, Challenges, and Future Directions},
+  journal = {Journal of Artificial Intelligence Research},
+  volume  = {85},
+  pages   = {34},
+  year    = {2026}
+}
+
+% The remaining papers of the thesis author. Entries marked TODO carry a venue
+% or an author list that still has to be checked against the published record.
+
+@unpublished{sager_grokking_2026,
+  author = {Sager, Pascal J. and Grewe, Benjamin F. and Vilimelis Aceituno, Pau and Stadelmann, Thilo},
+  title  = {Grokking Beyond Backpropagation: The Learning Rule Decides How Many Units Carry the Solution},
+  year   = {2026},
+  note   = {Under review}
+}
+
+% TODO co-author list.
+@unpublished{sager_bounded_2026,
+  author = {Sager, Pascal J. and others},
+  title  = {Bounded Is Not Better: Trivial Baselines and Scale Confounds in Latent World-Model Evaluation},
+  year   = {2026},
+  note   = {In preparation}
+}
+
+% TODO venue and year. The vendored copy is the ICML 2025 submission.
+@misc{saponati_structures_2025,
+  author = {Saponati, Matteo and Sager, Pascal J. and Vilimelis Aceituno, Pau and Stadelmann, Thilo and Grewe, Benjamin F.},
+  title  = {The Underlying Structures of Self-Attention: Symmetry, Directionality, and Emergent Dynamics in Transformer Training},
+  year   = {2025},
+  note   = {Preprint}
+}
+
+% TODO volume, pages, year. The vendored copy is submission NECO-D-24-00304.
+@article{sager_cooperative_2025,
+  author  = {Sager, Pascal J. and Deriu, Jan M. and Grewe, Benjamin F. and Stadelmann, Thilo and von der Malsburg, Christoph},
+  title   = {The Cooperative Network Architecture: Learning Structured Networks as Representation of Sensory Patterns},
+  journal = {Neural Computation},
+  year    = {2025}
+}
+
+% TODO venue. The vendored copy uses the IEEE conference template.
+@inproceedings{meyer_hounsfield_2025,
+  author    = {Meyer, Benjamin and Sager, Pascal J. and Abdulkadir, Ahmed and Grewe, Benjamin F. and Schuetz, Philipp and Stadelmann, Thilo and Burn, Felice},
+  title     = {Hounsfield Unit Ranges as Inductive Bias for Intra-Clinical Learning of Data-Efficient {CT} Segmentation Models},
+  booktitle = {Proceedings of the 12th IEEE Swiss Conference on Data Science (SDS)},
+  year      = {2025}
+}
+
+@inproceedings{sager_deep_2025,
+  author    = {Sager, Pascal J. and Kamaraj, Ashwini and Grewe, Benjamin F. and Stadelmann, Thilo},
+  title     = {Deep Retrieval at {CheckThat!} 2025: Identifying Scientific Papers from Implicit Social Media Mentions via Hybrid Retrieval and Re-Ranking},
+  booktitle = {Working Notes of the Conference and Labs of the Evaluation Forum (CLEF 2025)},
+  series    = {CEUR Workshop Proceedings},
+  address   = {Madrid, Spain},
+  year      = {2025}
+}
+
+% TODO venue.
+@inproceedings{tuggener_private_2024,
+  author    = {Tuggener, Lukas and Sager, Pascal and Taoudi-Benchekroun, Yassine and Grewe, Benjamin F. and Stadelmann, Thilo},
+  title     = {So You Want Your Private {LLM} at Home? A Survey and Benchmark of Methods for Efficient {GPTs}},
+  booktitle = {Proceedings of the 11th IEEE Swiss Conference on Data Science (SDS)},
+  year      = {2024}
+}
+
+% TODO author list.
+@misc{cogitao,
+  author = {Taoudi-Benchekroun, Yassine and others},
+  title  = {{COGITAO}: A Visual Reasoning Framework To Study Compositionality \& Generalization},
+  year   = {2025},
+  note   = {Preprint}
+}
+
+% Background the introduction cites and no imported bibliography carries.
+
+@article{barlow_single_1972,
+  author  = {Barlow, Horace B.},
+  title   = {Single Units and Sensation: A Neuron Doctrine for Perceptual Psychology?},
+  journal = {Perception},
+  volume  = {1},
+  number  = {4},
+  pages   = {371--394},
+  year    = {1972}
+}
+
+@incollection{hinton_distributed_1986,
+  author    = {Hinton, Geoffrey E. and McClelland, James L. and Rumelhart, David E.},
+  title     = {Distributed Representations},
+  booktitle = {Parallel Distributed Processing: Explorations in the Microstructure of Cognition, Volume 1: Foundations},
+  editor    = {Rumelhart, David E. and McClelland, James L.},
+  publisher = {MIT Press},
+  address   = {Cambridge, MA},
+  pages     = {77--109},
+  year      = {1986}
+}
+
+@article{olshausen_emergence_1996,
+  author  = {Olshausen, Bruno A. and Field, David J.},
+  title   = {Emergence of Simple-Cell Receptive Field Properties by Learning a Sparse Code for Natural Images},
+  journal = {Nature},
+  volume  = {381},
+  pages   = {607--609},
+  year    = {1996}
+}
+
+@article{averbeck_neural_2006,
+  author  = {Averbeck, Bruno B. and Latham, Peter E. and Pouget, Alexandre},
+  title   = {Neural Correlations, Population Coding and Computation},
+  journal = {Nature Reviews Neuroscience},
+  volume  = {7},
+  pages   = {358--366},
+  year    = {2006}
+}
+
+@misc{power_grokking_2022,
+  author = {Power, Alethea and Burda, Yuri and Edwards, Harri and Babuschkin, Igor and Misra, Vedant},
+  title  = {Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets},
+  year   = {2022},
+  eprint = {2201.02177},
+  eprinttype = {arxiv}
+}
+
+@inproceedings{nanda_progress_2023,
+  author    = {Nanda, Neel and Chan, Lawrence and Lieberum, Tom and Smith, Jess and Steinhardt, Jacob},
+  title     = {Progress Measures for Grokking via Mechanistic Interpretability},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2023}
+}
+
+@inproceedings{chughtai_toy_2023,
+  author    = {Chughtai, Bilal and Chan, Lawrence and Nanda, Neel},
+  title     = {A Toy Model of Universality: Reverse Engineering How Networks Learn Group Operations},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2023}
+}
+
+@book{hebb_organization_1949,
+  author    = {Hebb, Donald O.},
+  title     = {The Organization of Behavior: A Neuropsychological Theory},
+  publisher = {Wiley},
+  address   = {New York},
+  year      = {1949}
+}

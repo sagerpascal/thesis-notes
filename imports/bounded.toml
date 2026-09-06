@@ -1,0 +1,42 @@
+# Bounded Is Not Better, TMLR rewrite of the Koopman-JEPA work.
+
+slug    = "bounded"
+dir     = "imported_papers/Koopman-JEPA-TMLR-rewrite"
+chapter = "sections/5-1_bounded.tex"
+title   = "Bounded Is Not Better"
+citation_key = "sager_bounded_2026"
+status  = "pending"
+layout  = "monolithic"
+source  = "main.tex"
+split   = "section"
+
+imported_on = "2026-09-06"
+upstream    = ""
+
+bib      = ["main.bib"]
+graphics = ["paper_figures"]
+
+# The template ships as a nested copy of its own repository, with a second
+# main.tex and math_commands.tex inside it. None of it is the paper.
+[drop]
+"(front matter)"   = "title, authors and abstract, replaced by the chapter introduction and the publication header box"
+"Introduction"     = "replaced by the chapter introduction"
+"Related Work"     = "covered by the thesis related work chapter"
+"Conclusions"      = "replaced by the chapter summary"
+
+[prune]
+"tmlr.sty"       = "TMLR template, the thesis uses kaobook"
+"tmlr.bst"       = "TMLR bibliography style, the thesis uses kaobiblio"
+"fancyhdr.sty"   = "bundled copy of a standard package"
+"style_check.sh" = "the paper's own style script"
+"tmlr-style-file-main/**" = "a vendored copy of the TMLR template repository, carrying a second main.tex and math_commands.tex"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"Implementation Details" = "appendix material of the paper"
+"The Soft Spectral Penalty" = "appendix material of the paper"
+"The Cayley Parameterization and Its DMD Warm-Start" = "appendix material of the paper"
+"Why Closed-Form Control Does Not Follow" = "appendix material of the paper"
+"Every Condition" = "appendix material of the paper"
+"Latent-Norm Drift and the Random Orthogonal Control" = "appendix material of the paper"
+"What Produced Each Number" = "appendix material of the paper"

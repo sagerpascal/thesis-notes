@@ -1,77 +1,69 @@
-%
-%
-The past decade of deep learning has produced systems of impressive capability, 
-yet their deployment in demanding real-world settings consistently exposes a 
-recurring cluster of failures: brittleness to distributional shift, inability 
-to compose learned concepts in novel ways, and error accumulation that renders 
-long-horizon planning unreliable. This thesis argues that these failures are 
-not incidental engineering shortcomings but structural consequences of how 
-current architectures represent knowledge. We propose a research direction that 
-moves from diagnosing these failures, through mitigating them with principled 
-constraints, toward a paradigm shift grounded in neuro-inspired computation.
+% English abstract. No coined vocabulary: "layout" is used as plain English
+% here and defined as a term only in the introduction.
 
-We begin with a comprehensive survey and taxonomy of agents for computer use 
-(ACUs), systems that automate complex tasks on digital devices given 
-natural-language instruction. Covering 87 research papers and 33 benchmark 
-datasets, we identify six persistent research gaps, including insufficient 
-generalisation, limited planning, and a disconnect between laboratory evaluation 
-and real-world deployment. We argue that these gaps are symptomatic of 
-structural limitations in the underlying learning paradigm rather than a matter 
-of scale alone. Two supporting studies corroborate this diagnosis from 
-independent directions. A benchmark of efficient large language models shows 
-that the compression methods currently needed to make these models accessible 
-systematically degrade the reasoning capabilities they are meant to preserve. 
-A compositional visual reasoning framework further demonstrates that 
-state-of-the-art architectures, including those with strong inductive biases 
-for compositionality, consistently fail to generalise to novel rule combinations.
+A network that has learned a task could have laid its solution out in many
+ways. The same function, at the same loss, can be carried by a few of its
+neurons or spread across all of them, and the weights that carry a computation
+can concentrate on a few directions or spread evenly. Neuroscience has long
+argued about sparse against distributed coding, and machine learning has mostly
+assumed that the task decides which layout a network reaches. This thesis shows
+that the layout of a learned solution is decided by the training procedure,
+that it can be read off the update equation and chosen, and that the choice
+trades robustness to damage against speed of adaptation. It closes with a
+proposal for representations in which the layout is built in rather than left
+to the rule.
 
-To understand the origin of these failures, we develop a mathematical framework 
-for analysing the representational geometry of self-attention matrices. We prove 
-that the choice of training objective, bidirectional versus autoregressive, 
-dictates a precise structural signature in the learned weight matrices: symmetry 
-in the former, directionality and column dominance in the latter. These results 
-are validated across ModernBERT, GPT, LLaMA3, and Mistral on text, vision, and 
-audio modalities. They establish that the geometry of learned representations is 
-a mathematical consequence of the training objective. Current architectures do 
-not discover structure in the world; they embed the statistical structure of 
-their loss function.
+The stake is set by a survey of $87$ papers and $33$ datasets on agents for
+computer use. The field builds its agents by one recipe, a pretrained
+foundation model adapted by prompting or behaviour cloning, and names
+inefficient learning and insufficient generalisation among its gaps. Both are
+properties of the trained network, so the thesis asks what in that recipe
+decides them.
 
-Given this diagnosis, we investigate whether imposing hard, mathematically 
-grounded constraints on deep learning systems can correct specific failure modes. 
-We introduce \textit{Koopman-JEPA}, a self-supervised world model that lifts 
-complex visual observations into a latent space governed by globally linear 
-dynamics. In standard nonlinear world models, approximation errors compound 
-exponentially across rollout steps via the Lipschitz constant of the composed 
-functions. By replacing these nonlinear rollouts with matrix multiplications 
-over a stable linear operator, error accumulation is bounded to grow linearly 
-with horizon. Three variants with progressively stronger spectral constraints 
-on the transition matrix culminate in a Cayley parameterisation that 
-architecturally enforces strict stability and satisfies the stabilisability 
-precondition of discrete-time linear quadratic regulation. Koopman variants 
-reduce long-horizon prediction error by up to 99\% on action-free tasks and 
-91\% on action-conditioned tasks at a ten-step horizon, while improving sample 
-efficiency by approximately sixteen-fold when only ten percent of training data 
-is available. Two complementary studies show that the constraint principle 
-generalises across domains. Encoding tissue-specific Hounsfield unit ranges as 
-binary input masks compensates for data scarcity in clinical CT segmentation, 
-and a hybrid retrieval architecture that grounds predictions via external 
-structured knowledge achieves first place on the CLEF CheckThat! 2025 
-development leaderboard without any external training data.
+The central study holds task, data, architecture and optimizer fixed and varies
+only the learning rule, in the grokking setting where a network fits its
+training data long before it generalises and its solution can be read neuron by
+neuron. Four of twelve rules never generalise, because their update does not
+vanish at the minima of the loss. Among those that do, loss, margin and weight
+norm agree while the number of neurons carrying the solution runs from about
+$150$ to $250$ of $256$. A rescaling of each neuron's share of the error that
+provably leaves the objective and every update direction unchanged moves that
+number across its full range, whether applied from the start or switched on
+after the network has generalised, so the layout is a state the rule
+maintains. Which rules spread the solution can be read from their update. Only
+rules that normalise one neuron at a time do, because a shared normaliser
+leaves the inequality within its group untouched, and that prediction places
+all eight published optimizers correctly. The layout has a price, proven and
+measured. Spread solutions survive neuron deletion far better, with the
+fluctuation falling as one over the square root of the effective number of
+units, and concentrated ones adapt to a new task about twice as fast.
 
-Finally, we ask whether constraint engineering alone is sufficient or whether 
-the representational substrate must itself change. We introduce the 
-\textit{Cooperative Network Architecture} (CNA), which replaces distributed 
-activation patterns with dynamically assembled, recurrently connected networks 
-of neurons called \textit{nets}, built from overlapping fragments learned 
-without supervision from regularities in sensory input. Because nets are 
-composable by construction, CNA exhibits figure completion, noise resilience, 
-and generalisation to out-of-distribution patterns without retraining. These 
-properties emerge from the representational principle of the architecture rather 
-than from loss engineering.
+The same question is asked of the weights that carry attention in a
+Transformer. Their update is a sum over the token pairs the objective lets one
+token use to predict another. An autoregressive objective uses each token as
+context for every later token but as target once, so a few columns come to
+dominate, and a bidirectional objective enters every pair in both orders, so
+the update is symmetric and the structure spreads. Both layouts appear in
+ModernBERT, GPT, LLaMA3 and Mistral across text, vision and audio, and
+initialising the weights symmetrically speeds up bidirectional training.
 
-Together, these contributions trace a path from empirical diagnosis through 
-principled mitigation to architectural reconception. We conclude that 
-constraint-based approaches offer the most immediate practical gains, but that 
-achieving robust and composable intelligence ultimately requires representational 
-structures that embed invariance and compositionality by design, a direction in 
-which neuro-inspired computation remains the most principled guide.
+Three shorter studies supply structure from outside the data: a spectral
+constraint on the latent dynamics of a world model, input masks derived from
+medical knowledge for CT segmentation, and an external index for retrieving
+scientific sources from social media posts. The last two pass their controls.
+The first is the cautionary case. The constraint wins by five orders of
+magnitude under the standard probe and by nothing under a readout that ignores
+latent scale, and predictors that learn no dynamics beat every learned model,
+so a property the loss leaves free had been imposed and read as learning.
+
+If the learning rule decides the layout and the layout has a price, the layout
+can instead be fixed in the architecture and learning left to fill in its
+parts. The Cooperative Network Architecture is a first implementation of that
+proposal. It represents a sensory pattern by a net, a set of neurons each
+supported by several others, assembled from fragments learned by Hebbian
+plasticity. Because support is built in, noise, which has none, is filtered
+even when more than half of the input is corrupted, occluded figures are
+completed, and fragments recombine into patterns never seen in training. The
+model does not yet scale beyond line drawings, and the thesis ends by setting
+out what a representation of this kind would need in order to serve as the
+state of an agent's model of its environment.

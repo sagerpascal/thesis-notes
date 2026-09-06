@@ -246,3 +246,17 @@ TSWLatexianTemp*
 *.spl
 
 .DS_Store
+*.pdf
+
+# The blanket *.pdf rule above is aimed at build output. It would otherwise
+# swallow every vendored figure and every figure scripts/convert_eps.py makes,
+# and Overleaf needs both committed because it cannot run the converter.
+!imported_papers/**/*.pdf
+!generated/**/*.pdf
+
+# Scratch output of scripts/check_compile.py.
+build/
+_compilecheck.*
+
+# JetBrains project files.
+.idea/

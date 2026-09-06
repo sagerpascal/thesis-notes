@@ -1,0 +1,93 @@
+# The mathematical structure of self-attention, ICML 2025 submission.
+#
+# The project ships three variants. ICML2025 is the one with split section
+# files and is the import source. Its own root file inputs everything with an
+# `ICML2025/` prefix, so the paper root is the project directory, not the
+# ICML2025 subdirectory.
+
+slug    = "attention"
+dir     = "imported_papers/self_attention_geometry_project_ICML"
+chapter = "sections/4-2_attention.tex"
+title   = "The Mathematical Structure of Self-Attention"
+citation_key = ""
+status  = "pending"
+layout  = "sections"
+source  = "ICML2025/OLDmain-ICML2025.tex"
+
+imported_on = "2026-05-21"
+upstream    = ""
+
+bib      = ["ICML2025/bib.bib"]
+graphics = ["ICML2025/figures", "ICML2025/figures/figures-pdf"]
+
+# Whole trees that are not part of this import.
+[exclude]
+"ICML2025-rebuttal/**" = "the response letter to the ICML reviewers, not part of the paper"
+"arXiv/**"             = "the arXiv variant, superseded by the ICML2025 tree"
+
+[drop]
+"ICML2025/OLDmain-ICML2025.tex" = "the paper's own root file, replaced by the chapter wrapper"
+"ICML2025/sections/abstract.tex"     = "the thesis has its own abstract"
+"ICML2025/sections/introduction.tex" = "replaced by the chapter introduction"
+"ICML2025/sections/discussion.tex"   = "replaced by the chapter summary and the thesis discussion"
+"ICML2025/supplementary/related-work.tex"                    = "the paper's own root file has this commented out"
+"ICML2025/supplementary/math-characterization-bilinear-form.tex" = "not reached from the paper's root file"
+"ICML2025/sections/realted-work.tex" = "covered by the thesis background chapter"
+
+[prune]
+"ICML2025/icml2025.sty"    = "ICML template, the thesis uses kaobook"
+"ICML2025/icml2025.bst"    = "ICML bibliography style, the thesis uses kaobiblio"
+"ICML2025/algorithm.sty"   = "bundled copy of a standard package"
+"ICML2025/algorithmic.sty" = "bundled copy of a standard package"
+"ICML2025/fancyhdr.sty"    = "bundled copy of a standard package"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"ICML2025/supplementary/math-proofs.tex" = "appendix material of the paper"
+"ICML2025/supplementary/experimental-details.tex" = "appendix material of the paper"
+"ICML2025/supplementary/supplementary-figures.tex" = "appendix material of the paper"
+"ICML2025/supplementary/supplementary-tables.tex" = "appendix material of the paper"
+"ICML2025/figures/suppfigure-encoder-decoder-models.tex" = "appendix material of the paper"
+"ICML2025/figures/suppfigure-pretrained-models.tex" = "appendix material of the paper"
+"ICML2025/figures/suppfigure-symmetric-initialization.tex" = "appendix material of the paper"
+"ICML2025/figures/suppfigure-training-custom-models-layers.tex" = "appendix material of the paper"
+"ICML2025/figures/suppfigure-training-custom-models.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-corollary-gradient-asymmetry-growth-rows-columns.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-corollary-gradient-directionality.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-lemma-decomposition-norm-symmetric-skew-symmetric.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-lemma-sequence-directionality_entropy.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-prop-counting-prediction-context.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-prop-directionality-score-properties.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-prop-gradient-asymmetric-growth-rows-columns.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-prop-gradient-columns-rows.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-prop-gradient-self-attention.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-prop-self-attention-bilinear-form.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-prop-symmetry-score-properties.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-theo-gradient-directionality.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof-theo-gradient-symmetry.tex" = "appendix material of the paper"
+"ICML2025/math/proofs/proof_lemma-probability_same_mean_different_variance.tex" = "appendix material of the paper"
+"ICML2025/math/statements/corollary-gradient-asymmetric-growth-rows-columns.tex" = "appendix material of the paper"
+"ICML2025/math/statements/corollary-gradient-directionality.tex" = "appendix material of the paper"
+"ICML2025/math/statements/def-bilinear-form.tex" = "appendix material of the paper"
+"ICML2025/math/statements/def-objective-functions.tex" = "appendix material of the paper"
+"ICML2025/math/statements/def-transformer-model.tex" = "appendix material of the paper"
+"ICML2025/math/statements/lemma-decomposition-norm-symmetric-skew-symmetric.tex" = "appendix material of the paper"
+"ICML2025/math/statements/lemma-probability_same_mean_different_variance.tex" = "appendix material of the paper"
+"ICML2025/math/statements/lemma-sequence-directionality-entropy.tex" = "appendix material of the paper"
+"ICML2025/math/statements/prop-counting-prediction-context.tex" = "appendix material of the paper"
+"ICML2025/math/statements/prop-gradient-asymmetric-growth-rows-columns.tex" = "appendix material of the paper"
+"ICML2025/math/statements/prop-gradient-columns-rows.tex" = "appendix material of the paper"
+"ICML2025/math/statements/prop-gradient-extreme-case.tex" = "appendix material of the paper"
+"ICML2025/math/statements/prop-rows-columns-prediction-context.tex" = "appendix material of the paper"
+"ICML2025/math/statements/prop-score-directionality-properties.tex" = "appendix material of the paper"
+"ICML2025/math/statements/prop-score-symmetry-properties.tex" = "appendix material of the paper"
+"ICML2025/math/statements/remark-gradient-symmetry-MLM.tex" = "appendix material of the paper"
+"ICML2025/math/statements/remark-self-attention-bilinear-form-multihead.tex" = "appendix material of the paper"
+"ICML2025/math/statements/remark-self-attention-bilinear-form-projection.tex" = "appendix material of the paper"
+"ICML2025/math/statements/remark-self-attention-gradient-WqWk.tex" = "appendix material of the paper"
+"ICML2025/math/statements/remark-self-attention-gradient-softmax.tex" = "appendix material of the paper"
+"ICML2025/math/statements/theo-gradient-directionality.tex" = "appendix material of the paper"
+"ICML2025/math/statements/theo-gradient-symmetry.tex" = "appendix material of the paper"
+"ICML2025/tables/supp-table-bert-configs.tex" = "appendix material of the paper"
+"ICML2025/tables/table-directionality-score-language.tex" = "appendix material of the paper"
+"ICML2025/tables/table-symmetry-score-language.tex" = "appendix material of the paper"

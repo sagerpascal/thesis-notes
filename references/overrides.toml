@@ -1,0 +1,98 @@
+# references/overrides.toml
+#
+# Hand corrections to the merged bibliography. This is the only place a
+# reference is ever fixed by hand. Never edit a bibliography under
+# imported_papers/, and never edit references/merged.bib, which is generated.
+#
+# After every change:
+#     uv run --no-project python scripts/merge_bib.py
+#
+# references/merge_report.md lists everything the script could not decide on
+# its own and prints a ready to paste block for each case.
+#
+# ---------------------------------------------------------------------------
+# 1. Correcting one entry
+# ---------------------------------------------------------------------------
+#
+# Address an entry by any key it has ever had: an original key from a source
+# bibliography, or the generated key. Whatever you set wins over whatever the
+# merge decided, and settles any conflict on that field.
+#
+#     [entry.zhao_survey_2023]
+#     doi = "10.48550/arXiv.2303.18223"
+#     journal = "Journal of Artificial Intelligence Research"
+#
+# Three directives are available alongside ordinary fields. They start with an
+# underscore, which no BibTeX field does.
+#
+#     _key    = "sager_survey_2026"   # pin the citation key
+#     _type   = "article"             # override the entry type
+#     _remove = ["note", "url"]       # delete fields
+#     _drop   = true                  # leave the entry out of the bibliography
+#
+# ---------------------------------------------------------------------------
+# 2. Two entries that are the same work
+# ---------------------------------------------------------------------------
+#
+# The script merges entries that share a DOI, an arXiv identifier, or a title
+# and first author. Anything looser is reported and left alone. Confirm a match
+# like this:
+#
+#     [[merge]]
+#     keys = ["radford2019language", "radford_gpt2_2019"]
+#     reason = "same technical report, one cited as a preprint"
+#
+# ---------------------------------------------------------------------------
+# 3. Two entries that only look like the same work
+# ---------------------------------------------------------------------------
+#
+# A split is permanent. The script will never merge these, whatever signal says
+# they match, which also covers the case of a shared DOI typo.
+#
+#     [[split]]
+#     keys = ["he2016deep", "he2016identity"]
+#     reason = "ResNet and the pre-activation follow up, different papers"
+#
+# ---------------------------------------------------------------------------
+# 4. Venue names, applied everywhere
+# ---------------------------------------------------------------------------
+#
+# One table per field. The left side is matched loosely, ignoring case,
+# punctuation and accents, so "Proc. of NIPS'16" and "proc of nips 16" are the
+# same probe. The right side is written out verbatim.
+#
+#     [replace.booktitle]
+#     "Proc. of NIPS'16" = "Advances in Neural Information Processing Systems"
+#
+#     [replace.journal]
+#     "TPAMI" = "IEEE Transactions on Pattern Analysis and Machine Intelligence"
+
+# ===========================================================================
+# Corrections
+# ===========================================================================
+
+# The GPT-3 entry in the ACU bibliography carries BERT's DOI, so the two
+# merged into one reference. The DOI below is GPT-3's own.
+[entry.brown_language_2020]
+doi = "10.48550/arXiv.2005.14165"
+
+[[split]]
+keys = ["brown_language_2020", "devlinBERTPretrainingDeep2019"]
+reason = "GPT-3 and BERT, merged only because the GPT-3 entry had BERT's DOI"
+
+# arXiv 2306.02552 was retitled between versions, so the ACU bibliography
+# holds it twice under two different titles. Same work.
+[[merge]]
+keys = ["wang_user_2024", "wang_when_2023"]
+reason = "same arXiv paper, title changed between v1 and the published version"
+
+
+# ===========================================================================
+# Venue names
+# ===========================================================================
+
+[replace.journal]
+
+[replace.booktitle]
+
+[replace.publisher]

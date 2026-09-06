@@ -1,39 +1,24 @@
 % =============================================================================
 \chapter{Agents for Computer Use: A Comprehensive Survey}
 \label{chap:acu}
+\margintoc
 % =============================================================================
 
 % ─────────────────────────────────────────────────────────────────────────────
 % PUBLICATION HEADER
 % ─────────────────────────────────────────────────────────────────────────────
 
-\begin{tcolorbox}[
-    colback=gray!6,
-    colframe=gray!35,
-    arc=3pt,
-    boxrule=0.4pt,
-    left=8pt, right=8pt, top=6pt, bottom=6pt
-]
-\small
-\textbf{Publication basis of this chapter}
-
-\medskip
+\begin{publicationbasis}{Published}
 Sager, P.\,J., Meyer, B., Yan, P., von Wartburg-Kottler, R., Etaiwi, L.,
 Enayati, A., Nobel, G., Abdulkadir, A., Grewe, B.\,F., \& Stadelmann, T.
 (2026). A comprehensive survey of agents for computer use: Foundations,
 challenges, and future directions. \textit{Journal of Artificial Intelligence
 Research}, \textit{85}, 34. \cite{acu_survey}
-
-\medskip
-\textbf{Status:} Published.
-\end{tcolorbox}
-
-\bigskip
+\end{publicationbasis}
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section*{Contribution Statement}
+\contributionstatement
 \label{sec:acu_contribution}
-\addcontentsline{toc}{section}{Contribution Statement}
 % ─────────────────────────────────────────────────────────────────────────────
 
 The thesis author holds shared first authorship on this work with Benjamin
@@ -106,7 +91,7 @@ the empirical foundation for the structural diagnosis developed in
 Part~\ref{part:diagnosis}.
 
 Section~\ref{sec:acu_methodology} describes the survey methodology.
-Sections~\ref{sec:field} through~\ref{sec:evaluation_agent} constitute the
+Sections~\ref{acu:sec:field} through~\ref{acu:sec:evaluation_agent} constitute the
 core survey content, reproduced from the published paper with minor
 reformatting for thesis consistency. Section~\ref{sec:acu_chapter_summary}
 provides a new chapter summary that draws out the specific implications of the
@@ -148,16 +133,15 @@ the literature is not repeated here.
 % ─────────────────────────────────────────────────────────────────────────────
 
 
-\input{imported_papers/ACU_JAIR/sections/02_field_of_agents}
-\input{imported_papers/ACU_JAIR/sections/03_domain_perspective}
-\input{imported_papers/ACU_JAIR/sections/04_interaction_perspective}
-% 04_1_observation_space and 04_2_action_space are included via
-% 04_interaction_perspective.tex through the forwarding stubs in
-% sections/ — including them again here would double-define labels.
-\input{imported_papers/ACU_JAIR/sections/05_agent_perspective}
-\input{imported_papers/ACU_JAIR/sections/06_datasets}
-\input{imported_papers/ACU_JAIR/sections/07_evaluation}
-\input{imported_papers/ACU_JAIR/sections/08_challenges}
+\begin{importedpaper}{acu}
+\importsection{sections/02_field_of_agents}
+\importsection{sections/03_domain_perspective}
+\importsection{sections/04_interaction_perspective}
+\importsection{sections/05_agent_perspective}
+\importsection{sections/06_datasets}
+\importsection{sections/07_evaluation}
+\importsection{sections/08_challenges}
+\end{importedpaper}
 
 
 % ─────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,35 @@
+# Hounsfield unit ranges as an inductive bias for CT segmentation, SDS.
+
+slug    = "hounsfield"
+dir     = "imported_papers/sds_hounsfield_features"
+chapter = "sections/5-2_hounsfield.tex"
+title   = "Input-Space Constraints via Domain Knowledge"
+citation_key = ""
+status  = "pending"
+layout  = "monolithic"
+source  = "main.tex"
+split   = "section"
+
+imported_on = "2026-05-21"
+upstream    = ""
+
+bib      = ["references_clean.bib"]
+graphics = ["figures", "figures/results"]
+
+[drop]
+"(front matter)"            = "title, authors and abstract, replaced by the chapter introduction and the publication header box"
+"Introduction"              = "replaced by the chapter introduction"
+"Related Work"              = "covered by the thesis related work chapter"
+"Discussion and Conclusions" = "replaced by the chapter summary"
+
+[prune]
+"IEEEtran.cls"          = "IEEE template, the thesis uses kaobook"
+"IEEEtran.bst"          = "IEEE bibliography style, the thesis uses kaobiblio"
+"IEEEtranS.bst"         = "IEEE bibliography style"
+"references.bib"        = "superseded by references_clean.bib"
+"references_clean2.bib" = "superseded by references_clean.bib"
+"old_stuff_backup/**"   = "an earlier draft kept only as a backup"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"Comparing to HU Windowing" = "appendix material of the paper"

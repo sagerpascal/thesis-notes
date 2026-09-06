@@ -1,3 +1,102 @@
-\chapter{Additional Material}
+% ===========================================================================
+% The thesis appendix carries each paper's own appendix. The parts come from
+% the [appendix] table of imports/<slug>.toml, and scripts/check_imports.py
+% fails if the table and the includes here disagree.
+% ===========================================================================
 
-Additional material goes here.
+\chapter{Agents for Computer Use}
+\label{app:acu}
+
+\begin{importedpaper}{acu}
+\importsection{sections/80_appendix.tex}
+\end{importedpaper}
+
+\chapter{COGITAO}
+\label{app:cogitao}
+
+\begin{importedpaper}{cogitao}
+\importsection{6_appendix/COGITAO_details.tex}
+\importsection{6_appendix/Metrics.tex}
+\importsection{6_appendix/Models.tex}
+\importsection{6_appendix/Results.tex}
+\importsection{6_appendix/Training.tex}
+\importsection{6_appendix/cogitao_learning_regime.tex}
+\importsection{6_appendix/llm_results.tex}
+\importsection{6_appendix/naturalistic_COGITAO.tex}
+\importsection{6_appendix/sequential_COGITAO.tex}
+\importsection{6_appendix/transformation_learnability.tex}
+\end{importedpaper}
+
+\chapter{The Learning Rule and the Layout}
+\label{app:grokking}
+
+\begin{importedpaper}{grokking}
+\importpart{08_the-grain-sweep-and-the-test-on-published-optimizers}
+\importpart{09_implementation-and-reproducibility}
+\importpart{10_interventions-that-separate-credit-from-the-gradient}
+\importpart{11_controls-and-alternative-explanations}
+\importpart{12_theory-in-tractable-models}
+\importpart{13_scope-and-limits-of-the-measures}
+\importpart{14_the-two-endpoint-rules-in-detail}
+\importpart{15_long-run-stability-and-rule-switching}
+\importpart{16_adaptation-to-a-new-operation}
+\importpart{17_generality-and-boundaries}
+\end{importedpaper}
+
+\chapter{The Structure of Self-Attention}
+\label{app:attention}
+
+\begin{importedpaper}{attention}
+\label{sec-experimental-details}
+\importsection{ICML2025/math/proofs/proof-lemma-sequence-directionality_entropy.tex}
+\importsection{ICML2025/math/statements/lemma-sequence-directionality-entropy.tex}
+\importsection{ICML2025/math/statements/prop-gradient-extreme-case.tex}
+\importsection{ICML2025/math/statements/prop-rows-columns-prediction-context.tex}
+\importsection{ICML2025/math/statements/remark-self-attention-gradient-softmax.tex}
+\importsection{ICML2025/supplementary/experimental-details.tex}
+\importsection{ICML2025/supplementary/math-proofs.tex}
+\importsection{ICML2025/supplementary/supplementary-figures.tex}
+\importsection{ICML2025/supplementary/supplementary-tables.tex}
+\end{importedpaper}
+
+\chapter{Latent World-Model Evaluation}
+\label{app:bounded}
+
+\begin{importedpaper}{bounded}
+\importpart{09_implementation-details}
+\importpart{10_the-soft-spectral-penalty}
+\importpart{11_the-cayley-parameterization-and-its-dmd-warm-start}
+\importpart{12_why-closed-form-control-does-not-follow}
+\importpart{13_every-condition}
+\importpart{14_latent-norm-drift-and-the-random-orthogonal-control}
+\importpart{15_what-produced-each-number}
+\end{importedpaper}
+
+\chapter{Hounsfield Unit Ranges}
+\label{app:hounsfield}
+
+\begin{importedpaper}{hounsfield}
+\importpart{08_comparing-to-hu-windowing}
+\end{importedpaper}
+
+\chapter{Hybrid Retrieval}
+\label{app:retrieval}
+
+\begin{importedpaper}{retrieval}
+\importsection{sections/10_appendix.tex}
+\end{importedpaper}
+
+\chapter{The Cooperative Network Architecture}
+\label{app:cna}
+
+\begin{importedpaper}{cna}
+\importpart{09_appendix}
+\importpart{10_feature-extraction}
+\importpart{11_normalization}
+\importpart{12_single-weight-kernel-implementation}
+\importpart{13_dataset}
+\importpart{14_training-parameters}
+\importpart{15_autoencoder-training}
+\importpart{16_quantifying-noise-filtration}
+\end{importedpaper}
+

@@ -1,0 +1,65 @@
+# COGITAO, a visual reasoning framework for compositionality and generalization.
+#
+# Written with the subfiles package: the root says \subfile{1_introduction/main.tex}
+# and that file says \subfile{new_intro.tex}, meaning a path relative to itself.
+# thesis_import.sty tracks that, so the chapter includes the same way any other
+# sections paper does. None of the leaves carries a \documentclass wrapper, so
+# the subfiles package itself is not needed.
+
+slug    = "cogitao"
+dir     = "imported_papers/COGITAO_ICML_2026"
+chapter = "sections/3-3_cogitao.tex"
+title   = "COGITAO: Compositionality and Generalization"
+citation_key = "cogitao"
+status  = "pending"
+layout  = "sections"
+# The root file is dropped, but its preamble defines macros the kept text
+# uses, so the splitter reads it and writes generated/imported/cogitao/_macros.tex.
+source  = "main.tex"
+
+imported_on = "2026-09-06"
+upstream    = ""
+
+bib      = ["references.bib"]
+graphics = ["Figures"]
+
+[exclude]
+"deprecated/**" = "an earlier NeurIPS version kept only as a backup"
+
+[drop]
+"6_appendix/LLM_Prompts.tex" = "147 lines of raw LLM prompts in lstlisting. kaobook's margin-aware output routine exhausts TeX's main memory partway through them and the build produces no PDF. Restore it if the prompts are shortened or moved out of a listing."
+"6_appendix/main.tex" = "only a list of \\subfile calls, one of which is the broken Experiments.tex. The thesis appendix includes its children directly and supplies its own heading."
+"6_appendix/Experiments.tex" = "the outermost \\begin{itemize} on line 9 is never closed, which swallows the rest of the thesis. Restore this once it is fixed upstream."
+"main.tex"                = "the paper's own root file, replaced by the chapter wrapper"
+"iclr2026_conference.tex" = "the ICLR template's own sample document, not the paper"
+"abstract_ICLR.tex"       = "the thesis has its own abstract"
+"abstract_NIPS.tex"       = "an alternative abstract for a different venue"
+"checklist.tex"           = "the venue's submission checklist"
+"math_commands.tex"       = "the paper's notation, carried into _macros.tex by the splitter"
+"1_introduction/main.tex"     = "replaced by the chapter introduction"
+"1_introduction/new_intro.tex" = "replaced by the chapter introduction"
+"1_introduction/intro_old.tex" = "a superseded draft of the introduction"
+"2_related_works/main.tex"    = "covered by the thesis related work chapter"
+"5_discussion/main.tex"       = "replaced by the chapter summary"
+
+[prune]
+"iclr2026_conference.sty" = "ICLR template, the thesis uses kaobook"
+"iclr2026_conference.bst" = "ICLR bibliography style, the thesis uses kaobiblio"
+"iclr2026_conference.bib" = "the template's sample bibliography, the paper cites references.bib"
+"iclr2026_conference.log" = "build artefact"
+"iclr2026_conference.pdf" = "built output of the template sample"
+"natbib.sty"              = "bundled copy of a standard package"
+"fancyhdr.sty"            = "bundled copy of a standard package"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"6_appendix/COGITAO_details.tex" = "appendix material of the paper"
+"6_appendix/Metrics.tex" = "appendix material of the paper"
+"6_appendix/Models.tex" = "appendix material of the paper"
+"6_appendix/Results.tex" = "appendix material of the paper"
+"6_appendix/Training.tex" = "appendix material of the paper"
+"6_appendix/cogitao_learning_regime.tex" = "appendix material of the paper"
+"6_appendix/llm_results.tex" = "appendix material of the paper"
+"6_appendix/naturalistic_COGITAO.tex" = "appendix material of the paper"
+"6_appendix/sequential_COGITAO.tex" = "appendix material of the paper"
+"6_appendix/transformation_learnability.tex" = "appendix material of the paper"

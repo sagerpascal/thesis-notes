@@ -1,0 +1,42 @@
+# The Cooperative Network Architecture, Neural Computation.
+#
+# One file. Its appendix is a run of \section commands after \section*{Appendix},
+# so the split has to keep that boundary in mind when the appendix material is
+# placed in the thesis appendix.
+
+slug    = "cna"
+dir     = "imported_papers/Neural_Computation__CNA"
+chapter = "sections/6-1_cna.tex"
+title   = "The Cooperative Network Architecture"
+citation_key = ""
+status  = "pending"
+layout  = "monolithic"
+source  = "NECO-D-24-00304-Source.tex"
+split   = "section"
+
+imported_on = "2026-05-21"
+upstream    = ""
+
+bib      = []               # the source file carries its bibliography inline
+graphics = ["pdf_images"]
+
+[drop]
+"(front matter)"            = "title, authors and abstract, replaced by the chapter introduction and the publication header box"
+"Introduction"              = "replaced by the chapter introduction"
+"Discussion and Outlook"    = "replaced by the chapter summary and the thesis discussion"
+"Funding"                   = "belongs to the paper, not to the thesis"
+"Data Availability Statement" = "belongs to the paper, not to the thesis"
+
+[prune]
+"apa_old.bst" = "APA bibliography style, the thesis uses kaobiblio"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"Appendix" = "appendix material of the paper"
+"Feature Extraction" = "appendix material of the paper"
+"Normalization" = "appendix material of the paper"
+"Single Weight-Kernel Implementation" = "appendix material of the paper"
+"Dataset" = "appendix material of the paper"
+"Training Parameters" = "appendix material of the paper"
+"Autoencoder Training" = "appendix material of the paper"
+"Quantifying Noise Filtration" = "appendix material of the paper"

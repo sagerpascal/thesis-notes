@@ -1,0 +1,51 @@
+# Grokking beyond backpropagation, ICLR 2027 submission.
+#
+# Vendored from the paper directory of the project repository only. The
+# upstream project is a full research codebase and none of it except
+# docs/paper/ belongs in the thesis.
+
+slug    = "grokking"
+dir     = "imported_papers/grokking"
+chapter = "sections/4-1_grokking.tex"
+title   = "Grokking Beyond Backpropagation"
+citation_key = "sager_grokking_2026"
+status  = "pending"
+layout  = "monolithic"
+source  = "iclr2027_conference_v2.tex"
+split   = "section"
+
+imported_on = "2026-09-06"
+upstream    = ""            # <repo>/docs/paper, contents copied into `dir`
+
+bib      = ["iclr2027_conference.bib"]
+graphics = ["figures", "figures/data"]
+
+[drop]
+"(front matter)"        = "title, authors and abstract, replaced by the chapter introduction and the publication header box"
+"Introduction"          = "replaced by the chapter introduction"
+"Background and related work" = "covered by the thesis related work chapter"
+"Discussion and conclusion"   = "replaced by the chapter summary and the thesis discussion"
+
+[prune]
+"iclr2027_conference.sty" = "ICLR template, the thesis uses kaobook"
+"iclr2027_conference.bst" = "ICLR bibliography style, the thesis uses kaobiblio"
+"iclr2027_conference.tex" = "the ICLR template's own sample document, not the paper"
+"natbib.sty"              = "bundled copy of a standard package"
+"fancyhdr.sty"            = "bundled copy of a standard package"
+"compile.sh"              = "the paper's own build script"
+"*.fls"                   = "pdflatex build artefact"
+"*.fdb_latexmk"           = "latexmk build artefact"
+"iclr2027_conference_v2.pdf" = "built output of the paper"
+
+# Parts the thesis carries in its appendix rather than in the chapter.
+[appendix]
+"The grain sweep and the test on published optimizers" = "appendix material of the paper"
+"Implementation and reproducibility" = "appendix material of the paper"
+"Interventions that separate credit from the gradient" = "appendix material of the paper"
+"Controls and alternative explanations" = "appendix material of the paper"
+"Theory in tractable models" = "appendix material of the paper"
+"Scope and limits of the measures" = "appendix material of the paper"
+"The two endpoint rules in detail" = "appendix material of the paper"
+"Long run stability and rule switching" = "appendix material of the paper"
+"Adaptation to a new operation" = "appendix material of the paper"
+"Generality and boundaries" = "appendix material of the paper"
