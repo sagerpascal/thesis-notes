@@ -258,7 +258,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{Introduction and Background}
+\part{Introduction and Background}\label{part:background}
 \pagelayout{margin}
 
 \chapter{Introduction}\label{chap:introduction}
@@ -274,7 +274,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{Agents Built by One Recipe}
+\part{Agents Built by One Recipe}\label{part:agents}
 \pagelayout{margin}
 
 % A paper backed chapter opens its own \chapter and \margintoc, because the
@@ -294,7 +294,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{The Training Procedure Decides the Layout}
+\part{The Training Procedure Decides the Layout}\label{part:procedure}
 \pagelayout{margin}
 
 \input{sections/4-1_grokking}
@@ -306,7 +306,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{Structure Supplied from Outside the Data}
+\part{Structure Supplied from Outside the Data}\label{part:structure}
 \pagelayout{margin}
 
 \input{sections/5-1_bounded}
@@ -320,7 +320,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{A Layout Fixed by Construction}
+\part{A Layout Fixed by Construction}\label{part:construction}
 \pagelayout{margin}
 
 \input{sections/6-1_cna}
@@ -330,7 +330,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\addpart{Synthesis}
+\part{Synthesis}\label{part:synthesis}
 \pagelayout{margin}
 
 \chapter{Discussion}\label{chap:discussion}
@@ -344,6 +344,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 \appendix % From here onwards, chapters are numbered with letters, as is the appendix convention
 
 \pagelayout{wide} % No margins
+% Unnumbered, because the appendix is not one of the argument's parts.
 \addpart{Appendix}
 \pagelayout{margin} % Restore margins
 

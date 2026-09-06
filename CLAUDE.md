@@ -264,6 +264,11 @@ is thesis work, and it happens in the thesis frame, never by editing the papers.
 - A term's single definition site is in the thesis frame if the thesis frame
   uses it, even if an imported chapter also defines it. The imported definition
   is left alone and the frame definition is the one the reader is sent to.
+- The six argument parts are numbered and labelled, so a chapter may refer to
+  one: `part:background`, `part:agents`, `part:procedure`, `part:structure`,
+  `part:construction`, `part:synthesis`. The appendix part is deliberately
+  unnumbered, because it is not part of the argument. Rename a label with its
+  part, and keep the two in step.
 - Keep a ledger of thesis wide terms in `imports/glossary.toml`, one entry per
   term with its definition site and any per chapter synonyms. Add a term the day
   it is coined.
@@ -859,17 +864,15 @@ and `generated/` trees, and all seven scripts.
    `chap:constraints`, `chap:contextual`, `chap:dfc`, `chap:koopman`,
    `chap:relatedwork`, `chap:selfattention`, `sec:acu_methodology` and the
    three `part:` references. They go when the introduction and the background
-   chapter are rewritten.
+   chapter are rewritten. The parts they mean do exist and are labelled, see
+   Section 3.9, so those three are a matter of writing the right name.
 
    The other two are upstream and cannot be fixed from the thesis.
    `attention:eq:weight-update-bilinear-form-prediction` exists only in the
    rebuttal variant, which the thesis does not import, and
    `tab:se_all_experiments` is issue 10. `check_imports.py` reports both, with
    the file each target lives in.
-9. **Part references can never resolve.** `main.tex` uses `\addpart`, which
-   makes parts unnumbered, so there is no number for `\ref` to print. Either
-   number the parts or name them by title.
-10. **Two upstream bugs in COGITAO.** `tab:se_all_experiments` in
+9. **Two upstream bugs in COGITAO.** `tab:se_all_experiments` in
     `transformation_learnability.tex` has a `\label` and no `\caption`, so
     the reference to it cannot resolve.
 
@@ -888,24 +891,24 @@ and `generated/` trees, and all seven scripts.
     around from the chapter rather than dropped, see Section 4.4. Fixing it
     upstream means deleting the optional argument there, and the checker says
     so when that day comes.
-11. **`6_appendix/LLM_Prompts.tex` cannot be included.** Six `lstlisting`
+10. **`6_appendix/LLM_Prompts.tex` cannot be included.** Six `lstlisting`
     environments over 177 lines. kaobook's output routine holds the whole
     listing in `\@outputbox` and exhausts TeX's main memory partway through,
     and the build then produces no PDF at all. It compiles on its own in a
     short document, so testing it outside the thesis proves nothing. The
     thesis appendix carries a short section in its place. Restore it if the
     prompts are shortened or taken out of a listing.
-12. **The CNA bibliography is converted, not real.** Its 52 references came
+11. **The CNA bibliography is converted, not real.** Its 52 references came
     from `\bibitem` entries, so author and title are as good as a formatted
     string allows. Ask for the paper's original `.bib`.
-13. **Untested on Overleaf.** Linux is case sensitive and has no Python. Every
+12. **Untested on Overleaf.** Linux is case sensitive and has no Python. Every
     generated artefact is committed, so the build should not need a script,
     but nobody has run it there. COGITAO's `Figures` against `figures` will
-    fail, see issue 10.
+    fail, see issue 9.
 
 ### Style
 
-14. **61 overfull boxes, one over 100pt.** None is in a table any more:
+13. **61 overfull boxes, one over 100pt.** None is in a table any more:
     40 are display equations set for a wider measure and 21 are paragraphs.
 
     ```bash
@@ -915,7 +918,7 @@ and `generated/` trees, and all seven scripts.
     reports each with the file and the PDF page it came from.
     `\emergencystretch` inside the block was tried and changes nothing,
     because what is left has no legal break to find.
-15. **Twelve captions out of 132 sit in the text block** rather than in the
+14. **Twelve captions out of 132 sit in the text block** rather than in the
     margin, because the float is too wide for a caption beside it and floatrow
     falls back. It is automatic and it looks right where it happens. Listed
     only so nobody reports it twice.
