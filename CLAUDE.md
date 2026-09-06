@@ -931,6 +931,14 @@ and `generated/` trees, and all seven scripts.
     reports each with the file and the PDF page it came from.
     `\emergencystretch` inside the block was tried and changes nothing,
     because what is left has no legal break to find.
+
+    Most of the displays overflow into the margin, which is white space, and
+    read as wide rather than broken. Two do not: PDF pages 280 and 292, both
+    in the self attention proof appendix, put an equation number within 4mm of
+    the paper edge. Fixing them means scaling display math, which would leave
+    the mathematics at two sizes across the thesis to repair two pages, so it
+    has been left. The measurement that finds them is the maximum x of any
+    word on the page against the 597pt paper width.
 14. **Twelve captions out of 132 sit in the text block** rather than in the
     margin, because the float is too wide for a caption beside it and floatrow
     falls back. It is automatic and it looks right where it happens. Listed
