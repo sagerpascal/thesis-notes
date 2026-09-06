@@ -846,7 +846,20 @@ and `generated/` trees, and all seven scripts.
    and page numbers to check against the published record.
 6. **The title is a working title.** Alternatives are in
    `00_ADMIN/05_thesis_concept.md`.
-7. **The preface argues the old story.** It talks about synthesising two
+7. **Page 1 of the PDF is the faculty's blank title form.**
+   `figures/Titelblatt_E_POV2011.pdf`, included whole, still carrying its
+   instruction bubbles and its dotted lines. It needs the committee names, the
+   citizenship line and the year of graduation, and its bold text has to be
+   adopted verbatim, so it cannot be filled in from here. kaobook's own title
+   page follows it on page 3. Replace the form with the completed version, and
+   decide whether both title pages belong in the final document.
+8. **Whether to use `\sidecite` is undecided.** Margin citations would suit
+   kaobook, but the margin already carries about 120 float captions, and
+   almost every citation in the thesis is inside an imported paper, so
+   converting them would change how nine published papers look. Deciding which
+   citations are important enough is a judgement about the text. Nothing has
+   been converted.
+9. **The preface argues the old story.** It talks about synthesising two
    paradigms and about deep generative world models, which is the framing the
    Koopman paper's rewrite retired.
 
