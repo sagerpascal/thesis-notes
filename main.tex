@@ -161,9 +161,10 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 
 \subject{Doctoral Dissertation}
 % Working title, chosen on 2026-09-06. The story is in 00_ADMIN/05_thesis_concept.md.
-\title[Sparse or Distributed Is a Choice]{
-    Sparse or Distributed Is a Choice
-}
+% One definition, so the preface and anywhere else that names the thesis
+% cannot drift from the title page.
+\newcommand{\thesistitle}{Sparse or Distributed Is a Choice}
+\title[\thesistitle]{\thesistitle}
 \subtitle{How Training Decides the Layout of a Neural Network's Solution, and What the Layout Costs}
 
 \author[Pascal Sager]{Pascal Sager}
