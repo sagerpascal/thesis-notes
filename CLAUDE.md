@@ -783,6 +783,30 @@ Full citation of the paper, ending in its \cite key.
 
 `check_imports.py` checks that each chapter has both.
 
+Citations go in the margin. `\sidecite` sets the usual numeric marker in the
+text and puts the work's author, year and title beside it, which is what
+kaobook's wide margin is for. It is applied by patching `\cite`, `\parencite`
+and `\textcite`, the three biblatex commands everything else routes through,
+so all nine papers get it without one of them being edited. `\ts@sidecitefalse`
+turns the whole thing off.
+
+Three rules decide whether a citation goes to the margin, and together they
+are what keeps the column inside the page.
+
+A citation of several works at once does not go there. Five references stacked
+in the margin swamp the page and the marker in the text is one bracket either
+way.
+
+A citation outside running text does not. Beside a float the margin already
+carries that float's caption, a caption's citation is re-executed when the
+list of figures is typeset, and a table cell has no margin of its own.
+
+A work already introduced in this chapter does not. This is the rule that
+does the work: of the 588 single key citations in the thesis only 276 are a
+work's first mention in its chapter, and without it five pages had margin
+notes running off the paper. With it, no page does. The measurement is the
+maximum y of any word in the margin column against the 842pt page height.
+
 Float pages are top aligned. LaTeX centres them, because `\@fptop` and
 `\@fpbot` are both infinitely stretchable, and a single table on such a page
 then floats a third of the way down with white above and below it and reads as
@@ -846,20 +870,15 @@ and `generated/` trees, and all seven scripts.
    and page numbers to check against the published record.
 6. **The title is a working title.** Alternatives are in
    `00_ADMIN/05_thesis_concept.md`.
-7. **Page 1 of the PDF is the faculty's blank title form.**
-   `figures/Titelblatt_E_POV2011.pdf`, included whole, still carrying its
-   instruction bubbles and its dotted lines. It needs the committee names, the
-   citizenship line and the year of graduation, and its bold text has to be
-   adopted verbatim, so it cannot be filled in from here. kaobook's own title
-   page follows it on page 3. Replace the form with the completed version, and
-   decide whether both title pages belong in the final document.
-8. **Whether to use `\sidecite` is undecided.** Margin citations would suit
-   kaobook, but the margin already carries about 120 float captions, and
-   almost every citation in the thesis is inside an imported paper, so
-   converting them would change how nine published papers look. Deciding which
-   citations are important enough is a judgement about the text. Nothing has
-   been converted.
-9. **The preface argues the old story.** It talks about synthesising two
+7. **Page 1 of the PDF is the faculty's blank title form.** The faculty
+   requires this page and it is not to be replaced with a designed one, so
+   `figures/Titelblatt_E_POV2011.pdf` stays where it is. What is still open is
+   that the vendored copy is the blank template, instruction bubbles and
+   dotted lines included. It needs the committee names, the citizenship line
+   and the year of graduation, and its bold text has to be adopted verbatim,
+   so it cannot be filled in from here. Drop the completed PDF in over it.
+   kaobook's own title page follows on page 3 and is a separate choice.
+8. **The preface argues the old story.** It talks about synthesising two
    paradigms and about deep generative world models, which is the framing the
    Koopman paper's rewrite retired.
 

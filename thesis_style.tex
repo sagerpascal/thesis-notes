@@ -280,3 +280,128 @@
 \newcommand{\chapref}[1]{\cref{#1}}
 \newcommand{\eqnref}[1]{\cref{#1}}
 \newcommand{\appref}[1]{\cref{#1}}
+
+% ---------------------------------------------------------------------------
+% 9. Margin citations
+%
+% kaobiblio's \sidecite sets the usual numeric marker in the text and puts the
+% work's author, year and title in the margin, so a reader can see what is
+% being cited without turning to the bibliography. kaobook's wide margin is
+% there for exactly this.
+%
+% It is applied by patching the three biblatex commands the thesis actually
+% reaches: \cite, \parencite and \textcite. Everything else routes through
+% them, because main.tex defines \citet, \citep and \citepeg as wrappers, so
+% patching three commands covers all nine papers without touching one of them.
+%
+% Two rules decide whether a citation goes to the margin.
+%
+% A citation of several works at once does not. Five full references stacked
+% in the margin swamp the page, and the marker in the text is one bracket
+% either way. Single key citations are the ones a reader might want to look
+% up in place.
+%
+% A citation outside running text does not. The margin beside a float already
+% carries that float's caption, a caption's citation is re-executed when the
+% list of figures is typeset, and a table cell has no margin of its own. In
+% all of those the margin is either taken or does not exist, so the plain
+% citation is used.
+%
+% And a work already introduced in this chapter does not. Printing the same
+% author, year and title five times down one margin tells the reader nothing
+% the first one did not, and it is what fills the column: of the 588 single
+% key citations in the thesis, only 276 are a work's first mention in its
+% chapter. Restricting to those is what keeps the margin inside the page.
+% ---------------------------------------------------------------------------
+
+\makeatletter
+
+\newif\ifts@sidecite \ts@sidecitetrue   % the feature switch
+\newif\ifts@margfree \ts@margfreetrue   % is the margin usable right here?
+\newif\ifts@useside
+
+% The flag is per chapter, and the chapter number is part of its name rather
+% than something to reset, so the appendix and the front matter get their own
+% without any bookkeeping.
+\newcommand{\ts@markseen}[1]{%
+  \expandafter\gdef\csname ts@seen@\thechapter @#1\endcsname{}}
+
+\newcommand{\ts@decide}[1]{%
+  \ts@usesidefalse
+  \ifts@sidecite
+    \ifts@margfree
+      \in@{,}{#1}%
+      \ifin@\else
+        \@ifundefined{ts@seen@\thechapter @#1}{%
+          \ts@usesidetrue \ts@markseen{#1}%
+        }{}%
+      \fi
+    \fi
+  \fi
+}
+
+% \sidecite and its siblings set the in-text marker by calling \cite,
+% \parencite and \textcite. Those are the commands being patched, so the
+% originals have to be back in scope before one of them is called, or it calls
+% itself for ever.
+\newcommand{\ts@plaincites}{%
+  \let\cite\ts@save@cite
+  \let\parencite\ts@save@parencite
+  \let\textcite\ts@save@textcite
+}
+
+% biblatex takes [prenote][postnote]{keys}; \sidecite takes a vertical shift
+% first, so the notes shift one place along.
+\newcommand{\ts@dispatch}[5]{%
+  \ts@decide{#5}%
+  \ifts@useside
+    {\ts@plaincites
+     \IfNoValueTF{#3}{#1{#5}}%
+       {\IfNoValueTF{#4}{#1[][#3]{#5}}{#1[][#3][#4]{#5}}}}%
+  \else
+    \IfNoValueTF{#3}{#2{#5}}%
+      {\IfNoValueTF{#4}{#2[#3]{#5}}{#2[#3][#4]{#5}}}%
+  \fi
+}
+
+\NewDocumentCommand{\ts@cite}{oom}{%
+  \ts@dispatch{\sidecite}{\ts@save@cite}{#1}{#2}{#3}}
+\NewDocumentCommand{\ts@parencite}{oom}{%
+  \ts@dispatch{\sideparencite}{\ts@save@parencite}{#1}{#2}{#3}}
+\NewDocumentCommand{\ts@textcite}{oom}{%
+  \ts@dispatch{\sidetextcite}{\ts@save@textcite}{#1}{#2}{#3}}
+
+% Everywhere the margin is not running text. The switch is a plain \newif, so
+% each of these restores itself when the group ends.
+\newcommand{\ts@nomargin}{\ts@margfreefalse}
+\AtBeginDocument{%
+  \@for\ts@e:={figure,figure*,table,table*,longtable,tabular,tabularx,%
+    minipage,wrapfigure,marginfigure,margintable,sidewaystable,%
+    sidewaysfigure,subfigure,lstlisting,algorithm}\do{%
+    \@ifundefined{\ts@e}{}{\expandafter\AtBeginEnvironment\expandafter
+      {\ts@e}{\ts@nomargin}}%
+  }%
+  \@ifundefined{caption}{}{\pretocmd{\caption}{\ts@nomargin}{}{}}%
+  \@ifundefined{footnote}{}{\pretocmd{\footnote}{\ts@nomargin}{}{}}%
+  \@ifundefined{marginnote}{}{\pretocmd{\marginnote}{\ts@nomargin}{}{}}%
+  % The lists in the front matter re-execute whatever a caption contained, so
+  % a cited caption would put its reference in the margin of the list of
+  % figures. These three are not environments and do not have to be grouped,
+  % so the flag is put back explicitly rather than left to a group to restore.
+  \@for\ts@e:={tableofcontents,listoffigures,listoftables}\do{%
+    \@ifundefined{\ts@e}{}{%
+      \expandafter\pretocmd\csname\ts@e\endcsname{\ts@nomargin}{}{}%
+      \expandafter\apptocmd\csname\ts@e\endcsname{\ts@margfreetrue}{}{}%
+    }%
+  }%
+  % Swap the three in last, so that the copies taken here are biblatex's own
+  % and not something another package has already wrapped.
+  \let\ts@save@cite\cite
+  \let\ts@save@parencite\parencite
+  \let\ts@save@textcite\textcite
+  \let\cite\ts@cite
+  \let\parencite\ts@parencite
+  \let\textcite\ts@textcite
+}
+
+\makeatother
