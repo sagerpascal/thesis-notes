@@ -884,20 +884,31 @@ and `generated/` trees, and all seven scripts.
 
 ### Correctness
 
-8. **12 undefined references, printing 20 `??` in the PDF.** One label used
-   three times is three holes in the text, so count them in the output rather
-   than in the log:
+8. **8 undefined references, printing 13 `??` in the PDF.** One label used
+   twice is two holes in the text, so count them in the output rather than in
+   the log:
 
    ```bash
    uv run --no-project python scripts/check_layout.py --pdf
    ```
 
-   Ten labels, 17 of the holes, are thesis owned and belong to the old story:
-   `chap:constraints`, `chap:contextual`, `chap:dfc`, `chap:koopman`,
-   `chap:relatedwork`, `chap:selfattention`, `sec:acu_methodology` and the
-   three `part:` references. They go when the introduction and the background
-   chapter are rewritten. The parts they mean do exist and are labelled, see
-   Section 3.9, so those three are a matter of writing the right name.
+   Six labels, 10 of the holes, are in `1-1_introduction` and
+   `2-1_related_work` and belong to the old story: `chap:constraints`,
+   `chap:contextual`, `chap:dfc`, `chap:koopman`, `chap:selfattention` and
+   `part:paradigm`. They go when those two chapters are rewritten.
+
+   Two of the six are only renames, and the sentence around each says which
+   chapter it means: `chap:selfattention` is `chap:attention` and
+   `chap:koopman` is `chap:bounded`. The other four name a chapter or a part
+   the current structure does not have. The parts do exist and are labelled,
+   see Section 3.9.
+
+   `sections/3-1_acu_survey.tex` is clean. Its five old story names were
+   renamed and each was pinned by its own sentence: the part that holds the
+   self attention chapter is Part III, and the two parts that hold the
+   interventions are IV and V. Its sixth, `sec:acu_methodology`, pointed at a
+   section that has never existed, in the thesis or in the paper, so the two
+   sentences that claimed it did were removed.
 
    The other two are upstream and cannot be fixed from the thesis.
    `attention:eq:weight-update-bilinear-form-prediction` exists only in the
