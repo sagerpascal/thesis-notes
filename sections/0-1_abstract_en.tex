@@ -1,69 +1,96 @@
-% English abstract. No coined vocabulary: "layout" is used as plain English
-% here and defined as a term only in the introduction.
+% English abstract. No coined vocabulary: "layout" is not used as a term here,
+% only described, and it is defined as a term in the introduction.
+%
+% Every paragraph opens on the question the paragraph before it left open, and
+% every study is given in the same order: why it was run, how it was designed,
+% and what it shows. Keep both if the text is edited. It runs to about $980$
+% words, which is roughly a page and a half. Cutting it further means dropping
+% one of the seven steps, so cut a step rather than thinning every sentence.
 
-A network that has learned a task could have laid its solution out in many
-ways. The same function, at the same loss, can be carried by a few of its
-neurons or spread across all of them, and the weights that carry a computation
-can concentrate on a few directions or spread evenly. Neuroscience has long
-argued about sparse against distributed coding, and machine learning has mostly
-assumed that the task decides which layout a network reaches. This thesis shows
-that the layout of a learned solution is decided by the training procedure,
-that it can be read off the update equation and chosen, and that the choice
-trades robustness to damage against speed of adaptation. It closes with a
-proposal for representations in which the layout is built in rather than left
-to the rule.
+Two networks can fit the same data equally well and still be built differently
+inside. One carries its computation on a few of its neurons and leaves the rest
+idle. The other spreads the same computation over all of them. Both reach the
+same training loss, so nothing in the data chooses between them. This thesis
+asks what does, and finds that the training procedure does. The choice can be
+read off the procedure's update equation before the procedure is run, it is
+paid for in either robustness or adaptability, and it can be designed instead
+of inherited.
 
-The stake is set by a survey of $87$ papers and $33$ datasets on agents for
-computer use. The field builds its agents by one recipe, a pretrained
-foundation model adapted by prompting or behaviour cloning, and names
-inefficient learning and insufficient generalisation among its gaps. Both are
-properties of the trained network, so the thesis asks what in that recipe
-decides them.
+The question comes from a survey of $87$ papers and $33$ datasets on agents for
+computer use. The field builds those agents by one recipe, a pretrained
+foundation model adapted by prompting or by behaviour cloning, and the agents
+share six gaps. Four concern the benchmarks. The other two, insufficient
+generalisation and inefficient learning, are properties of the trained network.
+A survey cannot explain them, because the field never varies the training
+procedure and because a success rate cannot separate two networks that score
+alike. Two shorter studies confirm how little a score reveals, one finding that
+quantisation sold as nearly lossless costs text quality that raters notice and
+metrics miss, the other that architectures built for composition still fail on
+rule combinations they have not seen. The property has to be measured inside
+the network instead.
 
-The central study holds task, data, architecture and optimizer fixed and varies
-only the learning rule, in the grokking setting where a network fits its
-training data long before it generalises and its solution can be read neuron by
-neuron. Four of twelve rules never generalise, because their update does not
-vanish at the minima of the loss. Among those that do, loss, margin and weight
-norm agree while the number of neurons carrying the solution runs from about
-$150$ to $250$ of $256$. A rescaling of each neuron's share of the error that
-provably leaves the objective and every update direction unchanged moves that
-number across its full range, whether applied from the start or switched on
-after the network has generalised, so the layout is a state the rule
-maintains. Which rules spread the solution can be read from their update. Only
-rules that normalise one neuron at a time do, because a shared normaliser
-leaves the inequality within its group untouched, and that prediction places
-all eight published optimizers correctly. The layout has a price, proven and
-measured. Spread solutions survive neuron deletion far better, with the
-fluctuation falling as one over the square root of the effective number of
-units, and concentrated ones adapt to a new task about twice as fast.
+Measuring it there needs a task whose solution is known neuron by neuron, and
+grokking on modular arithmetic is such a task. Holding task, data, architecture
+and optimizer fixed and varying only the learning rule, four of twelve
+published rules never generalise, because their update does not vanish at the
+minima of the loss and so cannot come to rest where gradient descent does. The
+rules that do generalise reach the same loss, the same margin and the same
+weight norm, and they spread the solution over anywhere from $154$ to $254$ of
+$256$ neurons. The task offers every rule the same set of solutions, and each
+rule stops at a different member of it.
 
-The same question is asked of the weights that carry attention in a
-Transformer. Their update is a sum over the token pairs the objective lets one
-token use to predict another. An autoregressive objective uses each token as
-context for every later token but as target once, so a few columns come to
-dominate, and a bidirectional objective enters every pair in both orders, so
-the update is symmetric and the structure spreads. Both layouts appear in
-ModernBERT, GPT, LLaMA3 and Mistral across text, vision and audio, and
-initialising the weights symmetrically speeds up bidirectional training.
+Rules differ in many ways at once, so the cause is isolated with a rescaling of
+each neuron's share of the error that provably changes neither the objective
+nor any neuron's update direction. It moves the count across the full range,
+applied from the first step or switched on after the network has already
+generalised. Which published rules move it follows from their update alone,
+because a normaliser shared by several neurons rescales them together and
+cannot alter the inequality between them. Only per neuron normalisation can,
+and that prediction places all eight optimizers tested. The choice is not free.
+Random deletion costs every solution the same expected fraction of its output,
+so what separates solutions is the fluctuation around that average, which
+shrinks as one over the root of the effective neuron count. Spread solutions
+survive deletion far better, and concentrated ones adapt to a new task about
+twice as fast.
 
-Three shorter studies supply structure from outside the data: a spectral
-constraint on the latent dynamics of a world model, input masks derived from
-medical knowledge for CT segmentation, and an external index for retrieving
-scientific sources from social media posts. The last two pass their controls.
-The first is the cautionary case. The constraint wins by five orders of
-magnitude under the standard probe and by nothing under a readout that ignores
-latent scale, and predictors that learn no dynamics beat every learned model,
-so a property the loss leaves free had been imposed and read as learning.
+Small networks and a purpose built intervention are thin evidence, so the same
+question is put to a component the field does vary, in models at scale. With
+backpropagation held fixed and the training objective varied, the update to a
+Transformer's attention weights is a sum over the token pairs the objective
+allows. Autoregressive training makes each token the context of every later
+token and a target only once, so a few columns absorb most of the update.
+Bidirectional training takes every pair in both orders, so the update is
+symmetric and the structure spreads. Both appear in ModernBERT, GPT, LLaMA3 and
+Mistral, and across text, vision and audio. Symmetric initialisation follows
+from the derivation and speeds up bidirectional training, and autoregressive
+prediction is the objective behind every foundation model the survey found.
 
-If the learning rule decides the layout and the layout has a price, the layout
-can instead be fixed in the architecture and learning left to fill in its
-parts. The Cooperative Network Architecture is a first implementation of that
-proposal. It represents a sensory pattern by a net, a set of neurons each
-supported by several others, assembled from fragments learned by Hebbian
-plasticity. Because support is built in, noise, which has none, is filtered
-even when more than half of the input is corrupted, occluded figures are
-completed, and fragments recombine into patterns never seen in training. The
-model does not yet scale beyond line drawings, and the thesis ends by setting
-out what a representation of this kind would need in order to serve as the
-state of an agent's model of its environment.
+A procedure that fixes a property the data leaves open creates a hazard,
+because a measurement sensitive to that property can be satisfied with nothing
+learned. This thesis ran into it. Planning over several steps, the survey's
+third gap, needs a model that predicts several steps ahead, and the standard
+remedy bounds the spectrum of its transition operator. The bounded operator
+wins by five orders of magnitude under the readout this literature uses, and
+two free controls overturn that. Predictors that learn no dynamics beat every
+trained model, and a readout blind to latent scale erases the gap. The loss is
+scale invariant, so training never fixes that scale, the bound fixes how fast
+it grows, and the probe, fitted at the training scale, measures exactly that. A
+bounded error curve is not a better model. Every result above is therefore
+reported at matched loss, margin and weight norm and against predictors that
+learn nothing. Two further studies supply structure from outside the data and
+survive those controls, one with input masks from tissue specific Hounsfield
+ranges, the other with an external index for scientific source retrieval.
+
+The learning rule therefore decides how the solution is laid out, holds that
+layout against the gradient for as long as training runs, and charges
+robustness or adaptability for it. Choosing a rule is a roundabout way to
+obtain a spread layout, and building one in is the direct way. The Cooperative
+Network Architecture represents a sensory pattern as a net, a set of neurons
+each supported by several others, assembled from fragments learned by Hebbian
+plasticity. Because support is structural rather than trained, noise, which has
+none, is filtered even when more than half of the input is corrupted, occluded
+figures are completed, and fragments learned on straight lines recombine into
+digits and characters that never appeared in training. The model does not yet
+scale beyond line drawings, so the thesis closes by setting out what a
+representation of this kind would need in order to serve as the state of an
+agent's model of its environment.

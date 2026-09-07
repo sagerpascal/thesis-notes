@@ -164,10 +164,14 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 \frontmatter % Denotes the start of the pre-document content, uses roman numerals
 
 %----------------------------------------------------------------------------------------
-%	OUTPUT TITLE PAGE
+%	TITLE PAGE
 %----------------------------------------------------------------------------------------
+%
+% The faculty's title form is the title page of this thesis. kaobook's own
+% title page is deliberately not produced, so there is no \maketitle below.
+% The declarations that follow are kept because \thesistitle is cited in the
+% preface and because hyperref reads the metadata.
 
-% Include the custom title page
 \includepdf[pages=-]{figures/Titelblatt_E_POV2011.pdf}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -184,8 +188,6 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 \author[Pascal Sager]{Pascal Sager}
 \date{December 1, 2026}
 \publishers{University of Zurich}
-
-\maketitle
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT
@@ -224,25 +226,10 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 %	TABLE OF CONTENTS & LIST OF FIGURES/TABLES
 %----------------------------------------------------------------------------------------
 
-\begingroup % Local scope for the following commands
-
-% Define the style for the TOC, LOF, and LOT
-\setlength{\textheight}{230\vscale} % Manually adjust the height of the ToC pages
-
-% Turn on compatibility mode for the etoc package
-\etocstandarddisplaystyle % "toc display" as if etoc was not loaded
-\etocstandardlines % "toc lines as if etoc was not loaded
-
-\tableofcontents % Output the table of contents
-
-\listoffigures % Output the list of figures
-
-\let\cleardoublepage\bigskip
-\let\clearpage\bigskip
-
-\listoftables % Output the list of tables
-
-\endgroup
+% Contents, list of figures and list of tables. How they are set, including
+% which entries keep the accent colour and how a long caption is cut to one
+% line, is in thesis_style.tex section 10.
+\thesisfrontlists
 
 %----------------------------------------------------------------------------------------
 %	MAIN BODY

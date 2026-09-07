@@ -47,6 +47,9 @@ ROOT = Path(__file__).resolve().parent.parent
 # Paths are relative to the repository root.
 INPUT_FILES = [
     "references/manual.bib",
+    # Thesis owned, for the background chapter. It cites a literature no
+    # imported paper carries, see CLAUDE.md section 5.2.
+    "references/background.bib",
     "imported_papers/ACU_JAIR/cleaned_references.bib",
     "imported_papers/CLEF_Checkthat_4b/sources_cleaned.bib",
     "imported_papers/Llama2_benchmark_sds/references.bib",

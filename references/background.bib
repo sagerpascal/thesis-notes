@@ -1,0 +1,425 @@
+% references/background.bib
+%
+% Thesis owned references for the background chapter, sections/2-1_related_work.tex.
+% Split out from manual.bib because the background cites a literature no
+% imported paper carries: the implicit bias of training procedures, sparse and
+% distributed coding in neuroscience, unit ablation and pruning, and the
+% evaluation of learned predictors against trivial baselines.
+%
+% An entry belongs here only if it is NOT already reachable through an
+% imported paper's bibliography. Check before adding:
+%   grep -i '<surname>' references/merged.bib
+% The grokking, attention, retrieval and CNA bibliographies already supply the
+% grokking literature, the Transformer and interpretability literature, the
+% optimizer and credit assignment rules, BM25 and dense retrieval, and the
+% assembly and correlation theory lineage.
+%
+% This file is an input to scripts/merge_bib.py. Keys here are rewritten to the
+% thesis scheme and the key written below is kept as an alias, so a citation
+% written against this file keeps resolving. See CLAUDE.md section 5.
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Many parameter settings fit the same data, and the procedure picks one
+% ─────────────────────────────────────────────────────────────────────────────
+
+@inproceedings{zhang_rethinking_2017,
+  author    = {Zhang, Chiyuan and Bengio, Samy and Hardt, Moritz and Recht, Benjamin and Vinyals, Oriol},
+  title     = {Understanding Deep Learning Requires Rethinking Generalization},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2017}
+}
+
+@inproceedings{neyshabur_search_2015,
+  author    = {Neyshabur, Behnam and Tomioka, Ryota and Srebro, Nathan},
+  title     = {In Search of the Real Inductive Bias: On the Role of Implicit Regularization in Deep Learning},
+  booktitle = {International Conference on Learning Representations (ICLR), Workshop Track},
+  year      = {2015}
+}
+
+@article{belkin_reconciling_2019,
+  author  = {Belkin, Mikhail and Hsu, Daniel and Ma, Siyuan and Mandal, Soumik},
+  title   = {Reconciling Modern Machine-Learning Practice and the Classical Bias-Variance Trade-Off},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {116},
+  number  = {32},
+  pages   = {15849--15854},
+  year    = {2019}
+}
+
+@article{soudry_implicit_2018,
+  author  = {Soudry, Daniel and Hoffer, Elad and Nacson, Mor Shpigel and Gunasekar, Suriya and Srebro, Nathan},
+  title   = {The Implicit Bias of Gradient Descent on Separable Data},
+  journal = {Journal of Machine Learning Research},
+  volume  = {19},
+  number  = {70},
+  pages   = {1--57},
+  year    = {2018}
+}
+
+@inproceedings{du_algorithmic_2018,
+  author    = {Du, Simon S. and Hu, Wei and Lee, Jason D.},
+  title     = {Algorithmic Regularization in Learning Deep Homogeneous Models: Layers Are Automatically Balanced},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2018}
+}
+
+@inproceedings{kunin_neural_2021,
+  author    = {Kunin, Daniel and Sagastuy-Brena, Javier and Ganguli, Surya and Yamins, Daniel L. K. and Tanaka, Hidenori},
+  title     = {Neural Mechanics: Symmetry and Broken Conservation Laws in Deep Learning Dynamics},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021}
+}
+
+@inproceedings{arora_implicit_2019,
+  author    = {Arora, Sanjeev and Cohen, Nadav and Hu, Wei and Luo, Yuping},
+  title     = {Implicit Regularization in Deep Matrix Factorization},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2019}
+}
+
+@inproceedings{wilson_marginal_2017,
+  author    = {Wilson, Ashia C. and Roelofs, Rebecca and Stern, Mitchell and Srebro, Nathan and Recht, Benjamin},
+  title     = {The Marginal Value of Adaptive Gradient Methods in Machine Learning},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2017}
+}
+
+@article{amari_natural_1998,
+  author  = {Amari, Shun-Ichi},
+  title   = {Natural Gradient Works Efficiently in Learning},
+  journal = {Neural Computation},
+  volume  = {10},
+  number  = {2},
+  pages   = {251--276},
+  year    = {1998}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Sparse and distributed codes, and how a spread is measured
+% ─────────────────────────────────────────────────────────────────────────────
+
+@article{olshausen_sparse_2004,
+  author  = {Olshausen, Bruno A. and Field, David J.},
+  title   = {Sparse Coding of Sensory Inputs},
+  journal = {Current Opinion in Neurobiology},
+  volume  = {14},
+  number  = {4},
+  pages   = {481--487},
+  year    = {2004}
+}
+
+@incollection{foldiak_sparse_1995,
+  author    = {F{\"o}ldi{\'a}k, Peter and Young, Malcolm P.},
+  title     = {Sparse Coding in the Primate Cortex},
+  booktitle = {The Handbook of Brain Theory and Neural Networks},
+  editor    = {Arbib, Michael A.},
+  publisher = {MIT Press},
+  address   = {Cambridge, MA},
+  pages     = {895--898},
+  year      = {1995}
+}
+
+@article{rolls_relative_1990,
+  author  = {Rolls, Edmund T. and Treves, Alessandro},
+  title   = {The Relative Advantages of Sparse versus Distributed Encoding for Associative Neuronal Networks in the Brain},
+  journal = {Network: Computation in Neural Systems},
+  volume  = {1},
+  number  = {4},
+  pages   = {407--421},
+  year    = {1990}
+}
+
+@article{quiroga_invariant_2005,
+  author  = {Quian Quiroga, Rodrigo and Reddy, Leila and Kreiman, Gabriel and Koch, Christof and Fried, Itzhak},
+  title   = {Invariant Visual Representation by Single Neurons in the Human Brain},
+  journal = {Nature},
+  volume  = {435},
+  pages   = {1102--1107},
+  year    = {2005}
+}
+
+@article{litwinkumar_optimal_2017,
+  author  = {Litwin-Kumar, Ashok and Harris, Kameron Decker and Axel, Richard and Sompolinsky, Haim and Abbott, L. F.},
+  title   = {Optimal Degrees of Synaptic Connectivity},
+  journal = {Neuron},
+  volume  = {93},
+  number  = {5},
+  pages   = {1153--1164},
+  year    = {2017}
+}
+
+@article{gao_simplicity_2015,
+  author  = {Gao, Peiran and Ganguli, Surya},
+  title   = {On Simplicity and Complexity in the Brave New World of Large-Scale Neuroscience},
+  journal = {Current Opinion in Neurobiology},
+  volume  = {32},
+  pages   = {148--155},
+  year    = {2015}
+}
+
+@misc{ahmad_dense_2019,
+  author     = {Ahmad, Subutai and Scheinkman, Luiz},
+  title      = {How Can We Be So Dense? The Benefits of Using Highly Sparse Representations},
+  year       = {2019},
+  eprint     = {1903.11257},
+  eprinttype = {arxiv}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Deleting units and weights from a trained network
+% ─────────────────────────────────────────────────────────────────────────────
+
+@inproceedings{morcos_importance_2018,
+  author    = {Morcos, Ari S. and Barrett, David G. T. and Rabinowitz, Neil C. and Botvinick, Matthew},
+  title     = {On the Importance of Single Directions for Generalization},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2018}
+}
+
+@misc{zhou_revisiting_2018,
+  author     = {Zhou, Bolei and Sun, Yiyou and Bau, David and Torralba, Antonio},
+  title      = {Revisiting the Importance of Individual Units in {CNNs} via Ablation},
+  year       = {2018},
+  eprint     = {1806.02891},
+  eprinttype = {arxiv}
+}
+
+@inproceedings{han_learning_2015,
+  author    = {Han, Song and Pool, Jeff and Tran, John and Dally, William J.},
+  title     = {Learning Both Weights and Connections for Efficient Neural Networks},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2015}
+}
+
+@inproceedings{frankle_lottery_2019,
+  author    = {Frankle, Jonathan and Carbin, Michael},
+  title     = {The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2019}
+}
+
+@misc{elhage_toy_2022,
+  author = {Elhage, Nelson and Hume, Tristan and Olsson, Catherine and Schiefer, Nicholas and Henighan, Tom and Kravec, Shauna and Hatfield-Dodds, Zac and Lasenby, Robert and Drain, Dawn and Chen, Carol and Grosse, Roger and McCandlish, Sam and Kaplan, Jared and Amodei, Dario and Wattenberg, Martin and Olah, Christopher},
+  title  = {Toy Models of Superposition},
+  year   = {2022},
+  note   = {Transformer Circuits Thread}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Grokking, the two entries the grokking paper's bibliography does not carry
+% ─────────────────────────────────────────────────────────────────────────────
+
+@inproceedings{barak_hidden_2022,
+  author    = {Barak, Boaz and Edelman, Benjamin L. and Goel, Surbhi and Kakade, Sham and Malach, Eran and Zhang, Cyril},
+  title     = {Hidden Progress in Deep Learning: {SGD} Learns Parities Near the Computational Limit},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2022}
+}
+
+@inproceedings{liu_towards_2022,
+  author    = {Liu, Ziming and Kitouni, Ouail and Nolte, Niklas and Michaud, Eric J. and Tegmark, Max and Williams, Mike},
+  title     = {Towards Understanding Grokking: An Effective Theory of Representation Learning},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2022}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Credit assignment: why alternatives were sought, and the rules the grokking
+% paper's bibliography does not carry
+% ─────────────────────────────────────────────────────────────────────────────
+
+@article{crick_recent_1989,
+  author  = {Crick, Francis},
+  title   = {The Recent Excitement about Neural Networks},
+  journal = {Nature},
+  volume  = {337},
+  pages   = {129--132},
+  year    = {1989}
+}
+
+@article{rumelhart_learning_1986,
+  author  = {Rumelhart, David E. and Hinton, Geoffrey E. and Williams, Ronald J.},
+  title   = {Learning Representations by Back-Propagating Errors},
+  journal = {Nature},
+  volume  = {323},
+  pages   = {533--536},
+  year    = {1986}
+}
+
+@inproceedings{lee_difference_2015,
+  author    = {Lee, Dong-Hyun and Zhang, Saizheng and Fischer, Asja and Bengio, Yoshua},
+  title     = {Difference Target Propagation},
+  booktitle = {Machine Learning and Knowledge Discovery in Databases (ECML PKDD)},
+  year      = {2015}
+}
+
+@misc{hinton_forward_2022,
+  author     = {Hinton, Geoffrey},
+  title      = {The Forward-Forward Algorithm: Some Preliminary Investigations},
+  year       = {2022},
+  eprint     = {2212.13345},
+  eprinttype = {arxiv}
+}
+
+@inproceedings{meulemans_least_2022,
+  author    = {Meulemans, Alexander and Zucchet, Nicolas and Kobayashi, Seijin and von Oswald, Johannes and Sacramento, Jo{\~a}o},
+  title     = {The Least-Control Principle for Local Learning at Equilibrium},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2022}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Reading structure off attention weights
+% ─────────────────────────────────────────────────────────────────────────────
+
+@inproceedings{jain_attention_2019,
+  author    = {Jain, Sarthak and Wallace, Byron C.},
+  title     = {Attention Is Not Explanation},
+  booktitle = {Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)},
+  year      = {2019}
+}
+
+@inproceedings{wiegreffe_attention_2019,
+  author    = {Wiegreffe, Sarah and Pinter, Yuval},
+  title     = {Attention Is Not Not Explanation},
+  booktitle = {Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2019}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Structure supplied from outside the data
+% ─────────────────────────────────────────────────────────────────────────────
+
+@article{wolpert_free_1997,
+  author  = {Wolpert, David H. and Macready, William G.},
+  title   = {No Free Lunch Theorems for Optimization},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {1},
+  number  = {1},
+  pages   = {67--82},
+  year    = {1997}
+}
+
+@techreport{mitchell_need_1980,
+  author      = {Mitchell, Tom M.},
+  title       = {The Need for Biases in Learning Generalizations},
+  institution = {Department of Computer Science, Rutgers University},
+  number      = {CBM-TR-117},
+  year        = {1980}
+}
+
+@misc{bronstein_geometric_2021,
+  author     = {Bronstein, Michael M. and Bruna, Joan and Cohen, Taco and Veli{\v c}kovi{\'c}, Petar},
+  title      = {Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges},
+  year       = {2021},
+  eprint     = {2104.13478},
+  eprinttype = {arxiv}
+}
+
+@article{raissi_physics_2019,
+  author  = {Raissi, Maziar and Perdikaris, Paris and Karniadakis, George E.},
+  title   = {Physics-Informed Neural Networks: A Deep Learning Framework for Solving Forward and Inverse Problems Involving Nonlinear Partial Differential Equations},
+  journal = {Journal of Computational Physics},
+  volume  = {378},
+  pages   = {686--707},
+  year    = {2019}
+}
+
+@inproceedings{borgeaud_improving_2022,
+  author    = {Borgeaud, Sebastian and Mensch, Arthur and Hoffmann, Jordan and Cai, Trevor and Rutherford, Eliza and Millican, Katie and van den Driessche, George and Lespiau, Jean-Baptiste and Damoc, Bogdan and Clark, Aidan and de Las Casas, Diego and Guy, Aurelia and Menick, Jacob and Ring, Roman and Hennigan, Tom and Huang, Saffron and Maggiore, Loren and Jones, Chris and Cassirer, Albin and Brock, Andy and Paganini, Michela and Irving, Geoffrey and Vinyals, Oriol and Osindero, Simon and Simonyan, Karen and Rae, Jack W. and Elsen, Erich and Sifre, Laurent},
+  title     = {Improving Language Models by Retrieving from Trillions of Tokens},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2022}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Latent world models and how a rollout is scored
+% ─────────────────────────────────────────────────────────────────────────────
+
+@inproceedings{schwarzer_data_2021,
+  author    = {Schwarzer, Max and Anand, Ankesh and Goel, Rishab and Hjelm, R. Devon and Courville, Aaron and Bachman, Philip},
+  title     = {Data-Efficient Reinforcement Learning with Self-Predictive Representations},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021}
+}
+
+@inproceedings{azencot_forecasting_2020,
+  author    = {Azencot, Omri and Erichson, N. Benjamin and Lin, Vanessa and Mahoney, Michael W.},
+  title     = {Forecasting Sequential Data Using Consistent Koopman Autoencoders},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2020}
+}
+
+@inproceedings{mamakoukas_memory_2020,
+  author    = {Mamakoukas, Giorgos and Xherija, Orest and Murphey, Todd D.},
+  title     = {Memory-Efficient Learning of Stable Linear Dynamical Systems for Prediction and Control},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2020}
+}
+
+@inproceedings{jing_understanding_2022,
+  author    = {Jing, Li and Vincent, Pascal and LeCun, Yann and Tian, Yuandong},
+  title     = {Understanding Dimensional Collapse in Contrastive Self-Supervised Learning},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2022}
+}
+
+@inproceedings{chen_exploring_2021,
+  author    = {Chen, Xinlei and He, Kaiming},
+  title     = {Exploring Simple Siamese Representation Learning},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2021}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% Trivial baselines as the standard control
+% ─────────────────────────────────────────────────────────────────────────────
+
+@inproceedings{dacrema_really_2019,
+  author    = {Ferrari Dacrema, Maurizio and Cremonesi, Paolo and Jannach, Dietmar},
+  title     = {Are We Really Making Much Progress? A Worrying Analysis of Recent Neural Recommendation Approaches},
+  booktitle = {ACM Conference on Recommender Systems (RecSys)},
+  year      = {2019}
+}
+
+@inproceedings{musgrave_metric_2020,
+  author    = {Musgrave, Kevin and Belongie, Serge and Lim, Ser-Nam},
+  title     = {A Metric Learning Reality Check},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  year      = {2020}
+}
+
+@article{lin_neural_2019,
+  author  = {Lin, Jimmy},
+  title   = {The Neural Hype and Comparisons against Weak Baselines},
+  journal = {SIGIR Forum},
+  volume  = {52},
+  number  = {2},
+  pages   = {40--51},
+  year    = {2019}
+}
+
+@inproceedings{henderson_deep_2018,
+  author    = {Henderson, Peter and Islam, Riashat and Bachman, Philip and Pineau, Joelle and Precup, Doina and Meger, David},
+  title     = {Deep Reinforcement Learning That Matters},
+  booktitle = {AAAI Conference on Artificial Intelligence},
+  year      = {2018}
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% A layout built into the substrate
+% ─────────────────────────────────────────────────────────────────────────────
+
+@inproceedings{hinton_transforming_2011,
+  author    = {Hinton, Geoffrey E. and Krizhevsky, Alex and Wang, Sida D.},
+  title     = {Transforming Auto-Encoders},
+  booktitle = {International Conference on Artificial Neural Networks (ICANN)},
+  year      = {2011}
+}
+
+@inproceedings{sabour_dynamic_2017,
+  author    = {Sabour, Sara and Frosst, Nicholas and Hinton, Geoffrey E.},
+  title     = {Dynamic Routing between Capsules},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2017}
+}

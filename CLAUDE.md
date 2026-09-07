@@ -19,7 +19,8 @@ Two kinds of file live here, and the difference governs almost every rule below.
 
 **Thesis owned.** `main.tex`, `preface.tex`, `thesis_style.tex`,
 `thesis_import.sty`, `sections/**`, `references/manual.bib`,
-`references/overrides.toml`, `imports/**`, `scripts/**`, this file. We write
+`references/background.bib`, `references/overrides.toml`, `imports/**`,
+`scripts/**`, this file. We write
 these, we restyle these, the style guide in Section 3 applies to these.
 
 **Imported.** Everything under `imported_papers/**`. Upstream copies of
@@ -49,9 +50,17 @@ errors and the first missing bibliography keys. Use `errors` by default.
 Gates before every commit that touches the text:
 
 - The build reaches the end, and the last pass reports zero LaTeX errors.
+- Zero LaTeX errors. Read `./build.sh errors`, which counts them, rather than
+  filtering the log by hand: pdflatex reports some as `file:line: LaTeX Error`
+  and not as a line starting with `!`, and `Float(s) lost` went unnoticed for
+  a while behind a hand written `grep '^!'`.
 - Zero undefined references and zero duplicate labels. Count them in the PDF,
   not in the log: the log reports each label once, the PDF prints one `??` per
   use, and `scripts/check_layout.py --pdf` gives every hole with its page.
+  `build.sh`'s own `undefined` count is higher than the number of `??`,
+  because it also counts hyperref's `bhfn:N` back reference anchors. Those
+  come from kaobiblio's `backref` option, print nothing, and are not worth
+  chasing.
 - Zero missing bibliography keys in `build-biber.log`.
 - Zero banned words and zero em dashes in thesis owned files (Section 3.10).
 - After any trim, no number, citation key or label was lost. Compare the sets of
@@ -660,7 +669,8 @@ duplicate works would both break the build and corrupt the reference list.
 
 ```
 references/
-  manual.bib        # thesis owned entries, hand written, the only bib we edit
+  manual.bib        # thesis owned, hand written: our own papers
+  background.bib    # thesis owned, hand written: what the background cites
   merged.bib        # GENERATED, committed, the only file main.tex loads
   keymap.csv        # GENERATED, old key -> new key, with source file
   merge_report.md   # GENERATED, duplicates, conflicts and things to look at
@@ -674,15 +684,31 @@ the second `\addbibresource` for the ACU references is gone, since the merge
 covers it. Corrections go in `references/overrides.toml`, never into
 `merged.bib` and never into a bibliography under `imported_papers/`.
 
+Two hand written files rather than one, because they are edited for different
+reasons. `manual.bib` holds the thesis author's own papers, cited by the
+publication header box of the chapter each one backs. `background.bib` holds
+what `sections/2-1_related_work.tex` cites and no imported paper carries: the
+implicit bias of training procedures, sparse and distributed coding in
+neuroscience, unit ablation and pruning, and the evaluation of learned
+predictors against trivial baselines. Before adding an entry to either, check
+that no imported bibliography already has it, since six papers between them
+already supply the grokking literature, the Transformer and interpretability
+literature, the optimizers and credit assignment rules, retrieval, and the
+assembly lineage. `merge_bib.py` folds a duplicate rather than failing on it,
+so a needless entry is silent waste rather than an error.
+
 ### 5.3 How the merge works
 
 ```bash
 uv run --no-project python scripts/merge_bib.py
 ```
 
-Inputs are `references/manual.bib` plus every bib file named in an
+Inputs are the two thesis owned files, `references/manual.bib` and
+`references/background.bib`, plus every bib file named in an
 `imports/<slug>.toml`. Reading the manifests rather than globbing means a stray
-backup bib inside a paper directory is never picked up by accident.
+backup bib inside a paper directory is never picked up by accident. The thesis
+owned files are listed first in `INPUT_FILES`, so where a reference also
+appears in an imported bibliography, the values we wrote win.
 
 **Normalise.** Every entry is brought to one shape before anything is compared.
 Entry types unified. Zotero and Mendeley cruft dropped (`file`, `abstract`,
@@ -784,14 +810,15 @@ Full citation of the paper, ending in its \cite key.
 `check_imports.py` checks that each chapter has both.
 
 Citations go in the margin. `\sidecite` sets the usual numeric marker in the
-text and puts the work's author, year and title beside it, which is what
+text and puts the work's marker, author and year beside it, which is what
 kaobook's wide margin is for. It is applied by patching `\cite`, `\parencite`
 and `\textcite`, the three biblatex commands everything else routes through,
 so all nine papers get it without one of them being edited. `\ts@sidecitefalse`
 turns the whole thing off.
 
-Three rules decide whether a citation goes to the margin, and together they
-are what keeps the column inside the page.
+The margin holds 165 of the thesis's 588 single key citations, and every one
+of the five decisions that got it from 588 to 165 was forced by a measurement.
+Changing any of them means taking the measurement again.
 
 A citation of several works at once does not go there. Five references stacked
 in the margin swamp the page and the marker in the text is one bracket either
@@ -801,11 +828,34 @@ A citation outside running text does not. Beside a float the margin already
 carries that float's caption, a caption's citation is re-executed when the
 list of figures is typeset, and a table cell has no margin of its own.
 
-A work already introduced in this chapter does not. This is the rule that
-does the work: of the 588 single key citations in the thesis only 276 are a
-work's first mention in its chapter, and without it five pages had margin
-notes running off the paper. With it, no page does. The measurement is the
-maximum y of any word in the margin column against the 842pt page height.
+A work already introduced in this chapter does not. Of the 588 single key
+citations only 276 are a work's first mention in its chapter, and at 276 five
+pages had margin notes running off the paper.
+
+The note carries no title. kaobiblio's own margin format ends with the full
+title, which is four or five lines in a 136pt column, and the title is the one
+part the bibliography already gives in full. `\formatmargincitation` is
+redefined to stop at the year.
+
+At most one citation per paragraph reaches the margin, through the kernel's
+`para/begin` hook. A paragraph that cites three works in two sentences
+otherwise stacks three notes in the same few lines.
+
+And the note is placed by the marginnote package rather than by `\marginpar`.
+kaobook reads an offset-less `\marginnote` as a request for the floating
+`\marginpar`, so the shift is passed as `0pt` rather than left out. The
+floating one was tried first and cannot be used here: at full density seventy
+notes a run were relocated away from the paragraph they belonged to, and one
+left pending at the `\clearpage` that ends an imported chapter made LaTeX
+report `Float(s) lost` and discard it. An empty `importedpaper` block
+reproduces that, so it is the mechanism and not the volume. What marginnote
+does instead of relocating is overprint, which is why the two rules above are
+not optional, and why the check is to look at the densest margin in the
+document rather than to trust the log:
+
+```bash
+uv run --no-project python scripts/check_layout.py --margins
+```
 
 Float pages are top aligned. LaTeX centres them, because `\@fptop` and
 `\@fpbot` are both infinitely stretchable, and a single table on such a page
@@ -856,35 +906,39 @@ and `generated/` trees, and all seven scripts.
    background section the chapter drops, and `\importedlabel` points the
    paper's own back references at that introduction. The CNA chapter summary
    is where the paper's discussion label now lives, for the same reason.
-2. **105 citations in thesis owned prose resolve to nothing.** All of them are
-   in `1-1_introduction` and `2-1_related_work`, which still argue the old
-   story and cite invented keys. No imported paper has a missing citation any
-   more. Rewrite those two chapters and add the real entries to
-   `references/manual.bib`. Those two files also hold the last three
-   semicolons in thesis owned prose, which go with the rewrite.
+2. **The background chapter is a structure with no prose.**
+   `sections/2-1_related_work.tex` has its eight sections, its subsections and
+   a `\paragraph` stub per paragraph, each carrying a comment with the claim to
+   make and the keys to cite. All 121 keys it names resolve. Write the prose
+   against that plan. The old content argued the retired story and was removed
+   on 2026-09-07, `git show 9f332ab:sections/2-1_related_work.tex` retrieves
+   it.
 3. **Three papers are not final.** COGITAO, grokking and the Koopman/TMLR
    rewrite are still moving. Run `scripts/reimport.py <slug> <path>`, which
    replaces the directory and reruns everything downstream.
 4. **Discussion and conclusion are outlines in comments.** Write them last.
-5. **Own paper entries in `manual.bib` carry TODO fields.** Venue, author lists
-   and page numbers to check against the published record.
+5. **Own paper entries in `manual.bib` carry TODO fields.** The attention
+   paper is now ICML 2025 and COGITAO is the 2nd ICML Workshop on
+   Compositional Learning, both set on 2026-09-07. Still open: the COGITAO
+   year is inferred from the workshop being the second of its series and from
+   the vendored directory name, the author lists of COGITAO and the world model
+   paper read `and others`, and the CNA entry has no volume or pages. The list
+   of publications in `sections/0-4_publications.tex` prints these entries with
+   `\fullcite`, so fixing the bib fixes the list.
 6. **The title is a working title.** Alternatives are in
    `00_ADMIN/05_thesis_concept.md`.
-7. **Page 1 of the PDF is the faculty's blank title form.** The faculty
-   requires this page and it is not to be replaced with a designed one, so
-   `figures/Titelblatt_E_POV2011.pdf` stays where it is. What is still open is
-   that the vendored copy is the blank template, instruction bubbles and
-   dotted lines included. It needs the committee names, the citizenship line
-   and the year of graduation, and its bold text has to be adopted verbatim,
-   so it cannot be filled in from here. Drop the completed PDF in over it.
-   kaobook's own title page follows on page 3 and is a separate choice.
-8. **The preface argues the old story.** It talks about synthesising two
-   paradigms and about deep generative world models, which is the framing the
-   Koopman paper's rewrite retired.
+7. **Page 1 of the PDF is the faculty's blank title form.** It is the title
+   page of the thesis, and kaobook's own title page is deliberately not
+   produced, so `main.tex` has no `\maketitle`. The vendored copy at
+   `figures/Titelblatt_E_POV2011.pdf` is still the blank template, instruction
+   bubbles and dotted lines included. It needs the committee names, the
+   citizenship line and the year of graduation, and its bold text has to be
+   adopted verbatim, so it cannot be filled in from here. Drop the completed
+   PDF in over it.
 
 ### Correctness
 
-8. **8 undefined references, printing 13 `??` in the PDF.** One label used
+7. **8 undefined references, printing 13 `??` in the PDF.** One label used
    twice is two holes in the text, so count them in the output rather than in
    the log:
 
@@ -913,9 +967,9 @@ and `generated/` trees, and all seven scripts.
    The other two are upstream and cannot be fixed from the thesis.
    `attention:eq:weight-update-bilinear-form-prediction` exists only in the
    rebuttal variant, which the thesis does not import, and
-   `tab:se_all_experiments` is issue 10. `check_imports.py` reports both, with
+   `tab:se_all_experiments` is issue 8. `check_imports.py` reports both, with
    the file each target lives in.
-9. **Two upstream bugs in COGITAO.** `tab:se_all_experiments` in
+8. **Two upstream bugs in COGITAO.** `tab:se_all_experiments` in
     `transformation_learnability.tex` has a `\label` and no `\caption`, so
     the reference to it cannot resolve.
 
@@ -934,42 +988,55 @@ and `generated/` trees, and all seven scripts.
     around from the chapter rather than dropped, see Section 4.4. Fixing it
     upstream means deleting the optional argument there, and the checker says
     so when that day comes.
-10. **`6_appendix/LLM_Prompts.tex` cannot be included.** Six `lstlisting`
+9. **`6_appendix/LLM_Prompts.tex` cannot be included.** Six `lstlisting`
     environments over 177 lines. kaobook's output routine holds the whole
     listing in `\@outputbox` and exhausts TeX's main memory partway through,
     and the build then produces no PDF at all. It compiles on its own in a
     short document, so testing it outside the thesis proves nothing. The
     thesis appendix carries a short section in its place. Restore it if the
     prompts are shortened or taken out of a listing.
-11. **The CNA bibliography is converted, not real.** Its 52 references came
+10. **The CNA bibliography is converted, not real.** Its 52 references came
     from `\bibitem` entries, so author and title are as good as a formatted
     string allows. Ask for the paper's original `.bib`.
-12. **Untested on Overleaf.** Linux is case sensitive and has no Python. Every
+11. **Untested on Overleaf.** Linux is case sensitive and has no Python. Every
     generated artefact is committed, so the build should not need a script,
     but nobody has run it there. COGITAO's `Figures` against `figures` will
-    fail, see issue 9.
+    fail, see issue 8.
 
 ### Style
 
-13. **61 overfull boxes, one over 100pt.** None is in a table any more:
-    40 are display equations set for a wider measure and 21 are paragraphs.
+12. **58 overfull hboxes, one over 100pt.** None is in a table any more.
+    Most are display equations set for a wider measure, the rest paragraphs.
 
     ```bash
     uv run --no-project python scripts/check_layout.py --overfull
     ```
 
-    reports each with the file and the PDF page it came from.
-    `\emergencystretch` inside the block was tried and changes nothing,
+    reports each with the file and the PDF page it came from. `build.sh`'s
+    `badboxes` count is higher, because it counts underfull boxes and vboxes
+    as well. `\emergencystretch` inside the block was tried and changes nothing,
     because what is left has no legal break to find.
 
     Most of the displays overflow into the margin, which is white space, and
-    read as wide rather than broken. Two do not: PDF pages 280 and 292, both
+    read as wide rather than broken. Two do not: PDF pages 268 and 280, both
     in the self attention proof appendix, put an equation number within 4mm of
     the paper edge. Fixing them means scaling display math, which would leave
     the mathematics at two sizes across the thesis to repair two pages, so it
     has been left. The measurement that finds them is the maximum x of any
-    word on the page against the 597pt paper width.
-14. **Twelve captions out of 132 sit in the text block** rather than in the
+    word on the page against the 597pt paper width. That measurement also
+    flags the two float list pages, and there it is an artefact: `trimclip`
+    hides the end of a clipped caption but leaves it in the text layer, so its
+    boxes still run past the edge with nothing visible there.
+13. **The two float lists print whole captions.** The papers contain 211
+    captions and not one carries LaTeX's short form. The entries are currently
+    clipped to one line with an ellipsis, which is a truncation and not a
+    summary. The options, the measurements and a recommended mechanism are in
+    `00_ADMIN/06_float_presentation_concept.md`.
+14. **Table style is not uniform across the papers.** 89 `\toprule` against
+    39 `\hline`, table font sizes from `\footnotesize` to nothing at all, and
+    COGITAO putting its captions below the table while the other eight put
+    them above. Three fixes, one line each, in the same document.
+15. **Twelve captions out of 132 sit in the text block** rather than in the
     margin, because the float is too wide for a caption beside it and floatrow
     falls back. It is automatic and it looks right where it happens. Listed
     only so nobody reports it twice.

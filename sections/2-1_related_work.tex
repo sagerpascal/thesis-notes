@@ -1,457 +1,550 @@
+% Background. Thesis owned. Structure only, prose still to be written.
+%
+% The story this follows is in 00_ADMIN/05_thesis_concept.md. The old content
+% argued the retired story and was removed on 2026-09-07. Retrieve it with
+%   git show 9f332ab:sections/2-1_related_work.tex
+%
+% HOW THIS FILE IS ORGANISED
+%
+% Eight sections that read as one argument, in the order the argument needs
+% them, not in the order of the thesis parts. The argument: a trained network
+% is one of many that fit, the procedure picks which one, that literature has
+% asked about norms and never about how many units carry the computation, the
+% question is old in neuroscience and has measures, grokking is where it can be
+% read off, the procedure has parts that nobody has varied for this purpose,
+% the same question can be asked of a weight matrix, structure can instead be
+% supplied or built in, and the gap follows.
+%
+% Every \paragraph below is scaffolding, one paragraph of prose to write. Each
+% carries a comment with the claim it has to make and the keys it cites.
+% Dissolve a \paragraph heading into flowing prose when its neighbours read
+% better as one passage. Section and subsection headings stay.
+%
+% CONVENTIONS
+%   - Section titles are statements, per CLAUDE.md 3.8.
+%   - Keys come from references/merged.bib. Those written to
+%     references/background.bib are thesis owned; the rest arrive through an
+%     imported paper's bibliography and are listed here so nobody adds a
+%     duplicate entry.
+%   - No results of ours anywhere in this chapter, per CLAUDE.md 3.8. Forward
+%     pointers to a chapter are fine, claims about what we found are not.
+%   - There is deliberately no section on agents for computer use. That field
+%     is surveyed by Chapter~\ref{chap:acu}, which is itself a survey, and a
+%     second pass over it here would duplicate it.
+%
+% NOTE FOR THE ACU REFRAME: the old file defined sec:rw_agents, which
+% sections/3-1_acu_survey.tex still cites. That label is gone on purpose. The
+% sentence there has to be reworded, see CLAUDE.md section 7.
 
-This chapter positions the contributions of this thesis within the broader
-research literature. Because the thesis spans several distinct research areas,
-the related work is organised thematically rather than chronologically. Each
-section introduces the relevant body of prior work, identifies the specific
-limitations or open questions that motivate the contributions of this thesis,
-and explains how those contributions relate to, depart from, or extend the
-existing literature. Detailed discussion of closely related work for each
-individual contribution is deferred to the corresponding chapter, where it
-can be presented in direct relation to the specific technical claims being made.
-
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Autonomous Agents and Computer Use}
-\label{sec:rw_agents}
-% ─────────────────────────────────────────────────────────────────────────────
-
-The idea of automating computer tasks through high-level instruction has a
-long history in human-computer interaction research, from early work on
-programming by demonstration~\cite{cypher_watch, myers_pbd} to the web
-automation systems of the 2000s~\cite{leshed_CoScripter}. These early systems
-operated on structured representations of the interface, such as the
-application's internal state tree or the underlying HTML, and were limited to
-tasks in applications they had been explicitly programmed for.
-
-The introduction of large-scale language models shifted this paradigm
-fundamentally. \cite{nakano_webgpt} demonstrated that language models could
-be fine-tuned to interact with web browsers using text-based observations,
-and \cite{yao_webshop} showed that language-model-based agents could complete
-shopping tasks on a simulated web environment. Subsequent work extended this
-to general desktop environments~\cite{OSWorld, xie_osworld},
-mobile platforms~\cite{rawles_androidworld, zhang_android_eval}, and
-cross-platform settings~\cite{koh_visualwebarena, zhou_webarena}.
-
-The introduction of vision-language models (VLMs) opened a new direction:
-agents that observe the interface as a screenshot rather than as structured
-text. \cite{shaw_pixels} showed that a VLM-based agent could locate interface
-elements from screenshots without access to the underlying accessibility tree,
-and \cite{hong_cogagent} trained a specialised VLM for GUI understanding and
-interaction. \cite{claude_computer_use} and \cite{openai_cua} demonstrated
-capable screenshot-based agents built on large foundation models. The trend
-toward vision-based observation is now dominant in the literature.
-
-On the learning side, the dominant paradigm remains behaviour cloning from
-human demonstrations~\cite{humphreys_data_driven, zheng_synapse}. Approaches
-using reinforcement learning are less common due to the difficulty of
-specifying automatic reward functions for open-ended computer tasks, though
-recent work has explored reward models trained from human
-feedback~\cite{xu_aguvis} and process reward models for step-level
-supervision~\cite{pan_autonomous}.
-
-Despite this progress, systematic evaluations consistently find that current
-ACU systems fail in qualitatively similar ways across platforms and
-architectures~\cite{OSWorld, koh_visualwebarena}. The specific failure
-characterisation, and the argument that these failures have a structural rather
-than an engineering origin, is the contribution of the survey presented in
-Chapter~\ref{chap:acu}. Existing surveys of the field~\cite{durante_agent,
-wang_survey_agents} provide useful taxonomies but do not develop the structural
-argument that connects the observed failures to the properties of the learning
-paradigm. Our survey is distinguished both by its scope, covering 87 papers
-and 33 datasets, and by the analytical framing it imposes on the field.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Efficiency of Large Language Models}
-\label{sec:rw_efficiency}
+\section{Many parameter settings fit the same data, and the procedure picks one}
+\label{sec:bg_solutionset}
 % ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: establish the solution set, and that the training
+% procedure rather than the task selects a member of it. This is the premise
+% the whole thesis rests on, so it comes first.
 
-The computational cost of training and serving large language models has
-motivated an extensive literature on methods for reducing their resource
-requirements. We distinguish three families of approach.
+\subsection{An overparameterised network has many settings that fit}
+\label{sec:bg_interpolation}
 
-\textbf{Model quantisation} reduces the numerical precision of model weights
-and activations, typically from 32-bit or 16-bit floating point to lower
-bit-width integer or floating-point formats. Post-training quantisation methods
-including GPTQ~\cite{frantar_gptq} and AWQ~\cite{lin_awq} achieve 4-bit
-weight quantisation with limited average benchmark degradation.
-\cite{dettmers_llmint8} introduced 8-bit quantisation with mixed-precision
-decomposition, and \cite{dettmers_qlora} extended this to enable
-quantised fine-tuning. Despite the widespread adoption of these methods and
-their description as near-lossless in the literature, their effect on
-qualitative reasoning capability, as opposed to aggregate benchmark scores,
-has not been systematically studied.
+\paragraph{Fitting is not the constraint.}
+% A network with more parameters than training examples can fit the data
+% exactly, including random labels, so reaching zero training loss says little
+% about which function was found. Keys: zhang_rethinking_2017.
 
-\textbf{Low-rank adaptation} (LoRA)~\cite{hu_lora} fine-tunes a pre-trained
-model by learning low-rank updates to its weight matrices, keeping the
-original weights frozen. This reduces the number of trainable parameters by
-orders of magnitude and makes fine-tuning feasible on consumer hardware.
-Extensions including QLoRA~\cite{dettmers_qlora} combine quantisation with
-low-rank adaptation to further reduce memory requirements.
+\paragraph{The solutions form a set rather than a point.}
+% Many settings reach the same training loss, and they differ in properties the
+% loss does not see. Say plainly that this thesis is about one such property.
+% Keys: neyshabur_search_2015, belkin_reconciling_2019.
 
-\textbf{Knowledge distillation}~\cite{hinton_distillation} trains a smaller
-student model to mimic the behaviour of a larger teacher, producing compact
-models with performance closer to the teacher than a model of similar size
-trained from scratch would achieve. Distillation has been applied extensively
-to language models~\cite{sanh_distilbert, gu_minillm}.
+\subsection{The training procedure selects among them}
+\label{sec:bg_implicitbias}
+% The term to introduce here, in plain words, is implicit bias: a preference
+% among the settings that fit, produced by the procedure rather than by the
+% objective.
 
-The benchmark presented in Chapter~\ref{chap:contextual} evaluates seven
-methods from the quantisation and low-rank adaptation families against a
-common protocol that includes both quantitative benchmarks and a structured
-qualitative human evaluation. The key finding, that quantisation methods
-marketed as lossless produce measurable qualitative degradation in reasoning
-and text quality that standard benchmarks fail to detect, is not established
-by any prior work. This finding has direct implications for the ACU literature,
-where reasoning quality rather than average benchmark performance is the
-operationally relevant measure.
+\paragraph{Gradient descent has a bias that can be stated exactly.}
+% On separable data, gradient descent on the logistic loss converges in
+% direction to the maximum margin solution, so the procedure fixes a property
+% the objective leaves open. Keys: soudry_implicit_2018.
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Compositional Generalisation}
-\label{sec:rw_compositionality}
-% ─────────────────────────────────────────────────────────────────────────────
+\paragraph{The geometry of the update decides which property is minimised.}
+% Steepest and mirror descent under different norms select different minima of
+% the same objective. Keys: gunasekar_characterizing_2018.
 
-The question of whether neural networks can learn compositional representations
-has been debated since the earliest critiques of connectionist
-systems~\cite{fodor_connectionism}. Empirical investigation began in earnest
-with the SCAN benchmark~\cite{lake_scan}, which tests whether
-sequence-to-sequence models can generalise a set of compositional rules to
-novel combinations. Subsequent work introduced more controlled benchmarks
-including COGS~\cite{kim_cogs} for language, CLEVR~\cite{johnson_clevr} for
-visual reasoning, and gSCAN~\cite{ruis_benchmark} for grounded instruction
-following.
+\paragraph{The scale of the initialisation moves the network between two regimes.}
+% Small initialisation gives a rich, feature learning regime and large
+% initialisation a kernel regime, and the two reach different solutions. Note
+% that this axis has been connected to grokking. Keys: woodworth_kernel_2020,
+% kumar_grokking_2024.
 
-A consistent finding across these benchmarks is that standard neural
-architectures, including Transformers of varying sizes, fail to generalise
-systematically when test combinations differ from training combinations, even
-when all individual components have been seen during training. This failure
-is robust: it persists across architectures, training procedures, and data
-augmentation strategies~\cite{dziri_faith, ontanon_making}.
+\paragraph{Changing the optimizer changes the solution, not only the speed.}
+% Adaptive methods reach solutions that generalise differently from those of
+% plain gradient descent at matched training loss. Keys: wilson_marginal_2017.
 
-Architectural responses to the compositional generalisation gap have taken
-several directions. Modular architectures~\cite{andreas_neural, akyurek_dn}
-explicitly decompose the computation into reusable modules, one per semantic
-primitive, which are assembled at inference time. Disentangled
-representations~\cite{higgins_beta, locatello_disentangling} attempt to
-separate the factors of variation in the input into independent latent
-dimensions. Graph neural networks~\cite{battaglia_relational} impose a
-relational inductive bias suited to structured reasoning over object-attribute
-pairs.
+\subsection{Some of the choice is visible in what the update conserves}
+\label{sec:bg_conserved}
+% This subsection is the machinery the grokking chapter's propositions use, so
+% it has to be here rather than in that chapter.
 
-Despite these efforts, the gap remains open. Even architectures specifically
-designed with compositional inductive biases continue to fail on novel
-combinations that require applying a rule to objects or settings not seen in
-training~\cite{bahdanau_scan}. The COGITAO framework, presented in
-Chapter~\ref{chap:contextual}, addresses a significant limitation of prior
-benchmarks: the combinatorial depth of existing evaluations is shallow,
-and the number of unique task rules is small relative to the scale of the
-models being evaluated. COGITAO generates millions of unique task rules at
-adjustable composition depth, enabling a more stringent evaluation than
-existing benchmarks and revealing failure modes that shallower evaluations
-do not expose.
+\paragraph{Gradient flow on a homogeneous network keeps layers balanced.}
+% The difference of squared norms across a layer boundary is constant under
+% gradient flow, so the initialisation's imbalance survives training. Keys:
+% du_algorithmic_2018.
+
+\paragraph{Each symmetry of the parameterisation gives a conserved quantity.}
+% Rescale and permutation symmetries imply quantities the dynamics cannot
+% change, and weight decay and momentum break them in known ways. Keys:
+% kunin_neural_2021.
+
+\paragraph{A conserved ratio is what freezes a profile.}
+% State the consequence the thesis uses without claiming it as a result here.
+% If the flow conserves the ratios between units, no amount of training can
+% reshape the relative sizes it started with, and a rule that conserves
+% differences instead can. Point forward to Chapter~\ref{chap:grokking}.
+
+\subsection{This literature has asked about norms, not about how many units carry the computation}
+\label{sec:bg_biasgap}
+
+\paragraph{The properties it characterises are global.}
+% Norm, margin, rank and effective dimension are properties of the whole
+% parameter vector. The closest to a structural claim is the low rank bias of
+% deep matrix factorisation. Keys: arora_implicit_2019, gunasekar_characterizing_2018.
+
+\paragraph{And the part of the procedure it varies is the optimizer.}
+% The results above vary the optimizer or the initialisation scale. The
+% computation that assigns each parameter its share of the error is held at
+% backpropagation throughout. Name that as the opening this thesis uses.
+
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Mechanistic Interpretability of Transformers}
-\label{sec:rw_interpretability}
+\section{How a computation is spread over neurons is an old question with measures}
+\label{sec:bg_coding}
 % ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: import the neuroscience framing, and above all the
+% measures and the consequences. The reader must leave this section
+% believing that the spread is a real property with real costs, and knowing how
+% it is quantified.
 
-Understanding what Transformer models learn and how they represent information
-internally has become a significant subfield of machine learning research,
-commonly described as mechanistic interpretability. The goals of this research
-are both scientific, advancing understanding of how learned representations
-are organised, and practical, enabling more reliable and predictable model
-behaviour.
+\subsection{Sparse and distributed codes are the two ends}
+\label{sec:bg_sparsedistributed}
 
-Early work focused on probing: training lightweight classifiers on top of
-frozen model representations to test whether specific types of information,
-such as syntactic structure or semantic roles, are linearly decodable from
-the representations~\cite{ettinger_probing, tenney_bert_linguistics,
-clark_bert_attention}. This work established that Transformer representations
-contain substantial structured information about their input, but the probing
-methodology has been criticised for conflating what information is present in
-the representation with what information the model actually uses during
-inference~\cite{belinkov_probing}.
+\paragraph{The question and the two answers.}
+% Whether a stimulus is represented by a few highly selective neurons or by a
+% pattern over many is the oldest form of this question. Give both names.
+% Keys: barlow_single_1972, hinton_distributed_1986.
 
-Attention visualisation, which inspects the attention weight matrix $A$ as a
-direct window into the model's internal computation, became popular early but
-has been shown to be an unreliable guide to the model's actual information
-routing~\cite{jain_attention, wiegreffe_attention}. The attention weights
-reflect the query-key similarities after softmax normalisation; they do not
-directly reflect the causal influence of each position on the output.
+\paragraph{Sparsity as a principle derived from the input statistics.}
+% Optimising for a sparse code of natural images produces oriented receptive
+% fields resembling those of primary visual cortex, which is sparsity derived
+% rather than assumed. Keys: olshausen_emergence_1996, olshausen_sparse_2004,
+% foldiak_sparse_1995.
 
-More recent mechanistic work has focused on identifying circuits, subgraphs
-of the attention and MLP components that implement specific
-computations~\cite{olsson_context, wang_interpretability, elhage_circuits}.
-This approach has produced detailed accounts of specific behaviours, such as
-induction heads that implement in-context learning and name-mover heads that
-track entity references across long sequences, but does not yet provide a
-general account of how information is organised across the full model.
+\paragraph{Highly selective cells do exist.}
+% Single neurons in the human medial temporal lobe respond to one concept
+% across very different images. State it as evidence for the sparse end, not as
+% a settlement of the debate. Keys: quiroga_invariant_2005.
 
-The mathematical framework developed in Chapter~\ref{chap:selfattention}
-approaches the interpretability question from a different direction. Rather
-than identifying circuits or probing for specific information, we derive the
-structural properties of the attention weight matrices that are predicted by
-the gradient dynamics of different training objectives. This is a
-theory-first approach: we prove what structure the training process must
-produce, then verify it empirically. This distinguishes our contribution from
-the empirical-first approaches that dominate the mechanistic interpretability
-literature, and it produces theoretical guarantees rather than empirical
-observations. The result, that bidirectional objectives induce symmetry and
-autoregressive objectives induce directionality and column dominance, is
-not established by any prior work.
+\subsection{Each end buys something and gives something up}
+\label{sec:bg_codingprice}
+% This subsection is the one the thesis leans on hardest, because the trade off
+% it describes is the one Chapter~\ref{chap:grokking} measures.
 
-Related work on the geometry of learned representations includes studies of
-the rank structure of attention weight matrices~\cite{chen_bert_rank,
-guo_parameter}, the emergence of linear representations of
-structure~\cite{park_linear, nanda_progress}, and analyses of how different
-layers contribute differently to the representation of
-syntax and semantics~\cite{jawahar_what}. Our work complements these by
-providing a theoretical account of why specific geometric properties arise,
-grounded in the mathematics of the training process itself.
+\paragraph{A distributed code degrades gracefully.}
+% If many neurons carry a signal, losing some of them changes the summed signal
+% little, and the fluctuation shrinks with the number carrying it. This is the
+% population coding argument, and it is the biological form of the bound the
+% grokking chapter proves. Keys: averbeck_neural_2006, rolls_relative_1990.
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{World Models and Predictive Representation Learning}
-\label{sec:rw_worldmodels}
-% ─────────────────────────────────────────────────────────────────────────────
+\paragraph{A sparse code interferes less and stores more.}
+% Fewer shared neurons means a new association disturbs less of what is already
+% there, and capacity arguments favour sparse connectivity. Keys:
+% rolls_relative_1990, litwinkumar_optimal_2017.
 
-The idea that an intelligent agent should maintain an internal model of its
-environment, which it uses to simulate the consequences of its actions before
-executing them, has deep roots in both cognitive science~\cite{tolman_maps}
-and reinforcement learning~\cite{sutton_dyna}. The operationalisation of this
-idea in modern deep learning has taken several directions.
+\paragraph{Artificial networks show the same two effects.}
+% Deleting units or weights from a trained network degrades it unevenly,
+% ablating single directions predicts generalisation, sparse subnetworks train
+% to full accuracy, and dropout buys redundancy by construction. Keys:
+% lecun_optimal_1989, han_learning_2015, morcos_importance_2018,
+% zhou_revisiting_2018, frankle_lottery_2019, srivastava_dropout_2014,
+% ahmad_dense_2019.
 
-\textbf{Model-based reinforcement learning.} Systems such as
-DreamerV3~\cite{hafner_dreamer3}, MBPO~\cite{janner_when}, and
-TD-MPC2~\cite{hansen_tdmpc2} learn a world model jointly with a policy and
-a value function, using the world model to generate synthetic rollouts for
-policy improvement. These systems achieve state-of-the-art sample efficiency
-on a range of continuous control benchmarks. However, they rely on generative
-world models that predict in observation space, which is computationally
-expensive and allocates model capacity to predicting irrelevant surface detail.
+\subsection{The spread can be measured, and the measure has to be chosen}
+\label{sec:bg_measures}
 
-\textbf{Latent-space world models.} An alternative approach learns the world
-model in a compressed latent space rather than in observation space. RSSM, the
-recurrent state space model used in DreamerV3~\cite{hafner_dreamer3}, learns
-a latent transition model alongside a decoder for optional reconstruction.
-\cite{hafner_mastering} demonstrated that latent-space models can achieve
-superhuman performance on Atari. A key limitation of these approaches is that
-the latent space is not constrained to have any particular structure, and the
-transition function is a learned nonlinear function without stability guarantees.
+\paragraph{Participation ratio counts how many parts effectively contribute.}
+% Define it in words, say it is basis independent, and say that multiplying by
+% the number of units reads as an effective count. This is the measure the
+% thesis uses. Keys: litwinkumar_optimal_2017, gao_simplicity_2015.
 
-\textbf{Self-supervised and contrastive world models.} Recent work has moved
-toward learning world models through self-supervised objectives that do not
-require pixel-level reconstruction. \cite{guo_byol_explore} used a
-bootstrapped self-supervised objective for exploration. \cite{schwarzer_spr}
-showed that training on future latent state predictions with a momentum
-encoder improves sample efficiency in model-free RL. The JEPA framework of
-\cite{lecun_jepa} and its visual instantiation in~\cite{assran_ijepa}
-demonstrated that predicting in representation space rather than observation
-space yields more semantically structured representations.
+\paragraph{How many features a unit carries is a different axis.}
+% Polysemantic units and superposition ask how many features share a neuron.
+% That is not the same question as how many neurons share a computation, and
+% the two must not be conflated. Keys: elhage_toy_2022,
+% bricken_monosemanticity_2023.
 
-Koopman-JEPA, presented in Chapter~\ref{chap:koopman}, builds on the JEPA
-framework and addresses a specific limitation that none of the above works
-resolves: the exponential accumulation of prediction errors in multi-step
-rollouts. Prior work on Koopman-based world models~\cite{lusch_deep_koopman,
-morton_deep_variational, wehmeyer_time} has established the value of the
-linear lifting approach for dynamical systems analysis, but these works use
-reconstruction-based objectives, do not study the stability of the learned
-transition operator systematically, and have not been applied to the
-multi-step prediction problem in visual model-based RL. The combination of
-the JEPA objective with progressively constrained Koopman parameterisations,
-and the formal connection to discrete-time LQR via the stabilisability
-analysis, constitute the novel contributions of Chapter~\ref{chap:koopman}.
+\paragraph{A basis dependent measure can mislead.}
+% Spectral entropy and similar quantities depend on the basis they are computed
+% in. Say that the thesis therefore leads with a basis independent measure and
+% point to Chapter~\ref{chap:grokking} for the case where the two disagree.
+
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Koopman Operator Methods in Machine Learning}
-\label{sec:rw_koopman}
+\section{Grokking is where the layout can be read off}
+\label{sec:bg_grokking}
 % ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: explain the phenomenon, explain that its circuit is
+% known at the level of single neurons, and end on the assumption the thesis
+% tests. Gloss "grokking" inline at first use.
 
-The application of Koopman operator theory to data-driven dynamical systems
-modelling began with dynamic mode decomposition (DMD)~\cite{schmid_dmd} and
-its extension to nonlinear observables in extended DMD
-(EDMD)~\cite{williams_edmd}. These methods compute a linear approximation of
-the Koopman operator from a finite dictionary of basis functions and have been
-applied to fluid dynamics~\cite{rowley_spectral}, power
-systems~\cite{susuki_koopman}, and robotic locomotion~\cite{shi_deep_koopman}.
+\subsection{Generalisation can arrive long after the training data is fitted}
+\label{sec:bg_grokphenomenon}
 
-The integration of Koopman operator theory with deep learning was proposed
-by~\cite{lusch_deep_koopman}, who jointly learned the lifting function and
-the transition matrix using a deep autoencoder with a Koopman-structured latent
-dynamics model. Subsequent work explored auxiliary networks for eigenvalue
-prediction~\cite{li_learning_koopman}, variational formulations for
-uncertainty quantification~\cite{morton_deep_variational}, and applications
-to control~\cite{shi_deep_koopman, han_deep_koopman_control}.
+\paragraph{The phenomenon.}
+% Training accuracy reaches one, test accuracy sits at chance for thousands of
+% epochs, then climbs abruptly. Give the setting: small algorithmic tasks,
+% weight decay, full batch. Keys: power_grokking_2022.
 
-Spectral constraints on the Koopman transition matrix have been studied in the
-context of stability. \cite{mamakoukas_derivative} enforces stable eigenvalues
-through constrained optimisation. \cite{azencot_forecasting} parameterises the
-transition matrix as a product of Householder reflections to enforce
-orthogonality. Our Cayley parameterisation achieves the same orthogonality
-guarantee through a different algebraic construction that is both differentiable
-and compatible with standard optimisation, and we provide the first analysis
-connecting the spectral properties of the learned Koopman matrix to the
-stabilisability precondition of discrete-time LQR.
+\paragraph{The explanations offered.}
+% Weight norm and the distance from initialisation, circuit efficiency, the
+% rich and lazy regimes, an effective theory of representation learning, and
+% hidden progress that standard metrics miss. Keys: liu_omnigrok_2022,
+% varma_explaining_2023, kumar_grokking_2024, liu_towards_2022,
+% barak_hidden_2022.
 
-Koopman methods have also been applied to reinforcement learning as a tool for
-improving the sample efficiency of model-based planning~\cite{bevanda_koopman,
-weissenbacher_koopman}. These works use the linear structure of the Koopman
-latent space to enable efficient trajectory optimisation but do not address
-the error accumulation problem or the stability of long-horizon rollouts.
+\paragraph{And that an optimizer can decide whether it happens at all.}
+% Adaptive optimizers change whether and when grokking occurs, which is the
+% closest the literature comes to the thesis's question and still does not ask
+% which solution is reached. Keys: thilak_slingshot_2022.
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Inductive Biases and Structured Learning}
-\label{sec:rw_inductive}
-% ─────────────────────────────────────────────────────────────────────────────
+\subsection{For modular arithmetic the circuit is known neuron by neuron}
+\label{sec:bg_grokcircuit}
 
-The role of inductive biases in enabling generalisation from limited data is
-one of the oldest questions in machine learning, formalised by
-\cite{mitchell_bias} and given a principled Bayesian treatment by
-\cite{wolpert_no_free_lunch}. The resurgence of interest in inductive biases
-in the deep learning era has been driven by the observation that universal
-approximation ability does not imply appropriate generalisation: a model that
-can fit any function is not guaranteed to fit the right one from limited data.
+\paragraph{The Fourier computation.}
+% The embedding maps operands onto a few frequencies, the hidden layer combines
+% them into sine and cosine of the sum, and the logit for a candidate peaks at
+% the correct answer. Keys: nanda_progress_2023, gromov_grokking_2023.
 
-\textbf{Architectural inductive biases} include translational equivariance
-in convolutional networks~\cite{lecun_convnet}, permutation equivariance in
-graph networks~\cite{battaglia_relational}, and equivariance to broader
-symmetry groups in geometric deep learning~\cite{bronstein_geometric}. These
-encode prior knowledge about the invariances that are relevant for a class of
-tasks, and they have been shown to dramatically improve sample efficiency
-when correctly matched to the task structure.
+\paragraph{The same analysis for a group that is not commutative.}
+% Composition in a permutation group is solved with the group's irreducible
+% representations rather than frequencies. Keys: chughtai_toy_2023.
 
-\textbf{Domain-knowledge biases} encode task-specific prior knowledge that is
-not naturally expressed as an architectural symmetry. \cite{raissi_physics}
-introduced physics-informed neural networks, which add terms to the training
-loss that penalise violations of known physical laws. \cite{gu_structured}
-incorporated structured state-space models with specific stability properties
-into sequence models, improving their ability to capture long-range
-dependencies. These approaches share the principle that known structure in
-the domain should be reflected in the model, rather than being left to be
-discovered from data.
+\paragraph{The characterisation bundles two properties.}
+% Max margin analysis of a one hidden layer model gives neurons that each tune
+% to a single frequency and a computation carried by many units at once. Say
+% clearly that these are two separate properties, because the thesis separates
+% them. Keys: morwani_feature_2024.
 
-The Hounsfield unit masking approach presented in Chapter~\ref{chap:constraints}
-belongs to the domain-knowledge bias family, encoding the biophysics of X-ray
-attenuation as a hard constraint on the model's input representation. The
-prior work most closely related to this contribution is the use of domain
-knowledge in medical image segmentation~\cite{taghanaki_deep_semantic,
-chen_deep_anatomy}, which has largely focused on anatomical structure priors
-rather than physical measurement constraints.
+\paragraph{The circuit is not unique even under backpropagation.}
+% A different algorithm appears under other hyperparameters, a sparse
+% generalising subnetwork can be separated from a dense memorising one, and a
+% small initialisation condenses a network onto few effective neurons. Keys:
+% zhong_clock_2023, merrill_tale_2023, luo_phase_2021.
 
-\textbf{Retrieval-based approaches} augment a parametric model with a
-non-parametric external memory, grounding the model's outputs in retrieved
-documents or knowledge. Retrieval-augmented generation
-(RAG)~\cite{lewis_rag} concatenates retrieved passages with the model's
-input and has been shown to improve factual accuracy and reduce
-hallucination. \cite{borgeaud_retro} trained a language model from scratch
-with retrieval, showing that retrieval enables smaller parametric models to
-match the performance of much larger ones on knowledge-intensive tasks.
-The hybrid retrieval pipeline presented in Chapter~\ref{chap:constraints}
-extends this line of work to the scientific literature retrieval setting, where
-the informal-to-formal language gap between social media posts and academic
-abstracts requires both lexical precision and dense semantic generalisation.
+\subsection{The assumption is that the task fixes the circuit}
+\label{sec:bg_universality}
+
+\paragraph{Universality, stated.}
+% The claim that every network solving a task finds the same circuit, so a
+% circuit found in one network stands for the task. Keys: chughtai_toy_2023,
+% olah_zoom_2020.
+
+\paragraph{Two levels that the evidence does not separate.}
+% What is computed, and how many units carry it. The first is not contested by
+% this thesis. Say that every network behind the evidence above was trained
+% with backpropagation, and stop there. No claim about what we found.
+
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Neuro-Inspired Architectures}
-\label{sec:rw_neuroinspired}
+\section{The training procedure has parts, and each of them can be varied}
+\label{sec:bg_rules}
 % ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: give the reader the rules Chapter~\ref{chap:grokking}
+% compares, organised so that the organising property is visible. The
+% vocabulary (credit assignment algorithm, optimizer, learning rule) is defined
+% in Chapter~\ref{chap:introduction} and used plainly here.
 
-The relationship between biological neural computation and artificial neural
-networks has been a source of both inspiration and controversy throughout the
-history of the field. The perceptron~\cite{rosenblatt_perceptron} and the
-multilayer perceptron~\cite{rumelhart_learning} were explicitly motivated by
-simplified models of biological neurons, but subsequent developments in deep
-learning have moved away from biological plausibility as an explicit design
-criterion. The success of architectures with no direct biological counterpart,
-such as Transformers and convolutional networks with batch normalisation, has
-led many practitioners to treat biological plausibility as an aesthetic
-preference rather than a scientific constraint.
+\subsection{Credit can be assigned without backpropagation}
+\label{sec:bg_credit}
 
-We take a different view. The specific neuro-inspired principles that motivate
-the contributions of Part~\ref{part:paradigm} are not appeals to biology as
-an aesthetic; they are motivated by the concrete representational properties
-that biological systems possess and artificial systems currently lack:
-compositional organisation, robustness to input variation, and local learning
-rules that do not require a globally propagated error signal. We survey the
-relevant literature with this motivation in mind.
+\paragraph{Why alternatives were looked for.}
+% Backpropagation needs the transpose of the forward weights, which has no
+% obvious biological implementation. Keys: rumelhart_learning_1986,
+% crick_recent_1989.
 
-\textbf{Capsule networks and structured assemblies.} \cite{hinton_capsules}
-proposed capsule networks as a departure from the scalar activation of standard
-neurons toward structured representations that encode the pose and
-configuration of objects. Subsequent work including
-CapsNet~\cite{sabour_capsnet} and EM routing~\cite{hinton_em_routing}
-demonstrated promising results on small-scale object recognition tasks, but
-scaling to natural image benchmarks has proved difficult. The Cooperative
-Network Architecture presented in Chapter~\ref{chap:cna} shares the motivation
-of encoding structural relationships explicitly but takes a different approach,
-using dynamically assembled nets rather than capsule routing, and learning
-fragments from local statistics without supervision.
+\paragraph{Random feedback is enough to learn.}
+% Feedback alignment routes the error through a fixed random matrix and the
+% forward weights align to it, and the direct form skips the layer chain
+% entirely. Note the finding that alignment happens early and memorisation
+% follows. Keys: lillicrap_random_2016, nokland_direct_2016,
+% refinetti_align_2021.
 
-\textbf{Sparse coding and dictionary learning.} \cite{olshausen_sparse}
-showed that optimising for sparse representations of natural images produces
-oriented Gabor-like filters closely resembling the receptive fields of
-primary visual cortex neurons. This result established a computational
-principle, sparsity, that explains a structural property of biological
-representations from first principles. Subsequent work extended sparse coding
-to hierarchical settings~\cite{lee_sparse_deep} and connected it to
-deep learning through dictionary learning~\cite{sulam_multi_layer}. The net
-fragments of CNA are learned from local statistical regularities in a manner
-conceptually related to dictionary learning, but the assembly mechanism and
-the recurrent connectivity within nets are novel.
+\paragraph{Curvature and sign.}
+% Natural gradient and its Kronecker factored approximation precondition by
+% curvature, and sign methods discard the magnitude entirely, with convergence
+% results that separate the plain sign update from an interpolated one. Keys:
+% amari_natural_1998, martens_optimizing_2015, bernstein_signsgd_2018,
+% karimireddy_error_2019, chen_lion_2024.
 
-\textbf{Biologically plausible learning rules.} A substantial literature has
-investigated learning rules that are local in the sense required by biological
-plausibility, including contrastive Hebbian learning~\cite{movellan_contrastive},
-equilibrium propagation~\cite{scellier_equilibrium}, predictive coding with
-local updates~\cite{rao_predictive, millidge_predictive_coding}, and
-forward-forward algorithms~\cite{hinton_forward_forward}. These approaches
-avoid the non-locality of backpropagation and, in some cases, perform
-comparably on simple benchmarks. Deep Feedback Control~\cite{dfc}, discussed
-in Chapter~\ref{chap:dfc}, belongs to this family, proposing a feedback
-control interpretation of the layer-wise update problem.
+\paragraph{Energy based and control based rules.}
+% Predictive coding, equilibrium propagation, target propagation, the
+% forward-forward algorithm, and deep feedback control, which replaces the
+% backward pass with a controller that drives the network towards the target.
+% Keys: whittington_approximation_2017, scellier_equilibrium_2017,
+% lee_difference_2015, hinton_forward_2022, meulemans_credit_2021,
+% meulemans_least_2022.
 
-\textbf{Liquid neural networks and continuous-time dynamics.}
-\cite{hasani_liquid} introduced liquid time-constant networks, a class of
-recurrent networks with dynamics governed by ordinary differential equations
-inspired by the nematode nervous system. These networks exhibit compact
-representations and robust extrapolation to out-of-distribution inputs,
-properties that share motivation with the CNA contribution. The key difference
-is that liquid networks achieve these properties through differential equation
-dynamics over fixed network topologies, while CNA achieves them through the
-dynamic assembly of network topology itself.
+\paragraph{What all of them are asked.}
+% Every one of these is evaluated on whether it matches backpropagation's
+% accuracy. Which solution it selects is left open, and none has been run on a
+% task whose circuit is known. Keys: mallinar_emergence_2025 for the closest case, a
+% kernel method that groks without backpropagation and so has no per unit
+% circuit to read.
+
+\subsection{Optimizers differ in how many parameters share one normaliser}
+\label{sec:bg_grain}
+% Present this as one spectrum in one property, because that property is what
+% Chapter~\ref{chap:grokking} predicts from.
+
+\paragraph{Per parameter.}
+% Running estimates of the gradient's second moment give each weight its own
+% step size, and a sign update or a factored estimate does the same thing more
+% cheaply. Keys: kingma_adam_2015, tieleman_lecture_2012,
+% shazeer_adafactor_2018, chen_lion_2024.
+
+\paragraph{Per layer and per matrix.}
+% Trust ratios rescale a whole layer by one scalar, and preconditioners
+% transform a whole weight matrix. Keys: you_batch_2017, you_batch_2020,
+% gupta_shampoo_2018, jordan_muon_2024.
+
+\paragraph{Per neuron.}
+% A normaliser shared by exactly the weights entering one neuron, and the
+% reparameterisation that constrains those weights instead of the update.
+% Keys: liu_learning_2021, salimans_weight_2016.
+
+\paragraph{The property that orders them.}
+% State the spectrum without claiming the result: these methods differ in which
+% group of parameters shares one normaliser, from a single weight to a whole
+% matrix. Point forward to Chapter~\ref{chap:grokking}.
+
+\subsection{What is known about these rules is convergence and accuracy}
+\label{sec:bg_rulesgap}
+
+\paragraph{Per method results exist, a comparison at a matched setting does not.}
+% Each rule has its own convergence analysis and its own benchmark table. No
+% study holds task, data, architecture and optimizer fixed, varies the rule, and
+% reads the resulting solution at the level of single neurons.
+
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Positioning This Thesis}
-\label{sec:rw_positioning}
+\section{The same question can be asked of a weight matrix, where the objective is the knob}
+\label{sec:bg_attention}
 % ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: get the reader to the object Chapter~\ref{chap:attention}
+% studies, which is the product of the query and key matrices, and to the fact
+% that the two objectives differ in which token pairs enter the update.
 
-The preceding sections have introduced the research areas that this thesis
-intersects and identified the specific open questions that motivate its
-contributions. We close this chapter by making the positioning of the thesis
-explicit along three dimensions.
+\subsection{Query and key act only through their product}
+\label{sec:bg_qk}
 
-\textbf{Diagnosis before solution.} The majority of the works surveyed above
-propose solutions to specific observed failures without providing a theoretical
-account of why those failures occur. This thesis takes the diagnosis seriously
-as a research contribution in its own right. The mathematical framework for
-self-attention geometry in Chapter~\ref{chap:selfattention} is not a stepping
-stone to a proposed fix; it is an account of what the current training paradigm
-produces, from which the class of appropriate responses can be derived. This
-distinguishes the thesis from the bulk of the architectural and training
-literature, which addresses failure modes individually and empirically.
+\paragraph{Attention as a score over token pairs.}
+% Define attention in words, name query, key and value, and say the scores are
+% a linear map of the embeddings up to the row-wise softmax. Keys:
+% etal_attention_2017.
 
-\textbf{The constraint-paradigm distinction.} Among the neuro-inspired and
-structured learning works surveyed above, there is a tendency to frame
-biological plausibility and engineering tractability as competing objectives.
-This thesis argues for a more nuanced view: constraint-based approaches within
-the current paradigm and paradigm-level reconception are complementary, not
-competing, and the appropriate choice depends on how well the structure of the
-failure mode can be characterised in advance. This framing, and the taxonomy
-of constraint regimes it implies, is not present in the prior literature.
+\paragraph{The product is the object worth studying.}
+% The two matrices only ever appear as one product, which acts as a bilinear
+% form on the embeddings, so structure in either one separately can be
+% reparameterised away. Keys: elhage_mathematical_2021, dar_analyzing_2023.
 
-\textbf{Theoretical grounding across contributions.} The contributions of this
-thesis are unusually diverse in their technical domains, spanning survey
-methodology, mathematical analysis of attention geometry, Koopman operator
-theory applied to self-supervised learning, domain knowledge integration in
-clinical segmentation, information retrieval, and neuro-inspired architecture
-design. What connects them is not a shared technique but a shared argument:
-that the failures of current AI systems are structurally grounded and admit
-structurally grounded responses. No existing work makes this argument across
-this range of domains, and the synthesis of the contributions within a single
-coherent framework is itself a contribution of the thesis.
+\subsection{The two pretraining objectives differ in which pairs enter the update}
+\label{sec:bg_objectives}
+
+\paragraph{Bidirectional prediction.}
+% A masked token is predicted from the whole sequence, so a pair contributes in
+% both orders. Keys: devlin_bert_2019, warner_smarter_2024.
+
+\paragraph{Autoregressive prediction.}
+% Each token is predicted from its predecessors only, so a token is context for
+% every later token and a target once. Keys: brown_language_2020,
+% touvron_llama_2023a, radford_improving_2018.
+
+\paragraph{Why that difference is the interesting one.}
+% State it neutrally: the two objectives define different sets of pairs, and the
+% update to the attention weights is a sum over those pairs. Point forward to
+% Chapter~\ref{chap:attention}.
+
+\subsection{Reading structure off attention weights has been attempted from the outside}
+\label{sec:bg_interp}
+
+\paragraph{Probing asks what a representation contains.}
+% A light classifier on frozen features tests whether information is decodable,
+% and the control task literature shows how easily that overstates what the
+% model uses. Keys: belinkov_probing_2022, hewitt_designing_2019.
+
+\paragraph{Attention maps are an unreliable guide.}
+% The attention distribution can be changed substantially without changing the
+% output, and the reply to that result is worth citing too. Keys:
+% jain_attention_2019, wiegreffe_attention_2019.
+
+\paragraph{Features and circuits.}
+% Sparse autoencoders recover interpretable features, and circuit analysis
+% identifies subgraphs that implement a behaviour, such as induction heads.
+% Keys: huben_sparse_2024, bricken_monosemanticity_2023, olah_zoom_2020,
+% olsson_context_2022, geva_transformer_2021.
+
+\paragraph{All of it works from activations rather than from the update.}
+% These methods examine a trained network. None of them derives what structure
+% the training objective must produce, which is the opening the attention
+% chapter uses.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Structure can be supplied instead of learned, which makes measurement the hard part}
+\label{sec:bg_supplied}
+% ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: cover the three side chapters of Part IV at background
+% depth, and set up the one lesson that part carries. Keep it tight. Each of
+% those papers has its own related work; this section gives only what the
+% frame's argument needs.
+
+\subsection{A learner needs a bias, and it can be placed at several points}
+\label{sec:bg_inductive}
+
+\paragraph{Why a bias is necessary at all.}
+% No procedure generalises without one, and the trade against variance is the
+% classical statement. Keys: wolpert_free_1997, etal_neural_1992,
+% mitchell_need_1980.
+
+\paragraph{In the architecture.}
+% Weight sharing gives translation equivariance, and the general treatment
+% derives architectures from the symmetries of the domain. Keys:
+% etal_gradient_1998, bronstein_geometric_2021.
+
+\paragraph{In the input representation.}
+% Known physics can be added to the loss or the input rather than left to be
+% discovered. Point forward to Chapter~\ref{chap:hounsfield}. Keys:
+% raissi_physics_2019.
+
+\paragraph{At inference time.}
+% Retrieval grounds a prediction in an external index, with lexical matching,
+% dense retrieval and a cross encoder as the standard components. Point forward
+% to Chapter~\ref{chap:retrieval}. Keys: lewis_retrieval_2021,
+% borgeaud_improving_2022, robertson_probabilistic_2009, karpukhin_dense_2020,
+% nogueira_passage_2019.
+
+\subsection{A latent world model predicts forward, and its errors compound}
+\label{sec:bg_worldmodels}
+
+\paragraph{Predicting in a learned latent space.}
+% The state is encoded, the transition is applied in that space, and no pixels
+% are reconstructed. Keys: lecun_path_2022, assran_self_2023,
+% hafner_mastering_2023, schwarzer_data_2021.
+
+\paragraph{Why a rollout drifts.}
+% Composing a nonlinear map amplifies each step's error by its Lipschitz
+% constant, so error can grow without bound over a horizon.
+
+\paragraph{Constraining the operator's spectrum is the standard remedy.}
+% A linear transition whose spectral radius is bounded turns a product of
+% Lipschitz constants into a bound that stays flat in the horizon. Keys:
+% lusch_deep_2018, azencot_forecasting_2020, mamakoukas_memory_2020.
+
+\subsection{Scoring a rollout needs a readout, and the readout can decide the answer}
+\label{sec:bg_scoring}
+
+\paragraph{A probe from latent to physical state is the usual readout.}
+% It is fitted on the training latents and applied to rollout latents. Keys:
+% belinkov_probing_2022, hewitt_designing_2019.
+
+\paragraph{A prediction loss in latent space fixes no scale.}
+% A loss invariant to the scale of the representation leaves that scale free,
+% and the related collapse phenomena in self-supervised learning show what a
+% free direction can do. Keys: grill_bootstrap_2020, chen_exploring_2021,
+% jing_understanding_2022.
+
+\paragraph{A predictor that learns nothing is the control that catches this.}
+% Several fields have found headline results that a trivial baseline matches,
+% and the response was a protocol rather than a new model. This is the standard
+% the thesis holds its own comparisons to. Keys: dacrema_really_2019,
+% musgrave_metric_2020, lin_neural_2019, henderson_deep_2018.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{A layout can also be built into the substrate}
+\label{sec:bg_substrate}
+% ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: give the lineage Chapter~\ref{chap:cna} belongs to, so
+% the reader can see what that architecture changes and what it inherits. It
+% closes on where these models stop, which is what makes Part V a proposal.
+
+\subsection{An assembly is a set of neurons that support each other}
+\label{sec:bg_assemblies}
+
+\paragraph{The assembly and the plasticity that forms it.}
+% Neurons that fire together strengthen their connection, and a set of mutually
+% supporting neurons is the unit of representation. Keys: hebb_organization_1949.
+
+\paragraph{Associative memory made it precise, and rigid.}
+% Strengthening every pair of co-active neurons stores complete patterns as
+% snapshots, requires stored states to overlap little, and retrieves by
+% descending an energy function. Keys: amari_learning_1972, hopfield_neural_1982.
+
+\paragraph{Stochastic recurrent networks and what they need.}
+% A constraint satisfaction network tuned by plasticity, and the restriction
+% that made it trainable. Keys: etal_boltzmann_1984, smolensky_information_1987,
+% hinton_reducing_2006.
+
+\subsection{Dynamic links, nets and the binding problem}
+\label{sec:bg_binding}
+
+\paragraph{Correlation theory and connections that are selected, not fixed.}
+% Representation by temporarily selected connections rather than by activity
+% alone, and the later development of nets and net fragments. Keys:
+% malsburg_correlation_1981, malsburg_concerning_2018.
+
+\paragraph{The binding problem.}
+% Why unstructured activation over feature units cannot say which features
+% belong to the same object, and the perceptual grouping this connects to.
+% Keys: etal_binding_2020, etal_century_2012.
+
+\paragraph{Structured alternatives inside deep learning.}
+% Capsules replace a scalar activation with a vector carrying pose and route
+% between levels by agreement. Say what they share with the assembly tradition
+% and where they stopped. Keys: hinton_transforming_2011, sabour_dynamic_2017.
+
+\subsection{Where these models stop}
+\label{sec:bg_substratelimits}
+
+\paragraph{Three limits, stated plainly.}
+% Hand designed rather than learned features, demonstrations on small and
+% synthetic inputs, and no dynamics defined over the representation, so nothing
+% to plan with. These are the limits Chapter~\ref{chap:cna} inherits and its
+% summary addresses. Do not soften them.
+
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The gap}
+\label{sec:bg_gap}
+% ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: name the gap and stop. Half a page. No results, no
+% roadmap paragraph, no repetition of the contributions list from
+% Chapter~\ref{chap:introduction}. One clause per part at most.
+
+\paragraph{The question has not been asked with the procedure varied.}
+% Section~\ref{sec:bg_solutionset} gives a literature that varies the optimizer
+% and characterises norms. Section~\ref{sec:bg_coding} gives a question about
+% how many units carry a computation, with measures and a known price.
+% Section~\ref{sec:bg_grokking} gives the one setting where the answer is
+% readable. Nobody has put the three together.
+
+\paragraph{Three specific things are missing.}
+% A comparison that holds task, data, architecture and optimizer fixed and
+% varies the rule. A prediction of the resulting layout from the form of the
+% update alone. A measurement of what the layout costs.
+
+\paragraph{And two smaller ones.}
+% The same question has not been asked of a Transformer's attention weights
+% with the objective as the variable, and the assembly tradition has not been
+% read as a layout that is fixed by construction rather than learned.

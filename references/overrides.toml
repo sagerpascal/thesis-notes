@@ -76,6 +76,13 @@
 [entry.brown_language_2020]
 doi = "10.48550/arXiv.2005.14165"
 
+# COGITAO's year changed from 2025 to 2026 when the workshop acceptance came
+# through, and assign_keys carries a group's previous key on purpose so that
+# citations written against it keep working. That left the generated key
+# naming the wrong year, so it is pinned here instead.
+[entry.cogitao]
+_key = "taoudibenchekroun_cogitao_2026"
+
 [[split]]
 keys = ["brown_language_2020", "devlinBERTPretrainingDeep2019"]
 reason = "GPT-3 and BERT, merged only because the GPT-3 entry had BERT's DOI"

@@ -282,6 +282,19 @@
 \newcommand{\appref}[1]{\cref{#1}}
 
 % ---------------------------------------------------------------------------
+% 8a. The margin table of contents
+%
+% \margintoc puts a local contents list beside each chapter opening. kaobook
+% takes it down to subsections, which is more than the margin holds: the
+% background chapter has eight sections and twenty two subsections between
+% them, and the list ran off the foot of the page. Sections only keeps it to
+% one glance, which is what a chapter opening wants. The full depth is still
+% in the main table of contents.
+% ---------------------------------------------------------------------------
+
+\setcounter{margintocdepth}{\sectiontocdepth}
+
+% ---------------------------------------------------------------------------
 % 9. Margin citations
 %
 % kaobiblio's \sidecite sets the usual numeric marker in the text and puts the
@@ -309,16 +322,55 @@
 %
 % And a work already introduced in this chapter does not. Printing the same
 % author, year and title five times down one margin tells the reader nothing
-% the first one did not, and it is what fills the column: of the 588 single
-% key citations in the thesis, only 276 are a work's first mention in its
-% chapter. Restricting to those is what keeps the margin inside the page.
+% the first one did not: of the 588 single key citations in the thesis, only
+% 276 are a work's first mention in its chapter.
+%
+% Even 276 is more than the column holds, and getting from there to 165 that
+% fit took three more decisions. Each was measured, and the measurements are
+% the reason to keep them.
+%
+% The note is the marker, the author and the year, and not the title.
+% kaobiblio's own format ends with the full title, which is four or five lines
+% in a 136pt column and is the one part the bibliography already carries in
+% full.
+%
+% At most one citation per paragraph reaches the margin. A paragraph that
+% cites three works in two sentences otherwise puts three notes in the same
+% few lines.
+%
+% The note is placed by the marginnote package and not by \marginpar. kaobook
+% sends an offset-less \marginnote through the floating \marginpar, and that
+% was tried first: at full density seventy notes a run were being relocated
+% away from the paragraph they belonged to, and one left pending at the
+% \clearpage that ends an imported chapter made LaTeX report `Float(s) lost'
+% and throw it away. An empty importedpaper block was enough to reproduce
+% that, so it is the mechanism and not the volume. Giving the note an offset
+% of 0pt routes it through marginnote, which never floats, never relocates and
+% cannot be lost. What it does instead is overprint, so the two rules above
+% are what make it safe, and the check is to look at the densest margin in the
+% document rather than to trust the log.
 % ---------------------------------------------------------------------------
 
 \makeatletter
 
+% kaobiblio's own margin format is marker, author, year and the full title,
+% which runs to four or five lines in a 136pt column. The title is what makes
+% it long and it is the part the bibliography already carries in full, so the
+% margin keeps the marker, the author and the year. That is what a reader
+% needs to place a citation without turning to the back.
+\RenewDocumentCommand{\formatmargincitation}{m}{%
+  \parencite{#1}: \citeauthor*{#1}
+  (\iffieldundef{year}{\bibsstring{nodate}}{\printfield{year}})%
+}
+
 \newif\ifts@sidecite \ts@sidecitetrue   % the feature switch
 \newif\ifts@margfree \ts@margfreetrue   % is the margin usable right here?
+\newif\ifts@parfree  \ts@parfreetrue    % has this paragraph had one yet?
 \newif\ifts@useside
+
+% One per paragraph. The kernel's paragraph hook is the only place that knows
+% where a paragraph starts, and it costs nothing when the feature is off.
+\AddToHook{para/begin}{\ts@parfreetrue}
 
 % The flag is per chapter, and the chapter number is part of its name rather
 % than something to reset, so the appendix and the front matter get their own
@@ -330,11 +382,13 @@
   \ts@usesidefalse
   \ifts@sidecite
     \ifts@margfree
-      \in@{,}{#1}%
-      \ifin@\else
-        \@ifundefined{ts@seen@\thechapter @#1}{%
-          \ts@usesidetrue \ts@markseen{#1}%
-        }{}%
+      \ifts@parfree
+        \in@{,}{#1}%
+        \ifin@\else
+          \@ifundefined{ts@seen@\thechapter @#1}{%
+            \ts@usesidetrue \ts@markseen{#1}\ts@parfreefalse
+          }{}%
+        \fi
       \fi
     \fi
   \fi
@@ -351,13 +405,15 @@
 }
 
 % biblatex takes [prenote][postnote]{keys}; \sidecite takes a vertical shift
-% first, so the notes shift one place along.
+% first, so the notes shift one place along. The shift is given as 0pt rather
+% than left out, because kaobook reads an absent one as a request for the
+% floating \marginpar. See above for why that matters.
 \newcommand{\ts@dispatch}[5]{%
   \ts@decide{#5}%
   \ifts@useside
     {\ts@plaincites
-     \IfNoValueTF{#3}{#1{#5}}%
-       {\IfNoValueTF{#4}{#1[][#3]{#5}}{#1[][#3][#4]{#5}}}}%
+     \IfNoValueTF{#3}{#1[0pt]{#5}}%
+       {\IfNoValueTF{#4}{#1[0pt][#3]{#5}}{#1[0pt][#3][#4]{#5}}}}%
   \else
     \IfNoValueTF{#3}{#2{#5}}%
       {\IfNoValueTF{#4}{#2[#3]{#5}}{#2[#3][#4]{#5}}}%
@@ -405,3 +461,139 @@
 }
 
 \makeatother
+
+% ---------------------------------------------------------------------------
+% 10. The front matter lists
+%
+% Every entry in the table of contents and in the two lists of floats is a
+% hyperlink, so hyperref's linkcolor coloured all of them and the pages read
+% as solid teal. The colour is worth keeping where it marks structure and not
+% where it marks every line, so the lists are set with black links and the
+% part and chapter entries are coloured back in.
+%
+% Two things have to be arranged for that. A link sets its own colour inside
+% the entry, so as long as the entry text is a link nothing outside it can
+% recolour one level and not another. `linktoc=page' makes only the page number
+% a link, which leaves the text an ordinary piece of type. KOMA's font hooks
+% for the part and chapter entries then reach it.
+%
+% Patching \l@part and \l@chapter was tried first and does not work here: the
+% lists run under \etocstandardlines, and etoc typesets them with copies of
+% those macros that it took when it was loaded, long before this file runs.
+% ---------------------------------------------------------------------------
+
+\makeatletter
+
+\addtokomafont{partentry}{\color{ThesisPrimary}}
+\addtokomafont{chapterentry}{\color{ThesisPrimary}}
+
+% A caption is written to the list of floats whole, and the captions of the
+% imported papers run to several sentences, so the two lists became walls of
+% text. Shortening them at the source is not available: a caption belongs to
+% its paper and those are never edited, and by the time the entry reaches the
+% list it is wrapped in the label prefixing of thesis_import.sty and in
+% hyperref's link, so it cannot be taken apart by pattern either.
+%
+% It can be cut after it is typeset. The entry goes into a box, and if the box
+% is wider than the space a single line has, the overflow is clipped away and
+% an ellipsis marks that something was dropped. This never inspects the
+% caption, so any macro inside it is safe.
+\RequirePackage{trimclip}
+
+\newlength{\ts@entrywidth}
+\newsavebox{\ts@entrybox}
+
+\newcommand{\ts@oneline}[1]{%
+    % Room for one line: the measure, less the indent this level uses, less
+    % the margin the page number needs, less room for the ellipsis.
+    \setlength{\ts@entrywidth}{\dimexpr\linewidth-1.5em-\@tocrmarg-2em\relax}%
+    \sbox\ts@entrybox{#1}%
+    \ifdim\wd\ts@entrybox>\ts@entrywidth
+        \clipbox{0pt 0pt {\dimexpr\wd\ts@entrybox-\ts@entrywidth\relax} 0pt}%
+                {\usebox\ts@entrybox}%
+        \textcolor{ThesisGrey}{\,\dots}%
+    \else
+        \usebox\ts@entrybox
+    \fi}
+
+% \@dottedtocline is not used for these two, because a cut caption ends in an
+% ellipsis and a row of leader dots immediately after it hides the ellipsis, so
+% the cut reads as a fault rather than as a decision. The page number is set
+% flush right with plain space in front of it instead. Otherwise this follows
+% \@dottedtocline: \@tempdima has to be set before the entry is typeset,
+% because the \numberline inside it sizes the number box from it.
+\newcommand*{\ts@floatentry}[2]{%
+    \ifnum \c@tocdepth >\z@
+        \vskip \z@ \@plus.2\p@
+        {\leftskip 1.5em \rightskip \@tocrmarg \parindent \z@
+         \parfillskip -\rightskip
+         \interlinepenalty\@M
+         \leavevmode
+         \@tempdima 2.3em
+         \advance\leftskip \@tempdima \hskip -\leftskip
+         \ts@oneline{#1}\nobreak\hfill\nobreak
+         \hb@xt@\@pnumwidth{\hss #2}%
+         \par}%
+    \fi}
+\renewcommand*{\l@figure}{\ts@floatentry}
+\renewcommand*{\l@table}{\ts@floatentry}
+
+% One call for the whole block, so that main.tex carries no styling. The
+% group keeps the black links and the taller measure local to the lists.
+\newcommand{\thesisfrontlists}{%
+    \begingroup
+        \setlength{\textheight}{230\vscale}%
+        \etocstandarddisplaystyle
+        \etocstandardlines
+        % Entries in plain black, page numbers the only links, so that the
+        % colour above marks the parts and the chapters and nothing else.
+        \hypersetup{linktoc=page, linkcolor=black}%
+        \tableofcontents
+        \listoffigures
+        % The list of tables follows the list of figures on the same page
+        % where it fits.
+        \let\cleardoublepage\bigskip
+        \let\clearpage\bigskip
+        \listoftables
+    \endgroup}
+
+\makeatother
+
+
+% ---------------------------------------------------------------------------
+% 11. The list of publications
+%
+% One entry per publication: the full reference from the bibliography, then a
+% line that says which chapter carries it and what its status is. The
+% reference itself is never retyped, so the list cannot drift from
+% references/merged.bib.
+% ---------------------------------------------------------------------------
+
+\newenvironment{publicationlist}{%
+    \begin{list}{}{%
+        \setlength{\leftmargin}{2.2em}%
+        \setlength{\labelwidth}{1.6em}%
+        \setlength{\labelsep}{0.6em}%
+        \setlength{\itemsep}{1.1em}%
+        \setlength{\parsep}{0pt}%
+        \setlength{\topsep}{0.8em}%
+        \usecounter{tspub}%
+        \renewcommand{\makelabel}[1]{%
+            \hfill{\color{ThesisPrimary}\bfseries\thetspub}}%
+    }%
+}{%
+    \end{list}%
+}
+% Named without an @, because this file leaves \makeatletter before here.
+\newcounter{tspub}
+
+% \publication{bib key}{where it sits}{status}
+\newcommand{\publication}[3]{%
+    \item \fullcite{#1}%
+    \par\vspace{2pt}%
+    {\footnotesize\scshape\color{ThesisPrimary}#2}%
+    \hfill
+    {\footnotesize\scshape\color{ThesisGrey}#3}%
+    \par\vspace{1pt}%
+    \textcolor{ThesisRule}{\rule{\linewidth}{0.4pt}}%
+}

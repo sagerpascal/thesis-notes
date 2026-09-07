@@ -128,6 +128,82 @@ def overfull_from_log():
     return sorted(found, reverse=True)
 
 
+def report_margins() -> int:
+    """How full the margin column gets, and where.
+
+    The margin carries float captions, the margin table of contents and the
+    side citations, and none of those three knows about the others. The
+    marginnote package overprints rather than relocating, so a column that is
+    too full is silent: nothing appears in the log and the only way to see it
+    is to measure the output. This reports the fullest columns so the densest
+    page can be looked at, and flags any margin material that has run past the
+    foot of the paper.
+
+    The x bands are kaobook's: on a recto page the margin is to the right of
+    the text block, on a verso page it is to the left, so the band alternates.
+    Rotated pages are skipped, because their bounding boxes are in unrotated
+    coordinates and the bands mean nothing there.
+    """
+    pdf = ROOT / "main.pdf"
+    if not pdf.is_file():
+        print("  no main.pdf, run ./build.sh first")
+        return 1
+    tool = shutil.which("pdftotext") or "/opt/homebrew/bin/pdftotext"
+    out = ROOT / "build" / "bbox.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run([tool, "-bbox", str(pdf), str(out)], capture_output=True)
+    text = out.read_text(encoding="utf-8", errors="replace")
+    out.unlink(missing_ok=True)
+
+    page = re.compile(r'<page width="([\d.]+)" height="([\d.]+)">(.*?)</page>',
+                      re.S)
+    word = re.compile(r'<word xMin="([\d.]+)" yMin="([\d.]+)"'
+                      r' xMax="([\d.]+)" yMax="([\d.]+)">')
+    rows, spilt, wide = [], [], 0
+    for n, (_, height, body) in enumerate(page.findall(text), 1):
+        lo, hi = (392.0, 530.0) if n % 2 else (65.0, 208.0)
+        words = word.findall(body)
+        # The table of contents and the two float lists are set across the
+        # text block and the margin together, so on those pages the band below
+        # is type and not margin material. A page like that has words in the
+        # gutter that separates the two on every other page, which is what
+        # \marginparsep is, and no ordinary page has anything there.
+        # The band is narrowed at both ends, because a word's box can overhang
+        # the measure by a point or two, and three words are required, so that
+        # one stray box does not condemn a page.
+        gutter = (379.0, 388.0) if n % 2 else (209.0, 218.0)
+        if sum(1 for x0, _a, _x1, _b in words
+               if gutter[0] < float(x0) < gutter[1]) >= 3:
+            wide += 1
+            continue
+        boxes = [(float(a), float(b)) for x0, a, _x1, b in words
+                 if lo <= float(x0) <= hi]
+        if not boxes:
+            continue
+        rows.append((len(boxes), n))
+        bottom = max(b for _, b in boxes)
+        if bottom > float(height) - 30:
+            spilt.append((n, round(bottom)))
+
+    rows.sort(reverse=True)
+    print(f"  {len(rows)} pages carry margin material, "
+          f"{wide} wide pages skipped\n")
+    print("  fullest margin columns, words in the column")
+    for count, n in rows[:10]:
+        print(f"    p{n:<5d} {count:4d} words")
+    print()
+    if spilt:
+        print("  margin material within 30pt of the foot of the paper")
+        for n, bottom in spilt:
+            print(f"    p{n:<5d} reaches {bottom}pt of 842")
+    else:
+        print("  no margin material within 30pt of the foot of the paper")
+    print("\n  Rotated pages are skipped. Open the fullest pages and look:\n"
+          "  the marginnote package overprints instead of relocating, so an\n"
+          "  overfull column is not reported anywhere else.")
+    return 0
+
+
 def report_pdf() -> int:
     """Every ?? in the built PDF, which is the only place they are all visible.
 
@@ -173,10 +249,15 @@ def main() -> int:
                         help="only the overfull box summary")
     parser.add_argument("--pdf", action="store_true",
                         help="find every ?? in the built PDF, with its page")
+    parser.add_argument("--margins", action="store_true",
+                        help="how full the margin column gets, and where")
     args = parser.parse_args()
 
     if args.pdf:
         return report_pdf()
+
+    if args.margins:
+        return report_margins()
 
     if not args.overfull:
         rows = []

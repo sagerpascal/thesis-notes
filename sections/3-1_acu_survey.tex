@@ -96,10 +96,9 @@ reformatting for thesis consistency. Section~\ref{sec:acu_chapter_summary}
 provides a new chapter summary that draws out the specific implications of the
 survey findings for the thesis argument.
 
-A note on scope: the broader literature on ACUs and the prior surveys in this
-space are reviewed in Chapter~\ref{chap:background}, Section~\ref{sec:rw_agents}.
-General contextualisation of the ACU field in the literature is not repeated
-here.
+A note on scope. This chapter surveys the ACU literature itself, so
+Chapter~\ref{chap:background} does not cover that field a second time and
+carries only the background the later chapters rest on.
 
 
 
@@ -109,7 +108,13 @@ here.
 % drops, and then refers back to it from the body. Reproducing the float here,
 % inside the block and under the paper's own labels, is what keeps those
 % references resolving. check_imports.py holds it to the original.
-\begin{figure}[t]
+%
+% [htbp] and not [t]. This float is contributed before any of the paper's own,
+% and with [t] alone it was still pending when the environment's group closed,
+% which is a LaTeX Error: Float(s) lost. That error is reported as
+% `file:line: LaTeX Error', not as a line starting with `!', so grep for the
+% former or read ./build.sh errors rather than filtering the log by hand.
+\begin{figure}[htbp]
 \begin{subfigure}{0.49\linewidth}
 \includegraphics[width=\linewidth]{figures/ACU_example.png}
 \caption{Example of a computer use task.}
