@@ -904,31 +904,54 @@ and `generated/` trees, and all seven scripts.
 
 ### Blocking the thesis
 
-0. **The framing is reopened, and nothing else in this list should be written
-   until it is settled.** Raised by the author on 2026-09-12, because the
-   Koopman paper became an evaluation paper and the settled story gives it a
-   short side chapter. The proposed arc runs ACU, then evaluation, then what is
-   actually learned, then generalisation, then a circuit fixed in advance, with
-   "circuit" as the noun carrying every chapter. It is written up as section 10
-   of `00_ADMIN/04_story_framings.md`, together with the seven questions it has
-   to survive and the way to decide between it and the current story. Read that
-   section and `00_ADMIN/05_thesis_concept.md` together at the start of the next
-   session on this thesis, and raise it with the author before writing chapter
-   introductions, summaries, the background chapter or the discussion. Items 1,
-   2 and 4 below all depend on the answer.
+0. **The story has to be rethought, and no frame prose is written until it
+   is.** Reopened by the author on 2026-11-14. The arc has been unsettled
+   since 2026-09-12, and the re imports of that day changed two of the papers
+   the open proposal reasons about, so neither candidate arc describes the
+   paper set any more. The world model paper is now a constructive correction
+   to an evaluation protocol, which is neither the cautionary side chapter the
+   settled story gives it nor the "testing the circuit" slot the proposal
+   gives it. The grokking paper was rewritten and two of its headline results
+   are gone.
 
-1. **The chapter wrappers are placeholders.** Every paper backed chapter has a
-   publication box, contribution statement, chapter introduction and chapter
-   summary, and all of them say "Placeholder". The imported bodies below them
-   are real and compile. Write the framing prose, then flip each manifest to
-   `status = "wired"`.
+   **Read `00_ADMIN/04_story_framings.md` section 11 first.** It holds what
+   changed, what it costs the story, the decision that was taken, and the four
+   steps the next session works through in order. Read it before
+   `00_ADMIN/05_thesis_concept.md`, because two entries in that file's one
+   line summaries describe papers as they no longer are, and section 11 names
+   which.
 
-   Two of them carry a specific obligation, marked `TODO(story)` in the file.
-   The grokking chapter introduction has to define the twelve rules the
-   chapter tests, because the paper defines them in a subsection of the
-   background section the chapter drops, and `\importedlabel` points the
-   paper's own back references at that introduction. The CNA chapter summary
-   is where the paper's discussion label now lives, for the same reason.
+   One decision is settled and holds whatever arc wins: the thesis wide noun
+   is **circuit**, not "layout", with the definition unchanged.
+   `imports/glossary.toml` carries it. The prose does not: 64 occurrences of
+   "layout" remain in thesis owned files, 41 of them in the introduction, and
+   two part titles carry it. Sweep them while writing the new introduction,
+   not as a pass of its own.
+
+   Do not write chapter introductions, chapter summaries, the background
+   chapter or the discussion before the author has settled the arc. Items 1,
+   2 and 4 below all depend on it.
+
+1. **The chapter wrappers are mostly placeholders.** Every paper backed
+   chapter has a publication box, contribution statement, chapter introduction
+   and chapter summary. The imported bodies below them are real and compile.
+   Write the framing prose, then flip each manifest to `status = "wired"`.
+
+   Two chapters are further along. `sections/4-1_grokking.tex` and
+   `sections/5-1_bounded.tex` carry a real publication header box and a real
+   contribution statement as of 2026-11-14. Only their chapter introduction
+   and chapter summary are still placeholders, because those are the parts
+   that commit to an arc and the arc is item 0. The grokking contribution
+   statement is reconstructed from the author list, since that manuscript
+   carries no contributions section, and is marked `TODO(author)`. The world
+   model one follows the paper's own author contributions section.
+
+   One chapter carries a specific obligation, marked `TODO(story)` in the
+   file. The CNA chapter summary is where the paper's discussion label now
+   lives, because the chapter drops the paper's discussion. The grokking
+   chapter had an obligation of the same kind and no longer does: the
+   2026-11-14 version defines its learning rules in the experimental setup,
+   which the chapter includes.
 2. **The background chapter is a structure with no prose.**
    `sections/2-1_related_work.tex` has its eight sections, its subsections and
    a `\paragraph` stub per paragraph, each carrying a comment with the claim to
@@ -948,15 +971,23 @@ and `generated/` trees, and all seven scripts.
    `imported_papers/probe-norm`, titled "Correcting state-probe evaluation of
    world models for norm drift", with a separate supplement that now supplies
    the appendix parts. The slug stays `bounded`, so the chapter file, its label
-   and the appendix chapter kept their names, but the chapter's working title
-   and `references/manual.bib` describe the older framing in places.
+   and the appendix chapter kept their names.
+
+   Both `\chapter` titles still state the old findings. `chap:bounded` is "A
+   Constraint on Latent Dynamics Passes the Standard Readout Without
+   Predicting", which is the previous paper, and `chap:grokking` says "units"
+   where the thesis noun is now circuit. A chapter title is a statement of the
+   finding and belongs to the frame, so both are rewritten with the chapter
+   introductions, under item 0.
 4. **Discussion and conclusion are outlines in comments.** Write them last.
 5. **Own paper entries in `manual.bib` carry TODO fields.** The attention
    paper is now ICML 2025 and COGITAO is the 2nd ICML Workshop on
    Compositional Learning, both set on 2026-09-07. Still open: the COGITAO
    year is inferred from the workshop being the second of its series and from
-   the vendored directory name, the author lists of COGITAO and the world model
-   paper read `and others`, and the CNA entry has no volume or pages. The list
+   the vendored directory name, the COGITAO author list reads `and others`,
+   and the CNA entry has no volume or pages. The world model entry was
+   completed on 2026-11-14 and the grokking title corrected to the one the
+   2026-11-14 manuscript carries, so neither is open any more. The list
    of publications in `sections/0-4_publications.tex` prints these entries with
    `\fullcite`, so fixing the bib fixes the list.
 6. **The title is a working title.** Alternatives are in

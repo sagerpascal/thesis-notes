@@ -1225,3 +1225,142 @@ Listed as questions to answer next session, not as a verdict.
 Write both arcs as a one page introduction skeleton, three paragraphs each, and
 see which one states a claim a chapter tests. Section 6 is the standard to
 judge against.
+
+## 11. The story has to be rethought again (2026-11-14)
+
+**Status: the arc is open, and the next session on this thesis starts here.**
+The author asked for the story to be brainstormed once more before any chapter
+introduction, chapter summary, background prose or discussion prose is
+written. Section 10 is not resolved, and it can no longer be resolved on its
+own terms, because two of the papers it reasons about have changed underneath
+it.
+
+One decision was taken and is recorded below. Everything else is open.
+
+### Decided: "circuit" is the thesis wide noun
+
+The author chose "circuit" over "layout" on 2026-11-14. The definition does
+not change, only the name: the way a computation is distributed over a
+network's parts, whether those parts are neurons or the rows and columns of a
+weight matrix. It is defined once, in the introduction, definition before
+name.
+
+This reverses the choice made in section 7, which picked "layout" to avoid
+overloading a word that the grokking and interpretability literature uses
+narrowly. The reason it was reversed is that the central paper of the part now
+uses "circuit" as its own noun throughout the text the chapter includes: its
+results section is titled "Credit allocation changes circuit concentration",
+and its abstract defines the circuit as the neural implementation and circuit
+size as the number of participating neurons. The frame was carrying a second
+name for the thing its own lead paper names.
+
+The objection raised in section 10 still stands and is now the frame's problem
+to solve, not a reason to reopen the choice. The survey and the world model
+chapter contain no circuit in the interpretability sense. The frame therefore
+has to define the word wide enough to cover a weight matrix's columns, hold
+that definition everywhere, and not claim a circuit where there is none.
+
+`imports/glossary.toml` carries the decision. The prose does not yet. 64
+occurrences of "layout" remain in thesis owned files:
+
+| File | Occurrences |
+| --- | --- |
+| `sections/1-1_introduction.tex` | 41 |
+| `main.tex` | 7, of which two are part titles |
+| `sections/2-1_related_work.tex` | 5 |
+| `sections/0-1_abstract_en.tex` | 3 |
+| `sections/7-1_discussion.tex` | 3 |
+| five other files | 1 each |
+
+Two part titles carry it, `part:procedure` is "The Training Procedure Decides
+the Layout" and `part:construction` is "A Layout Fixed by Construction". The
+German abstract carries the idea as "Anordnung" twice and "Verteilung" once.
+The sweep is not a find and replace: "layout" reads naturally in several
+sentences where "circuit" would not, and the abstract deliberately uses no
+coined vocabulary at all. Do the sweep as part of writing the new arc, not
+before it.
+
+### What changed in the papers, and what it costs the story
+
+**The world model paper is a different paper.** It was the Koopman-JEPA study,
+then the TMLR rewrite "Bounded Is Not Better", and since 2026-11-14 it is a
+Frontiers manuscript, "Correcting state-probe evaluation of world models for
+norm drift", vendored at `imported_papers/probe-norm`. The thesis slug is
+still `bounded`.
+
+What it now claims: the norm of a predicted latent drifts during
+autoregressive rollout while its direction stays accurate, probes fitted on
+encodings are highly sensitive to that norm, and the probe therefore reports
+an error that is mostly drift. Of 39 surveyed evaluations of predicted
+latents, one reports prediction norms. For TCRL on pendulum, rescaling
+predictions to the norm of the encodings removes 97% of the probe's error at
+the end of the training horizon. The paper proposes re-projection, rescaling
+each prediction to a reference norm taken from the encodings, with four checks
+that test whether the re-projected error reflects what the model predicts.
+
+What this costs the story. The one line summary in `05_thesis_concept.md`
+still describes the previous paper: a scale invariant loss leaves latent scale
+free, a spectral constraint fixes its growth, the probe reads that as
+learning, and trivial predictors beat every learned model. The trivial
+baselines and the spectral constraint are no longer the headline. The paper is
+now a correction to an evaluation protocol, with a fix it recommends other
+people adopt. That is a constructive contribution rather than a cautionary
+one, which is the opposite of the role the settled arc gives it in Part IV,
+and it is also not "testing the circuit", which is the role section 10's arc
+gives it. **Neither existing arc describes this paper any more.** That is the
+first thing the next session has to settle.
+
+**The grokking paper was rewritten.** It is now "Grokking Can Be Steered:
+Selecting Desirable Solutions by Choice of Learning Rule". Every section was
+renamed or reorganised, the definition of the learning rules moved out of the
+background section into the experimental setup, and the appendix was
+restructured.
+
+What this costs the story. The one line summary in `05_thesis_concept.md` is
+partly stale and has to be re-derived from the new text before it is used in
+any frame prose. Specifically: "twelve rules, four of which never generalise"
+does not appear in the new version, and neither does the result that
+fluctuation under deletion falls as one over the square root of the effective
+unit count. What the new version does carry, in its own words: every rule that
+groks recovers the same Fourier based algorithm with circuits of different
+size; credit equalisation expands effective circuit size from 60% to 99% at
+similar training and test accuracy, including when applied after grokking; the
+circuit stays concentrated for equalisation groups of eight or more and
+distributes fully only at one factor per neuron; Nero distributes the
+computation where Adam and seven others do not; distributed circuits tolerate
+deletion better while concentrated ones prune further and transfer about twice
+as fast. The grain law survives, as `eq:grainlaw` and `prop:grain`.
+
+### What the next session has to do
+
+In this order.
+
+1. Re-derive the one line summary of the world model chapter and of the
+   grokking chapter from the papers as they now stand, and correct the two
+   entries in `05_thesis_concept.md` section "What each chapter says, in one
+   line". Do this first, because both arcs are being judged on what the papers
+   say, and one of the two entries is describing a paper that no longer
+   exists.
+2. Decide what role a constructive evaluation correction plays. The options
+   are not the ones in section 10 any more. It could stay a short chapter in
+   Part IV, it could lead a part about how the field measures what it claims,
+   or it could pair with the retrieval and Hounsfield chapters as the applied
+   part. Say which, and say what the thesis argument gains.
+3. Then, and only then, settle the arc, using the test section 10 already
+   names: write both candidate arcs as a one page introduction skeleton, three
+   paragraphs each, and see which one states a claim that a chapter tests.
+   Section 6 is the standard.
+4. Sweep "layout" to "circuit" as part of writing the new introduction, not
+   as a separate pass, and update `imports/glossary.toml` to drop the
+   `retired_frame_term` line once the sweep is done.
+
+### What is already written and does not need redoing
+
+The chapter wrappers of the grokking and world model chapters carry a real
+publication header box and a real contribution statement as of 2026-11-14.
+Their chapter introductions and chapter summaries are still placeholders, on
+purpose, because they are the parts that commit to an arc. The grokking
+contribution statement is reconstructed from the author list, since the
+manuscript carries no contributions section, and is marked `TODO(author)` for
+checking. The world model contribution statement follows the paper's own
+author contributions section and needs no checking.

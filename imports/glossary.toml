@@ -2,10 +2,20 @@
 # site in the thesis frame and the name each imported chapter uses for the
 # same idea. See CLAUDE.md 3.5 and 3.9. Add a term the day it is coined.
 
-[layout]
+# DECIDED 2026-11-14, NOT YET APPLIED. The author chose "circuit" as the thesis
+# wide noun, replacing "layout". The entry below is written as decided. The
+# prose is not swept yet, because the arc it sits in is being rethought: 64
+# occurrences of "layout" remain in thesis owned files, 41 of them in
+# sections/1-1_introduction.tex, and two part titles in main.tex carry it.
+# See 00_ADMIN/04_story_framings.md section 11 for the sweep and its cost.
+[circuit]
 definition = "the way a computation is distributed over a network's parts, whether those parts are neurons or the rows and columns of a weight matrix"
 site = "sections/1-1_introduction.tex, section A task fixes what a network computes"
-synonyms = { grokking = "circuit", attention = "structure, as in symmetric or directional structure and column dominance" }
+synonyms = { grokking = "circuit, circuit size, circuit concentration", attention = "structure, as in symmetric or directional structure and column dominance" }
+# The word the thesis frame used until 2026-11-14. It is not a synonym any
+# chapter uses, it is the retired frame term, kept here so a sweep can be
+# checked against it.
+retired_frame_term = "layout"
 
 [credit_assignment_algorithm]
 definition = "the computation that assigns each weight its share of the error at the output; backpropagation is one"

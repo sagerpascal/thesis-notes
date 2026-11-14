@@ -4,11 +4,24 @@ The settled story, as of 2026-09-06. The framings that were tried and rejected,
 and why, are in [04_story_framings.md](04_story_framings.md). This file is the
 one to read before writing any thesis owned prose.
 
-**Under review since 2026-09-12.** The author proposed a different arc, built
-around the world model paper having become an evaluation paper, and wants it
-compared against the story below before more frame prose is written. It is
-section 10 of [04_story_framings.md](04_story_framings.md). Nothing here is
-retired yet.
+**Under review since 2026-09-12, reopened 2026-11-14.** The author proposed a
+different arc on 2026-09-12, built around the world model paper having become
+an evaluation paper. That proposal is section 10 of
+[04_story_framings.md](04_story_framings.md) and it was never resolved. On
+2026-11-14 two of the papers it reasons about were re-imported and had both
+changed, so neither arc describes the paper set any more. The author asked for
+the story to be brainstormed once more before any further frame prose is
+written.
+
+**Read [04_story_framings.md](04_story_framings.md) section 11 before this
+file.** It records what changed, what it costs the story, the one decision
+that was taken, and what the next session has to do in which order. Two entries
+in "What each chapter says, in one line" below are stale and are named there.
+
+One decision is settled and applies whatever arc wins: the thesis wide noun is
+**circuit**, not "layout". The definition is unchanged. The prose has not been
+swept yet, so this file and the introduction still say "layout" throughout.
+Nothing else here is retired.
 
 ## Working title
 
@@ -100,21 +113,26 @@ Each of the three papers the author drove leads its own part.
 
 - ACU. One recipe, six gaps. Gaps one and two, generalisation and inefficient
   learning, are properties of the trained network.
-- Grokking. Rule varied, everything else fixed. Four of twelve rules never
-  generalise. The rule decides how many neurons carry the solution at equal
-  loss, margin and norm. The grain law predicts eight of eight optimizers. The
-  credit knob moves the layout from the start or after grokking. Fluctuation
-  under deletion falls as one over the square root of the effective unit
-  count. Concentrated solutions adapt about twice as fast.
+- Grokking. STALE since the 2026-11-14 re import, re-derive from the paper,
+  see section 11 of the framings file. Rule varied, everything else fixed.
+  Four of twelve rules never generalise. The rule decides how many neurons
+  carry the solution at equal loss, margin and norm. The grain law predicts
+  eight of eight optimizers. The credit knob moves the layout from the start
+  or after grokking. Fluctuation under deletion falls as one over the square
+  root of the effective unit count. Concentrated solutions adapt about twice
+  as fast.
 - Attention. Objective varied, backpropagation fixed. Autoregressive training
   uses a token as context many times and as target once, so a few columns
   dominate. Bidirectional training enters each pair in both orders, so the
   update is symmetric and the structure spreads. Symmetric initialisation
   speeds up bidirectional training.
-- World model. A scale invariant loss leaves latent scale free, a spectral
-  constraint fixes its growth, the probe reads that as learning. Trivial
-  predictors beat every learned model. The controls that expose this are the
-  ones every layout claim rests on.
+- World model. STALE, this describes a paper that no longer exists. The study
+  is now a Frontiers correction to the evaluation protocol, "Correcting
+  state-probe evaluation of world models for norm drift". Re-derive from the
+  paper, see section 11 of the framings file. The old line: a scale invariant
+  loss leaves latent scale free, a spectral constraint fixes its growth, the
+  probe reads that as learning. Trivial predictors beat every learned model.
+  The controls that expose this are the ones every layout claim rests on.
 - Hounsfield. Input masks from tissue specific Hounsfield ranges buy accuracy
   and data efficiency against the same model without masks.
 - Retrieval. Lexical search, dense retrieval and a cross encoder, first on the
