@@ -57,9 +57,13 @@ Stake, finding, measurement, construction.
    rule that groks modular addition recovers the same Fourier algorithm with
    circuits of different size. A neuron stays in use when its credit is large
    relative to the non gradient term of its own update. Equalising credit
-   expands the effective circuit from 60% to 99% of the layer at the same
-   accuracy, including after grokking. What an optimizer normalises together
-   decides, which places Nero apart from Adam and seven others. The circuit
+   expands the effective circuit from 60% to 99% of the layer at width 256,
+   including when switched on after grokking. Margin and parameter norm stay
+   within a few percent, and mean test accuracy falls from 0.998 to 0.976, so
+   this is not free and the thesis says the number wherever it says the
+   headline. What an optimizer normalises together decides which neurons stay
+   in use, which separates Nero from Adam, RMSProp, Muon, Shampoo and the
+   others tested. The circuit
    has a price: distributed circuits tolerate neuron deletion, concentrated
    ones prune further and transfer about twice as fast. The same question
    asked of a Transformer's attention weights gives the same answer one level
@@ -169,8 +173,13 @@ that number it cites the paper.
   three routes to unused neurons: coupled weight decay, Adam's epsilon, and
   the decay of a trainable per neuron gain. Equalising credit across neurons,
   or scaling each neuron's weight decay by its credit, expands the effective
-  circuit from 60% to 99% of the layer at similar training and test accuracy,
-  including when switched on after grokking. Varying how many neurons share
+  circuit from 60% to 99% of the layer at width 256, including when switched
+  on after grokking. The paper's own wording is "similar training and test
+  accuracy": margin and parameter norm stay within a few percent and mean test
+  accuracy falls from 0.998 to 0.976. The headline is width specific. At width
+  32 the reference already uses 30 of 32 neurons and equalisation reaches 31,
+  so there is nothing to redistribute, and at width 2048 the reference uses
+  332 and the equalised network 2046, so the gap widens with width. Varying how many neurons share
   one equalisation factor, the circuit stays concentrated at groups of eight
   or more and distributes fully only at one factor per neuron. What an
   optimizer normalises together therefore decides: Nero normalises per neuron

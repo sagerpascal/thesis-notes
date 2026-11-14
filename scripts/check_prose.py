@@ -46,6 +46,10 @@ TELLS = [
     "robust", "key insight", "critical", "ensures", "facilitates",
     "it is important", "comprehensive", "significantly", "dramatically",
     "vastly", "we believe", "we argue", "effectively", "notably",
+    # Self congratulation: it asks the reader to credit the candour before
+    # the content arrives, and implies the alternatives were dishonest.
+    "the honest answer", "to be fair", "it is fair to say", "in truth",
+    "the real question", "the key point",
 ]
 
 HARD = {
@@ -63,12 +67,62 @@ HARD = {
         r"\b(predicted in advance|before training|before the runs|"
         r"pre-?specified|registered in advance)\b", re.I),
     "code identifier in prose": re.compile(r"(?<![\\\w/])[a-z]+_[a-z_]+(?![\w/}])"),
+    # 3.3 bans label sentences outright, giving "Key finding: the agents fail
+    # to generalise" as the example. A short capitalised run before a colon at
+    # the head of a line is that shape.
+    "label sentence": re.compile(r"(?m)^\s*[A-Z][A-Za-z][A-Za-z ]{0,22}:\s+\S"),
 }
 
 SOFT = {
     "characteristic word": re.compile("|".join(r"\b" + re.escape(w) + r"\b" for w in TELLS), re.I),
     "semicolon": re.compile(r";"),
+    # 3.3 bans rhetorical questions in prose. A real question in a research
+    # questions list is legitimate, which is why this is soft.
+    "question in prose": re.compile(r"\?"),
+    # 3.6: these may not act. A measure, a benchmark or a document deciding
+    # something is the personification the guide rules out.
+    "personified abstraction": re.compile(
+        r"\b(the thesis|the chapter|the benchmark|the task|the dataset|"
+        r"the literature|the field|the measure)\s+"
+        r"(says|argues|claims|decides|chooses|must|believes|wants|demands|"
+        r"tells|insists)\b", re.I),
 }
+
+# Counted per file rather than per line, because one is a habit and ten is a
+# mould. The antithesis is the shape a generator reaches for when it wants a
+# sentence to sound considered: it asserts a thing by rejecting its opposite,
+# and the rejected half is often a straw man nobody proposed.
+ANTITHESIS = re.compile(
+    r"\brather than\b|\bis not (just|merely|only)\b|\bnot\b[^.]{0,40}\bbut\b|"
+    r",\s*not\s+\w", re.I)
+ANTITHESIS_PER_1000 = 4.0
+
+
+def heading_lines(text: str) -> set[int]:
+    """Line numbers covered by a heading or a caption.
+
+    A colon is legitimate in a chapter title and in a caption, and the ACU
+    chapter carries both: the paper's published title, and the hero figure
+    the wrapper reproduces under the paper's own label, per CLAUDE.md 4.3.
+    The label sentence rule is aimed at prose and would otherwise fire on
+    every one of them, which is how a checker gets ignored.
+    """
+    covered: set[int] = set()
+    for m in re.finditer(r"\\(chapter|section|subsection|subsubsection|"
+                         r"paragraph|caption|title)\*?\s*(\[[^\]]*\])?\{", text):
+        i = m.end() - 1
+        depth, j = 0, i
+        while j < len(text):
+            if text[j] == "{":
+                depth += 1
+            elif text[j] == "}":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        covered.update(range(text.count("\n", 0, m.start()) + 1,
+                             text.count("\n", 0, j) + 2))
+    return covered
 
 
 def strip_latex(text: str) -> list[tuple[int, str]]:
@@ -105,6 +159,13 @@ def paragraphs(lines: list[tuple[int, str]]) -> list[tuple[int, str]]:
     """Group consecutive prose lines into paragraphs."""
     paras, cur, start, prev = [], [], None, None
     for n, line in lines:
+        # A list is not a paragraph. Its items are deliberately parallel, so
+        # the rhythm check would fire on every well formed list.
+        if re.match(r"\s*([-*+]|\d+[.)])\s", line):
+            if cur:
+                paras.append((start, " ".join(cur)))
+            cur, start, prev = [], None, None
+            continue
         if prev is not None and n != prev + 1 and cur:
             paras.append((start, " ".join(cur)))
             cur, start = [], None
@@ -154,15 +215,26 @@ def check_rhythm(path: Path, paras: list[tuple[int, str]]) -> list[tuple[str, in
 def check_file(path: Path) -> tuple[list, list]:
     text = path.read_text(encoding="utf-8")
     lines = strip_latex(text)
+    headings = heading_lines(text)
     hard, soft = [], []
     for n, line in lines:
         for name, pat in HARD.items():
+            if name == "label sentence" and n in headings:
+                continue
             for m in pat.finditer(line):
                 hard.append((name, n, m.group(0).strip()[:60]))
         for name, pat in SOFT.items():
             for m in pat.finditer(line):
                 soft.append((name, n, m.group(0).strip()[:60]))
     soft.extend(check_rhythm(path, paragraphs(lines)))
+
+    prose = " ".join(l for _, l in lines)
+    words = len(prose.split())
+    n_anti = len(ANTITHESIS.findall(prose))
+    if words > 400 and n_anti / words * 1000 > ANTITHESIS_PER_1000:
+        soft.append(("antithesis density", 0,
+                     f"{n_anti} in {words} words, "
+                     f"{n_anti / words * 1000:.1f} per 1000"))
     return hard, soft
 
 
