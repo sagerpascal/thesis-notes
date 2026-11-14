@@ -1149,3 +1149,79 @@ so a property the loss leaves free had been imposed and read as learning.
 
 The rest of the abstract in section 8 stands: opening, survey, grokking,
 attention, then this paragraph, then the CNA proposal as the close.
+
+## 10. Open proposal: the circuit arc (2026-09-12)
+
+**Status: not decided. This is the author's proposal, written down so that the
+next session starts by comparing it against section 9 and `05_thesis_concept.md`
+rather than assuming the settled story still holds.**
+
+Why it was raised. The Koopman paper turned into an evaluation paper, and the
+settled story puts it in Part IV as a short cautionary chapter. The author's
+reading is that an evaluation result of that kind can carry more than a side
+chapter, and that the paper set may tell a different story with it in second
+position.
+
+### The arc, as the author stated it
+
+1. ACU survey. This is where the field is going, AI interacting with the
+   physical world. It closes on the open issues, and on the claim that they
+   need a real understanding of the world.
+2. World model paper, now an evaluation paper. Long horizon prediction is the
+   problem, and it needs proper evaluation before anything else is claimed.
+3. Attention. Besides evaluating properly, the right thing has to be learned.
+   This chapter asks what is actually learned.
+4. A critique that what is learned is just statistics.
+5. Grokking. A step towards the generalisation that is needed.
+6. CNA. The circuit can be fixed in advance.
+
+### The circuit variant
+
+The same order, with one noun running through every chapter.
+
+| Chapter | Role in the circuit frame |
+| --- | --- |
+| ACU | which circuit properties would be wanted |
+| World model | testing the circuit |
+| Attention | what the circuit actually learns |
+| Grokking | generalising the circuit |
+| CNA | choosing the circuit |
+
+### First pass on what this would have to survive
+
+Listed as questions to answer next session, not as a verdict.
+
+- "Circuit" already has a narrow meaning in the grokking and interpretability
+  literature, and the grokking chapter uses it there. Running it across all
+  five chapters overloads it, and the survey and the world model chapter do not
+  contain one in that sense. The settled story picked "layout" for exactly this
+  reason, see section 7. Either the frame defines circuit wider at one site and
+  holds that definition everywhere, or it keeps layout and uses circuit only
+  where a circuit is meant.
+- Step 4, "what is learned is just statistics", is currently a claim with no
+  chapter behind it. Which paper tests it? If none does, it is frame rhetoric
+  of the kind section 6 rejected.
+- Promoting the world model paper to second position reverses the author's own
+  judgement in section 9 that it is not strong and belongs as a side chapter.
+  That judgement was about the paper, not about its position, so it can be
+  revisited, but it has to be revisited on purpose.
+- The attention paper is Matteo Saponati's lead. Giving it the "what is
+  actually learned" slot makes a supporting chapter carry an argument step.
+- Four papers have no slot in this arc: Hounsfield, retrieval, the LLM
+  benchmark and COGITAO. Section 9 parks them in two short chapters. Where do
+  they go here?
+- The ACU opening claims the field is moving towards AI interacting with the
+  physical world. The survey is about agents operating software from natural
+  language instructions, so the physical framing needs either a different
+  source or a narrower sentence.
+- What this arc gains over section 9 is a clean chain of needs: evaluate
+  properly, then learn the right thing, then generalise, then build it in. What
+  it loses is the tested core, one claim that three chapters test with one
+  argument, which section 6 identified as the thing that keeps a cumulative
+  thesis from reading as a covering story.
+
+### How to decide
+
+Write both arcs as a one page introduction skeleton, three paragraphs each, and
+see which one states a claim a chapter tests. Section 6 is the standard to
+judge against.

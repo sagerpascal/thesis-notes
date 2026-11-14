@@ -4,6 +4,12 @@ The settled story, as of 2026-09-06. The framings that were tried and rejected,
 and why, are in [04_story_framings.md](04_story_framings.md). This file is the
 one to read before writing any thesis owned prose.
 
+**Under review since 2026-09-12.** The author proposed a different arc, built
+around the world model paper having become an evaluation paper, and wants it
+compared against the story below before more frame prose is written. It is
+section 10 of [04_story_framings.md](04_story_framings.md). Nothing here is
+retired yet.
+
 ## Working title
 
 **Sparse or Distributed Is a Choice.** Subtitle: How Training Decides the
