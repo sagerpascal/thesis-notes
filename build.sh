@@ -64,7 +64,10 @@ run_pdflatex() {
     # Judge by what actually matters instead, an error free log and an output
     # file, and only report the code.
     local n_err
-    n_err=$(grep -acE "^\!|: LaTeX Error|: Emergency|Fatal error" "build-pass-$pass.log" 2>/dev/null || echo 0)
+    # grep -c prints 0 and exits 1 when it matches nothing, so `|| echo 0`
+    # appended a second line and left n_err as "0\n0", which made the test
+    # below fail with "integer expression expected" on every clean build.
+    n_err=$(grep -acE "^\!|: LaTeX Error|: Emergency|Fatal error" "build-pass-$pass.log" 2>/dev/null) || n_err=0
     if [ "$n_err" -gt 0 ]; then
         err "pdflatex pass $pass: $n_err errors (full log: build-pass-$pass.log)"
         return 1

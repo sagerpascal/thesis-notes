@@ -266,12 +266,14 @@ def check_shadowing(m: Manifest, report: Report) -> None:
     """
     # A monolithic paper's source is read by the splitter, not by LaTeX, so no
     # thesis file can shadow it.
-    source = m.data.get("source") if m.layout == "monolithic" else None
+    split_only: set[str] = set()
+    if m.layout == "monolithic":
+        split_only = {m.data["source"], *body_files(m.data)}
 
     for path in m.dir.rglob("*.tex"):
         rel = str(path.relative_to(m.dir))
         # A dropped or excluded file is never included, so nothing can shadow it.
-        if matches_any(rel, m.exclude) or rel in m.drop or rel == source:
+        if matches_any(rel, m.exclude) or rel in m.drop or rel in split_only:
             continue
         shadow = ROOT / rel
         if shadow.is_file() and shadow.resolve() != path.resolve():
@@ -344,19 +346,36 @@ def check_coverage(m: Manifest, report: Report) -> None:
                 f"{m.slug}: {rel} is marked dropped but the chapter reaches it")
 
 
+def body_files(data: dict) -> list[str]:
+    """The files a monolithic paper's sections are in.
+
+    Most papers keep the preamble and the body in one file, and `body` is not
+    given. A Frontiers paper splits them, and ships its supplement as a second
+    document whose sections are the paper's appendix material, so `body` may
+    name more than one file. They are read as if they were one.
+    """
+    names = data.get("body", data["source"])
+    return [names] if isinstance(names, str) else list(names)
+
+
 def check_monolithic(m: Manifest, report: Report) -> None:
-    source = m.dir / m.data["source"]
-    if not source.is_file():
-        report.errors.append(f"{m.slug}: source {m.data['source']} does not exist")
-        return
-    titles = [t for _, t in find_sections(source.read_text(encoding="utf-8"))]
+    names = body_files(m.data)
+    text = []
+    for name in names:
+        source = m.dir / name
+        if not source.is_file():
+            report.errors.append(f"{m.slug}: {name} does not exist")
+            return
+        text.append(source.read_text(encoding="utf-8"))
+    name_of_body = ", ".join(names)
+    titles = [t for _, t in find_sections("\n".join(text))]
     for name in m.drop:
         if name == FRONT_MATTER:
             continue
         if name not in titles:
             report.errors.append(
                 f"{m.slug}: [drop] names the section \"{name}\", which is not a "
-                f"section of {m.data['source']} any more")
+                f"section of {name_of_body} any more")
 
     # The split parts are generated and committed. They must exist, and the
     # chapter must include the ones that were not dropped.

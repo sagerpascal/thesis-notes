@@ -17,14 +17,13 @@ Placeholder. Who did what, factually, naming co-authors.
 
 %% TODO(story): written by the framing pass. Placeholder until then.
 \section{Chapter Introduction}
-%% TODO(story): this section has to define the twelve rules the chapter tests,
-%% and say which eight vary the optimizer. The paper defines them in the last
-%% subsection of its background section, which the chapter drops as covered by
-%% the thesis background chapter, and the paper's body refers back to that
-%% definition as Section~\ref{sec:ruleset}. The label is placed here because
-%% this is where the definition now lives. If the definition ends up in the
-%% background chapter instead, move the label with it.
-\importedlabel{grokking}{sec:ruleset}
+%% The 2026-11-14 version of the paper moved the definition of the learning
+%% rules out of its background section and into its experimental setup, which
+%% this chapter includes. The \importedlabel for sec:ruleset that stood here
+%% went with it, because the paper now defines that label in kept text and two
+%% definitions would collide. What the dropped background section still owns
+%% is sec:background, and the thesis background chapter is its replacement, so
+%% that label is placed there.
 
 Placeholder. Connects the previous chapter's result to this one and
 states what the chapter contributes to the thesis argument.
@@ -34,10 +33,24 @@ states what the chapter contributes to the thesis argument.
 % ---------------------------------------------------------------------------
 
 \begin{importedpaper}{grokking}
-\importpart{03_setup}
-\importpart{04_whether-a-rule-groks-is-decided-at-the-minima-of-the-loss}
-\importpart{05_the-rules-that-grok-share-the-algorithm-but-not-the-circuit}
-\importpart{06_the-two-ends-trade-robustness-against-adaptation-speed}
+
+% The paper puts its overview figure in the introduction, which this chapter
+% drops, and then refers back to it from the body. Reproducing the float here,
+% inside the block and under the paper's own label, is what keeps those
+% references resolving. check_imports.py holds it to the original.
+%
+% [htbp] and not [t], for the reason recorded in sections/3-1_acu_survey.tex:
+% a float contributed before any of the paper's own is still pending when the
+% environment's group closes, and LaTeX reports Float(s) lost.
+\begin{figure}[htbp]
+\begin{center}\includegraphics[width=\linewidth]{figures/fig1_hero_v2.pdf}\end{center}
+\caption{The learning rule selects whether a network groks, how many neurons implement the grokked algorithm, and the resulting robustness and adaptation. \textbf{(a)} All runs fit the training set, and only some then generalize to the held-out pairs. Each dot is one seed and shows the null-space weight norm $q$ at the end of training (Section~\ref{sec:grokrules}). \textbf{(b)} First hidden layer of two networks that share data and initialization. The credit of a neuron is the gradient of its incoming weights. Under backpropagation with Adam the credit is unequal (top row, relative to the layer mean and averaged over training), and neurons that receive little credit end with small outgoing weights. Credit equalization makes the magnitudes equal before the gradient enters the optimizer (Adam) and keeps every gradient's direction (middle row, schematic). Dots show the $256$ neurons in the order of the top row, with area proportional to the outgoing norm. Effective counts are for this seed, and the three-seed means are $154$ and $254$. \textbf{(c)} Tolerance is the normalized area under the curve of test accuracy against the fraction of randomly deleted neurons. Adaptation is the number of epochs to test accuracy $0.9$ on subtraction, starting from the addition network or from scratch (without pretraining). The network drawings are schematic, $\mu \pm \sigma$ are over ten seeds (Table~\ref{tab:adapt} and Appendix~\ref{app:deletion}).}
+\label{fig:main}
+\end{figure}
+
+\importpart{03_experimental-setup}
+\importpart{04_results-credit-allocation-changes-circuit-concentration}
+\importpart{05_relevance-distributed-circuits-tolerate-neuron-deletion-concentrated-circuits-keep-spare-capacity}
 \end{importedpaper}
 
 %% TODO(story): written by the framing pass. Placeholder until then.

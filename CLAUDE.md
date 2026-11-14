@@ -471,6 +471,16 @@ with `\importpart` rather than `\importsection`, because they live under
 `--check` regenerates into memory and fails if the committed files differ,
 which catches a re import that nobody re-split.
 
+Two papers keep the preamble and the sections in different files, and one of
+them keeps its appendix in a second document. A Frontiers manuscript is a
+`main.tex` that loads a template, a preamble and three `\input` lines, with the
+sections in `content/body.tex` and the appendix in `content/supplement.tex`,
+which is the body of a separate supplement document. Cutting the root file
+there finds no section at all. The optional `body` field names the file or
+files the sections are really in, and they are cut as if they were one, so the
+supplement's sections become the paper's appendix parts. `source` stays the
+root file, because that is where the macros and the packages are read from.
+
 Three things the splitter has to do because the paper's preamble is not
 imported, each of them reported when it happens. It removes the paper's own
 bibliography and its `\appendix` switch, which would otherwise inject a second
@@ -640,7 +650,7 @@ design.
 | `llmbench` | `imported_papers/Llama2_benchmark_sds` | `sections/3-2_llm_benchmark.tex` | monolithic, `llm_at_home.tex` |
 | `grokking` | `imported_papers/grokking` | `sections/4-1_grokking.tex` | monolithic, `iclr2027_conference_v2.tex` |
 | `attention` | `imported_papers/self_attention_geometry_project_ICML` | `sections/4-2_attention.tex` | sections, under `ICML2025/` |
-| `bounded` | `imported_papers/Koopman-JEPA-TMLR-rewrite` | `sections/5-1_bounded.tex` | monolithic, `main.tex` |
+| `bounded` | `imported_papers/probe-norm` | `sections/5-1_bounded.tex` | monolithic, `main.tex` plus `body` |
 | `cogitao` | `imported_papers/COGITAO_ICML_2026` | `sections/3-3_cogitao.tex` | sections |
 | `hounsfield` | `imported_papers/sds_hounsfield_features` | `sections/5-2_hounsfield.tex` | monolithic, `main.tex` |
 | `retrieval` | `imported_papers/CLEF_Checkthat_4b` | `sections/5-3_retrieval.tex` | sections |
@@ -885,7 +895,7 @@ something is done, delete its entry rather than marking it done, so the list
 stays short enough to read every session. Anything that has become permanent
 knowledge belongs in the sections above, not here.
 
-The thesis builds: 347 pages, zero LaTeX errors, zero duplicate labels, a
+The thesis builds: 351 pages, zero LaTeX errors, zero duplicate labels, a
 working bibliography, and every one of the nine papers included with its
 appendix. `check_compile.py` reports zero errors across all nine, and
 `check_imports.py` zero. Machinery that works is not listed here: `build.sh`,
@@ -893,6 +903,19 @@ appendix. `check_compile.py` reports zero errors across all nine, and
 and `generated/` trees, and all seven scripts.
 
 ### Blocking the thesis
+
+0. **The framing is reopened, and nothing else in this list should be written
+   until it is settled.** Raised by the author on 2026-09-12, because the
+   Koopman paper became an evaluation paper and the settled story gives it a
+   short side chapter. The proposed arc runs ACU, then evaluation, then what is
+   actually learned, then generalisation, then a circuit fixed in advance, with
+   "circuit" as the noun carrying every chapter. It is written up as section 10
+   of `00_ADMIN/04_story_framings.md`, together with the seven questions it has
+   to survive and the way to decide between it and the current story. Read that
+   section and `00_ADMIN/05_thesis_concept.md` together at the start of the next
+   session on this thesis, and raise it with the author before writing chapter
+   introductions, summaries, the background chapter or the discussion. Items 1,
+   2 and 4 below all depend on the answer.
 
 1. **The chapter wrappers are placeholders.** Every paper backed chapter has a
    publication box, contribution statement, chapter introduction and chapter
@@ -913,9 +936,20 @@ and `generated/` trees, and all seven scripts.
    against that plan. The old content argued the retired story and was removed
    on 2026-09-07, `git show 9f332ab:sections/2-1_related_work.tex` retrieves
    it.
-3. **Three papers are not final.** COGITAO, grokking and the Koopman/TMLR
-   rewrite are still moving. Run `scripts/reimport.py <slug> <path>`, which
-   replaces the directory and reruns everything downstream.
+3. **Three papers are not final.** COGITAO, grokking and the world model paper
+   are still moving. Run `scripts/reimport.py <slug> <path>`, which replaces
+   the directory and reruns everything downstream.
+
+   Grokking and the world model paper were both re-imported on 2026-11-14 and
+   both had changed structurally. Grokking renamed and reorganised every
+   section, so its manifest, its split and the `\importpart` lists in the
+   chapter and the appendix were rewritten. The world model paper is no longer
+   the TMLR rewrite: it is a Frontiers manuscript at
+   `imported_papers/probe-norm`, titled "Correcting state-probe evaluation of
+   world models for norm drift", with a separate supplement that now supplies
+   the appendix parts. The slug stays `bounded`, so the chapter file, its label
+   and the appendix chapter kept their names, but the chapter's working title
+   and `references/manual.bib` describe the older framing in places.
 4. **Discussion and conclusion are outlines in comments.** Write them last.
 5. **Own paper entries in `manual.bib` carry TODO fields.** The attention
    paper is now ICML 2025 and COGITAO is the 2nd ICML Workshop on
@@ -938,37 +972,24 @@ and `generated/` trees, and all seven scripts.
 
 ### Correctness
 
-7. **8 undefined references, printing 13 `??` in the PDF.** One label used
-   twice is two holes in the text, so count them in the output rather than in
-   the log:
+7. **2 `??` in the PDF, both upstream and both unfixable from here.** One
+   label used twice is two holes in the text, so count them in the output
+   rather than in the log:
 
    ```bash
    uv run --no-project python scripts/check_layout.py --pdf
    ```
 
-   Six labels, 10 of the holes, are in `1-1_introduction` and
-   `2-1_related_work` and belong to the old story: `chap:constraints`,
-   `chap:contextual`, `chap:dfc`, `chap:koopman`, `chap:selfattention` and
-   `part:paradigm`. They go when those two chapters are rewritten.
+   `attention:eq:weight-update-bilinear-form-prediction` on page 109 exists
+   only in the rebuttal variant, which the thesis does not import, and
+   `tab:se_all_experiments` on page 204 is issue 8. `check_imports.py` reports
+   both, with the file each target lives in.
 
-   Two of the six are only renames, and the sentence around each says which
-   chapter it means: `chap:selfattention` is `chap:attention` and
-   `chap:koopman` is `chap:bounded`. The other four name a chapter or a part
-   the current structure does not have. The parts do exist and are labelled,
-   see Section 3.9.
-
-   `sections/3-1_acu_survey.tex` is clean. Its five old story names were
-   renamed and each was pinned by its own sentence: the part that holds the
-   self attention chapter is Part III, and the two parts that hold the
-   interventions are IV and V. Its sixth, `sec:acu_methodology`, pointed at a
-   section that has never existed, in the thesis or in the paper, so the two
-   sentences that claimed it did were removed.
-
-   The other two are upstream and cannot be fixed from the thesis.
-   `attention:eq:weight-update-bilinear-form-prediction` exists only in the
-   rebuttal variant, which the thesis does not import, and
-   `tab:se_all_experiments` is issue 8. `check_imports.py` reports both, with
-   the file each target lives in.
+   The old story's six names in `1-1_introduction` and `2-1_related_work` are
+   gone, and so are the ACU chapter's five. Where a chapter drops a paper's
+   introduction, the hero figure goes with it and the body still refers to it:
+   `grokking:fig:main` and `bounded:fig:intro` are reproduced in their
+   wrappers, under the paper's own label, the way Section 4.3 describes.
 8. **Two upstream bugs in COGITAO.** `tab:se_all_experiments` in
     `transformation_learnability.tex` has a `\label` and no `\caption`, so
     the reference to it cannot resolve.
@@ -1005,8 +1026,10 @@ and `generated/` trees, and all seven scripts.
 
 ### Style
 
-12. **58 overfull hboxes, one over 100pt.** None is in a table any more.
-    Most are display equations set for a wider measure, the rest paragraphs.
+12. **101 overfull hboxes, one over 100pt.** Most are display equations set
+    for a wider measure, the rest paragraphs. The count rose from 58 with the
+    2026-11-14 re imports, and 44 of the new ones are the rows of one table,
+    `probe-norm/tables/table_literature.tex`, each 6pt over.
 
     ```bash
     uv run --no-project python scripts/check_layout.py --overfull
@@ -1018,9 +1041,10 @@ and `generated/` trees, and all seven scripts.
     because what is left has no legal break to find.
 
     Most of the displays overflow into the margin, which is white space, and
-    read as wide rather than broken. Two do not: PDF pages 268 and 280, both
-    in the self attention proof appendix, put an equation number within 4mm of
-    the paper edge. Fixing them means scaling display math, which would leave
+    read as wide rather than broken. Two do not: both are in the self
+    attention proof appendix and put an equation number within 4mm of the
+    paper edge. Their page numbers moved with the 2026-11-14 re imports and
+    were not measured again. Fixing them means scaling display math, which would leave
     the mathematics at two sizes across the thesis to repair two pages, so it
     has been left. The measurement that finds them is the maximum x of any
     word on the page against the 597pt paper width. That measurement also

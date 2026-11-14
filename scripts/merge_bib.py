@@ -59,7 +59,7 @@ INPUT_FILES = [
     # bib is a superset used only for the response letter and is not built.
     "imported_papers/self_attention_geometry_project_ICML/ICML2025/bib.bib",
     "imported_papers/grokking/iclr2027_conference.bib",
-    "imported_papers/Koopman-JEPA-TMLR-rewrite/main.bib",
+    "imported_papers/probe-norm/main.bib",
     # COGITAO also ships the ICLR template's sample bibliography, which the
     # paper does not cite. Only the one it cites is read.
     "imported_papers/COGITAO_ICML_2026/references.bib",

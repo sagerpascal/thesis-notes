@@ -17,10 +17,10 @@
 %   imported_papers/sds_hounsfield_features/references_clean.bib
 %   imported_papers/self_attention_geometry_project_ICML/ICML2025/bib.bib
 %   imported_papers/grokking/iclr2027_conference.bib
-%   imported_papers/Koopman-JEPA-TMLR-rewrite/main.bib
+%   imported_papers/probe-norm/main.bib
 %   imported_papers/COGITAO_ICML_2026/references.bib
 %   generated/imported/cna/_thebibliography.bib
-% 935 entries.
+% 1010 entries.
 
 @article{Su_RoFormer_2024,
   author  = {Su, Jianlin and Ahmed, Murtadha and Lu, Yu and Pan, Shengfeng and Bo, Wen and Liu, Yunfeng},
@@ -121,6 +121,7 @@
   title      = {Understanding intermediate layers using linear classifier probes},
   booktitle  = {NIPS 2016 Workshop on Interpretable Machine Learning in Complex Systems},
   year       = {2016},
+  doi        = {10.48550/arxiv.1610.01644},
   eprint     = {1610.01644},
   eprinttype = {arxiv},
   note       = {arXiv preprint arXiv:1610.01644}
@@ -169,6 +170,16 @@
   year    = {2014},
   doi     = {10.1159/000356760},
   issn    = {0304-324X, 1423-0003}
+}
+
+@inproceedings{alrasheed_latent_2026,
+  ids        = {alrasheed2026latent},
+  author     = {Alrasheed, Ali J. and Parast, Aryan Yazdan and Azam, Basim and Bailey, James and Akhtar, Naveed},
+  title      = {Latent Video Prediction for World Modeling: An Evaluation Uncovering Intriguing Favorable Evidence},
+  booktitle  = {Advances in Neural Information Processing Systems Evaluations and Datasets Track},
+  year       = {2026},
+  eprint     = {2605.15618},
+  eprinttype = {arxiv}
 }
 
 @article{amari_learning_1972,
@@ -254,6 +265,14 @@
   address   = {Toronto, Canada},
   year      = {2023},
   doi       = {10.18653/v1/2023.acl-long.618}
+}
+
+@inproceedings{anand_unsupervised_2019,
+  ids       = {Anand2019AtariARI},
+  author    = {Ankesh Anand and Evan Racah and Sherjil Ozair and Yoshua Bengio and Marc-Alexandre C{\^o}t{\'e} and R. Devon Hjelm},
+  title     = {Unsupervised State Representation Learning in {Atari}},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2019}
 }
 
 @misc{anantha_protip_2023,
@@ -419,6 +438,16 @@
   url       = {https://openreview.net/forum?id=jt3il4fC5B}
 }
 
+@article{assran_jepa_2025,
+  ids        = {assran2025vjepa},
+  author     = {Assran, Mido and Bardes, Adrien and Fan, David and Garrido, Quentin and Howes, Russell and Komeili, Mojtaba and Muckley, Matthew and Rizvi, Ammar and Roberts, Claire and Sinha, Koustuv and Zholus, Artem and Arnaud, Sergio and Gejji, Abha and Martin, Ada and Hogan, Francois Robert and Dugas, Daniel and Bojanowski, Piotr and Khalidov, Vasil and Labatut, Patrick and Massa, Francisco and Szafraniec, Marc and Krishnakumar, Kapil and Li, Yong and Ma, Xiaodong and Chandar, Sarath and Meier, Franziska and LeCun, Yann and Rabbat, Michael and Ballas, Nicolas},
+  title      = {{V-JEPA 2}: Self-Supervised Video Models Enable Understanding, Prediction and Planning},
+  year       = {2025},
+  doi        = {10.48550/arxiv.2506.09985},
+  eprint     = {2506.09985},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{assran_self_2023,
   ids       = {Assran2023},
   author    = {Assran, Mahmoud and Duval, Quentin and Misra, Ishan and Bojanowski, Piotr and Vincent, Pascal and Rabbat, Michael and LeCun, Yann and Ballas, Nicolas},
@@ -451,10 +480,21 @@
 }
 
 @inproceedings{azencot_forecasting_2020,
+  ids       = {Azencot2020},
   author    = {Azencot, Omri and Erichson, N. Benjamin and Lin, Vanessa and Mahoney, Michael W.},
   title     = {Forecasting Sequential Data Using Consistent Koopman Autoencoders},
   booktitle = {International Conference on Machine Learning (ICML)},
   year      = {2020}
+}
+
+@article{ba_layer_2016,
+  ids        = {Ba2016LayerNorm, ba2016layernorm},
+  author     = {Ba, Jimmy Lei and Kiros, Jamie Ryan and Hinton, Geoffrey E.},
+  title      = {Layer Normalization},
+  year       = {2016},
+  doi        = {10.48550/arxiv.1607.06450},
+  eprint     = {1607.06450},
+  eprinttype = {arxiv}
 }
 
 @inproceedings{baechler_screenai_2024,
@@ -534,6 +574,16 @@
   year      = {2022}
 }
 
+@article{baldassarre_back_2025,
+  ids        = {baldassarre2025back},
+  author     = {Baldassarre, Federico and Szafraniec, Marc and Terver, Basile and Khalidov, Vasil and Massa, Francisco and LeCun, Yann and Labatut, Patrick and Seitzer, Maximilian and Bojanowski, Piotr},
+  title      = {Back to the Features: {DINO} as a Foundation for Video World Models},
+  year       = {2025},
+  doi        = {10.48550/arxiv.2507.19468},
+  eprint     = {2507.19468},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{banerjee_lexi_2022,
   author    = {Banerjee, P. and Mahajan, S. and Arora, K. and Baral, C. and Riva, O.},
   title     = {{Lexi: Self-supervised learning of the UI language}},
@@ -576,19 +626,44 @@
   url       = {https://openreview.net/forum?id=p-BhZSz59o4}
 }
 
-@inproceedings{barak_hidden_2022,
-  author    = {Barak, Boaz and Edelman, Benjamin L. and Goel, Surbhi and Kakade, Sham and Malach, Eran and Zhang, Cyril},
-  title     = {Hidden Progress in Deep Learning: {SGD} Learns Parities Near the Computational Limit},
-  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
-  year      = {2022}
+@article{bao_correcting_2026,
+  ids        = {bao2026correcting},
+  author     = {Bao, Richard},
+  title      = {Correcting a Learned Physical Invariant Improves World-Model Rollouts},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2608.23526},
+  eprint     = {2608.23526},
+  eprinttype = {arxiv}
 }
 
-@inproceedings{bardes_feature_2025,
-  ids       = {Bardes2024},
-  author    = {Bardes, Adrien and Garrido, Quentin and Ponce, Jean and Chen, Xinlei and Rabbat, Michael and LeCun, Yann and Assran, Mido and Ballas, Nicolas},
-  title     = {Revisiting Feature Prediction for Learning Visual Representations from Video},
-  booktitle = {International Conference on Learning Representations (ICLR)},
-  year      = {2025}
+@inproceedings{bar_navigation_2025,
+  ids        = {bar2025navigation},
+  author     = {Bar, Amir and Zhou, Gaoyue and Tran, Danny and Darrell, Trevor and LeCun, Yann},
+  title      = {Navigation World Models},
+  booktitle  = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year       = {2025},
+  doi        = {10.1109/cvpr52734.2025.01472},
+  eprint     = {2412.03572},
+  eprinttype = {arxiv}
+}
+
+@inproceedings{barak_hidden_2022,
+  ids        = {barak2022hidden},
+  author     = {Barak, Boaz and Edelman, Benjamin L. and Goel, Surbhi and Kakade, Sham and Malach, Eran and Zhang, Cyril},
+  title      = {Hidden Progress in Deep Learning: {SGD} Learns Parities Near the Computational Limit},
+  booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume     = {35},
+  year       = {2022},
+  eprint     = {2207.08799},
+  eprinttype = {arxiv}
+}
+
+@article{bardes_feature_2025,
+  ids     = {Bardes2024},
+  author  = {Bardes, Adrien and Garrido, Quentin and Ponce, Jean and Chen, Xinlei and Rabbat, Michael and LeCun, Yann and Assran, Mahmoud and Ballas, Nicolas},
+  title   = {Revisiting Feature Prediction for Learning Visual Representations from Video},
+  journal = {Transactions on Machine Learning Research (TMLR)},
+  year    = {2024}
 }
 
 @inproceedings{bardes_vicreg_2022,
@@ -680,6 +755,14 @@
   issn      = {02615614}
 }
 
+@inproceedings{bear_physion_2021,
+  ids       = {Bear2021Physion},
+  author    = {Bear, Daniel M. and Wang, Elias and Mrowca, Damian and Binder, Felix J. and Tung, Hsiao-Yu Fish and Pramod, R. T. and Holdaway, Cameron and Tao, Sirui and Smith, Kevin and Sun, Fan-Yun and Fei-Fei, Li and Kanwisher, Nancy and Tenenbaum, Joshua B. and Yamins, Daniel L. K. and Fan, Judith E.},
+  title     = {Physion: Evaluating Physical Prediction from Vision in Humans and Machines},
+  booktitle = {Advances in Neural Information Processing Systems Datasets and Benchmarks Track},
+  year      = {2021}
+}
+
 @article{beaudart_sarcopenia_2016,
   author  = {Beaudart, Charlotte and McCloskey, Eug\`{e}ne and Bruy\`{e}re, Olivier and Cesari, Matteo and others},
   title   = {Sarcopenia in daily practice: assessment and management},
@@ -762,10 +845,19 @@
 @incollection{bengio_scaling_2007,
   ids       = {Bengio+chapter2007},
   author    = {Bengio, Yoshua and LeCun, Yann},
+  editor    = {Bottou, L{\'e}on and Chapelle, Olivier and DeCoste, Dennis and Weston, Jason},
   title     = {Scaling Learning Algorithms Towards {AI}},
-  booktitle = {Large Scale Kernel Machines},
+  booktitle = {Large-Scale Kernel Machines},
   publisher = {MIT Press},
   year      = {2007}
+}
+
+@inproceedings{bengio_scheduled_2015,
+  ids       = {Bengio2015ScheduledSampling},
+  author    = {Bengio, Samy and Vinyals, Oriol and Jaitly, Navdeep and Shazeer, Noam},
+  title     = {Scheduled Sampling for Sequence Prediction with Recurrent Neural Networks},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2015}
 }
 
 @inproceedings{berant_semantic_2013,
@@ -779,7 +871,7 @@
 
 @inproceedings{bernstein_signsgd_2018,
   ids        = {bernstein2018signsgd},
-  author     = {Bernstein, Jeremy and Wang, Yu-Xiang and Azizzadenesheli, Kamyar and Anandkumar, Anima},
+  author     = {Bernstein, Jeremy and Wang, Yu-Xiang and Azizzadenesheli, Kamyar and Anandkumar, Animashree},
   title      = {sign{SGD}: Compressed Optimisation for Non-Convex Problems},
   booktitle  = {International Conference on Machine Learning (ICML)},
   pages      = {560--569},
@@ -827,7 +919,8 @@
   journal = {Annu. Rev. Control},
   volume  = {52},
   pages   = {197--212},
-  year    = {2021}
+  year    = {2021},
+  doi     = {10.1016/j.arcontrol.2021.09.002}
 }
 
 @inbook{bibb_medical_2014,
@@ -1131,6 +1224,16 @@
   doi       = {10.1007/978-3-030-58779-6_15}
 }
 
+@article{chen_atm_2026,
+  ids        = {chen2026atm},
+  author     = {Chen, Jiaheng and Zhang, Tinghe and Xiao, Yucheng and Cai, Xinyong and Yu, Lan and Bu, Juncheng and Li, Jiaxing and Wang, Yunlong},
+  title      = {{ATM}: Why Latent World Models Can Fail to Plan},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2606.09028},
+  eprint     = {2606.09028},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{chen_chatcot_2023,
   author    = {Chen, Zhipeng and Zhou, Kun and Zhang, Beichen and Gong, Zheng and Zhao, Wayne Xin and Wen, Ji-Rong},
   title     = {{ChatCoT: Tool-augmented chain-of-thought reasoning on chat-based large language models}},
@@ -1181,6 +1284,7 @@
 }
 
 @inproceedings{chen_exploring_2021,
+  ids       = {ChenHe2021SimSiam},
   author    = {Chen, Xinlei and He, Kaiming},
   title     = {Exploring Simple Siamese Representation Learning},
   booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
@@ -1216,11 +1320,13 @@
 }
 
 @inproceedings{chen_lion_2024,
-  ids       = {chen2024lion},
-  author    = {Chen, Lizhang and Liu, Bo and Liang, Kaizhao and Liu, Qiang},
-  title     = {Lion secretly solves constrained optimization: As {Lyapunov} predicts},
-  booktitle = {International Conference on Learning Representations},
-  year      = {2024}
+  ids        = {chen2024lion},
+  author     = {Chen, Lizhang and Liu, Bo and Liang, Kaizhao and Liu, Qiang},
+  title      = {Lion Secretly Solves Constrained Optimization: As {Lyapunov} Predicts},
+  booktitle  = {International Conference on Learning Representations (ICLR)},
+  year       = {2024},
+  eprint     = {2310.05898},
+  eprinttype = {arxiv}
 }
 
 @inproceedings{chen_object_2020,
@@ -1250,6 +1356,8 @@
   author     = {Chen, Xiangning and Liang, Chen and Huang, Da and Real, Esteban and Wang, Kaiyuan and Liu, Yao and Pham, Hieu and Dong, Xuanyi and Luong, Thang and Hsieh, Cho-Jui and Lu, Yifeng and Le, Quoc V.},
   title      = {Symbolic Discovery of Optimization Algorithms},
   booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume     = {36},
+  pages      = {49205--49233},
   year       = {2023},
   eprint     = {2302.06675},
   eprinttype = {arxiv}
@@ -1776,6 +1884,15 @@
   doi       = {10.18653/v1/n19-1423}
 }
 
+@article{dewulf_aurora_2026,
+  ids        = {dewulf2026aurora},
+  author     = {Dewulf, A. and Pai, D. and Yang, L. and Zhang, A. and Keigwin, B.},
+  title      = {Aurora: A Leverage-Aware Spectral Optimizer},
+  year       = {2026},
+  eprint     = {2606.27715},
+  eprinttype = {arxiv}
+}
+
 @article{dhingra_time_2022,
   ids     = {dhingra_time-aware_2022},
   author  = {Dhingra, Bhuwan and Cole, Jeremy R. and Eisenschlos, Julian Martin and Gillick, Daniel and Eisenstein, Jacob and Cohen, William W.},
@@ -1808,6 +1925,17 @@
   doi        = {10.48550/arxiv.2401.04124},
   eprint     = {2401.04124},
   eprinttype = {arxiv}
+}
+
+@article{dohare_loss_2024,
+  ids     = {dohare2024loss},
+  author  = {Dohare, Shibhansh and Hernandez-Garcia, J. Fernando and Lan, Qingfeng and Rahman, Parash and Mahmood, A. Rupam and Sutton, Richard S.},
+  title   = {Loss of Plasticity in Deep Continual Learning},
+  journal = {Nature},
+  volume  = {632},
+  pages   = {768--774},
+  year    = {2024},
+  doi     = {10.1038/s41586-024-07711-7}
 }
 
 @article{dorigo_robot_1994,
@@ -1852,6 +1980,14 @@
   eprint     = {2401.08281},
   eprinttype = {arxiv},
   note       = {Version Number: 3}
+}
+
+@inproceedings{draganov_importance_2025,
+  ids       = {draganov2025norms},
+  author    = {Draganov, Andrew and Vadgama, Sharvaree and Damrich, Sebastian and B{\"o}hm, Jan Niklas and Maes, Lucas and Kobak, Dmitry and Bekkers, Erik},
+  title     = {On the Importance of Embedding Norms in Self-Supervised Learning},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2025}
 }
 
 @inproceedings{drouin_workarena_2024,
@@ -1899,6 +2035,16 @@
   eprinttype = {arxiv}
 }
 
+@article{du_next_2026,
+  ids        = {du2026beyond},
+  author     = {Du, Tianqi and Zhang, Qi and Wang, Yifei and Wang, Yisen},
+  title      = {Beyond the Next Step: Variable-Length Latent World Models for Long-Horizon Planning},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2606.21775},
+  eprint     = {2606.21775},
+  eprinttype = {arxiv}
+}
+
 @misc{du_ocr_2020,
   ids        = {du_pp-ocr_2020},
   author     = {Du, Yuning and Li, Chenxia and Guo, Ruoyu and Yin, Xiaoting and Liu, Weiwei and Zhou, Jun and Bai, Yifan and Yu, Zilin and Yang, Yehua and Dang, Qingqing and Wang, Haoshuang},
@@ -1907,6 +2053,14 @@
   doi        = {10.48550/arxiv.2009.09941},
   eprint     = {2009.09941},
   eprinttype = {arxiv}
+}
+
+@article{dufortlabbe_maxwell_2025,
+  ids     = {dufortlabbe2025maxwell},
+  author  = {Dufort-Labb{\'e}, Simon and D'Oro, Pierluca and Nikishin, Evgenii and Pascanu, Razvan and Bacon, Pierre-Luc and Baratin, Aristide},
+  title   = {Maxwell's Demon at Work: Efficient Pruning by Leveraging Saturation of Neurons},
+  journal = {Transactions on Machine Learning Research},
+  year    = {2025}
 }
 
 @inproceedings{dziri_faith_2023,
@@ -1933,14 +2087,23 @@
   url        = {http://arxiv.org/abs/2212.10650}
 }
 
-@misc{eldan_tinystories_2023,
-  ids        = {eldanTinyStoriesHowSmall2023},
+@article{eldan_tinystories_2023,
+  ids        = {eldan2023tinystories, eldanTinyStoriesHowSmall2023},
   author     = {Eldan, Ronen and Li, Yuanzhi},
-  title      = {{TinyStories: How Small Can Language Models Be and Still Speak Coherent English?}},
+  title      = {TinyStories: How Small Can Language Models Be and Still Speak Coherent English?},
   month      = {may},
   year       = {2023},
   doi        = {10.48550/arxiv.2305.07759},
   eprint     = {2305.07759},
+  eprinttype = {arxiv}
+}
+
+@article{eldenk_attention_2026,
+  ids        = {eldenk2026attention},
+  author     = {Eldenk, Do{\u{g}}a{\c{c}} and Mohapatra, Payal and Comlek, Yigitcan and Oktay, Kaan and Zhang, Hongyang and Xia, Stephen},
+  title      = {Attention Drift: What Autoregressive Speculative Decoding Models Learn},
+  year       = {2026},
+  eprint     = {2605.09992},
   eprinttype = {arxiv}
 }
 
@@ -2379,6 +2542,17 @@
   pages     = {10323--10337}
 }
 
+@article{french_catastrophic_1999,
+  ids     = {french1999catastrophic},
+  author  = {French, Robert M.},
+  title   = {Catastrophic Forgetting in Connectionist Networks},
+  journal = {Trends in Cognitive Sciences},
+  volume  = {3},
+  number  = {4},
+  pages   = {128--135},
+  year    = {1999}
+}
+
 @article{fukushima_neocognitron_1980,
   author  = {Fukushima, Kunihiko},
   title   = {{Neocognitron: A self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position}},
@@ -2490,6 +2664,16 @@
   year       = {2024},
   doi        = {10.48550/arxiv.2402.14073},
   eprint     = {2402.14073},
+  eprinttype = {arxiv}
+}
+
+@article{gao_leworldmodel_2026,
+  ids        = {gao2026fast},
+  author     = {Gao, Yuntian and Xu, Xiangyu},
+  title      = {Fast {LeWorldModel}},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2606.26217},
+  eprint     = {2606.26217},
   eprinttype = {arxiv}
 }
 
@@ -2624,6 +2808,14 @@
   issn      = {2522-5839}
 }
 
+@inproceedings{gelada_deepmdp_2019,
+  ids       = {Gelada2019DeepMDP},
+  author    = {Gelada, Carles and Kumar, Saurabh and Buckman, Jacob and Nachum, Ofir and Bellemare, Marc G.},
+  title     = {{DeepMDP}: Learning Continuous Latent Space Models for Representation Learning},
+  booktitle = {International Conference on Machine Learning},
+  year      = {2019}
+}
+
 @misc{gemmateam_gemma_2024,
   ids        = {gemma_team_gemma_2024},
   author     = {{Gemma Team} and Riviere, Morgane and Pathak, Shreya and Sessa, Pier Giuseppe and Hardin, Cassidy and others},
@@ -2745,7 +2937,7 @@
 @book{goodfellow_deep_2016,
   ids       = {goodfellow2016deep},
   author    = {Goodfellow, Ian and Bengio, Yoshua and Courville, Aaron},
-  title     = {Deep learning},
+  title     = {Deep Learning},
   publisher = {MIT Press},
   year      = {2016}
 }
@@ -2927,9 +3119,27 @@
   author     = {Gunasekar, Suriya and Lee, Jason D. and Soudry, Daniel and Srebro, Nathan},
   title      = {Characterizing Implicit Bias in Terms of Optimization Geometry},
   booktitle  = {International Conference on Machine Learning (ICML)},
+  pages      = {1832--1841},
   year       = {2018},
   eprint     = {1802.08246},
   eprinttype = {arxiv}
+}
+
+@inproceedings{guo_bootstrap_2020,
+  ids       = {Guo2020PBL},
+  author    = {Guo, Daniel and Avila Pires, Bernardo and Piot, Bilal and Grill, Jean-Bastien and Altch{\'e}, Florent and Munos, R{\'e}mi and Azar, Mohammad Gheshlaghi},
+  title     = {Bootstrap Latent-Predictive Representations for Multitask Reinforcement Learning},
+  booktitle = {International Conference on Machine Learning},
+  year      = {2020}
+}
+
+@inproceedings{guo_byol_2022,
+  ids       = {Guo2022BYOLExplore},
+  author    = {Guo, Zhaohan Daniel and Thakoor, Shantanu and P{\^\i}slar, Miruna and Avila Pires, Bernardo and Altch{\'e}, Florent and Tallec, Corentin and Saade, Alaa and Calandriello, Daniele and Grill, Jean-Bastien and Tang, Yunhao and Valko, Michal and Munos, R{\'e}mi and Azar, Mohammad Gheshlaghi and Piot, Bilal},
+  title     = {{BYOL}-Explore: Exploration by Bootstrapped Prediction},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {35},
+  year      = {2022}
 }
 
 @inproceedings{guo_pptc_2024,
@@ -2957,7 +3167,7 @@
 @inproceedings{gupta_shampoo_2018,
   ids       = {gupta2018shampoo},
   author    = {Gupta, Vineet and Koren, Tomer and Singer, Yoram},
-  title     = {Shampoo: Preconditioned stochastic tensor optimization},
+  title     = {Shampoo: Preconditioned Stochastic Tensor Optimization},
   booktitle = {International Conference on Machine Learning (ICML)},
   pages     = {1842--1850},
   year      = {2018}
@@ -3083,6 +3293,16 @@
   crossref = {faggioli_working_2025}
 }
 
+@inproceedings{hafner_dream_2020,
+  ids        = {hafner2020dream},
+  author     = {Hafner, Danijar and Lillicrap, Timothy and Ba, Jimmy and Norouzi, Mohammad},
+  title      = {Dream to Control: Learning Behaviors by Latent Imagination},
+  booktitle  = {International Conference on Learning Representations (ICLR)},
+  year       = {2020},
+  eprint     = {1912.01603},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{hafner_learning_2019,
   ids       = {Hafner2019Planet},
   author    = {Hafner, Danijar and Lillicrap, Timothy and Fischer, Ian and Villegas, Ruben and Ha, David and Lee, Honglak and Davidson, James},
@@ -3158,6 +3378,14 @@
   year      = {2024}
 }
 
+@inproceedings{hansen_temporal_2022,
+  ids       = {hansen2022temporal},
+  author    = {Hansen, Nicklas and Wang, Xiaolong and Su, Hao},
+  title     = {Temporal Difference Learning for Model Predictive Control},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2022}
+}
+
 @inproceedings{hao_one_2011,
   author    = {Hao, Qiang and Cai, Rui and Pang, Yanwei and Zhang, Lei},
   title     = {{From one tree to a forest: A unified solution for structured web data extraction}},
@@ -3225,7 +3453,7 @@
 @inproceedings{he_delving_2015,
   ids       = {he2015delving},
   author    = {He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
-  title     = {Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification},
+  title     = {Delving Deep into Rectifiers: Surpassing Human-Level Performance on {ImageNet} Classification},
   booktitle = {IEEE International Conference on Computer Vision (ICCV)},
   pages     = {1026--1034},
   year      = {2015}
@@ -3250,6 +3478,16 @@
   address   = {New York},
   year      = {1949},
   note      = {Hebb, D.~O. (1949). The organization of behavior: A neuropsychological theory. Wiley, New York.}
+}
+
+@inproceedings{hein_relu_2019,
+  ids       = {Hein2019ReLU},
+  author    = {Hein, Matthias and Andriushchenko, Maksym and Bitterwolf, Julian},
+  title     = {Why {ReLU} Networks Yield High-Confidence Predictions Far Away From the Training Data and How to Mitigate the Problem},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {41--50},
+  year      = {2019},
+  doi       = {10.1109/cvpr.2019.00013}
 }
 
 @inproceedings{helfrich_orthogonal_2018,
@@ -3360,10 +3598,11 @@
 
 @article{hinton_learning_2006,
   ids     = {Hinton06},
-  author  = {Hinton, Geoffrey E. and Osindero, Simon and Teh, Yee Whye},
+  author  = {Hinton, Geoffrey E. and Osindero, Simon and Teh, Yee-Whye},
   title   = {A Fast Learning Algorithm for Deep Belief Nets},
   journal = {Neural Computation},
   volume  = {18},
+  number  = {7},
   pages   = {1527--1554},
   year    = {2006}
 }
@@ -3552,6 +3791,17 @@
   url        = {https://openreview.net/forum?id=nZeVKeeFYf9}
 }
 
+@inproceedings{hu_model_2022,
+  ids        = {hu2022model},
+  author     = {Hu, Anthony and Corrado, Gianluca and Griffiths, Nicolas and Murez, Zak and Gurau, Corina and Yeo, Hudson and Kendall, Alex and Cipolla, Roberto and Shotton, Jamie},
+  title      = {Model-Based Imitation Learning for Urban Driving},
+  booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year       = {2022},
+  doi        = {10.52202/068431-1505},
+  eprint     = {2210.07729},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{huang_language_2022,
   author    = {Huang, Wenlong and Abbeel, Pieter and Pathak, Deepak and Mordatch, Igor},
   title     = {{Language models as zero-shot planners: Extracting actionable knowledge for embodied agents}},
@@ -3591,6 +3841,16 @@
   eprinttype = {arxiv}
 }
 
+@article{huang_vjepa_2026,
+  ids        = {huang2026vjepa},
+  author     = {Huang, Yongchao},
+  title      = {{VJEPA}: Variational Joint Embedding Predictive Architectures as Probabilistic World Models},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2601.14354},
+  eprint     = {2601.14354},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{huben_sparse_2024,
   ids       = {Huben_Cunningham_Smith_Ewart_Sharkey_2024},
   author    = {Huben, Robert and Cunningham, Hoagy and Smith, Logan Riggs and Ewart, Aidan and Sharkey, Lee},
@@ -3599,6 +3859,14 @@
   series    = {ICLR},
   year      = {2024},
   url       = {https://openreview.net/forum?id=F76bwRSLeK}
+}
+
+@inproceedings{hubert_learning_2021,
+  ids       = {hubert2021learning},
+  author    = {Hubert, Thomas and Schrittwieser, Julian and Antonoglou, Ioannis and Barekatain, Mohammadamin and Schmitt, Simon and Silver, David},
+  title     = {Learning and Planning in Complex Action Spaces},
+  booktitle = {International Conference on Machine Learning},
+  year      = {2021}
 }
 
 @inproceedings{hubotter_efficiently_2025,
@@ -3685,10 +3953,11 @@
   eprinttype = {arxiv}
 }
 
-@misc{ioffe_batch_2015,
-  ids         = {ioffe2015batchnormalizationacceleratingdeep},
-  author      = {Sergey Ioffe and Christian Szegedy},
+@inproceedings{ioffe_batch_2015,
+  ids         = {ioffe2015batchnorm, ioffe2015batchnormalizationacceleratingdeep},
+  author      = {Ioffe, Sergey and Szegedy, Christian},
   title       = {Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift},
+  booktitle   = {International Conference on Machine Learning (ICML)},
   year        = {2015},
   eprint      = {1502.03167},
   eprinttype  = {arxiv},
@@ -3703,7 +3972,7 @@
   series    = {Graduate Texts in Mathematics},
   volume    = {84},
   publisher = {Springer},
-  edition   = {2},
+  edition   = {Second},
   year      = {1990}
 }
 
@@ -3877,7 +4146,7 @@
 @misc{jordan_muon_2024,
   ids          = {jordan2024muon},
   author       = {Jordan, Keller and Jin, Yuchen and Boza, Vlado and You, Jiacheng and Cesista, Franz and Newhouse, Laker and Bernstein, Jeremy},
-  title        = {Muon: An optimizer for hidden layers in neural networks},
+  title        = {Muon: An Optimizer for Hidden Layers in Neural Networks},
   howpublished = {\url{https://kellerjordan.github.io/posts/muon/}},
   year         = {2024}
 }
@@ -3973,8 +4242,9 @@
 @inproceedings{karimireddy_error_2019,
   ids       = {karimireddy2019errorfeedback},
   author    = {Karimireddy, Sai Praneeth and Rebjock, Quentin and Stich, Sebastian U. and Jaggi, Martin},
-  title     = {Error feedback fixes {SignSGD} and other gradient compression schemes},
-  booktitle = {International Conference on Machine Learning},
+  title     = {Error Feedback Fixes {SignSGD} and Other Gradient Compression Schemes},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  pages     = {3252--3261},
   year      = {2019}
 }
 
@@ -3996,6 +4266,17 @@
   address   = {Online},
   year      = {2020},
   doi       = {10.18653/v1/2020.emnlp-main.550}
+}
+
+@inproceedings{karypidis_dino_2025,
+  ids        = {karypidis2025dino},
+  author     = {Karypidis, Efstathios and Kakogeorgiou, Ioannis and Gidaris, Spyros and Komodakis, Nikos},
+  title      = {{DINO-Foresight}: Looking into the Future with {DINO}},
+  booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year       = {2025},
+  doi        = {10.52202/085713-5466},
+  eprint     = {2412.11673},
+  eprinttype = {arxiv}
 }
 
 @inproceedings{kasai_realtime_2023,
@@ -4054,6 +4335,15 @@
   publisher = {IEEE},
   address   = {Seattle WA, USA},
   year      = {2024}
+}
+
+@inproceedings{kim_adaface_2022,
+  ids       = {kim2022adaface},
+  author    = {Kim, Minchul and Jain, Anil K. and Liu, Xiaoming},
+  title     = {{AdaFace}: Quality Adaptive Margin for Face Recognition},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2022},
+  doi       = {10.1109/cvpr52688.2022.01819}
 }
 
 @inproceedings{kim_cogs_2020,
@@ -4169,6 +4459,14 @@
   year      = {2022}
 }
 
+@inproceedings{kolb_differentiable_2025,
+  ids       = {kolb2025dgating},
+  author    = {Kolb, Chris and Frost, Lennart and Bischl, Bernd and R{\"u}gamer, David},
+  title     = {Differentiable Sparsity via {D}-Gating: Simple and Versatile Structured Penalization},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2025}
+}
+
 @inproceedings{kolter_learning_2019,
   ids       = {KolterManek2019},
   author    = {Kolter, J. Zico and Manek, Gaurav},
@@ -4256,6 +4554,14 @@
   isbn      = {978-981-15-6324-9 978-981-15-6325-6}
 }
 
+@inproceedings{kosson_rotational_2024,
+  ids       = {kosson2024rotational},
+  author    = {Kosson, Atli and Messmer, Bettina and Jaggi, Martin},
+  title     = {Rotational Equilibrium: How Weight Decay Balances Learning Across Neural Networks},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2024}
+}
+
 @inproceedings{krizhevsky_imagenet_2012,
   ids       = {krizhevsky2012imagenet},
   author    = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
@@ -4274,10 +4580,11 @@
   note   = {Krizhevsky, A. and Hinton, G.~E. (2009). Learning multiple layers of features from tiny images (Technical Report). University of Toronto.}
 }
 
-@article{kumar_grokking_2024,
+@inproceedings{kumar_grokking_2024,
   ids        = {kumar2024grokking},
-  author     = {Kumar, Tanishq and Bordelon, Blake and Gershman, Samuel J and Pehlevan, Cengiz},
+  author     = {Kumar, Tanishq and Bordelon, Blake and Gershman, Samuel J. and Pehlevan, Cengiz},
   title      = {Grokking as the Transition from Lazy to Rich Training Dynamics},
+  booktitle  = {International Conference on Learning Representations (ICLR)},
   year       = {2024},
   eprint     = {2310.06110},
   eprinttype = {arxiv}
@@ -4334,6 +4641,14 @@
   pages     = {115--121},
   publisher = {Nature Publishing Group UK London},
   year      = {2023}
+}
+
+@inproceedings{lamb_professor_2016,
+  ids       = {Lamb2016ProfessorForcing},
+  author    = {Lamb, Alex and Goyal, Anirudh and Zhang, Ying and Zhang, Saizheng and Courville, Aaron and Bengio, Yoshua},
+  title     = {Professor Forcing: A New Algorithm for Training Recurrent Networks},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2016}
 }
 
 @inproceedings{lambert_objective_2020,
@@ -4659,6 +4974,16 @@
   doi       = {10.18653/v1/2020.acl-demos.25}
 }
 
+@article{li_koopman_2026,
+  ids        = {li2026koopman},
+  author     = {Li, Jiaqi and Zhang, Xinglong and Xie, Haibin and Lan, Yixing and Pan, Wei and Xu, Xin},
+  title      = {{Koopman} {Dreamer}: Spectrally Constrained Latent Dynamics for Stable World-Model Imagination},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2607.19719},
+  eprint     = {2607.19719},
+  eprinttype = {arxiv}
+}
+
 @misc{li_learning_2021,
   author     = {Li, Wei},
   title      = {{Learning UI Navigation through Demonstrations composed of Macro Actions}},
@@ -4721,6 +5046,15 @@
   year    = {2024},
   doi     = {10.1561/0600000110},
   issn    = {1572-2740, 1572-2759}
+}
+
+@article{li_normuon_2025,
+  ids        = {li2025normuon},
+  author     = {Li, Zichong and Liu, Liming and Liang, Chen and Chen, Weizhu and Zhao, Tuo},
+  title      = {{NorMuon}: Making {Muon} more efficient and scalable},
+  year       = {2025},
+  eprint     = {2510.05491},
+  eprinttype = {arxiv}
 }
 
 @misc{li_personal_2024,
@@ -4885,7 +5219,7 @@
 
 @article{lillicrap_random_2016,
   ids     = {lillicrap2016feedback},
-  author  = {Lillicrap, Timothy P and Cownden, Daniel and Tweed, Douglas B and Akerman, Colin J},
+  author  = {Lillicrap, Timothy P. and Cownden, Daniel and Tweed, Douglas B. and Akerman, Colin J.},
   title   = {Random Synaptic Feedback Weights Support Error Backpropagation for Deep Learning},
   journal = {Nature Communications},
   volume  = {7},
@@ -5069,11 +5403,12 @@
   eprinttype = {arxiv}
 }
 
-@article{liu_omnigrok_2022,
+@inproceedings{liu_omnigrok_2022,
   ids        = {liu2022omnigrok},
-  author     = {Liu, Ziming and Michaud, Eric J and Tegmark, Max},
+  author     = {Liu, Ziming and Michaud, Eric J. and Tegmark, Max},
   title      = {Omnigrok: Grokking Beyond Algorithmic Data},
-  year       = {2022},
+  booktitle  = {International Conference on Learning Representations (ICLR)},
+  year       = {2023},
   eprint     = {2210.01117},
   eprinttype = {arxiv}
 }
@@ -5105,6 +5440,16 @@
   year       = {2019},
   doi        = {10.48550/arxiv.1907.11692},
   eprint     = {1907.11692},
+  eprinttype = {arxiv}
+}
+
+@article{liu_semigroup_2026,
+  ids        = {Liu2026SemigroupJEPA},
+  author     = {Andy Zeyi Liu and Haoran Sun and Lucas Baker and Randall Balestriero and John Sous},
+  title      = {{Semigroup-JEPA}: Latent Dynamics Consistency for Zero-Shot Physics Generalization},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2609.10464},
+  eprint     = {2609.10464},
   eprinttype = {arxiv}
 }
 
@@ -5188,7 +5533,7 @@
 }
 
 @inproceedings{loshchilov_decoupled_2019,
-  ids       = {Loshchilov_AdamW_2019, Loshchilov_Hutter_2019},
+  ids       = {Loshchilov_AdamW_2019, Loshchilov_Hutter_2019, loshchilov2019decoupled},
   author    = {Loshchilov, Ilya and Hutter, Frank},
   title     = {{Decoupled Weight Decay Regularization}},
   booktitle = {Proceedings of the 7th {International} {Conference} on {Learning} {Representations}},
@@ -5334,7 +5679,8 @@
   volume  = {9},
   number  = {1},
   pages   = {4950},
-  year    = {2018}
+  year    = {2018},
+  doi     = {10.1038/s41467-018-07210-0}
 }
 
 @misc{lutz_wilbur_2024,
@@ -5414,8 +5760,9 @@
 @article{maes_leworldmodel_2026,
   ids        = {maes2026leworldmodel},
   author     = {Maes, Lucas and Lidec, Quentin Le and Scieur, Damien and LeCun, Yann and Balestriero, Randall},
-  title      = {Leworldmodel: Stable end-to-end joint-embedding predictive architecture from pixels},
+  title      = {{LeWorldModel}: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels},
   year       = {2026},
+  doi        = {10.48550/arxiv.2603.19312},
   eprint     = {2603.19312},
   eprinttype = {arxiv}
 }
@@ -5448,9 +5795,10 @@
 
 @inproceedings{mallinar_emergence_2025,
   ids        = {mallinar2025agop},
-  author     = {Mallinar, Neil and Beaglehole, Daniel and Zhu, Libin and Radhakrishnan, Adityanarayanan and Pandit, Parthe and Belkin, Mikhail},
+  author     = {Mallinar, Neil Rohit and Beaglehole, Daniel and Zhu, Libin and Radhakrishnan, Adityanarayanan and Pandit, Parthe and Belkin, Mikhail},
   title      = {Emergence in Non-Neural Models: Grokking Modular Arithmetic via Average Gradient Outer Product},
   booktitle  = {International Conference on Machine Learning (ICML)},
+  pages      = {42834--42856},
   year       = {2025},
   eprint     = {2407.20199},
   eprinttype = {arxiv}
@@ -5499,6 +5847,15 @@
   year      = {2020}
 }
 
+@article{manningcoe_grokking_2025,
+  ids        = {manningcoe2025grokking},
+  author     = {Manning-Coe, Dmitry and Gliozzi, Jacopo and Stapleton, Alexander G. and Hirst, Edward and De Tomasi, Giuseppe and Bradlyn, Barry and Berman, David S.},
+  title      = {Grokking vs. Learning: Same Features, Different Encodings},
+  year       = {2025},
+  eprint     = {2502.01739},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{mao_generation_2021,
   ids       = {mao_generation-augmented_2021},
   author    = {Mao, Yuning and He, Pengcheng and Liu, Xiaodong and Shen, Yelong and Gao, Jianfeng and Han, Jiawei and Chen, Weizhu},
@@ -5537,7 +5894,7 @@
 @inproceedings{martens_optimizing_2015,
   ids       = {martens2015kfac},
   author    = {Martens, James and Grosse, Roger},
-  title     = {Optimizing neural networks with Kronecker-factored approximate curvature},
+  title     = {Optimizing Neural Networks with {Kronecker}-Factored Approximate Curvature},
   booktitle = {International Conference on Machine Learning (ICML)},
   pages     = {2408--2417},
   year      = {2015}
@@ -5584,6 +5941,14 @@
   doi       = {10.1109/wacv51458.2022.00264}
 }
 
+@inproceedings{mathieu_deep_2016,
+  ids       = {mathieu2016deep},
+  author    = {Mathieu, Michael and Couprie, Camille and LeCun, Yann},
+  title     = {Deep Multi-Scale Video Prediction Beyond Mean Square Error},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2016}
+}
+
 @inproceedings{mazumder_flin_2021,
   author    = {Mazumder, Sahisnu and Riva, Oriana},
   title     = {{FLIN: A Flexible Natural Language Interface for Web Navigation}},
@@ -5594,6 +5959,25 @@
   address   = {Online},
   year      = {2021},
   doi       = {10.18653/v1/2021.naacl-main.222}
+}
+
+@article{mcinroe_learning_2021,
+  ids        = {mcinroe2021learning},
+  author     = {McInroe, Trevor and Sch{\"a}fer, Lukas and Albrecht, Stefano V.},
+  title      = {Learning Temporally-Consistent Representations for Data-Efficient Reinforcement Learning},
+  year       = {2021},
+  doi        = {10.48550/arxiv.2110.04935},
+  eprint     = {2110.04935},
+  eprinttype = {arxiv}
+}
+
+@inproceedings{mehta_implicit_2019,
+  ids       = {mehta2019implicit},
+  author    = {Mehta, Dushyant and Kim, Kwang In and Theobalt, Christian},
+  title     = {On Implicit Filter Level Sparsity in Convolutional Neural Networks},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {520--528},
+  year      = {2019}
 }
 
 @misc{mei_aios_2024,
@@ -5657,6 +6041,16 @@
   year      = {2023}
 }
 
+@article{meo_object_2024,
+  ids        = {meo2024object},
+  author     = {Meo, Cristian and Nakano, Akihiro and Lic{\u{a}}, Mircea and Didolkar, Aniket and Suzuki, Masahiro and Goyal, Anirudh and Zhang, Mengmi and Dauwels, Justin and Matsuo, Yutaka and Bengio, Yoshua},
+  title      = {Object-Centric Temporal Consistency via Conditional Autoregressive Inductive Biases},
+  year       = {2024},
+  doi        = {10.48550/arxiv.2410.15728},
+  eprint     = {2410.15728},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{merkle_cooperative_2019,
   author    = {Merkle, Nicole and Philipp, Patrick},
   title     = {{Cooperative web agents by combining semantic technologies with reinforcement learning}},
@@ -5678,9 +6072,11 @@
 
 @inproceedings{meulemans_credit_2021,
   ids       = {meulemans2021dfc},
-  author    = {Meulemans, Alexander and Farinha, Matilde Tristany and Ordonez, Javier Garcia and Aceituno, Pau Vilimelis and Sacramento, Jo{\~a}o and Grewe, Benjamin F},
+  author    = {Meulemans, Alexander and Tristany Farinha, Matilde and Garc{\'i}a Ordo{\~n}ez, Javier and Vilimelis Aceituno, Pau and Sacramento, Jo{\~a}o and Grewe, Benjamin F.},
   title     = {Credit Assignment in Neural Networks through Deep Feedback Control},
   booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {34},
+  pages     = {4674--4687},
   year      = {2021}
 }
 
@@ -5689,6 +6085,8 @@
   author    = {Meulemans, Alexander and Zucchet, Nicolas and Kobayashi, Seijin and von Oswald, Johannes and Sacramento, Jo{\~a}o},
   title     = {The Least-Control Principle for Local Learning at Equilibrium},
   booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {35},
+  pages     = {33603--33617},
   year      = {2022}
 }
 
@@ -5718,6 +6116,16 @@
   publisher = {ACL},
   year      = {2020},
   doi       = {10.18653/v1/2020.acl-main.92}
+}
+
+@inproceedings{micheli_transformers_2023,
+  ids        = {micheli2023transformers},
+  author     = {Micheli, Vincent and Alonso, Eloi and Fleuret, Fran{\c{c}}ois},
+  title      = {Transformers are Sample-Efficient World Models},
+  booktitle  = {International Conference on Learning Representations (ICLR)},
+  year       = {2023},
+  eprint     = {2209.00588},
+  eprinttype = {arxiv}
 }
 
 @article{miconi_hebbian_2021,
@@ -5840,6 +6248,7 @@
 }
 
 @inproceedings{morcos_importance_2018,
+  ids       = {morcos2018importance},
   author    = {Morcos, Ari S. and Barrett, David G. T. and Rabinowitz, Neil C. and Botvinick, Matthew},
   title     = {On the Importance of Single Directions for Generalization},
   booktitle = {International Conference on Learning Representations (ICLR)},
@@ -5960,6 +6369,26 @@
   doi       = {10.1109/bigdata59044.2023.10386490}
 }
 
+@article{nayak_temporally_2025,
+  ids     = {nayak2024temporally},
+  author  = {Nayak, Indranil and Chakrabarti, Ananda and Kumar, Mrinal and Teixeira, Fernando and Goswami, Debdipta},
+  title   = {Temporally Consistent {Koopman} Autoencoders for Forecasting Dynamical Systems},
+  journal = {Scientific Reports},
+  volume  = {15},
+  pages   = {22127},
+  year    = {2025},
+  doi     = {10.1038/s41598-025-05222-7}
+}
+
+@inproceedings{nayebi_neural_2023,
+  ids       = {Nayebi2023MentalSim},
+  author    = {Nayebi, Aran and Rajalingham, Rishi and Jazayeri, Mehrdad and Yang, Guangyu Robert},
+  title     = {Neural Foundations of Mental Simulation: Future Prediction of Latent Representations on Dynamic Scenes},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023},
+  doi       = {10.52202/075280-3091}
+}
+
 @misc{neel_privacy_2024,
   author     = {Neel, Seth and Chang, Peter},
   title      = {{Privacy Issues in Large Language Models: A Survey}},
@@ -5997,6 +6426,17 @@
   eprinttype = {arxiv}
 }
 
+@inproceedings{nguyen_reusable_2023,
+  ids        = {nguyen2023reusable},
+  author     = {Nguyen, Trang and Mansouri, Amin and Madan, Kanika and Nguyen, Khuong and Ahuja, Kartik and Liu, Dianbo and Bengio, Yoshua},
+  title      = {Reusable Slotwise Mechanisms},
+  booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year       = {2023},
+  doi        = {10.52202/075280-1021},
+  eprint     = {2302.10503},
+  eprinttype = {arxiv}
+}
+
 @article{nie_language_2025,
   ids        = {Nie_LLaDA_2025},
   author     = {Nie, Shen and Zhu, Fengqi and You, Zebin and Zhang, Xiaolu and Ou, Jingyang and Hu, Jun and Zhou, Jun and Lin, Yankai and Wen, Ji-Rong and Li, Chongxuan},
@@ -6006,6 +6446,15 @@
   eprint     = {2502.09992},
   eprinttype = {arxiv},
   note       = {Version Number: 2}
+}
+
+@inproceedings{niu_lightzero_2023,
+  ids       = {niu2023lightzero},
+  author    = {Niu, Yazhe and Pu, Yuan and Yang, Zhenjie and Li, Xueyan and Zhou, Tong and Ren, Jiyuan and Hu, Shuai and Li, Hongsheng and Liu, Yu},
+  title     = {{LightZero}: A Unified Benchmark for {Monte Carlo} Tree Search in General Sequential Decision Scenarios},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track},
+  year      = {2023},
+  doi       = {10.52202/075280-1635}
 }
 
 @article{niu_review_2021,
@@ -6057,6 +6506,7 @@
   author    = {N{\o}kland, Arild},
   title     = {Direct Feedback Alignment Provides Learning in Deep Neural Networks},
   booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {29},
   year      = {2016}
 }
 
@@ -6342,6 +6792,15 @@
   doi       = {10.18653/v1/d19-1250}
 }
 
+@inproceedings{pimentel_information_2020,
+  ids       = {Pimentel2020Probing},
+  author    = {Pimentel, Tiago and Valvoda, Josef and {Hall Maudslay}, Rowan and Zmigrod, Ran and Williams, Adina and Cotterell, Ryan},
+  title     = {Information-Theoretic Probing for Linguistic Structure},
+  booktitle = {Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2020},
+  doi       = {10.18653/v1/2020.acl-main.420}
+}
+
 @inproceedings{pomerleau_alvinn_1988,
   author    = {Pomerleau, Dean A.},
   title     = {{{ALVINN}: An autonomous land vehicle in a neural network}},
@@ -6535,6 +6994,16 @@
   year      = {2023}
 }
 
+@article{radha_uwm_2026,
+  ids        = {Radha2026UWMJEPA},
+  author     = {Santosh Kumar Radha and Oktay Goktas},
+  title      = {{UWM-JEPA}: Predictive World Models That Imagine in Belief Space},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2605.25313},
+  eprint     = {2605.25313},
+  eprinttype = {arxiv}
+}
+
 @article{raffel_exploring_2020,
   author  = {Raffel, Colin and Shazeer, Noam and Roberts, Adam and Lee, Katherine and Narang, Sharan and Matena, Michael and Zhou, Yanqi and Li, Wei and Liu, Peter J.},
   title   = {{Exploring the limits of transfer learning with a unified text-to-text transformer}},
@@ -6613,6 +7082,16 @@
   doi       = {10.1109/icdcs.2019.00070}
 }
 
+@article{rao_skyjepa_2026,
+  ids        = {Rao2026SkyJEPA},
+  author     = {Pratyaksh Rao and Wancong Zhang and Randall Balestriero and Yann LeCun and Giuseppe Loianno},
+  title      = {{SkyJEPA}: Learning Long-Horizon World Models for Zero-Shot Sim-to-Real Control of Quadrotors},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2606.23444},
+  eprint     = {2606.23444},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{rasley_deepspeed_2020,
   ids       = {deepspeed},
   author    = {Rasley, Jeff and Rajbhandari, Samyam and Ruwase, Olatunji and He, Yuxiong},
@@ -6685,6 +7164,7 @@
   author    = {Refinetti, Maria and D'Ascoli, St{\'e}phane and Ohana, Ruben and Goldt, Sebastian},
   title     = {Align, then Memorise: the Dynamics of Learning with Feedback Alignment},
   booktitle = {International Conference on Machine Learning (ICML)},
+  pages     = {8925--8935},
   year      = {2021}
 }
 
@@ -6826,8 +7306,8 @@
 }
 
 @unpublished{sager_bounded_2026,
-  author = {Sager, Pascal J. and others},
-  title  = {Bounded Is Not Better: Trivial Baselines and Scale Confounds in Latent World-Model Evaluation},
+  author = {Sager, Pascal J. and Taoudi-Benchekroun, Yassine and Grewe, Benjamin F. and Stadelmann, Thilo},
+  title  = {Correcting State-Probe Evaluation of World Models for Norm Drift},
   year   = {2026},
   note   = {In preparation}
 }
@@ -6907,9 +7387,10 @@
 
 @inproceedings{salimans_weight_2016,
   ids       = {salimans2016weightnorm},
-  author    = {Salimans, Tim and Kingma, Durk P.},
+  author    = {Salimans, Tim and Kingma, Diederik P.},
   title     = {Weight Normalization: A Simple Reparameterization to Accelerate Training of Deep Neural Networks},
   booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {29},
   year      = {2016}
 }
 
@@ -6919,6 +7400,16 @@
   title     = {The Underlying Structures of Self-Attention: Symmetry, Directionality, and Emergent Dynamics in Transformer Training},
   booktitle = {Proceedings of the 42nd International Conference on Machine Learning (ICML)},
   year      = {2025}
+}
+
+@inproceedings{saric_single_2019,
+  ids        = {saric2019single},
+  author     = {{\v{S}}ari{\'c}, Josip and Or{\v{s}}i{\'c}, Marin and Antunovi{\'c}, Ton{\'c}i and Vra{\v{z}}i{\'c}, Sacha and {\v{S}}egvi{\'c}, Sini{\v{s}}a},
+  title      = {Single Level Feature-to-Feature Forecasting with Deformable Convolutions},
+  booktitle  = {German Conference on Pattern Recognition (GCPR)},
+  year       = {2019},
+  eprint     = {1907.11475},
+  eprinttype = {arxiv}
 }
 
 @misc{saunders_self_2022,
@@ -6950,6 +7441,16 @@
   year    = {2017}
 }
 
+@inproceedings{schafer_imagined_2026,
+  ids        = {schafer2026imagined},
+  author     = {Sch{\"a}fer, Finn Rasmus and Moller, Korbinian and Gao, Yuan and Oefinger, Christian and Schmidt, Sebastian and Betz, Johannes},
+  title      = {Imagined Rollouts are Kinematic, Not Dynamic: A Diagnosis of Long-Horizon World-Model Failure},
+  booktitle  = {RSS 2026 Workshop on Robot World Models},
+  year       = {2026},
+  eprint     = {2607.05966},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{schick_toolformer_2023,
   author    = {Schick, Timo and Dwivedi-Yu, Jane and Dessi, Roberto and Raileanu, Roberta and Lomeli, Maria and Hambro, Eric and Zettlemoyer, Luke and Cancedda, Nicola and Scialom, Thomas},
   title     = {{Toolformer: Language models can teach themselves to use tools}},
@@ -6976,7 +7477,8 @@
   journal = {J. Fluid Mech.},
   volume  = {656},
   pages   = {5--28},
-  year    = {2010}
+  year    = {2010},
+  doi     = {10.1017/s0022112010001217}
 }
 
 @article{schmidhuber_deep_2015,
@@ -7048,7 +7550,8 @@
   volume  = {588},
   number  = {7839},
   pages   = {604--609},
-  year    = {2020}
+  year    = {2020},
+  doi     = {10.1038/s41586-020-03051-4}
 }
 
 @inproceedings{schug_discovering_2024,
@@ -7091,6 +7594,7 @@
 }
 
 @inproceedings{schwarzer_data_2021,
+  ids       = {Schwarzer2021SPR},
   author    = {Schwarzer, Max and Anand, Ankesh and Goel, Rishab and Hjelm, R. Devon and Courville, Aaron and Bachman, Philip},
   title     = {Data-Efficient Reinforcement Learning with Self-Predictive Representations},
   booktitle = {International Conference on Learning Representations (ICLR)},
@@ -7141,6 +7645,16 @@
   language  = {en}
 }
 
+@article{shah_rollout_2026,
+  ids        = {shah2026rollout},
+  author     = {Shah, Rishi and Shrestha, Rishav},
+  title      = {Rollout-Decoded Reconstruction for Long-Horizon Prediction in Latent World Models},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2608.25017},
+  eprint     = {2608.25017},
+  eprinttype = {arxiv}
+}
+
 @online{shakir_boost_2024,
   ids    = {rerank2024mxbai},
   author = {Aamir Shakir and Darius Koenig and Julius Lipp and Sean Lee},
@@ -7185,7 +7699,7 @@
 @inproceedings{shazeer_adafactor_2018,
   ids       = {shazeer2018adafactor},
   author    = {Shazeer, Noam and Stern, Mitchell},
-  title     = {Adafactor: Adaptive learning rates with sublinear memory cost},
+  title     = {Adafactor: Adaptive Learning Rates with Sublinear Memory Cost},
   booktitle = {International Conference on Machine Learning (ICML)},
   pages     = {4596--4604},
   year      = {2018}
@@ -7362,6 +7876,16 @@
   doi       = {10.1109/cvpr.2019.00851}
 }
 
+@article{sivasankar_adaptive_2026,
+  ids        = {sivasankar2026adaptive},
+  author     = {Sivasankar, Achyuthan},
+  title      = {Adaptive Compute in Latent World Models: When Depth Helps, Hurts, or Doesn't Matter},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2607.10203},
+  eprint     = {2607.10203},
+  eprinttype = {arxiv}
+}
+
 @article{smolensky_information_1987,
   ids     = {Smolensky1987},
   author  = {Smolensky},
@@ -7381,6 +7905,16 @@
   eprinttype = {arxiv}
 }
 
+@inproceedings{sobal_joint_2022,
+  ids        = {sobal2022joint},
+  author     = {Sobal, Vlad and S, Jyothir and Jalagam, Siddhartha and Carion, Nicolas and Cho, Kyunghyun and LeCun, Yann},
+  title      = {Joint Embedding Predictive Architectures Focus on Slow Features},
+  booktitle  = {NeurIPS 2022 Workshop: Self-Supervised Learning -- Theory and Practice},
+  year       = {2022},
+  eprint     = {2211.10831},
+  eprinttype = {arxiv}
+}
+
 @misc{sodhi_heap_2023,
   author     = {Sodhi, Paloma and Branavan, S. R. K. and McDonald, Ryan},
   title      = {{HeaP: Hierarchical Policies for Web Actions using LLMs}},
@@ -7388,6 +7922,17 @@
   doi        = {10.48550/arxiv.2310.03720},
   eprint     = {2310.03720},
   eprinttype = {arxiv}
+}
+
+@inproceedings{sokar_dormant_2023,
+  ids       = {sokar2023dormant},
+  author    = {Sokar, Ghada and Agarwal, Rishabh and Castro, Pablo Samuel and Evci, Utku},
+  title     = {The Dormant Neuron Phenomenon in Deep Reinforcement Learning},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {202},
+  pages     = {32145--32168},
+  year      = {2023}
 }
 
 @inproceedings{song_llm_2023,
@@ -7470,11 +8015,11 @@
 
 @article{srivastava_dropout_2014,
   ids     = {srivastava2014dropout},
-  author  = {Srivastava, Nitish and Hinton, Geoffrey and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan},
+  author  = {Srivastava, Nitish and Hinton, Geoffrey E. and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan},
   title   = {Dropout: A Simple Way to Prevent Neural Networks from Overfitting},
   journal = {Journal of Machine Learning Research},
   volume  = {15},
-  number  = {1},
+  number  = {56},
   pages   = {1929--1958},
   year    = {2014}
 }
@@ -7548,6 +8093,15 @@
   journal    = {arXiv:2101.02722},
   year       = {2021},
   eprint     = {2101.02722},
+  eprinttype = {arxiv}
+}
+
+@article{strohm_keeping_2026,
+  ids        = {strohm2026keeping},
+  author     = {Strohm, Florian and Wagner, Patrick and Schwab, Jannik and Huber, Marco},
+  title      = {Keeping {JEPA} World Models Plannable When Little of the Frame Moves},
+  year       = {2026},
+  eprint     = {2610.03137},
   eprinttype = {arxiv}
 }
 
@@ -7712,7 +8266,17 @@
   title     = {Self-Correcting Models for Model-Based Reinforcement Learning},
   booktitle = {AAAI Conference on Artificial Intelligence},
   pages     = {2597--2603},
-  year      = {2017}
+  year      = {2017},
+  doi       = {10.1609/aaai.v31i1.10850}
+}
+
+@article{tan_can_2026,
+  ids        = {tan2026what},
+  author     = {Tan, Kaizhen and Xu, Sizhe and Xu, Xin and Tao, Siru and Li, Yixiao and Hong, Hanzhe and Feng, Yang and Du, Heqing and Wang, Zhaonan},
+  title      = {What Can Latent World Models Know? Physical Information in Multimodal Predictive Representations},
+  year       = {2026},
+  eprint     = {2607.27017},
+  eprinttype = {arxiv}
 }
 
 @misc{tan_computer_2024,
@@ -7743,6 +8307,17 @@
   eprinttype = {arxiv}
 }
 
+@inproceedings{tang_understanding_2023,
+  ids       = {Tang2023SelfPredictive},
+  author    = {Tang, Yunhao and Guo, Zhaohan Daniel and Richemond, Pierre Harvey and {\'A}vila Pires, Bernardo and Chandak, Yash and Munos, R{\'e}mi and Rowland, Mark and Azar, Mohammad Gheshlaghi and Le Lan, Charline and Lyle, Clare and Gy{\"o}rgy, Andr{\'a}s and Thakoor, Shantanu and Dabney, Will and Piot, Bilal and Calandriello, Daniele and Valko, Michal},
+  title     = {Understanding Self-Predictive Learning for Reinforcement Learning},
+  booktitle = {International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {202},
+  pages     = {33632--33656},
+  year      = {2023}
+}
+
 @inproceedings{tao_webwise_2024,
   ids       = {tao_webwise_2023},
   author    = {Tao, Heyi and T V, Sethuraman and Shlapentokh-Rothman, Michal and Hoiem, Derek},
@@ -7756,7 +8331,7 @@
 }
 
 @inproceedings{taoudibenchekroun_cogitao_2026,
-  ids       = {cogitao, taoudibenchekroun_cogitao_2025},
+  ids       = {cogitao},
   author    = {Taoudi-Benchekroun, Yassine and Troyan, Klim and Sager, Pascal Josef and Gerber, Stefan and Tuggener, Lukas and Stadelmann, Thilo and Grewe, Benjamin F.},
   title     = {{COGITAO}: A Procedural and Object-Centric Framework to Evaluate Compositional and Systematic Generalization},
   booktitle = {2nd ICML Workshop on Compositional Learning: Safety, Interpretability, and Agents},
@@ -7767,8 +8342,8 @@
   ids        = {Tassa2018},
   author     = {Tassa, Yuval and Doron, Yotam and Muldal, Alistair and Erez, Tom and Li, Yazhe and de Las Casas, Diego and Budden, David and Abdolmaleki, Abbas and Merel, Josh and Lefrancq, Andrew and Lillicrap, Timothy and Riedmiller, Martin},
   title      = {{DeepMind Control Suite}},
-  journal    = {arXiv:1801.00690},
   year       = {2018},
+  doi        = {10.48550/arxiv.1801.00690},
   eprint     = {1801.00690},
   eprinttype = {arxiv}
 }
@@ -7788,6 +8363,16 @@
   title  = {{Learning human actions on computer applications}},
   year   = {2023},
   url    = {https://rabbit.tech/research}
+}
+
+@article{terver_drives_2026,
+  ids        = {terver2026what},
+  author     = {Terver, Basile and Yang, Tsung-Yen and Ponce, Jean and Bardes, Adrien and LeCun, Yann},
+  title      = {What Drives Success in Physical Planning with Joint-Embedding Predictive World Models?},
+  journal    = {Transactions on Machine Learning Research (TMLR)},
+  year       = {2026},
+  eprint     = {2512.24497},
+  eprinttype = {arxiv}
 }
 
 @article{thaker_python_2020,
@@ -7830,15 +8415,12 @@
   doi       = {10.18653/v1/n18-1074}
 }
 
-@article{tieleman_lecture_2012,
-  ids     = {tieleman2012rmsprop},
-  author  = {Tieleman, Tijmen and Hinton, Geoffrey},
-  title   = {Lecture 6.5-rmsprop: Divide the gradient by a running average of its recent magnitude},
-  journal = {COURSERA: Neural Networks for Machine Learning},
-  volume  = {4},
-  number  = {2},
-  pages   = {26--31},
-  year    = {2012}
+@misc{tieleman_lecture_2012,
+  ids          = {tieleman2012rmsprop},
+  author       = {Tieleman, Tijmen and Hinton, Geoffrey},
+  title        = {Lecture 6.5-rmsprop: Divide the Gradient by a Running Average of its Recent Magnitude},
+  howpublished = {Lecture slides, COURSERA: Neural Networks for Machine Learning},
+  year         = {2012}
 }
 
 @article{tolonen_methodology_2021,
@@ -7966,6 +8548,17 @@
   isbn      = {979-8-3503-0929-4}
 }
 
+@inproceedings{tung_physion_2023,
+  ids        = {tung2023physion},
+  author     = {Tung, Hsiao-Yu and Ding, Mingyu and Chen, Zhenfang and Bear, Daniel and Gan, Chuang and Tenenbaum, Joshua B. and Yamins, Daniel L. K. and Fan, Judith E. and Smith, Kevin A.},
+  title      = {{Physion++}: Evaluating Physical Scene Understanding that Requires Online Inference of Different Physical Properties},
+  booktitle  = {Advances in Neural Information Processing Systems Datasets and Benchmarks Track},
+  year       = {2023},
+  doi        = {10.52202/075280-2929},
+  eprint     = {2306.15668},
+  eprinttype = {arxiv}
+}
+
 @misc{turc_well_2019,
   ids        = {turcWellReadStudentsLearn2019},
   author     = {Turc, Iulia and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
@@ -7988,6 +8581,16 @@
   year    = {1950},
   doi     = {10.1093/mind/lix.236.433},
   issn    = {0026-4423}
+}
+
+@article{vakalis_intervention_2026,
+  ids        = {vakalis2026intervention},
+  author     = {Vakalis, Donna},
+  title      = {The Intervention Gap in Latent World Models},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2608.29998},
+  eprint     = {2608.29998},
+  eprinttype = {arxiv}
 }
 
 @article{valmeekam_llms_2024,
@@ -8085,6 +8688,15 @@
   eprinttype = {arxiv}
 }
 
+@inproceedings{venkatraman_improving_2015,
+  ids       = {Venkatraman2015DaD},
+  author    = {Venkatraman, Arun and Hebert, Martial and Bagnell, J. Andrew},
+  title     = {Improving Multi-Step Prediction of Learned Time Series Models},
+  booktitle = {AAAI Conference on Artificial Intelligence},
+  year      = {2015},
+  doi       = {10.1609/aaai.v29i1.9590}
+}
+
 @inproceedings{vig_investigating_2020,
   ids       = {Vig_Gehrmann_Belinkov_Qian_Nevo_Singer_Shieber_2020},
   author    = {Vig, Jesse and Gehrmann, Sebastian and Belinkov, Yonatan and Qian, Sharon and Nevo, Daniel and Singer, Yaron and Shieber, Stuart},
@@ -8127,6 +8739,15 @@
   address   = {Baltimore, MD, USA},
   year      = {2014},
   doi       = {10.3115/v1/w14-2508}
+}
+
+@inproceedings{voita_information_2020,
+  ids       = {Voita2020MDL},
+  author    = {Voita, Elena and Titov, Ivan},
+  title     = {Information-Theoretic Probing with Minimum Description Length},
+  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2020},
+  doi       = {10.18653/v1/2020.emnlp-main.14}
 }
 
 @inproceedings{wadden_fact_2020,
@@ -8585,8 +9206,8 @@
 
 @article{whittington_approximation_2017,
   ids     = {whittington2017pc},
-  author  = {Whittington, James C R and Bogacz, Rafal},
-  title   = {An Approximation of the Error Backpropagation Algorithm in a Predictive Coding Network with Local Hebbian Synaptic Plasticity},
+  author  = {Whittington, James C. R. and Bogacz, Rafal},
+  title   = {An Approximation of the Error Backpropagation Algorithm in a Predictive Coding Network with Local {Hebbian} Synaptic Plasticity},
   journal = {Neural Computation},
   volume  = {29},
   number  = {5},
@@ -8762,6 +9383,27 @@
   doi       = {10.1145/3472749.3474763}
 }
 
+@inproceedings{wu_slotdiffusion_2023,
+  ids        = {wu2023slotdiffusion},
+  author     = {Wu, Ziyi and Hu, Jingyu and Lu, Wuyue and Gilitschenski, Igor and Garg, Animesh},
+  title      = {{SlotDiffusion}: Object-Centric Generative Modeling with Diffusion Models},
+  booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year       = {2023},
+  doi        = {10.52202/075280-2216},
+  eprint     = {2305.11281},
+  eprinttype = {arxiv}
+}
+
+@inproceedings{wu_slotformer_2023,
+  ids        = {wu2023slotformer},
+  author     = {Wu, Ziyi and Dvornik, Nikita and Greff, Klaus and Kipf, Thomas and Garg, Animesh},
+  title      = {{SlotFormer}: Unsupervised Visual Dynamics Simulation with Object-Centric Models},
+  booktitle  = {International Conference on Learning Representations (ICLR)},
+  year       = {2023},
+  eprint     = {2210.05861},
+  eprinttype = {arxiv}
+}
+
 @inproceedings{wu_webui_2023,
   author    = {Wu, Jason and Wang, Siyan and Shen, Siman and Peng, Yi-Hao and Nichols, Jeffrey and Bigham, Jeffrey P},
   title     = {{WebUI: A Dataset for Enhancing Visual UI Understanding with Web Semantics}},
@@ -8879,6 +9521,14 @@
   doi       = {10.18653/v1/2021.naacl-main.80}
 }
 
+@inproceedings{xu_neural_2021,
+  ids       = {Xu2021Extrapolate},
+  author    = {Xu, Keyulu and Zhang, Mozhi and Li, Jingling and Du, Simon S. and Kawarabayashi, Ken-ichi and Jegelka, Stefanie},
+  title     = {How Neural Networks Extrapolate: From Feedforward to Graph Neural Networks},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021}
+}
+
 @misc{xu_rewoo_2023,
   author     = {Xu, Binfeng and Peng, Zhiyuan and Lei, Bowen and Mukherjee, Subhabrata and Liu, Yuchen and Xu, Dongkuan},
   title      = {{ReWOO: Decoupling Reasoning from Observations for Efficient Augmented Language Models}},
@@ -8906,6 +9556,15 @@
   doi        = {10.48550/arxiv.2010.11934},
   eprint     = {2010.11934},
   eprinttype = {arxiv}
+}
+
+@inproceedings{yaguchi_adam_2018,
+  ids       = {yaguchi2018adam},
+  author    = {Yaguchi, Atsushi and Suzuki, Taiji and Asano, Wataru and Nitta, Shuhei and Sakata, Yukinobu and Tanizawa, Akiyuki},
+  title     = {Adam Induces Implicit Weight Sparsity in Rectifier Neural Networks},
+  booktitle = {IEEE International Conference on Machine Learning and Applications (ICMLA)},
+  pages     = {318--325},
+  year      = {2018}
 }
 
 @misc{yan_gpt_2023,
@@ -9075,6 +9734,16 @@
   year      = {2022}
 }
 
+@inproceedings{ye_mastering_2021,
+  ids        = {ye2021mastering},
+  author     = {Ye, Weirui and Liu, Shaohuai and Kurutach, Thanard and Abbeel, Pieter and Gao, Yang},
+  title      = {Mastering {Atari} Games with Limited Data},
+  booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year       = {2021},
+  eprint     = {2111.00210},
+  eprinttype = {arxiv}
+}
+
 @article{yeh_attentionviz_2023,
   ids     = {Yeh_Chen_2023},
   author  = {Yeh, Catherine and Chen, Yida and Wu, Aoyu and Chen, Cynthia and Vi\'{e}gas, Fernanda and Wattenberg, Martin},
@@ -9084,6 +9753,18 @@
   year    = {2023},
   doi     = {10.1109/tvcg.2023.3327163},
   issn    = {1077-2626}
+}
+
+@inproceedings{yosinski_transferable_2014,
+  ids        = {yosinski2014transferable},
+  author     = {Yosinski, Jason and Clune, Jeff and Bengio, Yoshua and Lipson, Hod},
+  title      = {How Transferable are Features in Deep Neural Networks?},
+  booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume     = {27},
+  pages      = {3320--3328},
+  year       = {2014},
+  eprint     = {1411.1792},
+  eprinttype = {arxiv}
 }
 
 @article{you_batch_2017,
@@ -9134,6 +9815,14 @@
   year      = {2022},
   url       = {https://www.usenix.org/conference/osdi22/presentation/yu},
   isbn      = {978-1-939133-28-1}
+}
+
+@inproceedings{yu_playvirtual_2021,
+  ids       = {yu2021playvirtual},
+  author    = {Yu, Tao and Lan, Cuiling and Zeng, Wenjun and Feng, Mingxiao and Zhang, Zhizheng and Chen, Zhibo},
+  title     = {{PlayVirtual}: Augmenting Cycle-Consistent Virtual Trajectories for Reinforcement Learning},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2021}
 }
 
 @inproceedings{yu_sample_2018,
@@ -9230,6 +9919,14 @@
   series = {Proc. of ICLR'23}
 }
 
+@inproceedings{zhang_adam_2025,
+  ids       = {zhang2025adammini},
+  author    = {Zhang, Yushun and Chen, Congliang and Li, Ziniu and others},
+  title     = {Adam-mini: Use Fewer Learning Rates To Gain More},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2025}
+}
+
 @inproceedings{zhang_android_2024,
   author    = {Zhang, Jiwen and Wu, Jihao and Teng, Yihua and Liao, Minghui and Xu, Nuo and Xiao, Xiao and Wei, Zhongyu and Tang, Duyu},
   title     = {{Android in the Zoo: Chain-of-Action-Thought for GUI Agents}},
@@ -9268,6 +9965,16 @@
   address   = {Singapore},
   year      = {2024},
   url       = {https://openreview.net/forum?id=EnXJfQqy0K}
+}
+
+@inproceedings{zhang_hierarchical_2026,
+  ids        = {zhang2026hierarchical},
+  author     = {Zhang, Wancong and Terver, Basile and Zholus, Artem and Chitnis, Soham and Sutaria, Harsh and Assran, Mido and Balestriero, Randall and Bar, Amir and LeCun, Yann and Ballas, Nicolas},
+  title      = {Hierarchical Planning with Latent World Models},
+  booktitle  = {Conference on Robot Learning (CoRL)},
+  year       = {2026},
+  eprint     = {2604.03208},
+  eprinttype = {arxiv}
 }
 
 @misc{zhang_language_2024,
@@ -9428,6 +10135,24 @@
   doi       = {10.18653/v1/2024.findings-acl.186}
 }
 
+@inproceedings{zhao_simplified_2023,
+  ids       = {zhao2023simplified},
+  author    = {Zhao, Yi and Zhao, Wenshuai and Boney, Rinu and Kannala, Juho and Pajarinen, Joni},
+  title     = {Simplified Temporal Consistency Reinforcement Learning},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2023}
+}
+
+@article{zhao_sub_2026,
+  ids        = {zhao2026subjepa},
+  author     = {Zhao, Kai and Nie, Dongliang and Lin, Yuchen and Luo, Zhehan and Gu, Yixiao and Fan, Deng-Ping and Zeng, Dan},
+  title      = {{Sub-JEPA}: Subspace {Gaussian} Regularization for Stable End-to-End World Models},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2605.09241},
+  eprint     = {2605.09241},
+  eprinttype = {arxiv}
+}
+
 @misc{zhao_survey_2023,
   author     = {Zhao, Wayne Xin and others},
   title      = {A {Survey} of {Large} {Language} {Models}},
@@ -9444,6 +10169,16 @@
   year       = {2024},
   doi        = {10.48550/arxiv.2403.17918},
   eprint     = {2403.17918},
+  eprinttype = {arxiv}
+}
+
+@article{zheng_contactguard_2026,
+  ids        = {zheng2026contactguard},
+  author     = {Zheng, Gehan and Johnson-Roberson, Matthew and Zhi, Weiming},
+  title      = {{ContactGuard}: Pre-Contact Execution Monitoring with Action-Conditioned Latent World Models},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2608.13438},
+  eprint     = {2608.13438},
   eprinttype = {arxiv}
 }
 
@@ -9487,6 +10222,16 @@
   url       = {https://openreview.net/forum?id=Pc8AU1aF5e}
 }
 
+@article{zholus_robojepa_2026,
+  ids        = {zholus2026robojepa},
+  author     = {Zholus, Artem and Beltran-Velez, Nicolas and Yuan, Jianhao and Chandar, Sarath and Nagarajan, Tushar and Severo, Daniel and Sinha, Koustuv and Drozdzal, Michal and Romero Soriano, Adriana and Bohg, Jeannette and Ballas, Nicolas and Assran, Mahmoud},
+  title      = {{RoboJEPA}: Scaling Robotic Latent World Models},
+  year       = {2026},
+  doi        = {10.48550/arxiv.2610.10515},
+  eprint     = {2610.10515},
+  eprinttype = {arxiv}
+}
+
 @misc{zhong_agieval_2023,
   author     = {Zhong, Wanjun and others},
   title      = {{AGIEval}: {A} {Human}-{Centric} {Benchmark} for {Evaluating} {Foundation} {Models}},
@@ -9502,6 +10247,8 @@
   author     = {Zhong, Ziqian and Liu, Ziming and Tegmark, Max and Andreas, Jacob},
   title      = {The Clock and the Pizza: Two Stories in Mechanistic Explanation of Neural Networks},
   booktitle  = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume     = {36},
+  pages      = {27223--27250},
   year       = {2023},
   eprint     = {2306.17844},
   eprinttype = {arxiv}
@@ -9517,14 +10264,12 @@
   doi       = {10.1609/aaai.v38i17.29946}
 }
 
-@article{zhou_dino_2025,
-  ids        = {zhou2025dinowmworldmodelspretrained},
-  author     = {Gaoyue Zhou and Hengkai Pan and Yann LeCun and Lerrel Pinto},
-  title      = {DINO-WM: World Models on Pre-trained Visual Features enable Zero-shot Planning},
-  journal    = {arXiv:2411.04983},
-  year       = {2025},
-  eprint     = {2411.04983},
-  eprinttype = {arxiv}
+@inproceedings{zhou_dino_2025,
+  ids       = {zhou2025dinowmworldmodelspretrained},
+  author    = {Gaoyue Zhou and Hengkai Pan and Yann LeCun and Lerrel Pinto},
+  title     = {{DINO-WM}: World Models on Pre-trained Visual Features enable Zero-shot Planning},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2025}
 }
 
 @misc{zhou_importance_2018,
@@ -9657,11 +10402,11 @@
 }
 
 @article{zinage_neural_2022,
-  ids        = {zinage2022neural},
-  author     = {Zinage, Vrushabh and Bakolas, Efstathios},
-  title      = {{Neural Koopman Lyapunov Control}},
-  journal    = {arXiv:2201.05098},
-  year       = {2022},
-  eprint     = {2201.05098},
-  eprinttype = {arxiv}
+  ids     = {zinage2022neural},
+  author  = {Zinage, Vrushabh and Bakolas, Efstathios},
+  title   = {{Neural Koopman Lyapunov Control}},
+  journal = {Neurocomputing},
+  volume  = {527},
+  pages   = {174--183},
+  year    = {2023}
 }

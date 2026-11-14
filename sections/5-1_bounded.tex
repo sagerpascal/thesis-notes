@@ -26,11 +26,24 @@ states what the chapter contributes to the thesis argument.
 % ---------------------------------------------------------------------------
 
 \begin{importedpaper}{bounded}
-\importpart{02_error-growth-and-what-a-spectral-bound-does-not-say}
-\importpart{04_a-controlled-comparison-and-how-it-is-read}
-\importpart{05_results}
-\importpart{06_what-to-report-instead}
-\importpart{07_limitations}
+
+% The paper puts its overview figure in the introduction, which this chapter
+% drops, and then refers back to it from the results. Reproducing the float
+% here, inside the block and under the paper's own label, is what keeps that
+% reference resolving. check_imports.py holds it to the original.
+%
+% [htbp] and not [t], for the reason recorded in sections/3-1_acu_survey.tex:
+% a float contributed before any of the paper's own is still pending when the
+% environment's group closes, and LaTeX reports Float(s) lost.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_intro.pdf}
+\caption{\textbf{Norm drift inflates the probe's error, and re-projection removes it.} \textbf{(A)} The prediction is moved along its existing direction to a reference radius estimated from observation encodings. \textbf{(B)} The same TCRL pendulum predictions are evaluated before and after this change. Errors are divided by the error of always predicting the mean state. Persistence predicts no change from the initial state. Shading marks the horizon supervised during training. Diamonds mark the start-encoding probe, fitted from the initial encoding to the state $T$ steps ahead. Longer horizons use separate rollouts under the same policy.}
+\label{fig:intro}
+\end{figure}
+
+\importpart{03_materials-and-methods}
+\importpart{04_results}
 \end{importedpaper}
 
 %% TODO(story): written by the framing pass. Placeholder until then.

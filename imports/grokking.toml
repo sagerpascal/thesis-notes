@@ -14,17 +14,17 @@ layout  = "monolithic"
 source  = "iclr2027_conference_v2.tex"
 split   = "section"
 
-imported_on = "2026-09-06"
+imported_on = "2026-11-14"
 upstream    = ""            # <repo>/docs/paper, contents copied into `dir`
 
 bib      = ["iclr2027_conference.bib"]
-graphics = ["figures", "figures/data"]
+graphics = ["figures"]
 
 [drop]
 "(front matter)"        = "title, authors and abstract, replaced by the chapter introduction and the publication header box"
 "Introduction"          = "replaced by the chapter introduction"
 "Background and related work" = "covered by the thesis related work chapter"
-"Discussion and conclusion"   = "replaced by the chapter summary and the thesis discussion"
+"Discussion and conclusions"  = "replaced by the chapter summary and the thesis discussion"
 
 [prune]
 "iclr2027_conference.sty" = "ICLR template, the thesis uses kaobook"
@@ -35,17 +35,35 @@ graphics = ["figures", "figures/data"]
 "compile.sh"              = "the paper's own build script"
 "*.fls"                   = "pdflatex build artefact"
 "*.fdb_latexmk"           = "latexmk build artefact"
+"*.aux"                   = "pdflatex build artefact"
+"*.bbl"                   = "bibtex build artefact"
+"*.blg"                   = "bibtex build artefact"
+"*.log"                   = "pdflatex build artefact"
+"*.out"                   = "hyperref build artefact"
 "iclr2027_conference_v2.pdf" = "built output of the paper"
+"iclr2027_conference_v2 copy.tex" = "a working copy of the manuscript"
+"iclr2027_conference_v2 copy.pdf" = "built output of a working copy of the manuscript"
+"archive_pre-revision_2026-09-20.tex" = "an earlier revision of the manuscript"
+"diff_*.tex"              = "latexdiff drafts against earlier revisions"
+"diff_*.pdf"              = "built output of the latexdiff drafts"
+"*.md"                    = "the author's revision plans, rebuttals and review replies"
+"reviews/**"              = "reviews collected during the revision rounds"
+"arxiv/**"                = "the arXiv packaging of the paper, with its own build tree"
+"output/**"               = "built output of the paper"
+"tmp/**"                  = "the author's scratch directory, 49 MB of intermediate PDFs"
+"figures/data/**"         = "the result JSONs the figure scripts read, 113 MB and not read by LaTeX"
+"figures/review-baseline/**"    = "figures of an earlier revision, kept for comparison"
+"figures/afternoon-baseline/**" = "figures of an earlier revision, kept for comparison"
+"figures/*.svg"           = "vector sources of figures the paper includes as PDF"
+"figures/*.html"          = "a browser preview of one figure"
 
 # Parts the thesis carries in its appendix rather than in the chapter.
 [appendix]
-"The grain sweep and the test on published optimizers" = "appendix material of the paper"
-"Implementation and reproducibility" = "appendix material of the paper"
-"Interventions that separate credit from the gradient" = "appendix material of the paper"
-"Controls and alternative explanations" = "appendix material of the paper"
-"Theory in tractable models" = "appendix material of the paper"
-"Scope and limits of the measures" = "appendix material of the paper"
-"The two endpoint rules in detail" = "appendix material of the paper"
-"Long run stability and rule switching" = "appendix material of the paper"
-"Adaptation to a new operation" = "appendix material of the paper"
-"Generality and boundaries" = "appendix material of the paper"
+"Experimental details" = "appendix material of the paper"
+"Circuit measurements and algorithm checks" = "appendix material of the paper"
+"Controls on credit equalization" = "appendix material of the paper"
+"Normalization groups and optimizer comparison" = "appendix material of the paper"
+"Neuron deletion and adaptation" = "appendix material of the paper"
+"Other tasks and architectures" = "appendix material of the paper"
+"Theory of credit equalization" = "appendix material of the paper"
+"Supplementary analysis of generalization" = "appendix material of the paper"

@@ -36,7 +36,8 @@ section fails the check instead of silently dropping content.
 | `citation_key` | The paper's own key in `references/merged.bib`, cited by the chapter's publication header box. |
 | `status` | `wired` once the chapter includes the paper, `pending` before that. Coverage is only checked for `wired` papers. |
 | `layout` | `sections` when the paper is already split into files, `monolithic` when it is one file. |
-| `source` | Monolithic only. The single file holding the paper. |
+| `source` | Monolithic only. The root file of the paper. The preamble is read from here, and so are the sections unless `body` says otherwise. |
+| `body` | Monolithic only, optional. The file or files the sections are in, when the root file holds only the preamble and a few `\input` lines. A list is cut as if it were one file, which is how the Frontiers supplement becomes the paper's appendix parts. |
 | `split` | Monolithic only. Where to cut. `section` cuts at every top level `\section`. |
 | `imported_on` | Date of the last import. |
 | `upstream` | Where the paper was imported from. |
