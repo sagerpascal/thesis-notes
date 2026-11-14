@@ -1,0 +1,54 @@
+\documentclass[utf8]{FrontiersinHarvard}
+\input{preamble.tex}
+\input{content/front.tex}
+\input{wordcount.tex}
+\usepackage[onehalfspacing]{setspace}
+\usepackage{totcount}
+\regtotcounter{figure}
+\regtotcounter{table}
+\externaldocument{supplementary}
+\linenumbers
+
+\def\keyFont{\fontsize{8}{11}\helveticabold }
+\def\firstAuthorLast{Sager {et~al.}}
+\def\Authors{Pascal J. Sager\,$^{1,*}$, Yassine Taoudi-Benchekroun\,$^{2}$, Benjamin F. Grewe\,$^{2}$ and Thilo Stadelmann\,$^{1}$}
+\def\Address{$^{1}$Centre for Artificial Intelligence, Zurich University of Applied Sciences, Winterthur, Switzerland \\
+$^{2}$Institute of Neuroinformatics, University of Zurich and ETH Zurich, Zurich, Switzerland}
+\def\corrAuthor{Pascal J. Sager}
+\def\corrEmail{sage@zhaw.ch}
+
+\begin{document}
+\onecolumn
+\firstpage{1}
+\raggedbottom
+
+\title[\papershorttitle]{\papertitle}
+
+\author[\firstAuthorLast ]{\Authors}
+\address{}
+\correspondance{}
+\extraAuth{}
+
+\maketitle
+\suppressfloats[t]
+
+\begin{abstract}
+\section{}
+\input{content/abstract.tex}
+
+\tiny
+\keyFont{\section{Keywords:} \paperkeywords}
+
+\keyFont{\section{Words:} \wordcount\quad{\bfseries Figures:} \total{figure}\quad{\bfseries Tables:} \total{table}}
+\end{abstract}
+
+\input{content/body.tex}
+
+\input{content/statements.tex}
+
+\section*{Supplementary Material}
+The Supplementary Material contains the synthetic controls (Supplementary Section~\ref{app:synthetic}), the trained modules with their training details, encoder checks and further comparisons (Supplementary Section~\ref{app:trained}), the per-model details of the published models (Supplementary Section~\ref{app:published}), code for the protocol (Supplementary Section~\ref{app:code}) and the protocol of the literature survey (Supplementary Section~\ref{app:literature}).
+
+\bibliographystyle{Frontiers-Harvard}
+\bibliography{main}
+\end{document}

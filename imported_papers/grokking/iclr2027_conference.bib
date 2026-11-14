@@ -1,24 +1,14 @@
-@incollection{Bengio+chapter2007,
-author = {Bengio, Yoshua and LeCun, Yann},
-booktitle = {Large Scale Kernel Machines},
-publisher = {MIT Press},
-title = {Scaling Learning Algorithms Towards {AI}},
-year = {2007}
-}
-
-@article{Hinton06,
-author = {Hinton, Geoffrey E. and Osindero, Simon and Teh, Yee Whye},
-journal = {Neural Computation},
-pages = {1527--1554},
-title = {A Fast Learning Algorithm for Deep Belief Nets},
-volume = {18},
-year = {2006}
-}
-
-
-}
-
-% ---- entries for the submission ----
+% Bibliography for the DFC/grokking submission.
+%
+% Conventions used throughout this file:
+%   - Author names follow the published record; initials carry periods.
+%   - Compound surnames are given whole before the comma (e.g. "Vilimelis Aceituno, Pau").
+%   - Titles are Title Case; iclr2027_conference.bst sentence-cases them on output,
+%     so proper nouns must be brace-protected ({ImageNet}, {ReLU}, {BERT}, ...).
+%   - Unpublished preprints use journal={arXiv preprint arXiv:...};
+%     published papers carry the venue and an optional note={arXiv:...}.
+%   - Page ranges are included wherever the proceedings assign them
+%     (ICLR assigns none).
 
 @inproceedings{liu2021nero,
   title={Learning by Turning: Neural Architecture Aware Optimisation},
@@ -27,10 +17,6 @@ year = {2006}
   pages={6748--6758},
   year={2021}
 }
-
-% ===========================================================================
-%  VERIFIED references (arXiv id / venue checked, see docs/related-work.md)
-% ===========================================================================
 
 @article{power2022grokking,
   title={Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets},
@@ -53,11 +39,12 @@ year = {2006}
   year={2023}
 }
 
-@article{liu2022omnigrok,
+@inproceedings{liu2022omnigrok,
   title={Omnigrok: Grokking Beyond Algorithmic Data},
-  author={Liu, Ziming and Michaud, Eric J and Tegmark, Max},
-  journal={arXiv preprint arXiv:2210.01117},
-  year={2022}
+  author={Liu, Ziming and Michaud, Eric J. and Tegmark, Max},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2023},
+  note={arXiv:2210.01117}
 }
 
 @article{merrill2023tale,
@@ -67,17 +54,27 @@ year = {2006}
   year={2023}
 }
 
-@article{kumar2024grokking,
+@article{manningcoe2025grokking,
+  title={Grokking vs. Learning: Same Features, Different Encodings},
+  author={Manning-Coe, Dmitry and Gliozzi, Jacopo and Stapleton, Alexander G. and Hirst, Edward and De Tomasi, Giuseppe and Bradlyn, Barry and Berman, David S.},
+  journal={arXiv preprint arXiv:2502.01739},
+  year={2025}
+}
+
+@inproceedings{kumar2024grokking,
   title={Grokking as the Transition from Lazy to Rich Training Dynamics},
-  author={Kumar, Tanishq and Bordelon, Blake and Gershman, Samuel J and Pehlevan, Cengiz},
-  journal={arXiv preprint arXiv:2310.06110},
-  year={2024}
+  author={Kumar, Tanishq and Bordelon, Blake and Gershman, Samuel J. and Pehlevan, Cengiz},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2024},
+  note={arXiv:2310.06110}
 }
 
 @inproceedings{meulemans2021dfc,
   title={Credit Assignment in Neural Networks through Deep Feedback Control},
-  author={Meulemans, Alexander and Farinha, Matilde Tristany and Ordonez, Javier Garcia and Aceituno, Pau Vilimelis and Sacramento, Jo{\~a}o and Grewe, Benjamin F},
+  author={Meulemans, Alexander and Tristany Farinha, Matilde and Garc{\'i}a Ordo{\~n}ez, Javier and Vilimelis Aceituno, Pau and Sacramento, Jo{\~a}o and Grewe, Benjamin F.},
   booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={34},
+  pages={4674--4687},
   year={2021}
 }
 
@@ -85,19 +82,31 @@ year = {2006}
   title={The Least-Control Principle for Local Learning at Equilibrium},
   author={Meulemans, Alexander and Zucchet, Nicolas and Kobayashi, Seijin and von Oswald, Johannes and Sacramento, Jo{\~a}o},
   booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={35},
+  pages={33603--33617},
   year={2022}
+}
+
+@inproceedings{barak2022hidden,
+  title={Hidden Progress in Deep Learning: {SGD} Learns Parities Near the Computational Limit},
+  author={Barak, Boaz and Edelman, Benjamin L. and Goel, Surbhi and Kakade, Sham and Malach, Eran and Zhang, Cyril},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={35},
+  year={2022},
+  note={arXiv:2207.08799}
 }
 
 @inproceedings{nokland2016dfa,
   title={Direct Feedback Alignment Provides Learning in Deep Neural Networks},
   author={N{\o}kland, Arild},
   booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={29},
   year={2016}
 }
 
 @article{lillicrap2016feedback,
   title={Random Synaptic Feedback Weights Support Error Backpropagation for Deep Learning},
-  author={Lillicrap, Timothy P and Cownden, Daniel and Tweed, Douglas B and Akerman, Colin J},
+  author={Lillicrap, Timothy P. and Cownden, Daniel and Tweed, Douglas B. and Akerman, Colin J.},
   journal={Nature Communications},
   volume={7},
   number={1},
@@ -109,6 +118,7 @@ year = {2006}
   title={Align, then Memorise: the Dynamics of Learning with Feedback Alignment},
   author={Refinetti, Maria and D'Ascoli, St{\'e}phane and Ohana, Ruben and Goldt, Sebastian},
   booktitle={International Conference on Machine Learning (ICML)},
+  pages={8925--8935},
   year={2021}
 }
 
@@ -124,26 +134,16 @@ year = {2006}
 @book{ireland1990classical,
   title={A Classical Introduction to Modern Number Theory},
   author={Ireland, Kenneth and Rosen, Michael},
-  edition={2},
+  edition={Second},
   series={Graduate Texts in Mathematics},
   volume={84},
   publisher={Springer},
   year={1990}
 }
 
-@article{srivastava2014dropout,
-  title={Dropout: A Simple Way to Prevent Neural Networks from Overfitting},
-  author={Srivastava, Nitish and Hinton, Geoffrey and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan},
-  journal={Journal of Machine Learning Research},
-  volume={15},
-  number={1},
-  pages={1929--1958},
-  year={2014}
-}
-
 @article{whittington2017pc,
-  title={An Approximation of the Error Backpropagation Algorithm in a Predictive Coding Network with Local Hebbian Synaptic Plasticity},
-  author={Whittington, James C R and Bogacz, Rafal},
+  title={An Approximation of the Error Backpropagation Algorithm in a Predictive Coding Network with Local {Hebbian} Synaptic Plasticity},
+  author={Whittington, James C. R. and Bogacz, Rafal},
   journal={Neural Computation},
   volume={29},
   number={5},
@@ -153,8 +153,9 @@ year = {2006}
 
 @inproceedings{mallinar2025agop,
   title={Emergence in Non-Neural Models: Grokking Modular Arithmetic via Average Gradient Outer Product},
-  author={Mallinar, Neil and Beaglehole, Daniel and Zhu, Libin and Radhakrishnan, Adityanarayanan and Pandit, Parthe and Belkin, Mikhail},
+  author={Mallinar, Neil Rohit and Beaglehole, Daniel and Zhu, Libin and Radhakrishnan, Adityanarayanan and Pandit, Parthe and Belkin, Mikhail},
   booktitle={International Conference on Machine Learning (ICML)},
+  pages={42834--42856},
   year={2025},
   note={arXiv:2407.20199}
 }
@@ -207,6 +208,8 @@ year = {2006}
   title={The Clock and the Pizza: Two Stories in Mechanistic Explanation of Neural Networks},
   author={Zhong, Ziqian and Liu, Ziming and Tegmark, Max and Andreas, Jacob},
   booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={36},
+  pages={27223--27250},
   year={2023},
   note={arXiv:2306.17844}
 }
@@ -215,6 +218,7 @@ year = {2006}
   title={Characterizing Implicit Bias in Terms of Optimization Geometry},
   author={Gunasekar, Suriya and Lee, Jason D. and Soudry, Daniel and Srebro, Nathan},
   booktitle={International Conference on Machine Learning (ICML)},
+  pages={1832--1841},
   year={2018},
   note={arXiv:1802.08246}
 }
@@ -236,17 +240,21 @@ year = {2006}
 
 @inproceedings{bernstein2018signsgd,
   title={sign{SGD}: Compressed Optimisation for Non-Convex Problems},
-  author={Bernstein, Jeremy and Wang, Yu-Xiang and Azizzadenesheli, Kamyar and Anandkumar, Anima},
+  author={Bernstein, Jeremy and Wang, Yu-Xiang and Azizzadenesheli, Kamyar and Anandkumar, Animashree},
   booktitle={International Conference on Machine Learning (ICML)},
   pages={560--569},
   year={2018},
   note={arXiv:1802.04434}
 }
 
+% Author list follows the camera-ready PDF and arXiv (12 authors). The NeurIPS
+% proceedings metadata omits Yao Liu; that is an error in their record, not here.
 @inproceedings{chen2023lion,
   title={Symbolic Discovery of Optimization Algorithms},
   author={Chen, Xiangning and Liang, Chen and Huang, Da and Real, Esteban and Wang, Kaiyuan and Liu, Yao and Pham, Hieu and Dong, Xuanyi and Luong, Thang and Hsieh, Cho-Jui and Lu, Yifeng and Le, Quoc V.},
   booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={36},
+  pages={49205--49233},
   year={2023},
   note={arXiv:2302.06675}
 }
@@ -260,16 +268,8 @@ year = {2006}
   note={arXiv:2002.09277}
 }
 
-% ---- template samples kept for reference ----
-@book{goodfellow2016deep,
-  title={Deep learning},
-  author={Goodfellow, Ian and Bengio, Yoshua and Courville, Aaron},
-  year={2016},
-  publisher={MIT Press}
-}
-
 @inproceedings{gupta2018shampoo,
-  title={Shampoo: Preconditioned stochastic tensor optimization},
+  title={Shampoo: Preconditioned Stochastic Tensor Optimization},
   author={Gupta, Vineet and Koren, Tomer and Singer, Yoram},
   booktitle={International Conference on Machine Learning (ICML)},
   pages={1842--1850},
@@ -277,25 +277,26 @@ year = {2006}
 }
 
 @inproceedings{shazeer2018adafactor,
-  title={Adafactor: Adaptive learning rates with sublinear memory cost},
+  title={Adafactor: Adaptive Learning Rates with Sublinear Memory Cost},
   author={Shazeer, Noam and Stern, Mitchell},
   booktitle={International Conference on Machine Learning (ICML)},
   pages={4596--4604},
   year={2018}
 }
 
-@article{tieleman2012rmsprop,
-  title={Lecture 6.5-rmsprop: Divide the gradient by a running average of its recent magnitude},
+% RMSProp was never published as a paper. Its source is lecture 6.5 of Hinton's
+% 2012 Coursera course, credited to Tieleman and Hinton. The volume/number/page
+% fields widely attached to this citation describe a journal that does not exist
+% and are deliberately omitted.
+@misc{tieleman2012rmsprop,
+  title={Lecture 6.5-rmsprop: Divide the Gradient by a Running Average of its Recent Magnitude},
   author={Tieleman, Tijmen and Hinton, Geoffrey},
-  journal={COURSERA: Neural Networks for Machine Learning},
-  volume={4},
-  number={2},
-  pages={26--31},
-  year={2012}
+  year={2012},
+  howpublished={Lecture slides, COURSERA: Neural Networks for Machine Learning}
 }
 
 @inproceedings{martens2015kfac,
-  title={Optimizing neural networks with Kronecker-factored approximate curvature},
+  title={Optimizing Neural Networks with {Kronecker}-Factored Approximate Curvature},
   author={Martens, James and Grosse, Roger},
   booktitle={International Conference on Machine Learning (ICML)},
   pages={2408--2417},
@@ -303,24 +304,26 @@ year = {2006}
 }
 
 @misc{jordan2024muon,
-  title={Muon: An optimizer for hidden layers in neural networks},
+  title={Muon: An Optimizer for Hidden Layers in Neural Networks},
   author={Jordan, Keller and Jin, Yuchen and Boza, Vlado and You, Jiacheng and Cesista, Franz and Newhouse, Laker and Bernstein, Jeremy},
   year={2024},
   howpublished={\url{https://kellerjordan.github.io/posts/muon/}}
 }
 
 @inproceedings{karimireddy2019errorfeedback,
-  title={Error feedback fixes {SignSGD} and other gradient compression schemes},
+  title={Error Feedback Fixes {SignSGD} and Other Gradient Compression Schemes},
   author={Karimireddy, Sai Praneeth and Rebjock, Quentin and Stich, Sebastian U. and Jaggi, Martin},
-  booktitle={International Conference on Machine Learning},
+  booktitle={International Conference on Machine Learning (ICML)},
+  pages={3252--3261},
   year={2019}
 }
 
 @inproceedings{chen2024lion,
-  title={Lion secretly solves constrained optimization: As {Lyapunov} predicts},
+  title={Lion Secretly Solves Constrained Optimization: As {Lyapunov} Predicts},
   author={Chen, Lizhang and Liu, Bo and Liang, Kaizhao and Liu, Qiang},
-  booktitle={International Conference on Learning Representations},
-  year={2024}
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2024},
+  note={arXiv:2310.05898}
 }
 
 @inproceedings{kingma2015adam,
@@ -331,7 +334,7 @@ year = {2006}
 }
 
 @inproceedings{he2015delving,
-  title={Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification},
+  title={Delving Deep into Rectifiers: Surpassing Human-Level Performance on {ImageNet} Classification},
   author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
   booktitle={IEEE International Conference on Computer Vision (ICCV)},
   pages={1026--1034},
@@ -355,9 +358,186 @@ year = {2006}
   year={2022}
 }
 
+% The NeurIPS 2016 record prints "Durk P. Kingma"; normalised here to the form
+% used in kingma2015adam so the same person is not split across two entries.
 @inproceedings{salimans2016weightnorm,
   title={Weight Normalization: A Simple Reparameterization to Accelerate Training of Deep Neural Networks},
-  author={Salimans, Tim and Kingma, Durk P.},
+  author={Salimans, Tim and Kingma, Diederik P.},
   booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={29},
   year={2016}
+}
+
+@article{french1999catastrophic,
+  title={Catastrophic Forgetting in Connectionist Networks},
+  author={French, Robert M.},
+  journal={Trends in Cognitive Sciences},
+  volume={3},
+  number={4},
+  pages={128--135},
+  year={1999}
+}
+
+@inproceedings{yosinski2014transferable,
+  title={How Transferable are Features in Deep Neural Networks?},
+  author={Yosinski, Jason and Clune, Jeff and Bengio, Yoshua and Lipson, Hod},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  volume={27},
+  pages={3320--3328},
+  year={2014},
+  note={arXiv:1411.1792}
+}
+
+% ===========================================================================
+%  Not cited in the current draft. Retained for reference; safe to delete.
+%  The first three are the ICLR template's sample entries.
+% ===========================================================================
+
+@incollection{Bengio+chapter2007,
+  title={Scaling Learning Algorithms Towards {AI}},
+  author={Bengio, Yoshua and LeCun, Yann},
+  booktitle={Large-Scale Kernel Machines},
+  editor={Bottou, L{\'e}on and Chapelle, Olivier and DeCoste, Dennis and Weston, Jason},
+  publisher={MIT Press},
+  year={2007}
+}
+
+@article{Hinton06,
+  title={A Fast Learning Algorithm for Deep Belief Nets},
+  author={Hinton, Geoffrey E. and Osindero, Simon and Teh, Yee-Whye},
+  journal={Neural Computation},
+  volume={18},
+  number={7},
+  pages={1527--1554},
+  year={2006}
+}
+
+@book{goodfellow2016deep,
+  title={Deep Learning},
+  author={Goodfellow, Ian and Bengio, Yoshua and Courville, Aaron},
+  publisher={MIT Press},
+  year={2016}
+}
+
+@article{srivastava2014dropout,
+  title={Dropout: A Simple Way to Prevent Neural Networks from Overfitting},
+  author={Srivastava, Nitish and Hinton, Geoffrey E. and Krizhevsky, Alex and Sutskever, Ilya and Salakhutdinov, Ruslan},
+  journal={Journal of Machine Learning Research},
+  volume={15},
+  number={56},
+  pages={1929--1958},
+  year={2014}
+}
+
+@inproceedings{morcos2018importance,
+  title={On the Importance of Single Directions for Generalization},
+  author={Morcos, Ari S. and Barrett, David G. T. and Rabinowitz, Neil C. and Botvinick, Matthew},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2018}
+}
+
+@inproceedings{sokar2023dormant,
+  title={The Dormant Neuron Phenomenon in Deep Reinforcement Learning},
+  author={Sokar, Ghada and Agarwal, Rishabh and Castro, Pablo Samuel and Evci, Utku},
+  booktitle={International Conference on Machine Learning (ICML)},
+  volume={202},
+  series={Proceedings of Machine Learning Research},
+  pages={32145--32168},
+  year={2023}
+}
+
+@article{dohare2024loss,
+  title={Loss of Plasticity in Deep Continual Learning},
+  author={Dohare, Shibhansh and Hernandez-Garcia, J. Fernando and Lan, Qingfeng and Rahman, Parash and Mahmood, A. Rupam and Sutton, Richard S.},
+  journal={Nature},
+  volume={632},
+  pages={768--774},
+  year={2024},
+  doi={10.1038/s41586-024-07711-7}
+}
+
+@article{li2025normuon,
+  title={{NorMuon}: Making {Muon} more efficient and scalable},
+  author={Li, Zichong and Liu, Liming and Liang, Chen and Chen, Weizhu and Zhao, Tuo},
+  journal={arXiv preprint arXiv:2510.05491},
+  year={2025}
+}
+
+@inproceedings{loshchilov2019decoupled,
+  title={Decoupled Weight Decay Regularization},
+  author={Loshchilov, Ilya and Hutter, Frank},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2019}
+}
+
+@inproceedings{ioffe2015batchnorm,
+  title={Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift},
+  author={Ioffe, Sergey and Szegedy, Christian},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2015}
+}
+
+@article{ba2016layernorm,
+  title={Layer Normalization},
+  author={Ba, Jimmy Lei and Kiros, Jamie Ryan and Hinton, Geoffrey E.},
+  journal={arXiv preprint arXiv:1607.06450},
+  year={2016}
+}
+
+@inproceedings{yaguchi2018adam,
+  title={Adam Induces Implicit Weight Sparsity in Rectifier Neural Networks},
+  author={Yaguchi, Atsushi and Suzuki, Taiji and Asano, Wataru and Nitta, Shuhei and Sakata, Yukinobu and Tanizawa, Akiyuki},
+  booktitle={IEEE International Conference on Machine Learning and Applications (ICMLA)},
+  pages={318--325},
+  year={2018}
+}
+
+@inproceedings{mehta2019implicit,
+  title={On Implicit Filter Level Sparsity in Convolutional Neural Networks},
+  author={Mehta, Dushyant and Kim, Kwang In and Theobalt, Christian},
+  booktitle={IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages={520--528},
+  year={2019}
+}
+
+@inproceedings{kosson2024rotational,
+  title={Rotational Equilibrium: How Weight Decay Balances Learning Across Neural Networks},
+  author={Kosson, Atli and Messmer, Bettina and Jaggi, Martin},
+  booktitle={International Conference on Machine Learning (ICML)},
+  year={2024}
+}
+
+@article{dufortlabbe2025maxwell,
+  title={Maxwell's Demon at Work: Efficient Pruning by Leveraging Saturation of Neurons},
+  author={Dufort-Labb{\'e}, Simon and D'Oro, Pierluca and Nikishin, Evgenii and Pascanu, Razvan and Bacon, Pierre-Luc and Baratin, Aristide},
+  journal={Transactions on Machine Learning Research},
+  year={2025}
+}
+
+@inproceedings{kolb2025dgating,
+  title={Differentiable Sparsity via {D}-Gating: Simple and Versatile Structured Penalization},
+  author={Kolb, Chris and Frost, Lennart and Bischl, Bernd and R{\"u}gamer, David},
+  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
+  year={2025}
+}
+
+@article{dewulf2026aurora,
+  title={Aurora: A Leverage-Aware Spectral Optimizer},
+  author={Dewulf, A. and Pai, D. and Yang, L. and Zhang, A. and Keigwin, B.},
+  journal={arXiv preprint arXiv:2606.27715},
+  year={2026}
+}
+
+@inproceedings{zhang2025adammini,
+  title={Adam-mini: Use Fewer Learning Rates To Gain More},
+  author={Zhang, Yushun and Chen, Congliang and Li, Ziniu and others},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2025}
+}
+
+@article{eldan2023tinystories,
+  title={TinyStories: How Small Can Language Models Be and Still Speak Coherent English?},
+  author={Eldan, Ronen and Li, Yuanzhi},
+  journal={arXiv preprint arXiv:2305.07759},
+  year={2023}
 }

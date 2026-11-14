@@ -1,0 +1,296 @@
+\section{Synthetic Controls}
+\label{app:synthetic}
+To test whether re-projection recovers known errors, we build latents whose state content we control exactly. The states $\mathbf y\in\mathbb R^3$ follow a stable rotating linear system driven by random actions for $40$ frames. We use $300$ trajectories to fit the probes and $100$ each for validation and scoring.
+
+\emph{State in the direction.} We append a constant one to the state, normalize the result to unit length, and embed it with a fixed matrix $Q$ whose columns are orthonormal, giving $\z=cQ[\mathbf y,1]/\|[\mathbf y,1]\|\in\mathbb R^{16}$. The direction of $\z$ determines $\mathbf y$, because the appended constant keeps the scale that normalization would otherwise remove. The scalar $c$ is the length of $\z$ and plays the role of norm drift: changing it moves the latent along its direction without changing the state it encodes. We fit the probes at $c=1$, as on encodings, and test them at other values of $c$ with the same states, as on drifting predictions. We compare the ReLU probe (Section~\ref{app:impl}), ridge regression, a normalized probe, and the reference mean.
+
+\emph{State in the norm.} The second representation, $\z=c\mathbf u_0$, points in the same fixed direction $\mathbf u_0$ for every sample, and its length is the target state, $y=c$. Here the norm is the only carrier of state. A probe that sees only the direction receives the same input for every sample and cannot recover the state.
+
+%%BEGIN_SYNTHETIC
+Both ordinary probes fit the reference encodings well ($R^2=$ $0.9998$ for ReLU and $0.9786$ for ridge), yet they respond strongly to the norm (Figure~\ref{fig:suite}A). Multiplying the norm by ten, with the states unchanged, increases the ReLU probe's error $1.0\times10^{5}$-fold and raises ridge error to $78$ times that of the reference mean. The normalized probe is unaffected. Both ordinary probes still detect deliberate changes of the state-carrying direction, so their response to the norm comes on top of their response to the state. In the norm representation, ReLU and ridge recover the state almost perfectly, while the normalized probe, which sees only the direction, scores a held-out $R^2$ of about zero. Re-projection loses the state in the same way, and the radius check detects this case.
+
+\subsection{A ranking check with known state errors}
+\label{app:synthetic_ranking}
+We vary state error and norm independently in the directional representation: six state perturbation sizes $\epsilon$ and five norms from a tenth to ten times the reference radius. True state error increases with $\epsilon$ and is independent of norm. Among the $375$ pairs with different perturbation sizes per seed, the ordinary ReLU probe orders only $230$--$232$ correctly, depending on the seed. Re-projection to unit radius, the normalized probe, and the neighbor probe recover every ordering. The neighbor probe has held-out $R^2=$ $0.9962$.
+
+We repeat the ranking test at norms of $0.8$, $1$, $1.25$, and $2$ times the reference radius. Re-projected and normalized probes recover every ordering. Adding a state-independent component orthogonal to the encoding span reduces their accuracy to about $90$\% across $3840$ pairs per seed. A control that preserves the in-span norm gives similar accuracy, so the remaining errors arise from how the probes interpret the off-span component. The neighbor probe remains correct by construction because an orthogonal component cannot change the ordering of reference directions.
+
+\subsection{The protocol's decisions}
+\label{app:protocol_test}
+We apply the protocol's decision rules to five kinds of prediction whose right reading is known, each at an easy and a hard setting and over five seeds. Drifted predictions carry the state in their direction at two to four times the reference radius, so the re-projected error is the right one. Stable predictions keep the reference radius, so the raw error is. In the third kind, part of the state lies in the norm, which re-projection would remove, so the raw error is right again. Uninformative predictions are other frames' encodings at a drifted norm and should be credited with neither error, and predictions with an added component outside the encodings' span make the probe extrapolate, so their reading is inconclusive. The rules keep the raw error when the radius gain exceeds $0.05$ or the factor exceeds one, call the reading inconclusive when fewer than half of the predictions are supported, and credit the re-projected error when the factor lies below $0.9$, provided it beats the re-projected random directions and the reference mean. They reach the right reading in $50$ of $50$ cases (Table~\ref{tab:protocol_test}). For the predictions off the span, the support check decides. Their re-projected error beats the random directions and the reference mean in $10$ of $10$ cases, while the support check finds $0$\% of them supported.
+
+These cases lie far from the thresholds. Along graded settings that cross them (Table~\ref{tab:protocol_graded}), the decision turns to the re-projected error from a drift of $1.25$ times the reference radius, where the factor first falls below $0.9$, and the re-projected error then stays within $3$\% of the known state error. The support check flags an off-span component from $0.10$ of the in-span norm, where the re-projected error exceeds the known state error by only $13$\%, so the check flags the component before it distorts the error much. The re-projected error is credited in every seed once $75$\% of the predictions encode their own frame; at one half, it lies at the reference mean and the seeds split.
+
+\input{tables/table_protocol_graded.tex}
+
+\input{tables/table_protocol_test.tex}
+
+\paragraph{Rankings.} Step 4 compares pairs of models with several seeds each, so we test it on pairs of synthetic models in five synthetic worlds. A model predicts the state five steps ahead from a window's start state and actions, with a known state error, at a norm drifted from the reference radius, and each model has ten seeds. Its null rollouts predict with another window's actions, from another window's start, and from the start alone, as a module near the identity would at initialization. In informative pairs the more accurate model drifts further. Equally accurate pairs share the state error at different norms, uninformative pairs predict other windows' futures, and pairs off the span add a small component outside the encodings' span. The ordinary probe reverses the true ordering of the informative pairs in $5$ of $5$ worlds and resolves the equally accurate pairs in $5$. The protocol confirms the true ordering of the informative pairs in $5$ worlds and reaches the right verdict on $20$ of $20$ pairs (Table~\ref{tab:protocol_ranking}).
+
+\input{tables/table_protocol_ranking.tex}
+%%END_SYNTHETIC
+
+%%BEGIN_SUPPLEMENT
+\section{The Trained Modules}
+\label{app:trained}
+\label{app:impl}
+All quantities are computed per checkpoint before aggregation, and pooled medians include every checkpoint in the stated group.
+
+\paragraph{Encoder.} All modules share the encoder architecture and differ only in their dynamics. Each module learns its own encoder, which receives the current and the preceding $128\times128$ frame. Three stride-2 convolutional blocks with group normalization and GELU are followed by a two-layer MLP whose output has $D=256$ coordinates and ends in layer normalization~\citep{Ba2016LayerNorm}. This final normalization sets each encoding's norm from its direction, which gives the analytic reference radius of Section~\ref{app:radius}.
+
+\paragraph{Non-Linear.} The residual network $F_\theta(\z,\mathbf a)=\z+g([\z,\mathbf a])$, where $g$ is an MLP with two hidden layers of GELU units, each as wide as the latent. Nothing in this module restricts the norm of its output.
+
+\paragraph{Linear.} The linear map $F_\theta(\z,\mathbf a)=\K\z+\B\mathbf a$, with $\K$ initialized near the identity and $\B$ at zero. Repeated application of $\K$ can grow or shrink the norm without limit.
+
+\paragraph{Linear-Penalized.} The same linear map, trained with the additional penalty $\lambda_s\max(0,s(\K)-1)$, where $s(\K)$ is the spectral radius. The penalty pushes $s(\K)$ toward at most one but does not enforce it, and even $s(\K)\le1$ does not bound the amplification over a finite horizon. Linear-Penalized on cartpole has spectral radius $1.02$, but its operator powers reach norm $88$.
+
+\paragraph{Orthogonal.} The linear map with $\K$ orthogonal by construction, through the Cayley transform $\K=(I+A)^{-1}(I-A)$ of the skew-symmetric matrix $A=W-W^\top$~\citep{Helfrich2018}. We initialize $W$ from a least-squares fit to consecutive encodings~\citep{Schmid2010}. $\K$ preserves the norm exactly, so under bounded actions the norm can grow at most linearly with the horizon. It still need not stay at the reference radius.
+\label{app:dmd}
+
+These constraints follow work on stable latent dynamics~\citep{Lusch2018,Morton2018,KolterManek2019}. There they serve to improve the dynamics~\citep{Asadi2018,Bevanda2021,Erichson2019}, and here they vary how the norm evolves over a rollout.
+
+\paragraph{Training variants.} Each variant changes one component of the base models. The squared-error variant replaces the cosine prediction loss. The fixed-radius variant rescales every predicted step to the norm of the initial encoding. The SimNorm variant applies SimNorm with $32$ groups of eight coordinates to encoder and dynamics outputs~\citep{Hansen2023}. The last variant removes the encoder's final layer normalization.
+
+\paragraph{Training objective.} The objective combines prediction and representation regularization:
+\begin{equation}
+    \mathcal{L} = \lambda_p\mathcal{L}_\text{pred}
+    + \lambda_v\mathcal{L}_\text{var}(Z_{\rm enc})
+    + \lambda_v\lambda_c\mathcal{L}_\text{cov}(Z_{\rm enc}),
+    \label{eq:base_loss}
+\end{equation}
+where $Z_{\rm enc}$ contains the online encoder outputs for the observed training frames. The term $\mathcal L_{\mathrm{pred}}$ averages cosine or squared error over $k=1,\dots,6$ against moving-average encoder targets. The variance and covariance penalties apply only to the encodings, and predicted latents enter only $\mathcal L_{\mathrm{pred}}$. Following VICReg~\citep{Bardes2022}, the variance term discourages constant representations, and the covariance term discourages redundant latent coordinates. We mask a quarter of image patches during training.
+
+\paragraph{Hyperparameters.} Random searches of $32$ trials select the hyperparameters, first the encoder architecture on the Non-Linear module, then the optimization and loss weights for each module and environment. Both stages score a trial by the probe's held-out one-step state error. Acrobot reuses the cartpole values, and all variants keep the values of the base models without retuning (Table~\ref{tab:hyperparams}). Each run trains for $2000$ epochs, and we keep the epoch between $100$ and $2000$ with the lowest one-step validation probe error.
+
+\paragraph{Data and probes.} Images are rendered at $128\times128$. State targets contain angle sines and cosines, velocities, and cart position where applicable. Episodes use uniformly random actions. All checkpoints share $400$ held-out episodes, $300$ for reference and $100$ for scoring. Probes train on $240$ reference episodes for $300$ epochs with AdamW and standardized targets, and the remaining $60$ give held-out $R^2$. Errors use outputs transformed back to state units.
+
+\input{tables/table_hyperparams.tex}
+
+\subsection{Checks on learned encoders}
+\label{app:encoder}
+Before evaluating predictions, we check the probes on exact encodings, where no dynamics error is present. We measure how much the probe's output changes when an encoding is rescaled without changing its state, which sets how strongly norm drift can distort the score, and whether an encoding's norm carries state that its direction lacks, which re-projection would discard.
+
+\paragraph{Measurements.} \emph{Scale sensitivity} is the increase in a probe's error when exact encodings are multiplied by $c$, relative to $c=1$, divided by the reference mean's error. The \emph{radius check} compares probes fitted on directions alone with probes fitted on directions and norms. We standardize the inputs per coordinate, because without standardization, probes on unnormalized encoders can become nearly constant ($R^2$ as low as $-0.005$, compared with at least $0.64$ after standardization).
+
+\paragraph{Probe fits.} Nearest-encoding factors, radius checks, and held-out $R^2$ average three probe fits. Other factors, encoding-rescaling tests, and probe variants use the first fit. We exclude first-fit results with $R^2\le0.5$, which removes six of $360$ checkpoints, four of them without final encoder normalization.
+
+\input{tables/table_scale.tex}
+\paragraph{Results.} Rescaling exact encodings to the upper edge of the off-radius band already raises the probe's error, and doubling their norm adds more than the reference mean's error (Table~\ref{tab:scale}). Linear, ReLU, and GELU probes remain scale-sensitive at every tested capacity, whereas tanh probes become less sensitive once their units saturate (Table~\ref{tab:v2_capacity}). The radius check finds no state information in the norm beyond the direction (Table~\ref{tab:arms}), so re-projection can be applied to these encoders without losing state.
+
+\paragraph{Reference radius.}
+\label{app:radius}
+For layer normalization $\z=\boldsymbol\gamma\odot\hat{\mathbf x}+\boldsymbol\beta$, we solve $\|(c\mathbf u-\boldsymbol\beta)\oslash\boldsymbol\gamma\|^2=D$ along unit direction $\mathbf u$. With nonzero $\gamma_i$, let $a=\sum_i u_i^2/\gamma_i^2$, $b=\sum_i u_i\beta_i/\gamma_i^2$, and $k=\sum_i\beta_i^2/\gamma_i^2$. For $k<D$, the unique positive solution is
+\begin{equation}
+c_{\mathrm{LN}}(\mathbf u)=\frac{b+\sqrt{b^2+a(D-k)}}{a}.
+\end{equation}
+All $240$ layer-normalized encoders satisfy these conditions. The formula neglects the stabilizer $\epsilon$. At input variance $v$, the normalized squared norm is $Dv/(v+\epsilon)$ instead of $D$. Rescaling an arbitrary prediction does not enforce the additional zero-mean constraint and need not produce an encoder output. For SimNorm, each coordinate group sums to one, so $c=1/\sum_{i\in g}u_i$ for any group $g$ along a valid direction. Re-projection leaves SimNorm outputs unchanged.
+
+\input{tables/table_capacity.tex}
+
+\subsection{Controlled comparisons}
+\label{app:full_results}
+\label{app:trained_more}
+Table~\ref{tab:arms_full} reports medians over ten seeds per module for the base models and five in each variant. We examine alternative radius estimates, probe fitting on rescaled encodings, and removal of encoder normalization.
+
+\input{tables/table_arms_full.tex}
+
+\input{tables/table_readouts_full.tex}
+
+\paragraph{Norm growth and error.} Tables~\ref{tab:arms_full} and~\ref{tab:readouts_full} report the results by training setting, architecture, and task. Confidence intervals use $2000$ bootstrap resamples within environment--module groups. Adding norm to direction in probes fitted on predictions improves held-out $R^2$ by at most $0.018$ at $T=5$ and $0.066$ at $T=20$. At $T=20$ the gain exceeds the protocol's threshold of $0.05$ on one of $180$ checkpoints, on cartpole, where no module beats persistence at that horizon.
+
+The analytic radius $c_{\mathrm{LN}}(\mathbf u)$ differs from the nearest-encoding estimate by a median $0.2$\%. At $T=20$, its zero-mean constraint has median residual $0.010$. Using the initial norm instead gives factors within $10$\% for $96$\% of checkpoints and horizons. The main exception is Orthogonal on cartpole, whose analytic radius exceeds the initial norm by a median $30$\% at $T=20$.
+
+\paragraph{Ranking uncertainty.} Table~\ref{tab:pairs} includes unresolved comparisons. With ten seeds, bootstrap intervals collapse when one module wins every seed pair. Exact Mann--Whitney tests at the 5\% level resolve the same pairs for all six probes. The pendulum reversals at $T=5$ do not recur at $T=10$.
+
+\input{tables/table_pairs.tex}
+
+\paragraph{Verdicts.} Table~\ref{tab:pairs_main} lists the orderings on which the re-projected and the normalized probe agree, with every other probe and the protocol's verdict. Table~\ref{tab:verdicts} gives the verdict on every module pair in both designs, Tables~\ref{tab:gates} and~\ref{tab:gates_shared} the values behind step 3 and the support shares, and Table~\ref{tab:sensitivity} the verdicts under other thresholds. Step 3 compares medians over checkpoints. With or without a 10\% margin, it rejects $12$ of the eighteen base-model pairs, and no variant confirms a ranking in either design.
+
+\input{tables/table_pairs_main.tex}
+
+\input{tables/table_verdicts.tex}
+
+\input{tables/table_gates.tex}
+
+\input{tables/table_gates_shared.tex}
+
+\input{tables/table_sensitivity.tex}
+
+\paragraph{Models of known accuracy.}
+\label{app:known}
+On the encoder of each Non-Linear base model we build models whose accuracy is known. For each scoring episode, a model of rank $k$ predicts the encoding of a frame from another scoring episode whose state, standardized per coordinate, is among the $k$-th to $2k$-th nearest to the true state five steps ahead, drawn anew for each seed. The encoding is multiplied by the model's drift and a log-normal jitter. A smaller rank gives a smaller known state error. The model's null rollouts apply the same rule to the state reached from the nearest start of another episode (actions shuffled), to the next episode's state (starts swapped) and to the start state (untrained, near the identity), and the probe fitted on predictions sees the same model on the reference episodes. The most accurate model, of rank one at three times the reference radius, is paired with models of rank one, two, four, eight and $32$ at half that drift, each with ten seeds, and the protocol reads every pair as it reads the trained modules (Table~\ref{tab:known} gives the counts over all tasks and Table~\ref{tab:known_full} per task).
+
+\input{tables/table_known_full.tex}
+
+
+\paragraph{Training the probe on rescaled encodings.} Fitting the ordinary probe on encodings rescaled by random factors between a tenth and ten lowers median held-out $R^2$ from $0.85$ to $0.55$. At $T=5$, its error is $1.24$ times that of the re-projected ordinary probe. 
+
+\paragraph{Removing encoder normalization.} Without final encoder normalization, adding norm to a direction probe improves held-out $R^2$ by at most $0.010$. The free modules' pooled re-projection factor remains low ($0.005$ at $T=20$). Re-projection can also raise the error. Orthogonal on cartpole shrinks to $0.21$ of its reference radius, and rescaling increases its error $9.8$-fold at $T=20$.
+
+\subsection{Alternative probes and recurrent rescaling}
+\label{app:alternative_readouts}
+Pairwise comparisons refer to the seven orderings resolved by both the re-projected and normalized probes (Table~\ref{tab:pairs_main}).
+
+\paragraph{The normalized probe.} The ordinary probe's architecture, fitted and evaluated on unit directions. It cannot respond to the norm, but it also cannot use any state the norm carries.
+
+\paragraph{Fitting the probe on predictions.}
+We fit a separate probe at each horizon on predictions from reference episodes. It confirms three of the seven orderings, reverses none, and leaves four unresolved. It shows how much of the future state the predictions contain, even when they lie away from the encodings.
+
+On cartpole at $T=5$, probes fitted on predictions give similar relative errors for all architectures ($0.026$--$0.028$). Probes on the initial encoding and on untrained linear rollouts remain near the reference mean. The untrained Non-Linear network already reaches $0.045$, so this control distinguishes learning only for the linear modules. At $T=20$, prediction-fitted probes outperform the mean on $119$ of $120$ checkpoints, but start-encoding probes and untrained modules also often do so.
+
+\paragraph{The neighbor probe.}
+The neighbor probe uses the first probe fit's reference encodings and achieves median held-out $R^2=$ $0.86$. Its resolved pairwise orderings are unchanged with one, ten, or twenty neighbors. Disagreement with the re-projected probe persists on cartpole episodes supported by both modules under the held-out reference threshold. On these episodes, the re-projected probe favors both linear modules over Orthogonal, while neighbors and retrieval favor Orthogonal. All three favor Non-Linear over Orthogonal. Full-sample intervals are in Table~\ref{tab:pairs}.
+
+\paragraph{Target retrieval.} Retrieval asks whether a prediction points closer to its own future encoding than to those of other episodes. Each prediction ranks its own target among the $100$ encoded scoring targets at the same horizon by cosine similarity, and rank $1$ is best. It needs no probe and so cannot extrapolate. It measures closeness in the encoder's geometry, which can differ from error in state units. Retrieval and the neighbor probe jointly resolve seven module pairs and agree on all of them.
+
+\paragraph{Null rollouts.}
+For action shuffling, we independently permute actions across scoring episodes at each step. Start swapping uses the preceding episode's initial encoding. Replaying checkpoints reproduces stored rollouts to relative error $1.9\times10^{-4}$. Table~\ref{tab:controls_full} reports all null-rollout results, including the untrained modules and the start-encoding probe.
+
+\input{tables/table_controls.tex}
+
+\input{tables/table_controls_full.tex}
+
+\paragraph{Rescaling every rollout step.}
+Re-projection changes only the final probe input. Norm drift can also alter subsequent dynamics: for $F_\theta(c\z,\mathbf a)=c\K\z+\B\mathbf a$, changing $c$ changes the latent's weight relative to the action term. We therefore compare final-input rescaling with rescaling every recurrent step, without retraining.
+
+The median error ratio of recurrent to final-input rescaling is $1.00$ at $T=20$ for the trained modules and $0.97$--$1.07$ for TCRL, tested through $499$ steps. For Non-Linear, recurrent rescaling improves target alignment on only $15$ of $30$ checkpoints.
+
+\section{The Published Models}
+\label{app:published}
+For every model we use the released checkpoints or the authors' code with their published settings, and fit our probe on encodings of held-out episodes (Table~\ref{tab:published_setup}). Table~\ref{tab:published_full} gives every diagnostic of the published models. We note only where we depart from the authors' protocol. Tables~\ref{tab:published} and~\ref{tab:published_more} collect each model's diagnostics at the horizon of its smallest factor, and Table~\ref{tab:fidelity} compares reproduced performance with published metrics.
+
+\paragraph{Radius check.} Adding norm to direction changes held-out $R^2$ by at most $0.011$ for every published model, so re-projection loses no state in any of them.
+
+\paragraph{Radius estimate.} Without an analytic radius, the reference radius is the norm of the nearest reference encoding in angle. To check that this choice does not drive the results, we recompute the factor at $T^*$ with half and a quarter of the reference bank, with the mean norm of the ten nearest encodings, and with the true target norm, which requires the future observation and serves only as a control. The estimates usually agree within a few percent (Table~\ref{tab:support}). Only the true target norm on TCRL's four late tasks gives a larger reduction. On predictions, the estimator's error can be measured in the trained modules against the analytic layer-normalization root. Nearest-encoding factors relative to analytic-root factors span $0.96$--$1.03$ at $T=5$ and $0.91$--$1.08$ at $T=20$. Large norm effects therefore do not depend on the estimator, while factors within a few percent of one do.
+
+\input{tables/table_support.tex}
+
+\input{tables/table_published_setup.tex}
+
+\input{tables/table_published_full.tex}
+
+\input{tables/table_fidelity.tex}
+
+\subsection{LeWorldModel}
+\label{app:lewm}
+We use the released Push-T and Two-Room checkpoints with the authors' code. LeWorldModel's normalized output head bounds the norm without fixing a single radius. The Push-T checkpoint omits action normalization, so we select the action scale by one-step latent error on $40$ separate episodes, after which recorded actions outperform shuffled actions and persistence. Rollouts start from three encoded frames, and single-frame probes recover positions but not velocity. The Two-Room checkpoint is the Sub-JEPA baseline reported to show rollout drift~\citep{zhao2026subjepa}, and we evaluate it on expert-policy episodes that repeatedly cross the door.
+
+On Push-T, norms remain stable through $T=500$, and position predictions beat both baselines through $T=20$. The architectural bound permits $2.1$ times the 99th-percentile encoding norm, so the observed stability is tighter than the bound. On Two-Room, the position probe has held-out $R^2=$ $0.9999$, which makes relative errors sensitive even to small norm deviations. Re-projection changes the one-step relative error from $0.016$ to $0.012$. From $T=20$, re-projection removes at most $11$\%, so norm mismatch explains little of the later error.
+
+\subsection{TD-MPC2}
+\label{app:tdmpc2}
+We use three released checkpoints per task and verify our implementation against the official encoder and dynamics outputs. Short pendulum and acrobot evaluations use random actions. Cartpole and long-horizon evaluations use the checkpoint policy with Gaussian noise, because random actions visit unfamiliar cartpole states.
+
+Pendulum and acrobot probes recover every state coordinate with held-out $R^2\ge$ $0.997$. Median norms remain within a few percent of the estimated reference radius through $T=400$. Relative error is $0.08$ at $T=50$ and exceeds one from $T=$ $150$. Re-projection to the exact SimNorm radius leaves all predictions unchanged, giving factor one (Section~\ref{app:radius}). The nearest-encoding estimator instead gives median factors of $0.94$--$1.09$ and individual values of $0.85$--$1.28$. Since the exact radius leaves every prediction unchanged, this variation is the estimator's error on predictions. TD-MPC2's long-horizon errors persist without norm mismatch.
+
+\subsection{The Koopman autoencoder}
+\label{app:kae}
+We train ten plain and ten consistent models with the authors' code and settings~\citep{Azencot2020} and evaluate their own decoder and an auxiliary probe for pendulum angle and angular velocity. Rollouts start from held-out frames and run for $1000$ steps, $125$ times the training horizon.
+
+One plain and three consistent runs have median norm ratios above ten at $T=1000$. We exclude them from retained-run summaries and separately count divergence as a loss in all-run comparisons (Table~\ref{tab:kae_seeds}). Among retained runs, target alignment remains high (median cosine at least $0.992$), while norms grow up to $3.2$-fold. Median re-projection factors are $0.14$ for the decoder and $0.021$ for the state probe. Using true target norms gives decoder factor $0.15$, close to the bank estimate. At $T=1000$, random directions with the predictions' norms give a state-probe factor of $0.83$, against $0.021$ for the predictions, and their error after re-projection exceeds the reference mean's, so the Koopman reduction reflects accurate directions.
+
+Across retained runs, the rank correlation between decoder error and norm growth falls from $0.97$ to $0.14$ after re-projection. The consistent model wins $0.70$ of seed pairs before re-projection (interval $0.41$--$0.94$) and $0.38$ afterward ($0.11$--$0.68$). Under the authors' relative-error metric, its median error ratio to the plain model changes from $0.91$ to $1.80$, consistent with the change in decoder MSE. Excluding runs by norm growth conditions on the quantity being corrected, so Table~\ref{tab:kae_seeds} also reports comparisons over all runs and lists every run.
+
+\input{tables/table_kae_seeds.tex}
+
+\subsection{TCRL and TD-MPC}
+\label{app:problem}
+We train TCRL and TD-MPC with the authors' code and settings~\citep{zhao2023simplified,hansen2022temporal}, three seeds each, on pendulum, cartpole, and acrobot, and TCRL also on six further DeepMind Control tasks. Evaluation uses each model's policy with Gaussian action noise unless stated otherwise. Besides auxiliary state probes fitted on encodings, we read the reward heads the models train on predictions.
+
+At $T=5$, TCRL's pendulum predictions have accurate directions under random actions (median target cosine $0.999$). Re-projection removes $97$\% of error under its policy and $89$\% under random actions. Under the policy, start-encoding probes achieve relative errors of $8.9\times10^{-4}$, $2.4\times10^{-3}$, and $3.8\times10^{-2}$ on pendulum, cartpole, and acrobot, and re-projected predictions give $2.3\times10^{-3}$, $1.8\times10^{-4}$, and $2.2\times10^{-3}$. Predictions improve on the start on cartpole and acrobot, while on pendulum the start-encoding probe is better by a factor of $2.6$. Probe fits disagree $22$ times more on re-projected pendulum predictions than on corresponding target encodings, but the absolute difference is only $2.4\times10^{-4}$ of the reference mean's error, compared with residual error $2.3\times10^{-3}$. TD-MPC factors remain near one through most tested horizons.
+
+Other TCRL tasks show later reductions or none (Table~\ref{tab:published_full}), and random directions at the predictions' norms separate these late reductions from accurate prediction. TCRL predictions outperform random directions on all $27$ checkpoints at $T=5$. At each task's minimum-factor horizon, however, the pooled median factor is lower for random directions, and $18$ of $27$ prediction checkpoints still underperform the reference mean. These late reductions reflect the probe's sensitivity to scale.
+
+We evaluate reward heads on raw predictions, re-projected predictions, and true future encodings against environment rewards. Median factors at $T=5$ are $1.03$ for TCRL and $1.08$ for TD-MPC, and $1.00$ and $1.00$ at $T=20$. Individual TCRL checkpoints range from $0.18$ to $2.09$ at $T=5$, with reductions on $9$ of $27$. At $T=20$, TCRL reward error is still $45$ times its error on target encodings.
+
+\subsection{Semigroup-JEPA}
+\label{app:sgjepa}
+We reproduce the one-step baseline and the five-step Semigroup-JEPA with the authors' code on their square environment and keep their probe~\citep{Liu2026SemigroupJEPA}. The probe begins with layer normalization over a window of four latents and is therefore invariant to rescaling the whole window, apart from the small normalization stabilizer. We depart from this by estimating and restoring each predicted latent's radius separately before assembling the window, and we leave observed context latents unchanged. This can change relative scales within the window, so the probe's invariance to common scaling does not make it invariant to our intervention.
+
+Individual rescaling changes probe output by a median $0.006$ target standard deviations. At $T=44$, the baseline's median norm ratios remain within $0.93$--$0.98$, and factors remain near one. Target directions are nearly orthogonal (median cosine $0.006$). Norm mismatch does not explain the baseline's error, and re-projection leaves the published comparison unchanged.
+
+\subsection{KSL and PlayVirtual}
+\label{app:ksl}
+\label{app:playvirtual}
+We train KSL~\citep{mcinroe2021learning} and PlayVirtual~\citep{yu2021playvirtual} from pixels with the authors' code, three seeds each on cartpole and cheetah-run. Both apply cosine consistency losses to projected latents, so we evaluate them both in raw latent space and in that projection space. After one cartpole step, raw norm ratios are $1.88$ and $2.51$, and re-projection removes $75$\% and $90$\% of probe error. On cheetah-run, held-out encoding $R^2$ falls to $0.26$, so we report these measurements in Table~\ref{tab:published_more} but do not interpret them as measures of rollout accuracy.
+
+\paragraph{Projection space.} For KSL, PlayVirtual, and LightZero, we fit probes on projected target encodings and evaluate projected predictions (Table~\ref{tab:published_more}). KSL and PlayVirtual use moving-average target projection networks. LightZero shares one projection network between predictions and targets and fixes its batch-normalization statistics at evaluation. KSL and PlayVirtual have $50$-dimensional latents and projections, and LightZero projects $2304$ dimensions to $1024$. Each probe is fitted on $14880$ frames.
+
+At $T=5$, all ten re-projected checkpoints outperform both baselines, although EfficientZero on Pong beats persistence by only $1.5$\%. Raw-space probes perform similarly for LightZero but remain far above the reference mean for KSL and PlayVirtual (Table~\ref{tab:published_more}). Re-projected random directions matched to prediction norms have relative error at least $1.9$ on every checkpoint. By $T=50$, only two checkpoints beat the reference mean, and median target cosine falls to $0.50$. Projected encodings also support less accurate state recovery, with median held-out $R^2$ of $0.69$ compared with $0.84$ in raw space, and $-0.04$ on MsPacman.
+
+\input{tables/table_published_more.tex}
+
+\subsection{EfficientZero and MuZero}
+\label{app:lightzero}
+We test seven released LightZero Atari checkpoints~\citep{niu2023lightzero} and retain six in Table~\ref{tab:published_more}: EfficientZero and Sampled EfficientZero on Pong and MsPacman, and MuZero on Breakout and Pong. LightZero trains MuZero with EfficientZero's consistency loss. Our episodes mix policy-network actions, without tree search, with random actions, and state targets are extracted from console memory~\citep{Anand2019AtariARI}. MuZero's Pong policy network always selects one action, so we collect episodes with EfficientZero's policy network and replay their actions through MuZero. MuZero on MsPacman is excluded because recorded actions give one-step latent error $4.93$, compared with $4.90$ for preceding actions and $2.46$ for persistence. MsPacman probes are also weak for EfficientZero and Sampled EfficientZero (median held-out $R^2$ of $0.31$ and $0.21$). EfficientZero's policy-prior return is substantially below its published search-based return (Table~\ref{tab:fidelity}).
+
+Within training, factors lie in $0.97$--$1.07$. At $T=200$, norms reach $1.27$--$5.38$ times the reference radius, and re-projection removes $42$\%--$94$\% of error. All released configurations disable min--max scaling (\texttt{state\_norm}), and encoder and dynamics end in residual ReLU blocks with unbounded output norms.
+
+\paragraph{Random-direction control.} At $T=200$, norm-matched random directions give factors $0.05$--$0.57$, within $0.16$ of prediction factors. On Pong, target encodings assigned predicted norms give factors $0.011$--$0.06$ and recover their original error after re-projection. On MsPacman, prediction norms are two to five times target norms, and factors for predictions, random directions, and rescaled targets coincide.
+%%END_SUPPLEMENT
+
+\section{Code for the Protocol}
+\label{app:code}
+The module \texttt{probenorm.protocol}, released with this paper, runs the four steps of Section~\ref{sec:decision} for one model or a pair of models, from the command line or from Python. The listing shows these steps with the functions of the \texttt{probenorm} package. It assumes reference encodings \texttt{Z} with states \texttt{Y} and episode ids \texttt{groups}, predictions \texttt{P} at one horizon with their true states \texttt{y}, the initial encodings \texttt{Z0}, and the encoded targets \texttt{Zt}. Null rollouts and the start-encoding probe depend on the model and the data, so the listing takes them as given.
+
+\begin{tcolorbox}[breakable,colback=codebg,colframe=codebg,boxrule=0pt,arc=2pt,left=4pt,right=4pt,top=4pt,bottom=4pt]
+\begin{lstlisting}
+import numpy as np
+from probenorm.probes import fit_probe, direction, mse
+from probenorm.reproject import ReferenceBank, rescale
+from probenorm.checks import radius_check, support_check, random_directions
+
+# 1. Check the probe on encodings.
+fits = [fit_probe(Z, Y, groups, seed=s) for s in range(3)]
+probes = [probe for probe, _ in fits]
+r2 = np.mean([info["r2"] for _, info in fits])   # low: do not apply the probe to predictions
+rc = radius_check(Z, Y, groups)
+gain = np.mean(rc["aug_std"]["r2"]) - np.mean(rc["dir_std"]["r2"])
+
+# 2. Compare raw and re-projected errors.
+def error(V):
+    return np.mean([mse(probe(V), y) for probe in probes])
+
+bank = ReferenceBank(Z)
+rho = bank.radius(P)                 # or the analytic radius of the encoder's normalization
+raw, rep = error(P), error(rescale(P, rho))
+factor = rep / raw
+read_rep = gain <= 0.05 and factor < 0.9    # otherwise keep the raw error
+
+# 3. Test against the null controls: the model is rejected unless every comparator is worse;
+#    a ranking is rejected when both models are, or when it puts a rejected one first.
+R = random_directions(P)
+comparators = {"persistence": error(Z0),
+               "reference mean": mse(np.broadcast_to(Y.mean(0), y.shape), y),
+               "start-encoding probe": mse(start_probe(Z0), y),
+               "random directions": error(rescale(R, bank.radius(R))),
+               **{name: error(rescale(V, bank.radius(V)))
+                  for name, V in null_rollouts.items()}}
+rejected = rep >= min(comparators.values())
+
+# 4. Check support and the other probes: inconclusive below one half supported, and for a
+#    ranking unless the re-projected and normalized probes agree and no other probe
+#    reverses them (repeat per model).
+supported = support_check(bank, P, Zt)[0].mean()
+normalized, _ = fit_probe(Z, Y, groups, feature=direction)
+scores = {"re-projected": rep, "normalized": mse(normalized(P), y)}
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Literature Survey}
+\label{app:literature}
+
+\emph{Search.} In October 2026, we searched arXiv and machine-learning and robotics proceedings for work published in 2019--2026 on JEPA world models, latent planning, model-based reinforcement learning, and latent physical or video forecasting. We also searched for predicted-latent readouts and random-dynamics controls, and followed references and citing papers.
+
+\emph{Inclusion.} Studies must predict latents recursively or from actions, apply a readout to those predictions, and report scores or decoded rollouts.
+
+\emph{Exclusion.} We exclude observation-space predictors, probes applied only to encodings, and latents used only inside planners or value functions without a reported readout evaluation. Fifteen retrieved papers fail these criteria, including TD-MPC, TD-MPC2, DreamerV2, SPR, and TCRL.
+
+\emph{Extraction.} We record the readout, its training inputs, loss, recurrent output constraint, trained horizon $H$, evaluated horizons $T$, and reported checks (Table~\ref{tab:literature}). $H$ counts chained prediction steps in the loss, so teacher forcing gives $H=1$ regardless of context length. We resolve missing fields from code where possible and otherwise mark them unstated. Values derived from unstated quantities or inherited architectures are marked inferred. Sub-JEPA and Fast-LeWM retain LeWorldModel's normalized head. VLWM states the same architecture but has no released code. \emph{Normalized input} denotes normalization or re-projection built into the readout. None of these evaluations compares scores with and without that operation.
+
+\emph{Screen.}
+%%BEGIN_SURVEY_SCREEN
+We screen for quantitative evaluation beyond five times the training horizon with a readout fitted on encodings, no input normalization, and no reported prediction norms. Seven evaluations meet these criteria (Table~\ref{tab:literature}). Five have unconstrained or undocumented recurrent outputs: two Koopman autoencoders use their own decoder, DINO-Foresight uses an auxiliary readout with unconstrained outputs, and Navigation World Models and RDR leave output constraints unstated. The other two have bounded outputs: MILE uses its own decoder, and the imagined-DreamerV3 study uses a separate probe~\citep{schafer2026imagined}. Three LeWorldModel variants report long rollouts only qualitatively and are excluded from this screen, as are evaluations with unknown horizons. Where the model's own decoder reads the predictions, re-projection shows how much of the score the norm causes, and the raw error remains the measure of the model. The screen lists the evaluations that lack this comparison.
+%%END_SURVEY_SCREEN
+
+\input{tables/table_literature.tex}

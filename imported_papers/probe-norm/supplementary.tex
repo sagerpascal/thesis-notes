@@ -1,0 +1,22 @@
+\documentclass[utf8]{frontiers_suppmat}
+\input{preamble.tex}
+\usepackage[onehalfspacing]{setspace}
+\externaldocument{main}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theequation}{S\arabic{equation}}
+
+\begin{document}
+\onecolumn
+\firstpage{1}
+\raggedbottom
+
+\title[Supplementary Material]{{\helveticaitalic{Supplementary Material}}}
+\maketitle
+
+\input{content/supplement.tex}
+
+\bibliographystyle{Frontiers-Harvard}
+\bibliography{main}
+\end{document}

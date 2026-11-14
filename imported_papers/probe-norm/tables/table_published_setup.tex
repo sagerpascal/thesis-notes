@@ -1,0 +1,25 @@
+% Hand-written. Section 4: how each published model was trained and read.
+\begin{table}[t]
+\caption{The published models: eleven models on sixteen tasks. We use our ordinary probe except for Semigroup-JEPA (authors' probe) and the Koopman autoencoder (authors' decoder). DMC: DeepMind Control Suite. EfficientZero, Sampled EfficientZero and MuZero: LightZero implementations; LightZero trains MuZero with EfficientZero's consistency loss. Recurrent output: the architectural constraint on the norm of the predicted latent; free if there is none, although the loss can still depend on the norm.}
+\label{tab:published_setup}
+\centering\footnotesize
+\renewcommand{\arraystretch}{1.15}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedright\arraybackslash}p{0.16\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
+\toprule
+Model & Tasks & Loss on predictions & Recurrent output & Collection policy \\
+\midrule
+TCRL~\citep{zhao2023simplified} & nine DMC tasks & cosine & free & own policy + noise \\
+KSL~\citep{mcinroe2021learning} & cartpole, cheetah-run & cosine on a projection & free & random \\
+PlayVirtual~\citep{yu2021playvirtual} & cartpole, cheetah-run & cosine on a projection & free & random \\
+EfficientZero~\citep{ye2021mastering} & Pong, MsPacman & cosine on a projection & free & policy prior + random \\
+Sampled EfficientZero~\citep{hubert2021learning} & Pong, MsPacman & cosine on a projection & free & policy prior + random \\
+MuZero~\citep{Schrittwieser2020} & Breakout, Pong & cosine on a projection & free & policy prior + random \\
+TD-MPC~\citep{hansen2022temporal} & three DMC tasks & squared error & free & random \\
+TD-MPC2~\citep{Hansen2023} & three DMC tasks & squared error & bounded (SimNorm) & random or own policy \\
+LeWorldModel~\citep{maes2026leworldmodel} & Push-T, Two-Room & squared error + regularizer & bounded (normalized head) & collection or expert \\
+Semigroup-JEPA~\citep{Liu2026SemigroupJEPA} & square & squared error + regularizer & free & authors' test set \\
+Koopman autoencoder~\citep{Azencot2020} & pendulum & squared error, decoded & free (linear) & authors' test set \\
+\bottomrule
+\end{tabular}
+\end{table}
