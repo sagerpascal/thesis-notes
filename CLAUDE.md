@@ -274,7 +274,7 @@ is thesis work, and it happens in the thesis frame, never by editing the papers.
   uses it, even if an imported chapter also defines it. The imported definition
   is left alone and the frame definition is the one the reader is sent to.
 - The six argument parts are numbered and labelled, so a chapter may refer to
-  one: `part:background`, `part:agents`, `part:procedure`, `part:structure`,
+  one: `part:background`, `part:agents`, `part:measurement`, `part:procedure`,
   `part:construction`, `part:synthesis`. The appendix part is deliberately
   unnumbered, because it is not part of the argument. Rename a label with its
   part, and keep the two in step.
@@ -435,7 +435,8 @@ directory, `\ip@cwd` is never restored, and the next include resolves against
 a doubled path. `check_imports.py` works out what each file leaves open and
 holds the closers to it in both directions, so a missing one is an error and a
 stale one is reported the day the paper is fixed upstream. COGITAO's
-`6_appendix/Experiments.tex` needs one.
+`6_appendix/Experiments.tex` needed one, and the feature is kept because the
+next paper that arrives unbalanced will need it too.
 
 A file whose tables will not fit. `\importsectionrotated{...}` sets the file
 on turned pages. Section 4.5 explains why rotation is declared per file and
@@ -578,7 +579,8 @@ Two limits found the hard way, both recorded here so they are not retried.
 41, because the papers were typeset for wide templates, and it also exhausts
 TeX's main memory in kaobook's output routine and produces no PDF. And a file
 with a few hundred lines of `lstlisting` does the same on its own, which is why
-COGITAO's raw prompt appendix is dropped.
+COGITAO's raw prompt appendix was dropped while that paper was still
+imported.
 
 ### 4.6 Checking that it compiles
 
@@ -647,17 +649,25 @@ design.
 | Slug | Directory | Chapter | Layout |
 | --- | --- | --- | --- |
 | `acu` | `imported_papers/ACU_JAIR` | `sections/3-1_acu_survey.tex` | sections |
-| `llmbench` | `imported_papers/Llama2_benchmark_sds` | `sections/3-2_llm_benchmark.tex` | monolithic, `llm_at_home.tex` |
 | `grokking` | `imported_papers/grokking` | `sections/4-1_grokking.tex` | monolithic, `iclr2027_conference_v2.tex` |
 | `attention` | `imported_papers/self_attention_geometry_project_ICML` | `sections/4-2_attention.tex` | sections, under `ICML2025/` |
 | `bounded` | `imported_papers/probe-norm` | `sections/5-1_bounded.tex` | monolithic, `main.tex` plus `body` |
-| `cogitao` | `imported_papers/COGITAO_ICML_2026` | `sections/3-3_cogitao.tex` | sections |
-| `hounsfield` | `imported_papers/sds_hounsfield_features` | `sections/5-2_hounsfield.tex` | monolithic, `main.tex` |
-| `retrieval` | `imported_papers/CLEF_Checkthat_4b` | `sections/5-3_retrieval.tex` | sections |
 | `cna` | `imported_papers/Neural_Computation__CNA` | `sections/6-1_cna.tex` | monolithic, `NECO-D-24-00304-Source.tex` |
+| `llmbench` | `imported_papers/Llama2_benchmark_sds` | summarised | monolithic, `llm_at_home.tex` |
+| `cogitao` | `imported_papers/COGITAO_ICML_2026` | summarised | sections |
+| `hounsfield` | `imported_papers/sds_hounsfield_features` | summarised | monolithic, `main.tex` |
+| `retrieval` | `imported_papers/CLEF_Checkthat_4b` | summarised | sections |
 
-`sections/3-2_llm_benchmark.tex` and `sections/3-3_cogitao.tex` share one
-chapter heading, supplied by `main.tex`. Chapters whose wrapper is still empty
+The five reproduced papers are the argument. The four marked summarised carry
+`status = "summarised"` in their manifests, their bodies are included nowhere,
+their appendix chapters are gone, and
+`sections/3-2_further_contributions.tex` gives each a page or two of thesis
+owned prose with the author's role stated. Nothing under `imported_papers/`
+changed when they were cut, which is the point: any of them is wired back in
+by setting `status = "wired"` and writing the includes.
+`check_imports.py` checks that a summarised manifest gives a
+`summary_reason` and that its chapter opens no `importedpaper` block for that
+slug. Chapters whose wrapper is still empty
 get their heading and label from `main.tex` and lose both once the wrapper is
 written. All nine papers have a manifest.
 
@@ -895,7 +905,7 @@ something is done, delete its entry rather than marking it done, so the list
 stays short enough to read every session. Anything that has become permanent
 knowledge belongs in the sections above, not here.
 
-The thesis builds: 351 pages, zero LaTeX errors, zero duplicate labels, a
+The thesis builds: 281 pages, zero LaTeX errors, zero duplicate labels, a
 working bibliography, and every one of the nine papers included with its
 appendix. `check_compile.py` reports zero errors across all nine, and
 `check_imports.py` zero. Machinery that works is not listed here: `build.sh`,
@@ -904,41 +914,52 @@ and `generated/` trees, and all seven scripts.
 
 ### Blocking the thesis
 
-0. **The story has to be rethought, and no frame prose is written until it
-   is.** Reopened by the author on 2026-11-14. The arc has been unsettled
-   since 2026-09-12, and the re imports of that day changed two of the papers
-   the open proposal reasons about, so neither candidate arc describes the
-   paper set any more. The world model paper is now a constructive correction
-   to an evaluation protocol, which is neither the cautionary side chapter the
-   settled story gives it nor the "testing the circuit" slot the proposal
-   gives it. The grokking paper was rewritten and two of its headline results
-   are gone.
+0. **The arc and the paper selection are settled. The cut is not done.**
+   Settled on 2026-11-14 in sections 12 and 13 of
+   `00_ADMIN/04_story_framings.md`. `00_ADMIN/05_thesis_concept.md` carries
+   the result and is the file to read before writing any frame prose.
+   Sections 1 to 11 of the framings file are retired.
 
-   **Read `00_ADMIN/04_story_framings.md` section 11 first.** It holds what
-   changed, what it costs the story, the decision that was taken, and the four
-   steps the next session works through in order. Read it before
-   `00_ADMIN/05_thesis_concept.md`, because two entries in that file's one
-   line summaries describe papers as they no longer are, and section 11 names
-   which.
+   The spine is sparse against distributed coding, posed as a credit
+   assignment question for a committee at the Institute of Neuroinformatics:
+   the learning rule, not the task, decides how many neurons carry a
+   computation, it can be read off the update and chosen, and the choice
+   trades damage tolerance against compressibility and transfer speed. The
+   thesis wide noun is **circuit**.
 
-   One decision is settled and holds whatever arc wins: the thesis wide noun
-   is **circuit**, not "layout", with the definition unchanged.
-   `imports/glossary.toml` carries it. The prose does not: 64 occurrences of
-   "layout" remain in thesis owned files, 41 of them in the introduction, and
-   two part titles carry it. Sweep them while writing the new introduction,
-   not as a pass of its own.
+   The cut is done, on 2026-11-14. Five papers are reproduced as full
+   imported chapters: grokking, attention, CNA, the ACU survey and the world
+   model paper. Four are summarised in
+   `sections/3-2_further_contributions.tex`: the LLM benchmark, COGITAO,
+   Hounsfield and retrieval. The world model appendix was trimmed in the same
+   pass, by the rule that an appendix holds what the kept text points at. Only
+   its Literature Survey section could go, because the other four are all
+   referenced from the body and cutting a referenced section would print `??`.
+   That is 3 pages of 22, and it is as far as the rule reaches without editing
+   published text, which this repository does not do. The thesis went from 369
+   pages to 281, the overfull boxes from 101 to 30, the `??` from 2 to 1, and
+   `check_imports.py` from 6 warnings to 4. Nothing under `imported_papers/`
+   was touched.
 
-   Do not write chapter introductions, chapter summaries, the background
-   chapter or the discussion before the author has settled the arc. Items 1,
-   2 and 4 below all depend on it.
+   One job is left. The "layout" sweep. The part titles, the subtitle and the
+   grokking appendix title no longer say it, but the word remains in thesis
+   owned prose, most of it in `sections/1-1_introduction.tex`. Do it while
+   writing the new introduction, not as a pass of its own. The introduction
+   also still argues the old story throughout, and its chapter and section
+   references were repointed at the summary chapter rather than rewritten.
+
+   Two measurements that earlier drafts listed as optional glue are withdrawn
+   for good: participation ratio on attention weights, and unit deletion on
+   CNA nets. No checkpoints survive and the CNA code no longer runs. Do not
+   promise either anywhere.
 
 1. **The chapter wrappers are mostly placeholders.** Every paper backed
    chapter has a publication box, contribution statement, chapter introduction
    and chapter summary. The imported bodies below them are real and compile.
    Write the framing prose, then flip each manifest to `status = "wired"`.
 
-   Two chapters are further along. `sections/4-1_grokking.tex` and
-   `sections/5-1_bounded.tex` carry a real publication header box and a real
+   Two chapters are further along. `sections/5-1_grokking.tex` and
+   `sections/4-1_bounded.tex` carry a real publication header box and a real
    contribution statement as of 2026-11-14. Only their chapter introduction
    and chapter summary are still placeholders, because those are the parts
    that commit to an arc and the arc is item 0. The grokking contribution
@@ -1003,64 +1024,54 @@ and `generated/` trees, and all seven scripts.
 
 ### Correctness
 
-7. **2 `??` in the PDF, both upstream and both unfixable from here.** One
-   label used twice is two holes in the text, so count them in the output
-   rather than in the log:
+7. **1 `??` in the PDF, upstream and unfixable from here.** One label used
+   twice is two holes in the text, so count them in the output rather than in
+   the log:
 
    ```bash
    uv run --no-project python scripts/check_layout.py --pdf
    ```
 
-   `attention:eq:weight-update-bilinear-form-prediction` on page 109 exists
-   only in the rebuttal variant, which the thesis does not import, and
-   `tab:se_all_experiments` on page 204 is issue 8. `check_imports.py` reports
-   both, with the file each target lives in.
+   `attention:eq:weight-update-bilinear-form-prediction` on page 95 exists
+   only in the rebuttal variant, which the thesis does not import.
+   `check_imports.py` reports it with the file the target lives in. The second
+   hole, COGITAO's `tab:se_all_experiments`, left the build with COGITAO.
 
    The old story's six names in `1-1_introduction` and `2-1_related_work` are
    gone, and so are the ACU chapter's five. Where a chapter drops a paper's
    introduction, the hero figure goes with it and the body still refers to it:
    `grokking:fig:main` and `bounded:fig:intro` are reproduced in their
    wrappers, under the paper's own label, the way Section 4.3 describes.
-8. **Two upstream bugs in COGITAO.** `tab:se_all_experiments` in
-    `transformation_learnability.tex` has a `\label` and no `\caption`, so
-    the reference to it cannot resolve.
+8. **COGITAO's three upstream bugs no longer reach the thesis.** It is
+    summarised rather than imported, so the `\label` without a `\caption` in
+    `transformation_learnability.tex`, the `Figures` against `figures`
+    mismatch that fails on a case sensitive filesystem, and the unclosed
+    `itemize` in `6_appendix/Experiments.tex` are all out of the build. Kept
+    here because wiring COGITAO back in brings all three back.
 
-    Its warning names the label without the slug prefix, which looks like the
-    prefixing in `thesis_import.sty` has failed. It has not. A `\label` with no
-    `\caption` makes the caption package store `\caption@xref{tab:se_all_%
-    experiments}{ on input line 53}` as the label's value, and the warning
-    comes from that stored string, which was written before prefixing applied.
-    The prefix is correct everywhere, including here. Do not go looking for a
-    bug in the patching again.
+9. **A long `lstlisting` cannot be imported, and nothing needs to be now.**
+    COGITAO's `6_appendix/LLM_Prompts.tex`, six `lstlisting` environments over
+    177 lines, exhausted TeX's main memory in kaobook's output routine and the
+    build produced no PDF at all. It compiles on its own in a short document,
+    so testing it outside the thesis proves nothing. Remember the limit before
+    importing any paper's long listing.
 
-    And the figure directory is `Figures` while some includes say `figures`,
-    which works on macOS and fails on Overleaf.
-
-    A third, the unclosed `itemize` in `6_appendix/Experiments.tex`, is worked
-    around from the chapter rather than dropped, see Section 4.4. Fixing it
-    upstream means deleting the optional argument there, and the checker says
-    so when that day comes.
-9. **`6_appendix/LLM_Prompts.tex` cannot be included.** Six `lstlisting`
-    environments over 177 lines. kaobook's output routine holds the whole
-    listing in `\@outputbox` and exhausts TeX's main memory partway through,
-    and the build then produces no PDF at all. It compiles on its own in a
-    short document, so testing it outside the thesis proves nothing. The
-    thesis appendix carries a short section in its place. Restore it if the
-    prompts are shortened or taken out of a listing.
 10. **The CNA bibliography is converted, not real.** Its 52 references came
     from `\bibitem` entries, so author and title are as good as a formatted
     string allows. Ask for the paper's original `.bib`.
 11. **Untested on Overleaf.** Linux is case sensitive and has no Python. Every
     generated artefact is committed, so the build should not need a script,
-    but nobody has run it there. COGITAO's `Figures` against `figures` will
-    fail, see issue 8.
+    but nobody has run it there. The one known case sensitivity problem,
+    COGITAO's `Figures` against `figures`, left the build with the cut.
 
 ### Style
 
-12. **101 overfull hboxes, one over 100pt.** Most are display equations set
-    for a wider measure, the rest paragraphs. The count rose from 58 with the
-    2026-11-14 re imports, and 44 of the new ones are the rows of one table,
-    `probe-norm/tables/table_literature.tex`, each 6pt over.
+12. **30 overfull hboxes.** Most are display equations set
+    for a wider measure, the rest paragraphs. The count was 101 before the cut
+    of 2026-11-14. Forty-four of those were the rows of one table,
+    `probe-norm/tables/table_literature.tex`, which left the build when the
+    world model appendix was trimmed, and the rest went with the four
+    summarised papers.
 
     ```bash
     uv run --no-project python scripts/check_layout.py --overfull

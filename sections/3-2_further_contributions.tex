@@ -1,0 +1,170 @@
+% ===========================================================================
+\chapter{Further Contributions}
+\label{chap:further}
+\margintoc
+% ===========================================================================
+
+Four further publications carry the thesis author's name and are not
+reproduced in this thesis. Each is summarised here in a page or two, with the
+author's own role stated first, because the contribution to each was partial
+or because the work sits beside the argument rather than inside it. The
+published papers stand on their own and are cited in full. This follows the
+University of Zurich and Institute of Neuroinformatics expectation that a
+cumulative thesis separates the candidate's own intellectual contribution from
+collaborative work, and it keeps the reproduced chapters to the five papers
+the argument rests on.
+
+Two of the four measure what current models do, and they sharpen the gaps the
+previous chapter names. Two supply structure from outside the data and measure
+what that structure buys.
+
+% ---------------------------------------------------------------------------
+\section{Efficient Large Language Models on Local Hardware}
+\label{sec:llmbench}
+% ---------------------------------------------------------------------------
+
+\begin{publicationbasis}{Published}
+Lukas Tuggener, Pascal Sager, Yassine Taoudi-Benchekroun, Benjamin F. Grewe
+and Thilo Stadelmann. So you want your private LLM at home? A survey and
+benchmark of methods for efficient GPTs. Proceedings of the 11th IEEE Swiss
+Conference on Data Science, 2024, pages $205$ to
+$212$~\cite{tuggener_you_2024}.
+\end{publicationbasis}
+
+The thesis author ran the evaluation of the language models. The survey, the
+benchmark design and the write up are the work of the co-authors, and Lukas
+Tuggener led the paper.
+
+The paper asks what it costs to run a capable language model on hardware a
+small group can afford. It reviews the methods that reduce the computational
+footprint of a large language model and then benchmarks seven of them, drawn
+from the two areas where most progress had been made, model quantisation and
+low-rank adapters. The benchmark reports resource consumption such as memory
+on the graphics card, a quantitative performance evaluation, and a qualitative
+study in which eight human raters judged the generated text.
+
+Two results matter here. Quantisation reduces the memory a model needs by a
+large factor, which is what it is sold on. It also costs text quality that the
+human raters noticed and that the standard automatic metrics did not report,
+which is the opposite of how these methods were advertised at the time.
+Low-rank adapters allow a model to be fine tuned with moderate compute without
+that cost.
+
+The second result is the one the thesis uses. A method was accepted on a score
+that was not sensitive to the property the score was taken to stand for, and
+the gap only became visible when a different readout, human judgement, was
+applied to the same models. That is the same failure that
+Chapter~\ref{chap:bounded} analyses in a setting where the readout can be
+corrected rather than replaced. The thesis does not claim the two are
+instances of one mechanism. They are two cases of the same mistake.
+
+% ---------------------------------------------------------------------------
+\section{Compositional Generalisation in Visual Reasoning}
+\label{sec:cogitao}
+% ---------------------------------------------------------------------------
+
+\begin{publicationbasis}{Published}
+Yassine Taoudi-Benchekroun and colleagues. COGITAO: a visual reasoning
+framework to study compositionality and generalization. 2nd ICML Workshop on
+Compositional Learning, 2026~\cite{taoudibenchekroun_cogitao_2026}.
+\end{publicationbasis}
+
+The thesis author evaluated one model family, the masked latent diffusion
+model, on the released benchmark. The framework, the data generator, the task
+design and the remaining baselines are the work of the co-authors.
+
+COGITAO is a data generator for studying whether a model can apply learned
+concepts in combinations it has not seen. It builds rule-based tasks on grids,
+in the spirit of the ARC-AGI setting, by applying transformations to objects.
+It supports $28$ transformations that can be composed with one another, at a
+composition depth the experimenter sets, with control over the grid and the
+properties of the objects on it. The number of distinct task rules this allows
+runs into the millions, and any number of samples can be drawn per rule, which
+is what makes the in-domain and out-of-domain conditions separable by
+construction rather than by held-out sampling.
+
+The released baselines include architectures chosen because their inductive
+biases suit composition, among them a diffusion-based Transformer and
+recurrent Transformers with adaptive computation time. All of them reach
+strong accuracy on the compositions they were trained on. All of them fail to
+generalise to compositions they were not, and the failure is consistent across
+the architectures tested.
+
+For this thesis the result is a measurement of the first gap named in
+Chapter~\ref{chap:acu}. A model that scores well in domain can fail entirely
+on a recombination of the same components, so in-domain accuracy does not
+report whether the components were learned as components. The benchmark does
+not say what in training produces either outcome, and the thesis does not use
+it to argue that it does.
+
+% ---------------------------------------------------------------------------
+\section{Domain Knowledge in the Input of a Segmentation Model}
+\label{sec:hounsfield}
+% ---------------------------------------------------------------------------
+
+\begin{publicationbasis}{Published}
+Benjamin Meyer, Pascal J. Sager and colleagues. Hounsfield unit ranges as
+inductive bias for intra-clinical learning of data-efficient CT segmentation
+models~\cite{meyer_hounsfield_2025}.
+\end{publicationbasis}
+
+The thesis author is a shared first author and contributed mainly the framing
+of the work. The implementation and the experiments are the work of the
+co-authors, and Benjamin Meyer led them.
+
+Computed tomography measures radiodensity in Hounsfield units, and different
+tissue types occupy different and largely known ranges of that scale. The
+paper turns that knowledge into an input. For each tissue type of interest it
+derives thresholds from the training data, builds a binary mask marking the
+voxels inside the corresponding range, and concatenates those masks with the
+original scan as extra input channels. The segmentation model is otherwise
+unchanged.
+
+The comparison is against the same model without the masks, trained on the
+same data with the same budget. Adding the masks improves segmentation
+accuracy, and it improves data efficiency, so the model reaches the baseline's
+accuracy with less annotated training data. Annotation is the scarce resource
+in a clinical setting, which is what makes the second result the useful one.
+
+The work belongs in this thesis as a case where structure was supplied
+deliberately from outside the data and the gain was measured against the
+honest comparison, the identical model without that structure. It does not
+bear on what the learning rule decides, and no claim about circuits is made
+from it.
+
+% ---------------------------------------------------------------------------
+\section{Knowledge Supplied at Inference Time}
+\label{sec:retrieval}
+% ---------------------------------------------------------------------------
+
+\begin{publicationbasis}{Published}
+Pascal J. Sager, Ashwini Kamaraj, Benjamin F. Grewe and Thilo Stadelmann.
+Deep Retrieval at CheckThat! 2025: identifying scientific papers from implicit
+social media mentions via hybrid retrieval and re-ranking. CLEF 2025 Working
+Notes~\cite{sager_deep_2025}.
+\end{publicationbasis}
+
+The thesis author is the first author and designed and built the retrieval
+pipeline. Ashwini Kamaraj contributed to the experiments, and Benjamin F.
+Grewe and Thilo Stadelmann supervised.
+
+The task is to find the scientific paper a social media post refers to when
+the post names no paper. The language of the post and the language of the
+paper differ in register and in vocabulary, so lexical matching alone is
+brittle and semantic matching alone is imprecise. The pipeline uses both.
+Keyword matching with BM25 returns the $30$ best candidates, a dense search
+over a vector store using a fine tuned retriever returns $100$, the two
+candidate sets are merged, and a cross encoder built on a language model
+re-ranks what is left.
+
+The pipeline reaches a mean reciprocal rank at five of $76.46\%$ on the
+development set, which placed first on that leaderboard, and $66.43\%$ on the
+hidden test set, which placed third of $31$ teams and within two percentage
+points of the winning system. It runs open-source models locally and uses no
+external training data.
+
+The reason this work sits beside the thesis argument is the form of its
+solution. The knowledge the system needs is not learned into its weights. It
+is held in an index and fetched while the system runs, which is an alternative
+to the question the rest of the thesis asks, namely what training writes into
+a network and where. The thesis notes the alternative and does not develop it.

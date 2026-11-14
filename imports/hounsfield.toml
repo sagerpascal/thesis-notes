@@ -2,10 +2,11 @@
 
 slug    = "hounsfield"
 dir     = "imported_papers/sds_hounsfield_features"
-chapter = "sections/5-2_hounsfield.tex"
+chapter = "sections/3-2_further_contributions.tex"
 title   = "Input-Space Constraints via Domain Knowledge"
 citation_key = "meyer_hounsfield_2025"
-status  = "pending"
+status  = "summarised"
+summary_reason = """Shared first author for the framing, not the implementation. Applied work that supports no claim the thesis tests."""
 layout  = "monolithic"
 source  = "main.tex"
 split   = "section"

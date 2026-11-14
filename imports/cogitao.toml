@@ -8,10 +8,11 @@
 
 slug    = "cogitao"
 dir     = "imported_papers/COGITAO_ICML_2026"
-chapter = "sections/3-3_cogitao.tex"
+chapter = "sections/3-2_further_contributions.tex"
 title   = "COGITAO: Compositionality and Generalization"
 citation_key = "cogitao"
-status  = "pending"
+status  = "summarised"
+summary_reason = """One model family evaluated by the thesis author; the framework, data generator and remaining baselines are the co-authors' work. Its 34 page appendix was the largest in the thesis."""
 layout  = "sections"
 # The root file is dropped, but its preamble defines macros the kept text
 # uses, so the splitter reads it and writes generated/imported/cogitao/_macros.tex.

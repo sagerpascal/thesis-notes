@@ -34,7 +34,8 @@ section fails the check instead of silently dropping content.
 | `chapter` | The thesis owned chapter file that includes this paper. |
 | `title` | Human readable name, used in reports. |
 | `citation_key` | The paper's own key in `references/merged.bib`, cited by the chapter's publication header box. |
-| `status` | `wired` once the chapter includes the paper, `pending` before that. Coverage is only checked for `wired` papers. |
+| `status` | `wired` once the chapter includes the paper, `pending` before that, `summarised` when the thesis gives the paper a prose summary instead of reproducing it. Coverage is only checked for `wired` papers. |
+| `summary_reason` | Required when `status` is `summarised`. Why the paper is summarised rather than reproduced, usually the author's role or the paper's distance from the argument. The checker prints it on every run. |
 | `layout` | `sections` when the paper is already split into files, `monolithic` when it is one file. |
 | `source` | Monolithic only. The root file of the paper. The preamble is read from here, and so are the sections unless `body` says otherwise. |
 | `body` | Monolithic only, optional. The file or files the sections are in, when the root file holds only the preamble and a few `\input` lines. A list is cut as if it were one file, which is how the Frontiers supplement becomes the paper's appendix parts. |
@@ -64,6 +65,29 @@ loads them: publisher class files, bibliography styles, template PDFs and
 superseded drafts. The checker warns while any of them is still present, and
 `--prune` deletes them. Keeping the list means the next import can be pruned
 the same way without anyone having to remember.
+
+## Summarising a paper instead of reproducing it
+
+A paper the thesis cites and credits but does not reproduce is marked
+`status = "summarised"`, with a `summary_reason`, and its `chapter` points at
+the thesis owned file that carries the summary. Several manifests may name the
+same file, which is how four papers share
+`sections/3-2_further_contributions.tex`.
+
+This is selection at the level of the whole paper, and it follows the same
+rule as selection within one. Nothing under `imported_papers/` changes, the
+vendored copy stays complete, and the decision lives in the manifest where a
+re import cannot lose it. The checker then stops asking for coverage, balance
+and orphan references, since no file of that paper is included anywhere, and
+instead checks two things: that the manifest says why, and that the named
+chapter opens no `importedpaper` block for that slug, which would mean the
+body is being imported after all.
+
+Wiring one back in is the reverse: set `status = "wired"`, write the includes
+in a chapter of its own, and run the checker until it is clean. The split
+parts under `generated/imported/<slug>/` are left in place while a paper is
+summarised, so `split_paper.py --check` stays green and nothing has to be
+regenerated.
 
 ## Adding a paper
 

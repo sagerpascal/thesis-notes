@@ -31,6 +31,7 @@ graphics = ["figures"]
 "Related Work"   = "covered by the thesis related work chapter"
 "Discussion"     = "replaced by the chapter summary and the thesis discussion"
 "Conclusion"     = "replaced by the chapter summary"
+"Literature Survey" = "the survey of 39 published evaluations backs a claim the paper makes in its introduction, which this chapter replaces, so nothing in the kept text points at it. Its table also carried 44 of the thesis's overfull rows. Where the chapter introduction uses the survey's numbers it cites the paper."
 
 # Parts the thesis carries in its appendix rather than in the chapter. They
 # are the sections of the Frontiers supplement, which is a second document
@@ -40,7 +41,6 @@ graphics = ["figures"]
 "The Trained Modules"    = "appendix material of the paper"
 "The Published Models"   = "appendix material of the paper"
 "Code for the Protocol"  = "appendix material of the paper"
-"Literature Survey"      = "appendix material of the paper"
 
 [prune]
 ".gitignore"            = "the project repository's ignore file"

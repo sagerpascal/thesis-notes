@@ -88,6 +88,7 @@ class Manifest:
     chapter: Path
     layout: str
     status: str
+    summary_reason: str = ""
 
     drop: dict[str, str] = dc_field(default_factory=dict)
     exclude: dict[str, str] = dc_field(default_factory=dict)
@@ -122,6 +123,7 @@ def load_manifests(only: str | None) -> list[Manifest]:
             chapter=ROOT / data["chapter"],
             layout=data.get("layout", "sections"),
             status=data.get("status", "pending"),
+            summary_reason=data.get("summary_reason", ""),
             drop=data.get("drop", {}),
             exclude=data.get("exclude", {}),
             prune=data.get("prune", {}),
@@ -598,6 +600,33 @@ def check_orphan_refs(m: Manifest, report: Report) -> None:
                 f"upstream bug, so fix it in the paper and re import.")
 
 
+def check_summarised(m: Manifest, report: Report) -> None:
+    """A paper the thesis summarises rather than reproduces.
+
+    Its body is included nowhere, so coverage, balance and orphan references
+    do not apply to it. What does apply is that the decision stays on the
+    record. The manifest says why the paper is summarised, and the chapter
+    that carries the summary must exist and must not open an importedpaper
+    block for this slug, which would mean the body is being imported after
+    all. Nothing under imported_papers/ changes, so a summarised paper is
+    wired back in by setting status to "wired" and writing the includes.
+    """
+    if not m.summary_reason:
+        report.errors.append(
+            f"{m.slug}: status is \"summarised\" but the manifest gives no "
+            f"summary_reason. Record why the paper is summarised rather than "
+            f"reproduced, the way drop records why a file is left out.")
+    text = m.chapter.read_text(encoding="utf-8")
+    if re.search(r"\\begin\{importedpaper\}\{" + re.escape(m.slug) + r"\}", text):
+        report.errors.append(
+            f"{m.slug}: status is \"summarised\" but "
+            f"{m.chapter.relative_to(ROOT)} still opens an importedpaper block "
+            f"for it. Either set status back to \"wired\" or remove the block.")
+    report.notes.append(
+        f"{m.slug}: summarised in {m.chapter.relative_to(ROOT)}, body not "
+        f"imported. {m.summary_reason}")
+
+
 def check_label_collisions(manifests: list[Manifest], report: Report) -> None:
     """Two papers may share a label name only if both are label prefixed."""
     owners: dict[str, list[str]] = {}
@@ -646,6 +675,9 @@ def main() -> int:
             continue
         check_bib_registered(m, report)
         check_shadowing(m, report)
+        if m.status == "summarised":
+            check_summarised(m, report)
+            continue
         check_balanced(m, report)
         check_orphan_refs(m, report)
         if m.layout == "monolithic":

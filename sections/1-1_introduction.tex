@@ -110,7 +110,7 @@ determines what has to be done next. The field varies the model, the data and
 the prompt, and it does not vary the training procedure, so the procedure
 cannot appear in its results. It also measures task success, and a success rate
 cannot separate two networks that score the same while being built differently
-inside. Chapter~\ref{chap:llmbench} shows how far a score can sit from the
+inside. Section~\ref{sec:llmbench} shows how far a score can sit from the
 property it is taken to stand for. Quantisation advertised as nearly lossless
 costs text quality that human raters notice and the standard metrics
 miss~\cite{tuggener_private_2024}, and architectures carrying the inductive
@@ -280,17 +280,18 @@ exist because a procedure that can fix a structure can also fix a measurement,
 and the only defence is a comparison the procedure alone cannot win.
 
 Structure supplied from outside the data is not discredited by any of this, and
-two further chapters supply it and survive the same controls.
-Chapter~\ref{chap:hounsfield} adds binary masks derived from the Hounsfield
+two further studies supply it and survive the same controls.
+Section~\ref{sec:hounsfield} adds binary masks derived from the Hounsfield
 unit ranges of tissue types to the input of a CT segmentation model, which
 improves accuracy against the same model without masks and matches the baseline
 with half of the training data~\cite{meyer_hounsfield_2025}.
-Chapter~\ref{chap:retrieval} retrieves scientific sources for social media
+Section~\ref{sec:retrieval} retrieves scientific sources for social media
 posts with a pipeline combining lexical search, dense retrieval and a cross
 encoder, placing first on the development set and third of $31$ teams on the
 test set of a shared task without external training
-data~\cite{sager_deep_2025}. Both are shorter chapters, and each opens with the
-thesis author's role.
+data~\cite{sager_deep_2025}. Both are summarised in
+Chapter~\ref{chap:further} rather than reproduced, and each summary opens with
+the thesis author's role.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -357,10 +358,10 @@ The chain above is organised by four questions.
 \end{enumerate}
 
 Chapter~\ref{chap:acu} supplies the two gaps that make the first three
-questions worth asking. Chapters~\ref{chap:bounded} to~\ref{chap:retrieval}
-supply the measurement discipline the answers depend on, together with two
-cases of structure that survives it. None of those chapters tests the four
-questions, and the thesis does not claim that they do.
+questions worth asking. Chapter~\ref{chap:bounded} supplies the measurement
+discipline the answers depend on, and Chapter~\ref{chap:further} two cases of
+structure that survives it. Neither tests the four questions, and the thesis
+does not claim that they do.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -447,7 +448,7 @@ The five parts that follow are the argument of
 Sections~\ref{sec:intro_agents} to~\ref{sec:intro_proposal} in order.
 Part~\ref{part:agents} establishes the two gaps and shows why a score cannot
 explain them. Part~\ref{part:procedure} varies the learning rule and then the
-training objective. Part~\ref{part:structure} supplies structure from outside
+training objective. Part~\ref{part:measurement} supplies structure from outside
 the data and shows what has to be controlled when doing so.
 Part~\ref{part:construction} builds the layout into an architecture.
 Part~\ref{part:synthesis} states what the task fixes and what the procedure

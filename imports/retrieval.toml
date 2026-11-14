@@ -2,10 +2,11 @@
 
 slug    = "retrieval"
 dir     = "imported_papers/CLEF_Checkthat_4b"
-chapter = "sections/5-3_retrieval.tex"
+chapter = "sections/3-2_further_contributions.tex"
 title   = "Inference-Time Grounding via Hybrid Retrieval"
 citation_key = "sager_deep_2025"
-status  = "pending"
+status  = "summarised"
+summary_reason = """First author, but the work sits beside the thesis argument: knowledge held in an index at inference time rather than written into weights by training."""
 layout  = "sections"
 source  = "main.tex"
 

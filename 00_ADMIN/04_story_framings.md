@@ -1364,3 +1364,267 @@ contribution statement is reconstructed from the author list, since the
 manuscript carries no contributions section, and is marked `TODO(author)` for
 checking. The world model contribution statement follows the paper's own
 author contributions section and needs no checking.
+
+## 12. Three candidate arcs for the current paper set (2026-11-14)
+
+Written after step 1 of section 11 was done, so the two one line summaries in
+`05_thesis_concept.md` are now derived from the manuscripts as they stand.
+This section does step 2 and step 3: it says what role a constructive
+evaluation correction can play, and it writes the candidates as introduction
+skeletons so they can be judged by the section 6 standard, which is whether
+the frame states a claim a chapter tests rather than a label that fits every
+paper.
+
+### The fact that changes the arithmetic
+
+The world model paper got stronger for the thesis, not weaker. The previous
+version imposed a spectral constraint and then showed the probe mistook it for
+learning, which is a cautionary result and belongs in a side chapter. The
+current version makes the same move the thesis makes everywhere else. It names
+a quantity the objective never fixes, the norm of a predicted latent. It shows
+what fixes that quantity instead, the rollout dynamics. It shows that the
+standard way of reading the network out is sensitive to exactly that quantity,
+so the published score reports drift rather than prediction quality. Then it
+intervenes, by re projection, and checks the intervention four ways.
+
+That is the section 6 table's move, one column further. Compare:
+
+| | Grokking | Attention | World model |
+| --- | --- | --- | --- |
+| Quantity the task and the loss do not fix | how many neurons carry the computation, at equal training and test accuracy | how a weight matrix spreads a computation over its columns | the norm of a predicted latent under rollout |
+| What fixes it instead | the learning rule, through what it normalises together and through credit relative to the non gradient term | the set of token pairs the objective allows | the rollout dynamics, compounding step by step |
+| Derived from | the update equation | the update equation | the rollout and the probe's sensitivity |
+| Intervention | credit equalisation, per neuron decay, rule switch after grokking | symmetric initialisation | re projection to a reference norm |
+| What it had been read as | a property of the task, the sparse circuit | not previously derived | evidence that the model predicts well |
+
+The second fact worth recording. The ACU survey names six gaps and three of
+them are about evaluation: low task complexity in benchmarks, non standardised
+evaluation, and a disconnect between research and deployment. The settled
+story used gaps one and two and had nothing to do with four to six. An arc with
+a measurement part uses all six. COGITAO sharpens gap one with a measurement of
+its own: strong in domain performance, consistent failure to generalise to
+novel compositions.
+
+### Arc A: underdetermined by the task, with the measurement standard first
+
+Parts. I introduction and background. II agents built by one recipe, and what
+they cannot do yet: ACU as the pillar, with a short chapter holding the LLM
+benchmark and COGITAO. III what a score does not tell you: the world model
+chapter leads, with Hounsfield and retrieval behind it. IV the training
+procedure decides the circuit: grokking as the pillar, then attention. V a
+circuit fixed by construction: CNA as the proposal. VI synthesis.
+
+Introduction skeleton, three paragraphs.
+
+1. A network that has learned a task could have carried the solution in many
+   ways. The same function, at the same loss, margin and weight norm, can be
+   carried by a few neurons or by nearly all of them, and a weight matrix can
+   concentrate a computation on a few columns or spread it evenly. The way a
+   computation is distributed over a network's parts, whether those parts are
+   neurons or the columns of a weight matrix, is the solution's circuit.
+   Neuroscience has argued about sparse against distributed coding for
+   decades. Machine learning has mostly assumed the task decides, since the
+   grokking literature reads a sparse circuit as what the task offers and the
+   universality claim says every network solving a task finds the same one.
+   The stake is set by a survey of 87 papers and 33 datasets on agents for
+   computer use, which finds one recipe and six gaps, three of them properties
+   of the trained network and three of them about how the field measures what
+   it claims.
+2. A claim about a trained network is only as good as the readout behind it,
+   and a learned model is routinely scored through a quantity its own loss
+   never fixed. In latent world models the state is carried by the direction
+   of a latent while its norm is left free, the norm drifts during
+   autoregressive rollout, and the probe the field uses to score predicted
+   latents is mostly reporting the drift. Rescaling the predictions to the
+   norm of the encodings removes 97% of the probe's error for one published
+   model, so a worse model that drifts less can rank above a better one, and
+   of 39 surveyed evaluations one reports prediction norms. Re projection
+   removes the free quantity from the score, with four checks on what is left.
+   That is the standard the rest of the thesis is held to: a circuit claim is
+   made at matched loss, margin and weight norm, and against imposed and
+   permuted controls that the free quantity alone cannot satisfy. Two applied
+   studies supply structure from outside the data and show gains that survive
+   that comparison, input masks from tissue specific Hounsfield ranges for CT
+   segmentation and an external index for retrieving scientific sources from
+   social media posts.
+3. Held to that standard, the circuit is decided by the learning rule. With
+   task, data, architecture and width fixed, every rule that groks modular
+   addition recovers the same Fourier based algorithm with circuits of
+   different size. A neuron stays in use when its credit is large relative to
+   the non gradient term of its own update, equalising credit expands the
+   effective circuit from 60% to 99% of the layer at similar training and test
+   accuracy and does so even after grokking has happened, and what an
+   optimizer normalises together places Nero apart from Adam and seven others.
+   The same question asked of a Transformer's attention weights gives the same
+   answer one level up, where the objective's index set and not the data
+   decides whether a few columns dominate. The circuit has a price:
+   distributed circuits tolerate neuron deletion, concentrated ones prune
+   further and transfer about twice as fast. If the rule decides the circuit
+   and the circuit has a price, the circuit can be fixed in the architecture
+   instead and learning left to fill in its parts, which is what the
+   Cooperative Network Architecture does, and the thesis closes with it as a
+   proposal rather than a finding.
+
+What it states that a chapter tests. That a quantity the task and the loss
+leave free is fixed by the procedure, can be derived from the update or rollout
+equation, can be intervened on, and is misread when the readout is sensitive to
+it. Three chapters test that, each on its own quantity. The circuit is the
+thesis's main instance and gives the title its noun.
+
+What it costs. The frame carries one concept and one named instance rather
+than a single noun. "Circuit" does not cover the world model chapter, and the
+frame has to say so plainly rather than stretch the word, which is the section
+10 objection turned into a drafting rule. The grokking pillar arrives third
+rather than second.
+
+What it gains. Every one of the nine papers has a load bearing slot. The survey
+does full work for the first time, because its evaluation gaps get a part. The
+world model paper is promoted on what it now is rather than on what it was.
+The measurement standard arrives before the claims it licenses.
+
+### Arc B: findings first, measurement late
+
+This is section 9's shape with the world model chapter rewritten as
+constructive rather than cautionary. Parts: II agents built by one recipe, III
+the training procedure decides the circuit, IV structure supplied from outside
+the data and how to measure it, V CNA, VI synthesis.
+
+Introduction skeleton. Paragraph 1 as in arc A. Paragraph 2 is arc A's
+paragraph 3, the learning rule result and the attention result and the price.
+Paragraph 3 is arc A's paragraph 2, the readout, Hounsfield and retrieval.
+Paragraph 4 is CNA as the proposal.
+
+What it states that a chapter tests. The same claim, but the frame states it
+as a circuit claim only, and the world model chapter then enters as a method
+lesson after the claims it is supposed to license have already been made.
+
+What it costs. Four paragraphs rather than three, because the measurement part
+and the proposal cannot share one. The survey's evaluation gaps stay
+unanswered until late. A reader meets the standard after the evidence.
+
+What it gains. The strongest result and the author's own lead paper come
+second. The least rewriting, since Parts II, III and V are unchanged from the
+September story. If the arc has to be settled quickly, this is the cheap one.
+
+### Arc C: narrow core, everything else named as a further contribution
+
+Parts: I introduction and background, II the training procedure decides the
+circuit (grokking, attention), III a circuit fixed by construction (CNA), IV
+further contributions (ACU with the LLM benchmark and COGITAO, the world model
+correction, Hounsfield and retrieval), V synthesis.
+
+Introduction skeleton. Paragraph 1 the circuit and the claim. Paragraph 2 the
+two chapters that test it, derived and intervened. Paragraph 3 CNA as the
+proposal, closing with one plain sentence that the thesis has further
+contributions, named, each stated as what it is.
+
+What it states that a chapter tests. Exactly one claim, tested by two chapters,
+with nothing in the frame that is not tested. By the section 6 standard this is
+the strongest of the three.
+
+What it costs. Five of nine papers sit outside the argument, including the
+survey, which is the largest publication and a shared first authorship, and the
+world model paper, which is current and first authored. A committee reading
+Part IV sees a quarter of the thesis filed as leftovers.
+
+What it gains. Nothing in the frame is rhetoric. It is the fallback if arc A's
+wider concept turns out not to hold when the introduction is actually written.
+
+### Recommendation
+
+Arc A. It is the only one of the three in which the 2026-11-14 change to the
+world model paper is an improvement rather than damage to repair, and it is
+the only one that uses all six of the survey's gaps. It is also close to the
+author's own 2026-09-12 instinct in section 10, which put the world model
+paper second, with the four objections raised there answered: the four papers
+with no slot get one, the "just statistics" step is dropped because no chapter
+tests it, the physical world opening is replaced by the survey's own subject,
+and the attention chapter stays a supporting chapter behind the grokking
+pillar rather than carrying an argument step of its own.
+
+### Open questions for the author
+
+1. Does the judgement in section 9, that the world model paper is not strong
+   and belongs in a side chapter, carry over to the current paper? It was made
+   about a different manuscript.
+2. Arc A gives the thesis one concept, a quantity the task and the loss leave
+   free, with the circuit as its main instance. Is that one abstraction too
+   many, or is it the thing that makes the paper set cohere?
+3. Does CNA still close the thesis as a proposal, as section 8 decided?
+4. Working title. The September one, "Sparse or Distributed Is a Choice", still
+   fits arc A with "circuit" in the subtitle. Alternatives if the free quantity
+   frame is adopted: "Underdetermined by the Task: What Training Decides About
+   a Network's Circuit, and What It Costs", or "Same Score, Different Network".
+
+### Decision (2026-11-14)
+
+The author chose **arc A**, with the wider concept above "circuit" and with CNA
+still closing as a proposal. All three recommendations above were accepted
+without change. `05_thesis_concept.md` was rewritten to the chosen arc on the
+same day and is now the file to read before writing any frame prose.
+
+The four open questions are answered as follows. The September judgement that
+the world model paper is not strong was made about a different manuscript and
+does not carry over, so the current paper leads Part III. The frame carries one
+concept above the circuit, defined once in the introduction. CNA closes. The
+working title stays "Sparse or Distributed Is a Choice" with "circuit" in the
+subtitle, with two alternatives kept in reserve.
+
+Sections 1 to 11 of this file are retired. They are kept because they record
+what was tried and why it was dropped, which is the point of the file, but
+nothing in them should be used to write prose.
+
+## 13. Revision: paper selection, and a neuroscience spine (2026-11-14, evening)
+
+Section 12 settled arc A in the morning. Two things came to light the same day
+and the author reopened both the story and the paper set.
+
+**The glue is gone.** Section 12 and the concept file both leaned on two cross
+chapter measurements to turn the frame's links into evidence. The CNA code no
+longer runs and no attention checkpoints survive, so neither can be made. Both
+are withdrawn and must not be promised anywhere in the thesis.
+
+**The real problem was never the story.** Measured from the 367 page build,
+the page budget per paper, body plus appendix, is: ACU survey 56, COGITAO with
+the LLM benchmark 54, grokking 42, attention 42, world model 34, CNA 26,
+retrieval 16, Hounsfield 12. COGITAO's appendix alone is 34 pages, the largest
+in the thesis, against 32 for grokking, and the author's contribution to
+COGITAO was testing one model. `03_phd_thesis_outline.md` had already set the
+right policy, four main papers reproduced in full and four minor ones given one
+to two pages with the role stated, and the repository drifted away from it
+because the import machinery made vendoring everything easy. The story then had
+to find a home for nine chapters, which is what made every frame feel like
+glue.
+
+**Decided.** Five full chapters: grokking, attention, CNA, the ACU survey and
+the world model paper, the last shortened because it is not yet submitted to
+Frontiers. Four summarised into one chapter: COGITAO, the LLM benchmark,
+Hounsfield and retrieval. The cut saves about 76 pages.
+
+**Decided.** The spine is sparse against distributed coding, posed as a credit
+assignment question. The thesis is examined at the Institute of
+Neuroinformatics, the grokking paper literally measures how many neurons carry
+a computation, and CNA's design principle is that every active neuron is
+supported by several others, which is a distributed code by construction. This
+is the same claim as the morning's "underdetermined by the task" framing, in
+the vocabulary of the institute that will read it. The thesis wide noun stays
+**circuit**, decided earlier and carried by `imports/glossary.toml`. The
+introduction bridges the two: neuroscience asks whether a representation is
+sparse or distributed, and the object that answers it in a trained network is
+the circuit.
+
+**Consequence for the part order.** The survey drops from a pillar in Part II
+to a motivating chapter, and the world model chapter gets shorter. Both were
+premises of the morning's decision to put measurement second, so that decision
+no longer holds and the September order is restored: Parts III and IV were
+renumbered in the morning and renumbered back the same evening. The part
+titles and the label `part:measurement` are kept. Do not swap them again
+without a reason that outlives one session.
+
+**What this does to the honesty of the frame.** The weak joint named in
+section 12, the distance from a survey of software agents to modular addition,
+does not disappear. It shrinks to the weight a motivating chapter can carry.
+The Hounsfield and retrieval chapters stop being filler in a part of the
+argument and become what they are, supporting publications. What is left in
+the argument is two strong papers that share a derivation, one methodological
+chapter, and one architecture offered as a proposal.

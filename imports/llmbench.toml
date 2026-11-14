@@ -6,10 +6,11 @@
 
 slug    = "llmbench"
 dir     = "imported_papers/Llama2_benchmark_sds"
-chapter = "sections/3-2_llm_benchmark.tex"
+chapter = "sections/3-2_further_contributions.tex"
 title   = "Limitations of Foundation Models"
 citation_key = "tuggener_private_2024"
-status  = "pending"
+status  = "summarised"
+summary_reason = """Model evaluation only; the survey, benchmark design and write up are the co-authors' work."""
 layout  = "monolithic"
 source  = "llm_at_home.tex"
 split   = "section"

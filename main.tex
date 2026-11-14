@@ -183,7 +183,7 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 % cannot drift from the title page.
 \newcommand{\thesistitle}{Sparse or Distributed Is a Choice}
 \title[\thesistitle]{\thesistitle}
-\subtitle{How Training Decides the Layout of a Neural Network's Solution, and What the Layout Costs}
+\subtitle{How Training Decides the Circuit of a Neural Network's Solution, and What the Circuit Costs}
 
 \author[Pascal Sager]{Pascal Sager}
 \date{December 1, 2026}
@@ -271,17 +271,18 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 % once the wrapper is written.
 \input{sections/3-1_acu_survey}
 
-\chapter{Two More Places Where the Recipe's Score and Its Capability Diverge}\label{chap:llmbench}
-\margintoc
-\input{sections/3-2_llm_benchmark}
-\input{sections/3-3_cogitao}
+% The four papers the thesis summarises rather than reproduces. The chapter is
+% thesis owned prose and opens no importedpaper block, which is what
+% status = "summarised" in their manifests asserts and check_imports.py holds
+% them to. Nothing under imported_papers/ changed when they were cut.
+\input{sections/3-2_further_contributions}
 
 %----------------------------------------------------------------------------------------
-%	PART III: THE TRAINING PROCEDURE DECIDES THE LAYOUT
+%	PART III: THE LEARNING RULE DECIDES THE CIRCUIT
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\part{The Training Procedure Decides the Layout}\label{part:procedure}
+\part{The Learning Rule Decides the Circuit}\label{part:procedure}
 \pagelayout{margin}
 
 \input{sections/4-1_grokking}
@@ -289,25 +290,21 @@ Comment,Function,EndFunction,Procedure,EndProcedure,Loop,EndLoop}\do{%
 \input{sections/4-2_attention}
 
 %----------------------------------------------------------------------------------------
-%	PART IV: STRUCTURE SUPPLIED FROM OUTSIDE THE DATA
+%	PART IV: READING A NETWORK OUT
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\part{Structure Supplied from Outside the Data}\label{part:structure}
+\part{Reading a Network Out}\label{part:measurement}
 \pagelayout{margin}
 
 \input{sections/5-1_bounded}
 
-\input{sections/5-2_hounsfield}
-
-\input{sections/5-3_retrieval}
-
 %----------------------------------------------------------------------------------------
-%	PART V: A LAYOUT FIXED BY CONSTRUCTION
+%	PART V: A CIRCUIT FIXED BY CONSTRUCTION
 %----------------------------------------------------------------------------------------
 
 \pagelayout{wide}
-\part{A Layout Fixed by Construction}\label{part:construction}
+\part{A Circuit Fixed by Construction}\label{part:construction}
 \pagelayout{margin}
 
 \input{sections/6-1_cna}
