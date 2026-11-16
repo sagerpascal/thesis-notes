@@ -55,15 +55,21 @@
 \subsection{An overparameterised network has many settings that fit}
 \label{sec:bg_interpolation}
 
-\paragraph{Fitting is not the constraint.}
-% A network with more parameters than training examples can fit the data
-% exactly, including random labels, so reaching zero training loss says little
-% about which function was found. Keys: zhang_rethinking_2017.
+A network with more parameters than training examples can fit its training
+data exactly. It can do so even when the labels are random, which means that
+no property of the data stands in the way of memorisation and that reaching
+zero training loss says almost nothing about which function was
+found~\cite{zhang_rethinking_2017}. Fitting is not the constraint.
 
-\paragraph{The solutions form a set rather than a point.}
-% Many settings reach the same training loss, and they differ in properties the
-% loss does not see. Say plainly that this thesis is about one such property.
-% Keys: neyshabur_search_2015, belkin_reconciling_2019.
+What fits is therefore a set rather than a point. Many parameter settings
+reach the same training loss, and they differ in properties the loss never
+sees: how large the weights are, how wide the margin is, how the computation
+is arranged across the network's parts. Classical accounts of generalisation
+were built for the regime in which that set is small, and the behaviour of
+modern networks past the interpolation threshold does not fit
+them~\cite{neyshabur_search_2015,belkin_reconciling_2019}. This thesis is
+about one property that the loss leaves open, which is how many of a network's
+neurons end up carrying the computation.
 
 \subsection{The training procedure selects among them}
 \label{sec:bg_implicitbias}
@@ -71,199 +77,81 @@
 % among the settings that fit, produced by the procedure rather than by the
 % objective.
 
-\paragraph{Gradient descent has a bias that can be stated exactly.}
-% On separable data, gradient descent on the logistic loss converges in
-% direction to the maximum margin solution, so the procedure fixes a property
-% the objective leaves open. Keys: soudry_implicit_2018.
+If the objective does not single out one setting, something else does. The
+preference that training shows among the settings that fit, produced by how
+the network is trained rather than by what it is asked to compute, is what the
+literature calls implicit bias.
 
-\paragraph{The geometry of the update decides which property is minimised.}
-% Steepest and mirror descent under different norms select different minima of
-% the same objective. Keys: gunasekar_characterizing_2018.
+Sometimes that preference can be stated exactly. On data a linear model can
+separate, gradient descent on the logistic loss sends the weights to infinity,
+and the direction it converges to is the maximum margin
+solution~\cite{soudry_implicit_2018}. The objective is indifferent between
+separating directions, and the procedure is not.
 
-\paragraph{The scale of the initialisation moves the network between two regimes.}
-% Small initialisation gives a rich, feature learning regime and large
-% initialisation a kernel regime, and the two reach different solutions. Note
-% that this axis has been connected to grokking. Keys: woodworth_kernel_2020,
-% kumar_grokking_2024.
+Which property gets minimised depends on the geometry of the update rather
+than on the objective. Steepest descent under different norms, and mirror
+descent under different potentials, reach different minima of the same
+loss~\cite{gunasekar_characterizing_2018}. Changing the update is changing
+which member of the solution set is reached.
 
-\paragraph{Changing the optimizer changes the solution, not only the speed.}
-% Adaptive methods reach solutions that generalise differently from those of
-% plain gradient descent at matched training loss. Keys: wilson_marginal_2017.
+The scale at which the weights are initialised moves a network between two
+regimes. Small initialisation leaves the features free to move and the network
+learns them, while large initialisation keeps the network close to its
+linearisation and it behaves like a kernel
+method~\cite{woodworth_kernel_2020}. The two regimes reach different
+solutions, and the transition between them has been connected to the delay
+between fitting and generalising that this chapter turns to
+below~\cite{kumar_grokking_2024}.
+
+The optimizer changes the solution and not only the speed of reaching it.
+Adaptive methods and plain gradient descent, trained to the same training
+loss, reach solutions that generalise
+differently~\cite{wilson_marginal_2017}.
 
 \subsection{Some of the choice is visible in what the update conserves}
 \label{sec:bg_conserved}
 % This subsection is the machinery the grokking chapter's propositions use, so
 % it has to be here rather than in that chapter.
 
-\paragraph{Gradient flow on a homogeneous network keeps layers balanced.}
-% The difference of squared norms across a layer boundary is constant under
-% gradient flow, so the initialisation's imbalance survives training. Keys:
-% du_algorithmic_2018.
+Part of what a procedure will and will not do to a network can be read off its
+update without solving the dynamics. Under gradient flow on a network built
+from homogeneous layers, the difference of squared norms across a layer
+boundary does not change~\cite{du_algorithmic_2018}. Whatever imbalance the
+initialisation put there survives training.
 
-\paragraph{Each symmetry of the parameterisation gives a conserved quantity.}
-% Rescale and permutation symmetries imply quantities the dynamics cannot
-% change, and weight decay and momentum break them in known ways. Keys:
-% kunin_neural_2021.
+The general statement is that every continuous symmetry of the
+parameterisation gives a quantity the dynamics cannot
+alter~\cite{kunin_neural_2021}. Rescaling a unit's incoming weights and
+dividing its outgoing weights by the same factor leaves the function
+unchanged, and permuting units does too, and each such freedom pins something
+in the flow. Weight decay and momentum break these conservation laws, and they
+break them in ways that can be written down.
 
-\paragraph{A conserved ratio is what freezes a profile.}
-% State the consequence the thesis uses without claiming it as a result here.
-% If the flow conserves the ratios between units, no amount of training can
-% reshape the relative sizes it started with, and a rule that conserves
-% differences instead can. Point forward to Chapter~\ref{chap:grokking}.
+The consequence this thesis uses is about ratios. If the flow conserves the
+ratio between two units' contributions, then no amount of training can reshape
+the relative sizes the network started with, and a rule that conserves their
+difference instead can. \Cref{chap:grokking} turns that observation into a
+condition on the update.
 
-\subsection{This literature has asked about norms, not about how many units carry the computation}
+\subsection{It has asked about norms, and not about how many units carry the computation}
 \label{sec:bg_biasgap}
 
-\paragraph{The properties it characterises are global.}
-% Norm, margin, rank and effective dimension are properties of the whole
-% parameter vector. The closest to a structural claim is the low rank bias of
-% deep matrix factorisation. Keys: arora_implicit_2019, gunasekar_characterizing_2018.
+The properties this literature characterises are global. Norm, margin, rank
+and effective dimension are all properties of the whole parameter vector, and
+a network can be described completely in those terms without any statement
+about which of its units are doing the work. The closest the literature comes
+to a structural claim is the bias of deep matrix factorisation towards
+solutions of low rank, which is a statement about the spectrum rather than
+about the parts~\cite{arora_implicit_2019,gunasekar_characterizing_2018}.
 
-\paragraph{And the part of the procedure it varies is the optimizer.}
-% The results above vary the optimizer or the initialisation scale. The
-% computation that assigns each parameter its share of the error is held at
-% backpropagation throughout. Name that as the opening this thesis uses.
-
-
-% ─────────────────────────────────────────────────────────────────────────────
-\section{How a computation is spread over neurons is an old question with measures}
-\label{sec:bg_coding}
-% ─────────────────────────────────────────────────────────────────────────────
-% Job of this section: import the neuroscience framing, and above all the
-% measures and the consequences. The reader must leave this section
-% believing that the spread is a real property with real costs, and knowing how
-% it is quantified.
-
-\subsection{Sparse and distributed codes are the two ends}
-\label{sec:bg_sparsedistributed}
-
-\paragraph{The question and the two answers.}
-% Whether a stimulus is represented by a few highly selective neurons or by a
-% pattern over many is the oldest form of this question. Give both names.
-% Keys: barlow_single_1972, hinton_distributed_1986.
-
-\paragraph{Sparsity as a principle derived from the input statistics.}
-% Optimising for a sparse code of natural images produces oriented receptive
-% fields resembling those of primary visual cortex, which is sparsity derived
-% rather than assumed. Keys: olshausen_emergence_1996, olshausen_sparse_2004,
-% foldiak_sparse_1995.
-
-\paragraph{Highly selective cells do exist.}
-% Single neurons in the human medial temporal lobe respond to one concept
-% across very different images. State it as evidence for the sparse end, not as
-% a settlement of the debate. Keys: quiroga_invariant_2005.
-
-\subsection{Each end buys something and gives something up}
-\label{sec:bg_codingprice}
-% This subsection is the one the thesis leans on hardest, because the trade off
-% it describes is the one Chapter~\ref{chap:grokking} measures.
-
-\paragraph{A distributed code degrades gracefully.}
-% If many neurons carry a signal, losing some of them changes the summed signal
-% little, and the fluctuation shrinks with the number carrying it. This is the
-% population coding argument, and it is the biological form of the bound the
-% grokking chapter proves. Keys: averbeck_neural_2006, rolls_relative_1990.
-
-\paragraph{A sparse code interferes less and stores more.}
-% Fewer shared neurons means a new association disturbs less of what is already
-% there, and capacity arguments favour sparse connectivity. Keys:
-% rolls_relative_1990, litwinkumar_optimal_2017.
-
-\paragraph{Artificial networks show the same two effects.}
-% Deleting units or weights from a trained network degrades it unevenly,
-% ablating single directions predicts generalisation, sparse subnetworks train
-% to full accuracy, and dropout buys redundancy by construction. Keys:
-% lecun_optimal_1989, han_learning_2015, morcos_importance_2018,
-% zhou_revisiting_2018, frankle_lottery_2019, srivastava_dropout_2014,
-% ahmad_dense_2019.
-
-\subsection{The spread can be measured, and the measure has to be chosen}
-\label{sec:bg_measures}
-
-\paragraph{Participation ratio counts how many parts effectively contribute.}
-% Define it in words, say it is basis independent, and say that multiplying by
-% the number of units reads as an effective count. This is the measure the
-% thesis uses. Keys: litwinkumar_optimal_2017, gao_simplicity_2015.
-
-\paragraph{How many features a unit carries is a different axis.}
-% Polysemantic units and superposition ask how many features share a neuron.
-% That is not the same question as how many neurons share a computation, and
-% the two must not be conflated. Keys: elhage_toy_2022,
-% bricken_monosemanticity_2023.
-
-\paragraph{A basis dependent measure can mislead.}
-% Spectral entropy and similar quantities depend on the basis they are computed
-% in. Say that the thesis therefore leads with a basis independent measure and
-% point to Chapter~\ref{chap:grokking} for the case where the two disagree.
+The part of the procedure these results vary is also narrow. They vary the
+optimizer, or the geometry of the update, or the scale of the initialisation.
+The computation that assigns each parameter its share of the error stays at
+backpropagation throughout. That is the opening this thesis works in: a
+property the literature has not asked about, and a component of the procedure
+it has not varied.
 
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Grokking is where the layout can be read off}
-\label{sec:bg_grokking}
-% ─────────────────────────────────────────────────────────────────────────────
-% Job of this section: explain the phenomenon, explain that its circuit is
-% known at the level of single neurons, and end on the assumption the thesis
-% tests. Gloss "grokking" inline at first use.
-
-\subsection{Generalisation can arrive long after the training data is fitted}
-\label{sec:bg_grokphenomenon}
-
-\paragraph{The phenomenon.}
-% Training accuracy reaches one, test accuracy sits at chance for thousands of
-% epochs, then climbs abruptly. Give the setting: small algorithmic tasks,
-% weight decay, full batch. Keys: power_grokking_2022.
-
-\paragraph{The explanations offered.}
-% Weight norm and the distance from initialisation, circuit efficiency, the
-% rich and lazy regimes, an effective theory of representation learning, and
-% hidden progress that standard metrics miss. Keys: liu_omnigrok_2022,
-% varma_explaining_2023, kumar_grokking_2024, liu_towards_2022,
-% barak_hidden_2022.
-
-\paragraph{And that an optimizer can decide whether it happens at all.}
-% Adaptive optimizers change whether and when grokking occurs, which is the
-% closest the literature comes to the thesis's question and still does not ask
-% which solution is reached. Keys: thilak_slingshot_2022.
-
-\subsection{For modular arithmetic the circuit is known neuron by neuron}
-\label{sec:bg_grokcircuit}
-
-\paragraph{The Fourier computation.}
-% The embedding maps operands onto a few frequencies, the hidden layer combines
-% them into sine and cosine of the sum, and the logit for a candidate peaks at
-% the correct answer. Keys: nanda_progress_2023, gromov_grokking_2023.
-
-\paragraph{The same analysis for a group that is not commutative.}
-% Composition in a permutation group is solved with the group's irreducible
-% representations rather than frequencies. Keys: chughtai_toy_2023.
-
-\paragraph{The characterisation bundles two properties.}
-% Max margin analysis of a one hidden layer model gives neurons that each tune
-% to a single frequency and a computation carried by many units at once. Say
-% clearly that these are two separate properties, because the thesis separates
-% them. Keys: morwani_feature_2024.
-
-\paragraph{The circuit is not unique even under backpropagation.}
-% A different algorithm appears under other hyperparameters, a sparse
-% generalising subnetwork can be separated from a dense memorising one, and a
-% small initialisation condenses a network onto few effective neurons. Keys:
-% zhong_clock_2023, merrill_tale_2023, luo_phase_2021.
-
-\subsection{The assumption is that the task fixes the circuit}
-\label{sec:bg_universality}
-
-\paragraph{Universality, stated.}
-% The claim that every network solving a task finds the same circuit, so a
-% circuit found in one network stands for the task. Keys: chughtai_toy_2023,
-% olah_zoom_2020.
-
-\paragraph{Two levels that the evidence does not separate.}
-% What is computed, and how many units carry it. The first is not contested by
-% this thesis. Say that every network behind the evidence above was trained
-% with backpropagation, and stop there. No claim about what we found.
-
-
-% ─────────────────────────────────────────────────────────────────────────────
 \section{The training procedure has parts, and each of them can be varied}
 \label{sec:bg_rules}
 % ─────────────────────────────────────────────────────────────────────────────
@@ -275,77 +163,275 @@
 \subsection{Credit can be assigned without backpropagation}
 \label{sec:bg_credit}
 
-\paragraph{Why alternatives were looked for.}
-% Backpropagation needs the transpose of the forward weights, which has no
-% obvious biological implementation. Keys: rumelhart_learning_1986,
-% crick_recent_1989.
+Backpropagation computes each weight's share of the output error by sending
+the error backwards through the transpose of the forward
+weights~\cite{rumelhart_learning_1986}. A biological circuit has no obvious
+way to hold that transpose, which is the objection that sent people looking
+for alternatives~\cite{crick_recent_1989}.
 
-\paragraph{Random feedback is enough to learn.}
-% Feedback alignment routes the error through a fixed random matrix and the
-% forward weights align to it, and the direct form skips the layer chain
-% entirely. Note the finding that alignment happens early and memorisation
-% follows. Keys: lillicrap_random_2016, nokland_direct_2016,
-% refinetti_align_2021.
+Random feedback turned out to be enough. Routing the error through a fixed
+random matrix still trains a network, because the forward weights move into
+rough alignment with that matrix instead of the other way
+round~\cite{lillicrap_random_2016}, and the direct form delivers the error to
+every layer at once rather than passing it down the
+chain~\cite{nokland_direct_2016}. The alignment happens early in training and
+what follows it is largely memorisation of the training
+set~\cite{refinetti_align_2021}.
 
-\paragraph{Curvature and sign.}
-% Natural gradient and its Kronecker factored approximation precondition by
-% curvature, and sign methods discard the magnitude entirely, with convergence
-% results that separate the plain sign update from an interpolated one. Keys:
-% amari_natural_1998, martens_optimizing_2015, bernstein_signsgd_2018,
-% karimireddy_error_2019, chen_lion_2024.
+A second family changes the geometry rather than the path. Natural gradient
+preconditions the update by the curvature of the loss in function
+space~\cite{amari_natural_1998}, and a Kronecker factored approximation makes
+that affordable for a deep network~\cite{martens_optimizing_2015}. At the
+other extreme the sign methods throw the magnitude away and keep only the
+direction of each coordinate, which converges under conditions that separate
+the plain sign update from one that carries an error feedback
+term~\cite{bernstein_signsgd_2018,karimireddy_error_2019}, and a search over
+such update rules produced one that is in current
+use~\cite{chen_lion_2024}.
 
-\paragraph{Energy based and control based rules.}
-% Predictive coding, equilibrium propagation, target propagation, the
-% forward-forward algorithm, and deep feedback control, which replaces the
-% backward pass with a controller that drives the network towards the target.
-% Keys: whittington_approximation_2017, scellier_equilibrium_2017,
-% lee_difference_2015, hinton_forward_2022, meulemans_credit_2021,
-% meulemans_least_2022.
+A third family replaces the backward pass with a process that settles.
+Predictive coding networks approximate backpropagation with local error units
+when the network relaxes to equilibrium~\cite{whittington_approximation_2017},
+equilibrium propagation reads the gradient off the difference between two
+settled states~\cite{scellier_equilibrium_2017}, target propagation sends
+targets rather than errors backwards and corrects the inversion
+error~\cite{lee_difference_2015}, and the forward-forward algorithm replaces
+the backward pass with a second forward pass on contrasting
+data~\cite{hinton_forward_2022}. Deep feedback control drives the network
+towards the target with a controller and reads the credit off the control
+signal, which makes the resulting update interpretable as an approximation to
+a known optimisation
+method~\cite{meulemans_credit_2021,meulemans_least_2022}.
 
-\paragraph{What all of them are asked.}
-% Every one of these is evaluated on whether it matches backpropagation's
-% accuracy. Which solution it selects is left open, and none has been run on a
-% task whose circuit is known. Keys: mallinar_emergence_2025 for the closest case, a
-% kernel method that groks without backpropagation and so has no per unit
-% circuit to read.
+What every one of these is asked is the same question. Does it match the
+accuracy of backpropagation, and does it converge? Which member of the
+solution set it selects is left open, and none of them has been run on a task
+whose solution is known at the level of single neurons. The closest case is a
+kernel method that reproduces the delayed generalisation of grokking without
+any backward pass at all, and a kernel method has no per neuron structure to
+read~\cite{mallinar_emergence_2025}.
 
 \subsection{Optimizers differ in how many parameters share one normaliser}
 \label{sec:bg_grain}
 % Present this as one spectrum in one property, because that property is what
 % Chapter~\ref{chap:grokking} predicts from.
 
-\paragraph{Per parameter.}
-% Running estimates of the gradient's second moment give each weight its own
-% step size, and a sign update or a factored estimate does the same thing more
-% cheaply. Keys: kingma_adam_2015, tieleman_lecture_2012,
-% shazeer_adafactor_2018, chen_lion_2024.
+The optimizers in general use can be laid along a single axis: how many
+parameters share one normalising factor.
 
-\paragraph{Per layer and per matrix.}
-% Trust ratios rescale a whole layer by one scalar, and preconditioners
-% transform a whole weight matrix. Keys: you_batch_2017, you_batch_2020,
-% gupta_shampoo_2018, jordan_muon_2024.
+At one end each weight gets its own. Adam keeps a running estimate of the
+gradient's second moment per parameter and divides by its square
+root~\cite{kingma_adam_2015}, RMSProp does the same with a simpler
+average~\cite{tieleman_lecture_2012}, Adafactor stores that estimate in
+factored form to save memory~\cite{shazeer_adafactor_2018}, and Lion reduces
+the whole thing to the sign of an interpolated
+momentum~\cite{chen_lion_2024}.
 
-\paragraph{Per neuron.}
-% A normaliser shared by exactly the weights entering one neuron, and the
-% reparameterisation that constrains those weights instead of the update.
-% Keys: liu_learning_2021, salimans_weight_2016.
+Further along, one factor covers a layer or a whole matrix. Layerwise trust
+ratios rescale every weight in a layer by one scalar derived from the ratio of
+weight norm to gradient norm~\cite{you_batch_2017,you_batch_2020}. Shampoo
+preconditions a weight matrix with factored second moment
+matrices~\cite{gupta_shampoo_2018}, and Muon orthogonalises the momentum
+matrix before the step~\cite{jordan_muon_2024}. In each case the transformation
+is shared by many neurons at once.
 
-\paragraph{The property that orders them.}
-% State the spectrum without claiming the result: these methods differ in which
-% group of parameters shares one normaliser, from a single weight to a whole
-% matrix. Point forward to Chapter~\ref{chap:grokking}.
+At the other end sits a normaliser shared by exactly the weights entering one
+neuron. Nero normalises the update of each neuron's incoming weights and
+constrains their norm~\cite{liu_learning_2021}, and weight normalisation
+reaches a related place by reparameterising those weights into a direction and
+a length rather than by changing the
+update~\cite{salimans_weight_2016}.
+
+These methods are usually compared on convergence speed and final accuracy,
+and the axis above is not what they are usually sorted by. It is the axis
+\cref{chap:grokking} sorts them by.
 
 \subsection{What is known about these rules is convergence and accuracy}
 \label{sec:bg_rulesgap}
 
-\paragraph{Per method results exist, a comparison at a matched setting does not.}
-% Each rule has its own convergence analysis and its own benchmark table. No
-% study holds task, data, architecture and optimizer fixed, varies the rule, and
-% reads the resulting solution at the level of single neurons.
+Each of the rules above arrives with its own convergence analysis and its own
+table of benchmark numbers. What does not exist is a comparison that holds the
+task, the data, the architecture and the width fixed, varies the rule, and
+then reads the solution each rule reached at the level of single neurons. That
+comparison is what would separate a property of the task from a property of
+the procedure, and it is the comparison \cref{chap:grokking} makes.
 
 
+\section{In modular addition the grokked solution has been read neuron by neuron}
+\label{sec:bg_grokking}
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The same question can be asked of a weight matrix, where the objective is the knob}
+% Job of this section: explain the phenomenon, explain that its circuit is
+% known at the level of single neurons, and end on the assumption the thesis
+% tests. Gloss "grokking" inline at first use.
+
+\subsection{Generalisation can arrive long after the training data is fitted}
+\label{sec:bg_grokphenomenon}
+
+On small algorithmic tasks such as arithmetic modulo a prime, a network
+trained with weight decay on full batches reaches perfect training accuracy
+within a few hundred epochs and then sits at chance on held out data for
+thousands more, before test accuracy climbs abruptly to one. The behaviour is
+called grokking, meaning that generalisation arrives long after the training
+data has been fitted~\cite{power_grokking_2022}.
+
+The explanations offered for it differ in what they take to be the slow
+quantity. One account makes it the weight norm, with generalisation arriving
+once the network has travelled far enough from its
+initialisation~\cite{liu_omnigrok_2022}. Another makes it efficiency, with a
+memorising circuit and a generalising circuit competing under a regulariser
+that eventually favours the second~\cite{varma_explaining_2023}. A third
+places it on the axis between the kernel and the feature learning regimes,
+where the delay is the time the network takes to leave the first for the
+second~\cite{kumar_grokking_2024}. An effective theory of representation
+learning describes the same transition in terms of the structure that forms in
+the embedding~\cite{liu_towards_2022}, and there is evidence that progress is
+continuous underneath and only the standard metrics are
+flat~\cite{barak_hidden_2022}.
+
+Closest to this thesis is the finding that the optimizer decides whether
+grokking happens at all, and when. Adaptive methods produce a cyclic
+instability around the transition that changes its
+timing~\cite{thilak_slingshot_2022}. That result varies a component of the
+procedure and reads the consequence in the training curve. It does not ask
+which of the solutions that fit was reached.
+
+\subsection{For modular arithmetic the circuit is known neuron by neuron}
+\label{sec:bg_grokcircuit}
+
+What makes this setting useful is that the generalising solution has been
+taken apart. The embedding maps each operand onto a small number of
+frequencies, the hidden layer combines them into the sine and cosine of the
+sum, and the output unit for each candidate answer is largest at the correct
+one~\cite{nanda_progress_2023}. The same computation has been derived in
+closed form for a network of one hidden layer~\cite{gromov_grokking_2023}, and
+the analysis carries over to composition in a group that is not commutative,
+where the network uses the group's irreducible representations in place of
+frequencies~\cite{chughtai_toy_2023}.
+
+A margin analysis of a one hidden layer model sharpens the picture and bundles
+two properties together. The solutions it describes have neurons that each
+tune to a single frequency, and they have a computation carried by many
+neurons at once~\cite{morwani_feature_2024}. These are separate properties.
+What each neuron represents is one question, and how many neurons the
+computation is spread over is another, and this thesis is about the second.
+
+Even with backpropagation held fixed, the circuit is not unique. A different
+algorithm appears under other hyperparameters, one that composes rotations
+rather than reading off a sum~\cite{zhong_clock_2023}. A sparse generalising
+subnetwork can be separated from the dense memorising network around
+it~\cite{merrill_tale_2023}. And a small initialisation drives a network into
+a condensed regime in which few effective neurons remain active at
+all~\cite{luo_phase_2021}.
+
+\subsection{The assumption is that the task fixes the circuit}
+\label{sec:bg_universality}
+
+Running through this work is the assumption that the task settles the answer.
+Its strongest form is universality, the claim that networks solving the same
+task converge on the same features and the same circuit, so that a circuit
+read out of one network stands for the
+task~\cite{chughtai_toy_2023,olah_zoom_2020}.
+
+The claim operates at two levels that the evidence does not separate. One is
+what is computed, and for modular addition the answer is the Fourier
+construction above. The other is how many neurons carry it. This thesis does
+not contest the first. What is worth noticing about the evidence for the
+second is that every network behind it was trained with backpropagation and an
+adaptive optimizer, which is one procedure among many.
+
+
+\section{How far a computation spreads has been measured, and the measure has to be chosen}
+\label{sec:bg_coding}
+% ─────────────────────────────────────────────────────────────────────────────
+% Job of this section: supply the measure the thesis uses, and the evidence
+% that the spread has consequences. The neuroscience framing is the declared
+% analogy of Chapter~\ref{chap:introduction} and is kept to one subsection.
+% This section used to open the chapter. It was moved here on 2026-11-16,
+% when the spine changed to credit assignment, because what the thesis takes
+% from this literature is the measure rather than the question.
+
+\subsection{The question comes from neuroscience, and so does the measure}
+\label{sec:bg_sparsedistributed}
+
+Whether a stimulus is represented by a few highly selective cells or by a
+pattern of activity over many is among the oldest questions about neural
+representation. The first position has a clean statement in the proposal that
+perception is built from the responses of cells of increasing
+specificity~\cite{barlow_single_1972}, and the second in the argument that a
+concept is better held as a pattern over many units, each of which
+participates in many concepts~\cite{hinton_distributed_1986}.
+
+Sparsity can be derived rather than assumed. Optimising a linear code of
+natural images for sparse activity yields filters that are localised, oriented
+and bandpass, which is what receptive fields in primary visual cortex look
+like~\cite{olshausen_emergence_1996}, and the argument has been developed as a
+general principle for sensory coding~\cite{olshausen_sparse_2004} and realised
+in learning rules that produce sparse
+representations~\cite{foldiak_sparse_1995}. Cells of remarkable specificity do
+exist: single neurons in the human medial temporal lobe respond to one person
+across photographs, drawings and the written
+name~\cite{quiroga_invariant_2005}. That is evidence for one end of the range
+and not a settlement of the question.
+
+The relation between that literature and this thesis is an analogy, and
+\cref{chap:introduction} says in what respects it fails. What is taken from it
+here is the measure.
+
+\subsection{Each end of the range buys something and gives something up}
+\label{sec:bg_codingprice}
+% This subsection is the one the thesis leans on hardest, because the trade off
+% it describes is the one Chapter~\ref{chap:grokking} measures.
+
+A representation carried by many cells degrades gently when some of them are
+lost. If a signal is summed over many carriers, removing a few changes the sum
+little, and the fluctuation around the average shrinks as the number of
+carriers grows, which is the standard population coding
+argument~\cite{averbeck_neural_2006}. A representation carried by few cells
+buys something else. Fewer shared cells means that storing something new
+disturbs less of what is already there, and capacity arguments favour sparse
+connectivity for the same
+reason~\cite{rolls_relative_1990,litwinkumar_optimal_2017}.
+
+Both effects appear in artificial networks, where they have been studied under
+other names. Removing parameters by their effect on the loss is an old
+compression technique~\cite{lecun_optimal_1989} and remains the basis of
+modern pruning~\cite{han_learning_2015}. How much a trained network depends on
+single directions in activation space varies, and depending on few of them
+goes with worse
+generalisation~\cite{morcos_importance_2018,zhou_revisiting_2018}. Sparse
+subnetworks exist inside dense ones that train to full accuracy on their
+own~\cite{frankle_lottery_2019}. And redundancy can be bought deliberately, by
+dropping units at random during training~\cite{srivastava_dropout_2014} or by
+imposing sparse high dimensional activity by
+design~\cite{ahmad_dense_2019}.
+
+\subsection{Participation ratio counts the parts that contribute, and some measures mislead}
+\label{sec:bg_measures}
+
+The quantity this thesis measures is the participation ratio. For a set of
+non negative quantities it is the square of their sum divided by the sum of
+their squares, which equals the number of quantities when they are all equal
+and falls towards one as a few of them dominate. Multiplying the normalised
+form by the number of units reads as an effective count of how many units
+contribute. The measure is standard in both
+literatures~\cite{litwinkumar_optimal_2017,gao_simplicity_2015}.
+
+A different question is sometimes asked with similar words. How many features
+one unit carries, and whether a network packs more features into a layer than
+it has units, is the subject of superposition and
+polysemanticity~\cite{elhage_toy_2022,bricken_monosemanticity_2023}. That is
+not the same as how many units carry one computation, and the two should not
+be run together.
+
+The measure has to be chosen with care, because some quantities that look like
+measures of spread depend on the basis they are computed in. Spectral entropy
+of a weight matrix is one. A measure taken over the units of a layer inherits
+whatever freedom the parameterisation leaves in the size of a unit's weights,
+which is why \cref{chap:grokking} reports measures tied to the computation
+alongside the structural one, and why the two do not always agree.
+
+
+\section{Attention weights have been read for structure, and the two pretraining objectives differ in which token pairs enter the update}
 \label{sec:bg_attention}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: get the reader to the object Chapter~\ref{chap:attention}
@@ -355,60 +441,71 @@
 \subsection{Query and key act only through their product}
 \label{sec:bg_qk}
 
-\paragraph{Attention as a score over token pairs.}
-% Define attention in words, name query, key and value, and say the scores are
-% a linear map of the embeddings up to the row-wise softmax. Keys:
-% etal_attention_2017.
+A Transformer layer scores every pair of positions in its input and mixes the
+positions according to those scores~\cite{etal_attention_2017}. Each token's
+embedding is mapped to a query and to a key, the score for a pair is the inner
+product of one token's query with another's key, and a third map produces the
+value that is mixed. Up to the softmax taken over each row, the score is a
+bilinear function of the two embeddings.
 
-\paragraph{The product is the object worth studying.}
-% The two matrices only ever appear as one product, which acts as a bilinear
-% form on the embeddings, so structure in either one separately can be
-% reparameterised away. Keys: elhage_mathematical_2021, dar_analyzing_2023.
+That is why the object worth studying is the product of the query and key
+matrices rather than either of them. The two never appear separately in the
+score, so any structure visible in one alone can be moved into the other by a
+change of basis, while their product acts on the embeddings as a single
+bilinear form~\cite{elhage_mathematical_2021}. Reading that product directly,
+rather than the attention maps it produces, has been used to interpret what a
+head attends to~\cite{dar_analyzing_2023}.
 
 \subsection{The two pretraining objectives differ in which pairs enter the update}
 \label{sec:bg_objectives}
 
-\paragraph{Bidirectional prediction.}
-% A masked token is predicted from the whole sequence, so a pair contributes in
-% both orders. Keys: devlin_bert_2019, warner_smarter_2024.
+Bidirectional pretraining hides some of the tokens and asks the model to
+recover each from the whole surrounding sequence~\cite{devlin_bert_2019}, a
+recipe still in use in current
+encoders~\cite{warner_smarter_2024}. Every pair of positions therefore enters
+the computation in both orders: each is at some point the masked target and at
+some point part of the context.
 
-\paragraph{Autoregressive prediction.}
-% Each token is predicted from its predecessors only, so a token is context for
-% every later token and a target once. Keys: brown_language_2020,
-% touvron_llama_2023a, radford_improving_2018.
+Autoregressive pretraining asks for the next token given its predecessors
+only~\cite{radford_improving_2018}, which is the objective behind the models
+that followed~\cite{brown_language_2020,touvron_llama_2023a}. Here a token is
+the target exactly once and is context for every token after it, so a pair
+enters in one order.
 
-\paragraph{Why that difference is the interesting one.}
-% State it neutrally: the two objectives define different sets of pairs, and the
-% update to the attention weights is a sum over those pairs. Point forward to
-% Chapter~\ref{chap:attention}.
+Stated neutrally, the two objectives define different sets of ordered token
+pairs, and the update to the attention weights is a sum over the pairs the
+objective admits. \Cref{chap:attention} works out what that difference leaves
+in the trained weights.
 
 \subsection{Reading structure off attention weights has been attempted from the outside}
 \label{sec:bg_interp}
 
-\paragraph{Probing asks what a representation contains.}
-% A light classifier on frozen features tests whether information is decodable,
-% and the control task literature shows how easily that overstates what the
-% model uses. Keys: belinkov_probing_2022, hewitt_designing_2019.
+The usual approach is to interrogate a trained network. Probing fits a light
+classifier on frozen features and asks whether some property is decodable from
+them~\cite{belinkov_probing_2022}, and the control task literature shows how
+readily a probe's success overstates what the model itself
+uses~\cite{hewitt_designing_2019}.
 
-\paragraph{Attention maps are an unreliable guide.}
-% The attention distribution can be changed substantially without changing the
-% output, and the reply to that result is worth citing too. Keys:
-% jain_attention_2019, wiegreffe_attention_2019.
+Reading the attention distribution as an explanation is unreliable. The
+distribution can often be changed substantially without changing the model's
+output, which undercuts its use as an account of what drove a
+prediction~\cite{jain_attention_2019}, although what follows from that depends
+on what the explanation is wanted for~\cite{wiegreffe_attention_2019}.
 
-\paragraph{Features and circuits.}
-% Sparse autoencoders recover interpretable features, and circuit analysis
-% identifies subgraphs that implement a behaviour, such as induction heads.
-% Keys: huben_sparse_2024, bricken_monosemanticity_2023, olah_zoom_2020,
-% olsson_context_2022, geva_transformer_2021.
+A more recent line recovers features and circuits. Sparse autoencoders pull
+interpretable features out of activations that are individually
+uninterpretable~\cite{huben_sparse_2024,bricken_monosemanticity_2023}, circuit
+analysis identifies subgraphs of a network that implement a specific
+behaviour~\cite{olah_zoom_2020}, induction heads are the best understood
+example~\cite{olsson_context_2022}, and feedforward blocks have been read as
+key value memories~\cite{geva_transformer_2021}.
 
-\paragraph{All of it works from activations rather than from the update.}
-% These methods examine a trained network. None of them derives what structure
-% the training objective must produce, which is the opening the attention
-% chapter uses.
+All of this works from the activations of a network that has already been
+trained. None of it derives what structure a training objective must leave in
+the weights, which is the opening \cref{chap:attention} works in.
 
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Structure can be supplied instead of learned, which makes measurement the hard part}
+\section{A world model is scored through a probe, and the probe's own behaviour has rarely been checked}
 \label{sec:bg_supplied}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: cover the three side chapters of Part IV at background
@@ -419,67 +516,74 @@
 \subsection{A learner needs a bias, and it can be placed at several points}
 \label{sec:bg_inductive}
 
-\paragraph{Why a bias is necessary at all.}
-% No procedure generalises without one, and the trade against variance is the
-% classical statement. Keys: wolpert_free_1997, etal_neural_1992,
-% mitchell_need_1980.
+No procedure generalises from finite data without a preference among the
+hypotheses that fit it. Averaged over all problems no learner beats any
+other~\cite{wolpert_free_1997}, so the question is never whether to have a
+bias but which one, and the classical statement of the cost is the trade
+between bias and variance~\cite{etal_neural_1992,mitchell_need_1980}.
 
-\paragraph{In the architecture.}
-% Weight sharing gives translation equivariance, and the general treatment
-% derives architectures from the symmetries of the domain. Keys:
-% etal_gradient_1998, bronstein_geometric_2021.
+The bias can be placed in the architecture. Sharing weights across positions
+makes a network equivariant to translation~\cite{etal_gradient_1998}, and the
+general treatment derives architectures from the symmetries of the domain they
+act on~\cite{bronstein_geometric_2021}.
 
-\paragraph{In the input representation.}
-% Known physics can be added to the loss or the input rather than left to be
-% discovered. Point forward to Section~\ref{sec:hounsfield}. Keys:
-% raissi_physics_2019.
+It can be placed in the input or the loss instead. Known physical law can be
+written into the objective rather than left to be discovered from
+data~\cite{raissi_physics_2019}, and the same idea applied to a medical image
+is the subject of \cref{sec:hounsfield}.
 
-\paragraph{At inference time.}
-% Retrieval grounds a prediction in an external index, with lexical matching,
-% dense retrieval and a cross encoder as the standard components. Point forward
-% to Section~\ref{sec:retrieval}. Keys: lewis_retrieval_2021,
-% borgeaud_improving_2022, robertson_probabilistic_2009, karpukhin_dense_2020,
-% nogueira_passage_2019.
+Or it can be supplied at inference. Retrieval grounds a prediction in an
+external index rather than in the weights~\cite{lewis_retrieval_2021}, which
+scales to very large stores~\cite{borgeaud_improving_2022}, and the standard
+components are lexical matching~\cite{robertson_probabilistic_2009}, dense
+retrieval against learned embeddings~\cite{karpukhin_dense_2020} and a cross
+encoder that rescores the shortlist~\cite{nogueira_passage_2019}.
+\Cref{sec:retrieval} is a system of that kind.
 
 \subsection{A latent world model predicts forward, and its errors compound}
 \label{sec:bg_worldmodels}
 
-\paragraph{Predicting in a learned latent space.}
-% The state is encoded, the transition is applied in that space, and no pixels
-% are reconstructed. Keys: lecun_path_2022, assran_self_2023,
-% hafner_mastering_2023, schwarzer_data_2021.
+A latent world model encodes an observation, applies a learned transition in
+that latent space, and never reconstructs the observation
+itself~\cite{lecun_path_2022}. Training the encoder to predict its own
+representations rather than pixels is the self supervised version of the same
+idea~\cite{assran_self_2023}, and models of this family are what current model
+based agents plan
+with~\cite{hafner_mastering_2023,schwarzer_data_2021}.
 
-\paragraph{Why a rollout drifts.}
-% Composing a nonlinear map amplifies each step's error by its Lipschitz
-% constant, so error can grow without bound over a horizon.
+Rolling such a model forward composes the transition with itself. Each
+application can magnify whatever error is already present by its Lipschitz
+constant, so over a horizon of many steps the error can grow without bound.
 
-\paragraph{Constraining the operator's spectrum is the standard remedy.}
-% A linear transition whose spectral radius is bounded turns a product of
-% Lipschitz constants into a bound that stays flat in the horizon. Keys:
-% lusch_deep_2018, azencot_forecasting_2020, mamakoukas_memory_2020.
+The standard remedy constrains the transition. If the latent dynamics are
+linear with a bounded spectral radius, the product of Lipschitz constants
+collapses into a bound that does not grow with the
+horizon~\cite{lusch_deep_2018,azencot_forecasting_2020,mamakoukas_memory_2020}.
 
-\subsection{Scoring a rollout needs a readout, and the readout can decide the answer}
+\subsection{Scoring a rollout needs a readout, and the readout responds to a free quantity}
 \label{sec:bg_scoring}
 
-\paragraph{A probe from latent to physical state is the usual readout.}
-% It is fitted on the training latents and applied to rollout latents. Keys:
-% belinkov_probing_2022, hewitt_designing_2019.
+Because nothing in the latent space is directly interpretable, a rollout is
+scored through a probe: a regressor fitted from latent to physical state on
+encoded observations, then applied to predicted
+latents~\cite{belinkov_probing_2022,hewitt_designing_2019}.
 
-\paragraph{A prediction loss in latent space fixes no scale.}
-% A loss invariant to the scale of the representation leaves that scale free,
-% and the related collapse phenomena in self-supervised learning show what a
-% free direction can do. Keys: grill_bootstrap_2020, chen_exploring_2021,
-% jing_understanding_2022.
+A prediction loss computed in latent space need not fix the scale of that
+space. Where the loss compares directions and ignores magnitudes, the
+magnitude is free, and the collapse phenomena studied in self supervised
+learning are what a free direction in the representation can
+do~\cite{grill_bootstrap_2020,chen_exploring_2021,jing_understanding_2022}.
 
-\paragraph{A predictor that learns nothing is the control that catches this.}
-% Several fields have found headline results that a trivial baseline matches,
-% and the response was a protocol rather than a new model. This is the standard
-% the thesis holds its own comparisons to. Keys: dacrema_really_2019,
-% musgrave_metric_2020, lin_neural_2019, henderson_deep_2018.
+The control that catches a readout reporting the wrong quantity is a predictor
+that learns nothing. Several fields have found headline results that a trivial
+baseline matches once someone ran
+one~\cite{dacrema_really_2019,musgrave_metric_2020,lin_neural_2019}, and in
+each case the response was a protocol rather than a better
+model~\cite{henderson_deep_2018}. That is the standard this thesis holds its
+own comparisons to.
 
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{A layout can also be built into the substrate}
+\section{Mutual support between neurons has been built into architectures rather than trained}
 \label{sec:bg_substrate}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: give the lineage Chapter~\ref{chap:cna} belongs to, so
@@ -489,69 +593,85 @@
 \subsection{An assembly is a set of neurons that support each other}
 \label{sec:bg_assemblies}
 
-\paragraph{The assembly and the plasticity that forms it.}
-% Neurons that fire together strengthen their connection, and a set of mutually
-% supporting neurons is the unit of representation. Keys: hebb_organization_1949.
+The oldest proposal in this lineage is that neurons which are active together
+strengthen the connection between them, so that a set of mutually supporting
+neurons becomes the unit in which something is
+represented~\cite{hebb_organization_1949}. Support is structural: a neuron is
+part of the representation because other neurons hold it there.
 
-\paragraph{Associative memory made it precise, and rigid.}
-% Strengthening every pair of co-active neurons stores complete patterns as
-% snapshots, requires stored states to overlap little, and retrieves by
-% descending an energy function. Keys: amari_learning_1972, hopfield_neural_1982.
+Associative memory made the idea precise and, in doing so, rigid.
+Strengthening the connection between every pair of neurons active in a pattern
+stores that pattern as a whole~\cite{amari_learning_1972}, and retrieval
+becomes descent on an energy function towards the nearest stored
+state~\cite{hopfield_neural_1982}. What is stored is a complete snapshot
+rather than a set of parts that can be recombined, and capacity holds only
+while the stored states overlap little.
 
-\paragraph{Stochastic recurrent networks and what they need.}
-% A constraint satisfaction network tuned by plasticity, and the restriction
-% that made it trainable. Keys: etal_boltzmann_1984, smolensky_information_1987,
-% hinton_reducing_2006.
+Stochastic recurrent networks gave the same machinery a learning rule.
+A Boltzmann machine settles into configurations that satisfy its constraints
+and is tuned by a rule comparing two
+phases~\cite{etal_boltzmann_1984,smolensky_information_1987}, which became
+practical only once the connectivity was restricted so that one phase could be
+sampled in closed form~\cite{hinton_reducing_2006}.
 
 \subsection{Dynamic links, nets and the binding problem}
 \label{sec:bg_binding}
 
-\paragraph{Correlation theory and connections that are selected, not fixed.}
-% Representation by temporarily selected connections rather than by activity
-% alone, and the later development of nets and net fragments. Keys:
-% malsburg_correlation_1981, malsburg_concerning_2018.
+Correlation theory proposed that a representation is carried by connections
+that are temporarily selected rather than by activity
+alone~\cite{malsburg_correlation_1981}, and the later development of that
+line describes a representation as a net assembled from reusable
+fragments~\cite{malsburg_concerning_2018}.
 
-\paragraph{The binding problem.}
-% Why unstructured activation over feature units cannot say which features
-% belong to the same object, and the perceptual grouping this connects to.
-% Keys: etal_binding_2020, etal_century_2012.
+The difficulty these proposals address is binding. A layer of feature units
+that reports which features are present cannot say which of them belong to the
+same object, so two objects sharing a scene become one ambiguous
+description~\cite{etal_binding_2020}, and the perceptual grouping literature
+has studied how the pieces of a scene get assigned to objects in the first
+place~\cite{etal_century_2012}.
 
-\paragraph{Structured alternatives inside deep learning.}
-% Capsules replace a scalar activation with a vector carrying pose and route
-% between levels by agreement. Say what they share with the assembly tradition
-% and where they stopped. Keys: hinton_transforming_2011, sabour_dynamic_2017.
+Deep learning has its own structured alternatives. Capsules replace a unit's
+scalar activation with a vector that carries the pose of a part and route
+information between levels by agreement between
+predictions~\cite{hinton_transforming_2011,sabour_dynamic_2017}. They share
+with the assembly tradition the idea that a representation has parts standing
+in relations, and they stopped short of scaling to the inputs that
+convolutional networks handle routinely.
 
 \subsection{Where these models stop}
 \label{sec:bg_substratelimits}
 
-\paragraph{Three limits, stated plainly.}
-% Hand designed rather than learned features, demonstrations on small and
-% synthetic inputs, and no dynamics defined over the representation, so nothing
-% to plan with. These are the limits Chapter~\ref{chap:cna} inherits and its
-% summary addresses. Do not soften them.
+Three limits run through the whole lineage. The features these models compose
+are hand designed rather than learned from data. The demonstrations are on
+small, often synthetic inputs. And no dynamics are defined over the
+representation, so there is nothing in it to plan with. \Cref{chap:cna}
+inherits all three.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The gap}
+\section{No literature has asked how many neurons carry a computation, or what sets the number}
 \label{sec:bg_gap}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: name the gap and stop. Half a page. No results, no
 % roadmap paragraph, no repetition of the contributions list from
 % Chapter~\ref{chap:introduction}. One clause per part at most.
 
-\paragraph{The question has not been asked with the procedure varied.}
-% Section~\ref{sec:bg_solutionset} gives a literature that varies the optimizer
-% and characterises norms. Section~\ref{sec:bg_coding} gives a question about
-% how many units carry a computation, with measures and a known price.
-% Section~\ref{sec:bg_grokking} gives the one setting where the answer is
-% readable. Nobody has put the three together.
+Three literatures above come close to the question and none of them asks it.
+\Cref{sec:bg_solutionset} gives a body of work that varies the optimizer and
+characterises which norm or margin the procedure selects.
+\Cref{sec:bg_coding} gives a question about how many units carry a
+computation, together with a measure for it and evidence that the answer has a
+price. \Cref{sec:bg_grokking} gives the one setting in which the answer can be
+read off a trained network neuron by neuron. Nobody has put the three
+together.
 
-\paragraph{Three specific things are missing.}
-% A comparison that holds task, data, architecture and optimizer fixed and
-% varies the rule. A prediction of the resulting layout from the form of the
-% update alone. A measurement of what the layout costs.
+Three specific things are missing. A comparison that holds the task, the data,
+the architecture and the width fixed, varies the rule that assigns credit, and
+reads the solution each rule reached. A statement of which rules change the
+number of neurons in use, derived from the form of their update rather than
+found by trying them. And a measurement of what the resulting circuit costs.
 
-\paragraph{And two smaller ones.}
-% The same question has not been asked of a Transformer's attention weights
-% with the objective as the variable, and the assembly tradition has not been
-% read as a layout that is fixed by construction rather than learned.
+Two smaller ones are missing too. The same question has not been asked of a
+Transformer's attention weights with the training objective as the variable.
+And the assembly tradition has not been read as a case where the structure is
+fixed by construction rather than produced by training.

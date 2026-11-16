@@ -831,6 +831,119 @@ intensifier and the hyphens were touched, and the register point is marked
 `acu_survey`, which may be a JAIR article number rather than a first page; it
 is marked in the bib and the publication box prints whatever is there.
 
+## Level 3 for `chap:introduction`
+
+Five sections, from the Level 1 plan. About eight pages, roughly twenty
+paragraphs and two lists. The file it replaces runs eleven pages, argues the
+retired story throughout and uses the retired frame term forty-one times.
+
+Three obligations land in section 1 and nowhere else. The admissions and the
+viva questions above say why each one is owed, and none can be repaired later.
+
+### Section 1. The task and the loss leave open how far a computation spreads over a network's neurons
+
+1. Two networks fit the same data equally well and are built differently
+   inside. One carries the computation on a few neurons, the other spreads it.
+   Nothing in the data chooses. Something does.
+2. Why it matters: the two fail differently. A spread computation survives the
+   loss of any one neuron. A concentrated one leaves room to be extended.
+3. What the thesis shows, one clause each: the training procedure settles it,
+   the condition can be read off the update equation, neither end is free.
+   The verb for the second is "read off", never "predicted before training",
+   which CLAUDE.md 3.7 bans and which the old opening asserted.
+4. The definition site for circuit, definition before name. The set of neurons
+   that carry a computation, counted as the participation ratio of a layer's
+   outgoing weight norms. Say in the same paragraph that this is narrower than
+   the mechanistic interpretability sense, where a circuit is a subgraph of
+   components. Admission 8.
+5. The three choices inside the procedure, kept apart because the thesis
+   varies them one at a time: the credit assignment algorithm, the optimizer,
+   and the learning rule which is the pair. This paragraph survives from the
+   current file almost unchanged and is the best thing in it.
+6. What credit assignment means here. It covers how an optimizer distributes
+   credit across neurons, not only how an algorithm propagates error. Without
+   this sentence the title names an axis on which the thesis has one data
+   point besides backpropagation, which is viva question 3 and admission 9.
+7. What separates a task from a training objective. A task is what the network
+   is asked to compute; an objective is a particular loss written to get it
+   there. One sentence. Without it Part III's title covers neither of its two
+   chapters, and a reader meets "the task does not decide" in one chapter and
+   "the objective decides" in the next.
+8. The declared analogy to sparse and distributed coding, one paragraph,
+   naming the three disanalogies: the measure here is structural rather than
+   taken over a stimulus ensemble, the mechanisms unified have no counterpart
+   in a brain, and classical sparse coding derives sparsity from a prior where
+   here it is an unintended effect of a regulariser. The participation ratio
+   is borrowed from that literature and the borrowing is stated.
+9. Why machine learning has assumed the task decides: grokking, the Fourier
+   solution read neuron by neuron, and universality. Every network behind that
+   evidence was trained with backpropagation, so the evidence cannot separate
+   what the task requires from what one procedure produces. Do not stage a
+   refutation of universality, which is a claim about the algorithm and holds.
+   Admission 7.
+
+### Section 2. A survey of agents for computer use finds six gaps, and two of them are properties of the trained network
+
+10. Where the question came from. The definition of an agent for computer use
+    lives here and in no other file, so \cref{chap:acu} may not re-gloss it.
+11. The six gaps named, and the two the thesis takes. One sentence each. The
+    sort is two ways, not four: four of the six are about how the field
+    measures and the conditions it builds for. Planning is named as the one
+    the survey splits between the model and the environment, and the thesis
+    measures neither. The current file says four of the six "can be closed by
+    building harder benchmarks and agreeing on how to score them", which is
+    false of the deployment gap. Fix it here.
+12. Why a survey cannot settle the two it hands over: it never varies the
+    procedure with the task, the data, the architecture and the width held
+    fixed, and a success rate cannot separate two networks that score alike.
+    So the thesis measures inside the network.
+
+### Section 3. Credit assignment fixes how far a computation spreads, and the training objective fixes a structure of its own
+
+13. The grokking setting and why it earns the detailed work: modular addition
+    is where the solution can be read neuron by neuron.
+14. The condition and the intervention, in the one sentence version. The
+    accuracy cost goes in the same sentence, every time: $0.998$ to $0.976$.
+    The width scope goes in a clause: the expansion is from $60\%$ to $99\%$
+    at width $256$, and at width $32$ there is nothing to redistribute.
+15. The price. Deletion tolerance up, pruning and transfer down, with the
+    transfer scope in a clause, because two of the three follow from the
+    measure and only transfer is surprising. Admission 4.
+16. The second determinant. Backpropagation held fixed, the objective varied,
+    the symmetry of a Transformer's attention weights decided, at a scale the
+    grokking setting cannot reach. Not a second measurement of the same claim.
+17. The third. A quantity the loss never constrains at all, the norm of a
+    predicted latent, and a probe that reports it in place of the state.
+18. The fourth. Structure built into an architecture instead of produced by
+    training. A convergence on one mechanism, redundancy of support, and not a
+    consequence: CNA was submitted in 2024 and the grokking work is from 2026.
+19. What is not shared, said plainly rather than left for a reader to notice.
+    No measurement runs across the chapters. Two were planned and are not
+    available. Admission 6.
+
+### Section 4. Research questions
+
+The eight from `05_thesis_concept.md`, each phrased so the answer is not in
+it, each naming the chapter that answers it. Question 7 is the only one two
+chapters bear on and the list says so.
+
+### Section 5. Contributions
+
+One line each, naming the chapter, in the order the parts run. A final short
+paragraph for what the frame itself contributes, which is the vocabulary, the
+sort of the survey's gaps, and the application of one chapter's standard to
+another chapter's measure.
+
+Noun labels for sections 4 and 5, under the exemption now in CLAUDE.md 3.8.
+No "Structure of the thesis" section: 3.8 bans roadmaps and the six part
+titles do that work.
+
+### What this section does not do
+
+It does not state any finding in full. Each appears in one line here and in
+full in its chapter. The file it replaces stated six findings in six sections,
+restated them as questions and restated them again as contributions.
+
 ## Critique record
 
 ### Round 1, 2026-11-14, three readers on levels 0 and 1
