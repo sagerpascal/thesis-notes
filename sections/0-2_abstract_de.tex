@@ -1,113 +1,109 @@
 % Zusammenfassung auf Deutsch, übersetzt aus sections/0-1_abstract_en.tex.
 % Schweizer Schreibweise, kein Eszett. Aufbau wie im englischen Abstract: jeder
-% Absatz beginnt mit der Frage, die der vorherige offen gelassen hat, und jede
-% Studie wird in derselben Reihenfolge dargestellt, also warum sie durchgeführt
-% wurde, wie sie angelegt war und was sie zeigt.
+% Absatz beginnt mit der Frage, die der vorherige offen gelassen hat.
+%
+% Neu geschrieben am 2026-11-16. Die vorherige Fassung enthielt die Formulierung
+% "bevor das Verfahren läuft", die CLAUDE.md 3.7 verbietet, nannte zwei
+% Ergebnisse, die das Manuskript nicht mehr trägt, und beschrieb eine Arbeit,
+% die nicht mehr Teil der Dissertation ist.
+%
+% Keine geprägten Begriffe, nach CLAUDE.md 3.5.
 
-Zwei Netzwerke können dieselben Daten gleich gut anpassen und innen dennoch
-verschieden gebaut sein. Das eine trägt seine Berechnung auf wenigen seiner
-Neuronen und lässt die übrigen ungenutzt. Das andere verteilt dieselbe
-Berechnung über alle. Beide erreichen denselben Trainingsverlust, also
-entscheiden die Daten nicht zwischen ihnen. Diese Arbeit fragt, was es
-entscheidet, und findet, dass das Trainingsverfahren es entscheidet. Diese
-Entscheidung lässt sich aus der Aktualisierungsgleichung des Verfahrens
-ablesen, bevor das Verfahren läuft, sie wird entweder mit Robustheit oder mit
-Anpassungsfähigkeit bezahlt, und sie kann entworfen statt geerbt werden.
+Ein Netzwerk, das zwei Zahlen modulo einer Primzahl addieren lernt und $2048$
+Neuronen in seiner verborgenen Schicht hat, löst die Aufgabe fehlerfrei und
+trägt die Berechnung auf etwa $332$ davon. Ändert man eine einzige Sache am
+Training, nämlich welche Parameter sich im Aktualisierungsschritt einen
+Normierungsfaktor teilen, steigt diese Zahl auf $2046$. Aufgabe, Daten,
+Architektur und Breite bleiben gleich, und die Testgenauigkeit fällt von
+$0.998$ auf $0.976$. Wie viel eines Netzwerks am Ende die Arbeit leistet, wird
+also nicht dadurch entschieden, was das Netzwerk berechnen soll. Es wird
+dadurch entschieden, wie das Training den Fehler unter den Neuronen aufteilt,
+es lässt sich wählen, und die Wahl hat einen Preis.
 
-Die Frage entstammt einer Übersicht über $87$ Agenten und $33$ Datensätze zu
-Agenten für die Computernutzung. Das Feld baut diese Agenten nach einem Rezept,
-einem vortrainierten Grundlagenmodell, das durch Prompting oder
-Verhaltensklonen angepasst wird, und die Agenten teilen sechs Lücken. Vier der
-sechs betreffen die Benchmarks. Die beiden anderen, unzureichende
-Generalisierung und ineffizientes Lernen, sind Eigenschaften des trainierten
-Netzwerks, und sie sind die beiden, die eine Übersicht nicht erklären kann. Das
-Feld variiert Modelle, Daten und Prompts und nie das Trainingsverfahren, und
-eine Erfolgsquote kann zwei Netzwerke nicht unterscheiden, die gleich
-abschneiden. Zwei kürzere Studien zeigen, wie wenig eine Kennzahl über das
-Netzwerk hinter ihr verrät. Quantisierung, die als nahezu verlustfrei verkauft
-wird, kostet Textqualität, die menschliche Bewertende sehen und die üblichen
-Metriken übersehen, und Architekturen, die für Komposition gebaut sind,
-schneiden innerhalb der Verteilung gut ab und scheitern an Regelkombinationen,
-die sie nicht gesehen haben. Die Eigenschaft muss stattdessen im Netzwerk
-selbst gemessen werden.
+Die Frage entstammt einer Übersicht über $87$ Agenten für die Computernutzung
+und $33$ Datensätze. Das Feld nähert sich einem Rezept an, einem vortrainierten
+Modell mit Bild- und Sprachfähigkeiten, das durch Prompting oder durch Klonen
+menschlicher Demonstrationen angepasst wird, und sechs Einschränkungen treten
+immer wieder auf. Vier betreffen, wie das Feld misst, was es baut, und unter
+welchen Bedingungen es baut. Zwei betreffen das, was das Training
+hervorgebracht hat: Diese Systeme verallgemeinern schlecht über die Situationen
+hinaus, auf denen sie trainiert wurden, und benötigen grosse Mengen an
+Demonstrationsdaten. Eine Übersicht kann diese beiden nicht erklären, weil sie
+nie eine Aufgabe festhält und das Training variiert, und weil eine Erfolgsrate
+zwei Netzwerke nicht trennen kann, die gleich abschneiden. Sie müssen im
+Netzwerk selbst gemessen werden.
 
 Dafür braucht es eine Aufgabe, deren Lösung Neuron für Neuron bekannt ist, und
-Grokking auf modularer Arithmetik ist eine solche Aufgabe. Hält man Aufgabe,
-Daten, Architektur und Optimierer fest und variiert nur die Lernregel, so
-generalisieren vier von zwölf geprüften Regeln nie, weil ihre Aktualisierung an
-den Minima des Verlusts nicht verschwindet und sie daher nicht dort zur Ruhe
-kommen können, wo der Gradientenabstieg es tut. Die Regeln, die
-generalisieren, erreichen denselben Verlust, dieselbe Margin und dieselbe
-Gewichtsnorm, und sie verteilen die Lösung über $154$ bis $254$ von $256$
-Neuronen. Die Aufgabe bietet jeder Regel dieselbe Menge an Lösungen, und jede
-Regel hält bei einer anderen davon.
+die Arithmetik modulo einer Primzahl ist eine solche. Netzwerke, die darauf
+trainiert werden, zeigen Grokking: Sie passen die Trainingsdaten fehlerfrei an,
+bleiben über Tausende von Epochen auf Zufallsniveau bei ungesehenen Daten und
+verallgemeinern dann plötzlich. Hält man Aufgabe, Daten, Architektur und Breite
+fest und variiert nur die Regel, die den Fehler zuteilt, findet jede Regel, die
+verallgemeinert, dieselbe Fourier-Konstruktion, und die Zahl der Neuronen, die
+sie umsetzen, unterscheidet sich zwischen den Regeln um mehr als die Hälfte.
 
-Regeln unterscheiden sich in vielem gleichzeitig, daher wird die Ursache mit
-einer Umskalierung des Fehleranteils jedes Neurons isoliert, die beweisbar
-weder das Ziel noch die Aktualisierungsrichtung eines Neurons verändert. Sie
-bewegt die Zahl über den gesamten Bereich, ob vom ersten Schritt an angewandt
-oder erst eingeschaltet, nachdem das Netzwerk bereits generalisiert hat. Welche
-geprüften Regeln sie bewegen, folgt allein aus ihrer Aktualisierung, denn ein
-von mehreren Neuronen geteilter Normalisierer skaliert sie gemeinsam und kann
-die Ungleichheit zwischen ihnen nicht verändern, sodass nur eine
-Normalisierung pro Neuron dies vermag. Diese Vorhersage ordnet alle acht
-geprüften Optimierer richtig ein. Die Wahl ist nicht kostenlos. Das zufällige
-Löschen von Neuronen kostet jede Lösung denselben erwarteten Anteil ihrer
-Ausgabe, sodass sich die Lösungen nur in der Schwankung um diesen Mittelwert
-unterscheiden, die mit eins durch die Wurzel der effektiven Neuronenzahl
-kleiner wird. Verteilte Lösungen überstehen das Löschen daher weit besser, und
-konzentrierte passen sich etwa doppelt so schnell an eine neue Aufgabe an.
+Eine Bedingung erklärt das. Ein Neuron bleibt in Gebrauch, wenn der Anteil am
+Fehler, den es erhält, gross ist im Verhältnis zu jenem Teil seiner eigenen
+Aktualisierung, der nicht aus dem Gradienten stammt. Das deckt drei
+Mechanismen ab, für die es zuvor keine gemeinsame Erklärung gab: einen
+Gewichtszerfallsterm, der zum Gradienten addiert wird, die numerische
+Untergrenze im Nenner eines adaptiven Optimierers und den Zerfall eines
+trainierbaren Verstärkungsfaktors. Nur ein Normierungsfaktor, den sich genau
+ein Neuron teilt, kann dieses Verhältnis ändern, was die gebräuchlichen
+Optimierer auf die eine Seite einer Grenze stellt und zwei Regeln auf die
+andere. Gleicht man den Anteil am Fehler zwischen den Neuronen an, ohne die
+Richtung eines einzigen Gradienten zu ändern, verschiebt sich die Berechnung
+von $60$ auf $99$ Prozent der Schicht, zum Preis der oben genannten zwei
+Punkte Genauigkeit. Gibt man ein Profil der Fehleranteile direkt vor und lässt
+eine zufällige Permutation entscheiden, welches Neuron welche Grösse erhält,
+verschiebt sich die Berechnung ebenso. Damit ist ausgeschlossen, dass der
+Fehleranteil nur dem folgte, was die Neuronen ohnehin taten. Der Effekt wächst
+mit der Breite der Schicht und verschwindet dort, wo das unveränderte Netzwerk
+sie bereits ganz nutzt.
 
-Kleine Netzwerke und ein für den Zweck gebauter Eingriff sind schwache
-Belege, daher wird dieselbe Frage an eine Komponente gestellt, die das Feld
-tatsächlich variiert, und an sehr grosse Modelle. Hält man die
-Rückführung des Fehlers fest und variiert das Trainingsziel, so ist die
-Aktualisierung der Aufmerksamkeitsgewichte eines Transformers eine Summe über
-die Tokenpaare, die das Ziel zulässt. Autoregressives Training macht jedes
-Token zum Kontext jedes späteren Tokens und nur einmal zum Ziel, sodass wenige
-Spalten den grössten Teil der Aktualisierung aufnehmen. Bidirektionales
-Training nimmt jedes Paar in beiden Reihenfolgen auf, sodass die
-Aktualisierung symmetrisch ist und sich die Struktur verteilt. Beides findet
-sich in ModernBERT, GPT, LLaMA3 und Mistral sowie über Text, Bild und Audio.
-Eine symmetrische Initialisierung folgt aus der Herleitung und beschleunigt das
-bidirektionale Training, und autoregressive Vorhersage ist das Ziel hinter
-jedem Grundlagenmodell, das die Übersicht gefunden hat.
+Die Wahl wird in beide Richtungen bezahlt. Eine über viele Neuronen verteilte
+Berechnung verträgt das Entfernen von Neuronen deutlich besser. Eine auf wenige
+Neuronen konzentrierte Berechnung lässt sich stärker beschneiden und passt sich
+etwa doppelt so schnell an eine Aufgabe an, die neue Kombinationen der bereits
+gelernten Merkmale verlangt, indem sie die ungenutzten Neuronen heranzieht.
+Für eine Aufgabe, die nur ändert, welche Antwort jedes Merkmal stützt, gilt
+dieser Vorteil nicht.
 
-Ein Verfahren, das eine von den Daten offen gelassene Eigenschaft festlegt,
-schafft eine Gefahr, denn eine Messung, die auf diese Eigenschaft anspricht,
-kann dann erfüllt werden, ohne dass etwas gelernt wurde. Diese Arbeit ist
-darauf gestossen. Planung über mehrere Schritte, die dritte Lücke der
-Übersicht, braucht ein Modell, das mehrere Schritte voraussagt, und das übliche
-Mittel dagegen ist, das Spektrum seines Übergangsoperators zu beschränken. In
-einem kontrollierten Vergleich gewinnt der beschränkte Operator unter der in
-dieser Literatur üblichen Auslesung um fünf Grössenordnungen. Zwei kostenlose
-Kontrollen kehren dieses Ergebnis um. Prädiktoren, die keine Dynamik lernen,
-schlagen jedes trainierte Modell, und eine Auslesung, die für die latente Skala
-blind ist, löscht den Abstand aus. Der Vorhersageverlust ist skaleninvariant,
-das Training legt die latente Skala daher nie fest, die Beschränkung legt fest,
-wie schnell diese Skala wächst, und die Sonde ist auf der Trainingsskala
-angepasst und misst genau dieses Wachstum. Die Beschränkung tut, was ihre
-Theorie verspricht, und eine beschränkte Fehlerkurve ist kein besseres Modell.
-Jedes Ergebnis oben wird daher bei übereinstimmendem Verlust, übereinstimmender
-Margin und übereinstimmender Gewichtsnorm und gegen Prädiktoren berichtet, die
-nichts lernen. Zwei weitere Studien liefern Struktur von ausserhalb der Daten
-und bestehen dieselben Kontrollen, die eine mit Eingabemasken aus
-gewebespezifischen Hounsfield-Bereichen für ein Segmentierungsmodell, die
-andere mit einem externen Index für das Auffinden wissenschaftlicher Quellen.
+Die Lernregel ist nicht der einzige Teil des Trainings, der Struktur
+hinterlässt. Hält man den Algorithmus zur Fehlerzuteilung fest und variiert das
+Trainingsziel, so ist die Aktualisierung der Aufmerksamkeitsgewichte eines
+Transformers eine Summe über die geordneten Token-Paare, die das Ziel zulässt.
+Bidirektionales Training nimmt jedes Paar in beiden Reihenfolgen auf, und die
+Gewichte bleiben nahezu symmetrisch, während autoregressives Training ein Token
+einmal zum Ziel und vielfach zum Kontext macht, sodass einige wenige Spalten
+dominieren. Die Herleitung bestätigt sich in gleich aufgesetzten Modellen mit
+zwölf Schichten, und die Struktur zeigt sich in veröffentlichten Modellen über
+Text, Bild und Audio hinweg. Eine Initialisierung, die aus der Herleitung
+folgt, beschleunigt bidirektionales Training.
 
-Die Lernregel entscheidet also, wie die Lösung angeordnet ist, hält diese
-Anordnung gegen den Gradienten aufrecht, solange das Training läuft, und
-verlangt dafür Robustheit oder Anpassungsfähigkeit. Die Wahl einer Lernregel
-ist ein Umweg zu einer verteilten Anordnung, und sie einzubauen ist der direkte
-Weg. Die Cooperative Network Architecture repräsentiert ein sensorisches Muster
-als Netz, als eine Menge von Neuronen, von denen jedes durch mehrere andere
-gestützt wird, zusammengesetzt aus Fragmenten, die durch Hebbsche Plastizität
-gelernt werden. Die Stützung ist strukturell und nicht antrainiert, und drei
-Eigenschaften folgen daraus, ohne dass auf sie optimiert wurde. Rauschen, das
-keine Stützung hat, wird selbst dann herausgefiltert, wenn mehr als die Hälfte
-der Eingabe verfälscht ist. Verdeckte Figuren werden vervollständigt. Fragmente,
-die an geraden Linien gelernt wurden, setzen sich zu Ziffern und Zeichen
-zusammen, die im Training nie vorkamen. Das Modell skaliert noch nicht über
-Strichzeichnungen hinaus, und die Arbeit schliesst damit, darzulegen, was eine
-Repräsentation dieser Art bräuchte, um als Zustand des Umgebungsmodells eines
+Eine Messung an einem trainierten Netzwerk taugt nur so viel wie das
+Ausleseverfahren dahinter, auch die Messungen dieser Arbeit selbst. Das übliche
+Ausleseverfahren für ein latentes Weltmodell wird auf kodierten Beobachtungen
+angepasst und auf vorhergesagte angewandt, und wo der Trainingsverlust
+Richtungen vergleicht und Beträge ignoriert, legt nichts den Betrag fest. Das
+Verfahren berichtet dann vor allem dessen Abdriften: In synthetischen Daten
+erreicht sein Fehler das $27$-fache dessen, der entsteht, wenn man stets den
+mittleren Zustand vorhersagt, und bei einem veröffentlichten Modell entfernt
+das Skalieren der Vorhersagen auf den Betrag der Kodierungen $97$ Prozent des
+Fehlers, ohne etwas neu zu trainieren. Zur Korrektur gehören vier Prüfungen.
+Wendet man sie auf das eigene Mass dieser Arbeit an, so zeigt sich, dass die
+Richtung des zentralen Ergebnisses bestehen bleibt, während der Wert, den
+dieses Mass angibt, der höchste von drei Massen ist.
+
+Wenn sich dadurch entscheidet, wie viel eines Netzwerks eine Berechnung trägt,
+und wenn das einen Preis hat, lässt es sich stattdessen in der Architektur
+festlegen. Die letzte Studie stellt ein sensorisches Muster als eine Menge von
+Neuronen dar, von denen jedes durch mehrere andere gehalten wird,
+zusammengesetzt aus Fragmenten, die durch Hebbsche Plastizität gelernt wurden.
+Rauschen, das nichts stützt, wird herausgefiltert, selbst wenn mehr als die
+Hälfte der Eingabe verfälscht ist, teilweise verdeckte Figuren werden ergänzt,
+und getrennt gelernte Fragmente setzen sich zu Mustern zusammen, die im
+Training nie vorkamen. Das Modell lässt sich nicht über Strichzeichnungen
+hinaus skalieren, und so schliesst die Arbeit damit, darzulegen, was eine
+Darstellung dieser Art benötigen würde, um als Zustand des Umweltmodells eines
 Agenten zu dienen.

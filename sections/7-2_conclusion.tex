@@ -1,6 +1,57 @@
-% Conclusion. Thesis owned. Two pages at most, readable on its own. States the
-% answer to each of the four research questions of the introduction once, in
-% one paragraph each, then the proposal in one paragraph, and stops. No new
+% Conclusion. Thesis owned. Readable on its own. One short paragraph per
+% research question of the introduction, then the proposal, then stop. No new
 % material, no closing offer.
 
-% To be written.
+A task fixes what a network computes and leaves open how much of the network
+does the computing. With the target function, the data, the architecture and
+the width all held fixed, the rule that assigns credit during training settles
+how many neurons carry a grokked solution, and the settlement is not small:
+the same Fourier construction is implemented by about $154$ of $256$ neurons
+or by about $254$, depending on the rule.
+
+Which rules move it can be read off the form of their update. A neuron drops
+out of use when the credit it receives is small relative to the part of its
+own update that does not come from the gradient, and that one condition covers
+three mechanisms which had no common account before. Only a normalising factor
+shared by exactly one neuron can change that ratio, which is a yes or no about
+a rule rather than a ranking among rules, and it places the optimizers in
+general use on one side of the line and two rules on the other.
+
+The choice is not free. A computation spread over more neurons tolerates the
+deletion of neurons better. A computation held on fewer prunes further and
+adapts about twice as fast to a task that needs new combinations of the
+features already learned, though not to one that only changes which answer
+each feature votes for. And moving from the concentrated circuit to the spread
+one costs about two points of test accuracy on modular addition, from $0.998$
+to $0.976$.
+
+The learning rule is not the only component that leaves structure behind. With
+backpropagation held fixed and the training objective varied, the set of token
+pairs the objective admits settles whether a Transformer's attention weights
+stay close to symmetric or whether a few columns come to dominate, in models
+at the scale the field works at.
+
+A measurement taken of a trained network is only as good as the readout behind
+it. The probe used to score latent world models responds largely to the norm
+of a predicted latent, a quantity a cosine training loss never fixes, and
+rescaling each prediction to a reference norm taken from the encodings removes
+most of the error without retraining anything.
+
+That standard applies to this thesis's own measure, and applying it changes
+the answer in part. Measures tied to the computation place the untouched
+network lower than the structural measure does while moving in the same
+direction under every intervention, so the direction of the central result
+survives the check and the level reported by the structural measure is the
+largest of the three.
+
+The last chapter is a proposal rather than a result. An architecture in which
+every active neuron is held in place by several others filters noise that
+nothing supports, completes figures that are partly hidden, and recombines
+fragments learned separately into patterns it was never trained on, all
+without a learning rule being tuned to produce that structure. It does not
+scale beyond line drawings, its features are designed rather than learned, and
+it defines no dynamics over its representation.
+
+What the thesis establishes is that how far a computation spreads over a
+network is a property of how the network was trained, that the property can be
+chosen, and that choosing it has a price which can be measured and stated.
