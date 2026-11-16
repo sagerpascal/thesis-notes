@@ -66,6 +66,30 @@ superseded drafts. The checker warns while any of them is still present, and
 `--prune` deletes them. Keeping the list means the next import can be pruned
 the same way without anyone having to remember.
 
+`[closers]` names environments a file of the paper leaves open, which the
+thesis closes from outside because it never edits a paper. The key is the file
+path, and the value is a table of environment names against how many `\end`s
+it needs:
+
+```toml
+[closers]
+"6_appendix/Experiments.tex" = { itemize = 1 }
+```
+
+A chapter can carry the same information in the optional argument of
+`\importsection`, and for a wired paper that is where it usually sits. The
+manifest is where it has to sit for a summarised paper, because there is no
+chapter. `check_imports.py` reads both and holds each file to the closers it
+actually needs, in either direction: a missing one swallows the rest of the
+document, and a stale one breaks the build the day the paper is fixed
+upstream. `check_compile.py` applies them when it builds a paper on its own,
+which it does whether or not the thesis includes it.
+
+The symptom of a missing closer is not a complaint about the environment. The
+unclosed group means `\ip@cwd` is never restored, so the next include resolves
+against a doubled path, and what the log reports is a missing file called
+something like `6_appendix/6_appendix/Metrics.tex`.
+
 ## Summarising a paper instead of reproducing it
 
 A paper the thesis cites and credits but does not reproduce is marked

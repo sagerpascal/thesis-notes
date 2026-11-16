@@ -419,6 +419,20 @@ CLOSER = re.compile(
     r"\\importsection(?:rotated|wide)?\[(.*?)\]\{([^}]*)\}")
 
 
+def manifest_closers(m: Manifest) -> dict[str, dict[str, int]]:
+    """Closers the manifest records, for a paper with no chapter.
+
+    A summarised paper has no wrapper to carry its \\importsection closers, so
+    the knowledge lives in its manifest instead. It is needed the day the
+    paper is wired back in, and check_compile.py needs it now, because that
+    builds every paper whether or not the thesis includes it.
+    """
+    out: dict[str, dict[str, int]] = {}
+    for rel, per in (m.data.get("closers") or {}).items():
+        out[rel] = {k: int(v) for k, v in per.items()}
+    return out
+
+
 def importsection_closers(m: Manifest) -> dict[str, dict[str, int]]:
     """What each \\importsection's optional argument closes, per file.
 
@@ -428,7 +442,7 @@ def importsection_closers(m: Manifest) -> dict[str, dict[str, int]]:
     actually needs, in both directions: a missing one swallows the document,
     a stale one breaks the build the day the paper is fixed.
     """
-    out: dict[str, dict[str, int]] = {}
+    out: dict[str, dict[str, int]] = manifest_closers(m)
     for entry in (m.chapter, APPENDIX_FILE):
         if not entry.is_file():
             continue

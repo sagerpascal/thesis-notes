@@ -63,3 +63,16 @@ graphics = ["Figures"]
 "6_appendix/naturalistic_COGITAO.tex" = "appendix material of the paper"
 "6_appendix/sequential_COGITAO.tex" = "appendix material of the paper"
 "6_appendix/transformation_learnability.tex" = "appendix material of the paper"
+
+# Environments a file of this paper leaves open, which the thesis closes from
+# outside because it never edits a paper. The closer belongs here rather than
+# only in the chapter, because the chapter was removed when this paper was
+# summarised and the knowledge would have gone with it. scripts/check_imports.py
+# holds each file to the closers it actually needs, in both directions, and
+# scripts/check_compile.py applies them when it builds the paper on its own.
+#
+# Without this, 6_appendix/Experiments.tex swallows the rest of the group,
+# \ip@cwd is never restored, and the next include resolves against a doubled
+# path: 6_appendix/6_appendix/Metrics.tex.
+[closers]
+"6_appendix/Experiments.tex" = { itemize = 1 }

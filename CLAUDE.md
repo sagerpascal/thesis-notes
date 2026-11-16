@@ -457,6 +457,19 @@ stale one is reported the day the paper is fixed upstream. COGITAO's
 `6_appendix/Experiments.tex` needed one, and the feature is kept because the
 next paper that arrives unbalanced will need it too.
 
+A summarised paper has no chapter to carry that optional argument, so the
+closer goes in its manifest instead, as a `[closers]` table keyed by file.
+COGITAO's went there when the paper was cut. Without it `check_compile.py`,
+which builds every paper whether the thesis includes it or not, failed on
+COGITAO and reported a missing file at `6_appendix/6_appendix/Metrics.tex`,
+which is what a doubled `\ip@cwd` looks like from the log.
+
+A file whose display equations will not fit. `\importpartwide{...}` and
+`\importsectionwide{...}` set the file on pages that reclaim the margin
+column, which is 153pt. Declared per file for the reason rotation is, and
+margin citations are suppressed inside, because there is no margin there to
+put them in.
+
 A file whose tables will not fit. `\importsectionrotated{...}` sets the file
 on turned pages. Section 4.5 explains why rotation is declared per file and
 not per table.
@@ -1074,10 +1087,19 @@ finalised, or is cosmetic.
     which is a declared summary keyed by label. That needs the entry to be
     stashed at `\caption` and written at `\label`, and it has not been built.
     Two of the three open with a panel label rather than a claim.
-14. **Table style is not uniform across the papers.** 89 `\toprule` against
-    39 `\hline`, table font sizes from `\footnotesize` to nothing at all, and
-    COGITAO putting its captions below the table while the other eight put
-    them above. Three fixes, one line each, in the same document.
+14. **Table style is uniform enough, and the rest cannot be made uniform.**
+    Checked on 2026-11-16. The four reproduced papers use booktabs
+    throughout: not one `\hline` survives in the build, and the caption below
+    the table was COGITAO's habit, which left with it. The $89$ against $39$
+    count in the earlier version of this item was over all nine papers.
+
+    What remains is the declared font size, `\footnotesize` and `\small` in
+    the grokking appendix and neither in the attention one, and it cannot be
+    fixed by declaring one size. `\ip@clamptables` wraps every table in an
+    adjustbox with `max width=\linewidth`, which shrinks a wide table and
+    leaves a narrow one alone, so the rendered size depends on the shrink
+    factor and not on the declared size. Declaring a uniform size would
+    change the shrink factors and not the result.
 15. **Twelve captions out of 132 sit in the text block** rather than in the
     margin, because the float is too wide for a caption beside it and floatrow
     falls back. It is automatic and it looks right where it happens. Listed
