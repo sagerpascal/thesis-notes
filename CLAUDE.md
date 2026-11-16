@@ -940,12 +940,15 @@ something is done, delete its entry rather than marking it done, so the list
 stays short enough to read every session. Anything that has become permanent
 knowledge belongs in the sections above, not here.
 
-The thesis builds: 229 pages, zero LaTeX errors, zero duplicate labels, a
-working bibliography, and four of the nine papers reproduced with their
-appendices. The other five are summarised. `check_compile.py` reports zero
-errors across all nine, and `check_imports.py` zero. Machinery that works is not listed here: `build.sh`,
-`thesis_style.tex`, `thesis_import.sty`, the nine manifests, the `references/`
-and `generated/` trees, and all seven scripts.
+The thesis builds: 231 pages, zero LaTeX errors, zero overfull hboxes, zero
+duplicate labels, a bibliography of 204 works every one of which is cited, and
+four of the nine papers reproduced with their appendices. The other five are
+summarised, and all four reproduced manifests are `status = "wired"`, so the
+coverage check runs on them. `check_compile.py` reports zero errors across all
+nine and `check_imports.py` zero errors with four warnings. Machinery that
+works is not listed here: `build.sh`, `thesis_style.tex`,
+`thesis_import.sty`, the nine manifests, the `references/` and `generated/`
+trees, and all seven scripts.
 
 ### Blocking the thesis
 

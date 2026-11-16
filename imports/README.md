@@ -34,7 +34,7 @@ section fails the check instead of silently dropping content.
 | `chapter` | The thesis owned chapter file that includes this paper. |
 | `title` | Human readable name, used in reports. |
 | `citation_key` | The paper's own key in `references/merged.bib`, cited by the chapter's publication header box. |
-| `status` | `wired` once the chapter includes the paper, `pending` before that, `summarised` when the thesis gives the paper a prose summary instead of reproducing it. Coverage is only checked for `wired` papers. |
+| `status` | `wired` once the chapter includes the paper, `pending` before that, `summarised` when the thesis gives the paper a prose summary instead of reproducing it. Coverage is only checked for `wired` papers, so a paper left at `pending` after its chapter is written loses the guarantee the manifest exists for. All four reproduced papers sat at `pending` until 2026-11-16 for exactly that reason. Flip it the day the chapter includes the body, not the day the framing prose is finished. |
 | `summary_reason` | Required when `status` is `summarised`. Why the paper is summarised rather than reproduced, usually the author's role or the paper's distance from the argument. The checker prints it on every run. |
 | `layout` | `sections` when the paper is already split into files, `monolithic` when it is one file. |
 | `source` | Monolithic only. The root file of the paper. The preamble is read from here, and so are the sections unless `body` says otherwise. |

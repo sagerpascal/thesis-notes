@@ -10,7 +10,7 @@ dir     = "imported_papers/self_attention_geometry_project_ICML"
 chapter = "sections/4-2_attention.tex"
 title   = "The Mathematical Structure of Self-Attention"
 citation_key = "saponati_structures_2025"
-status  = "pending"
+status  = "wired"
 layout  = "sections"
 source  = "ICML2025/OLDmain-ICML2025.tex"
 

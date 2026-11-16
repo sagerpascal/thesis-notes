@@ -104,7 +104,8 @@ is the axis \cref{sec:bg_grain} lays the optimizers along.
 Every learning rule that groks modular addition recovers the same Fourier
 construction, and the count of neurons implementing it varies from rule to
 rule at one width, with everything outside the rule held constant. Among the
-eight published optimizers compared the spread is modest, from $0.470$ to $0.613$ of the layer. Nero and the credit equalisation
+eight published optimizers compared the spread is modest, from $0.470$ to
+$0.613$ of the layer. Nero and the credit equalisation
 introduced below reach the other end, near $0.99$, so the full range is a
 property of this comparison and not of the optimizers in general use. Unless
 stated otherwise the measurements concern the first of the network's two
@@ -193,8 +194,8 @@ and measuring what is lost when a neuron is removed puts them at $0.422$ and
 $0.801$, against $0.602$ and $0.992$ for the structural measure. All three
 move the same way and the structural measure is the most generous of them. The
 second answer is Nero, which holds each neuron's incoming weight norm fixed
-and still reaches a distributed circuit, so its result cannot be scale moved
-between the two sides of a neuron.
+and still reaches participation $0.986$ at test accuracy $0.985$, so that
+result cannot be scale moved between the two sides of a neuron.
 
 \Cref{chap:attention} asks the same kind of question about a different
 component. There the credit assignment algorithm is held fixed and the

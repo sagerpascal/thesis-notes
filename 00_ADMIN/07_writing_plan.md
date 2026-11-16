@@ -519,26 +519,27 @@ which the concept file's own guardrails forbid in prose.
 | | Title | Label |
 | --- | --- | --- |
 | I | Introduction and Background | `part:background` |
-| II | Agents Built by One Recipe | `part:agents` |
-| III | The Training Procedure Fixes What the Task Leaves Open | `part:procedure` |
+| II | Today's Agents Share One Recipe, and Two of Their Gaps Are About Training | `part:agents` |
+| III | The Learning Rule and the Objective Each Leave Their Own Structure in the Weights | `part:procedure` |
 | IV | What the Loss Leaves Free Can Dominate a Readout | `part:readout` |
-| V | Mutual Support Can Be Built into an Architecture Instead of Trained | `part:construction` |
+| V | Mutual Support Can Be Built into an Architecture Rather Than Left to the Learning Rule | `part:construction` |
 | VI | Synthesis | `part:synthesis` |
 
 I and VI are noun labels under the exemption now written into CLAUDE.md 3.8.
-Part II is the open structural question: it sits over the survey and over the
-four summarised papers, only one of which is about agents, and the concept
-file's own table calls it "The Stake" rather than what `main.tex` prints.
-That question is the same as the open question about the survey's 56 pages,
-and both are below.
+Part II still sits over the survey and over the four summarised papers, only
+one of which is about agents. The title now claims only what the survey
+establishes, and the four short papers sit under it as further contributions,
+which the introduction says.
 
 ### Chapter titles
 
 All five set in the files on 2026-11-16.
 
-- `chap:acu`: One Recipe Builds Agents for Computer Use, and Six Gaps Are
-  Shared Across Them. It was "Agents for Computer Use: A Comprehensive
-  Survey", which is the published title and a colon label. The published title
+- `chap:acu`: A Survey of Agents for Computer Use Finds Six Gaps, and Two Are
+  About What Training Produced. It was "Agents for Computer Use: A
+  Comprehensive Survey", which is the published title and a colon label, and
+  then briefly "One Recipe Builds Agents for Computer Use", which asserts a
+  recipe the survey says the field is still converging on. The published title
   stays in the publication box and in the bibliography, where it belongs.
 - `chap:grokking`: The Learning Rule Decides How Many Neurons Carry a Grokked
   Solution. The plan had proposed "Every Rule That Groks Recovers the Same
@@ -776,7 +777,7 @@ chapter or the discussion, where it is possible.
   setting `status = "wired"` and restoring the includes.
 
 **Measured after the cut, 2026-11-16.** The thesis went from 281 pages to
-229, the overfull hboxes from 30 to 17, and the chapter from 56 pages to 5.
+229 as measured then, the overfull hboxes from 30 to 17, and the chapter from 56 pages to 5.
 Zero LaTeX errors, zero duplicate labels, zero missing bibliography keys, the
 one upstream `??`, `check_imports.py` at zero errors and four warnings, and
 `check_prose.py` at zero hard findings across 18 files. The chapter's one soft

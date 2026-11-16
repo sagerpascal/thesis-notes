@@ -78,11 +78,12 @@ The check on agreement between readouts is passed. Three measures computed on
 different principles move the same way under the intervention and under the
 imposed profiles.
 
-The check on null controls is passed. A credit profile imposed under a random permutation moves
-the circuit while having nothing to do with what any neuron computes. And one
-rule settles the gauge question outright: an optimizer that holds each
-neuron's incoming weight norm fixed cannot move scale between the two sides of
-a neuron, and it reaches a distributed circuit anyway.
+The check on null controls is passed. A credit profile imposed under a random
+permutation moves the circuit while having nothing to do with what any neuron
+computes. And one rule settles the gauge question outright. Nero holds each
+neuron's incoming weight norm fixed, so it cannot move scale between the two
+sides of a neuron, and it reaches participation $0.986$ at test accuracy
+$0.985$ without the intervention at all.
 
 So the structural measure overstates the level while reporting the direction
 correctly, and this is visible only because the chapter reports the other two

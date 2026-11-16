@@ -402,7 +402,15 @@ def check_monolithic(m: Manifest, report: Report) -> None:
             f"chapter was not checked.")
         return
 
-    chapter_text = strip_comments(m.chapter.read_text(encoding="utf-8"))
+    # A paper's appendix parts are included from sections/appendix.tex rather
+    # than from the chapter, so both files have to be read or every appendix
+    # part reads as missing. Only the blocks that name this paper count, or
+    # every other paper's parts read as belonging to this one. This went
+    # unnoticed while the four reproduced papers were still marked pending,
+    # because a pending paper's chapter is not checked at all.
+    chapter_text = blocks_for(m.chapter, m.slug)
+    if APPENDIX_FILE.is_file():
+        chapter_text += "\n" + blocks_for(APPENDIX_FILE, m.slug)
     included = set(IMPORT_PART.findall(chapter_text))
     for name in parts:
         if name not in included:
@@ -413,6 +421,31 @@ def check_monolithic(m: Manifest, report: Report) -> None:
         report.errors.append(
             f"{m.slug}: the chapter includes \\importpart{{{name}}}, which is "
             f"not a generated part")
+
+
+def blocks_for(path: Path, slug: str) -> str:
+    """The text inside this paper's importedpaper blocks in one file.
+
+    A file may open blocks for several papers, which sections/appendix.tex
+    does, so everything outside this paper's own blocks has to go.
+    """
+    if not path.is_file():
+        return ""
+    text = strip_comments(path.read_text(encoding="utf-8", errors="replace"))
+    out, depth, mine = [], 0, False
+    for line in text.split("\n"):
+        opened = re.search(r"\\begin\{importedpaper\}\{([^}]*)\}", line)
+        if opened:
+            depth += 1
+            mine = opened.group(1).strip() == slug
+            continue
+        if "\\end{importedpaper}" in line:
+            depth = max(0, depth - 1)
+            mine = False
+            continue
+        if depth and mine:
+            out.append(line)
+    return "\n".join(out)
 
 
 CLOSER = re.compile(

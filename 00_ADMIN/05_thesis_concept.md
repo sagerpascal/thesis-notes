@@ -250,12 +250,17 @@ swap them again without a reason that outlives one session.
 `part:structure` became `part:measurement` and is now `part:readout`, titled
 "What the Loss Leaves Free Can Dominate a Readout". CLAUDE.md 3.9 requires the
 label and the part to stay in step, and "measurement" no longer named it.
-`part:procedure` is "The Training Procedure Fixes What the Task Leaves Open".
-Part III was titled for the learning rule alone until 2026-11-16, which named
-only the first of its two chapters, and then for the circuit, which the
-attention chapter never measures. Part V lost "circuit" for the same reason:
-CNA computes no participation ratio, and the guardrails below forbid extending
-the term to it.
+`part:procedure` is "The Learning Rule and the Objective Each Leave Their Own
+Structure in the Weights". Part III went through three titles on 2026-11-16.
+It was named for the learning rule alone, which covered only the first of its
+two chapters; then for the circuit, which the attention chapter never
+measures; then for the training procedure, which rested on a boundary between
+task and procedure that the introduction decided not to draw. The title it has
+names the two components instead. Part V lost "circuit" for the same reason as
+Part III's second title: CNA computes no participation ratio, and the
+guardrails below forbid extending the term to it. It lost "instead of trained"
+as well, because CNA's fragments are learned by Hebbian plasticity, and what
+is not trained is how they are joined.
 
 The survey was cut on 2026-11-16, after the question was put to the author.
 It keeps a chapter of its own and six thesis owned pages, because the
