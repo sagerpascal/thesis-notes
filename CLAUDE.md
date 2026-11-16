@@ -297,6 +297,16 @@ sample of a habit.
   label anyway, because a statement title there would repeat the chapter title
   two pages above it. The wrapper's two headings are also matched as literal
   strings by `scripts/check_imports.py`, so renaming them is not free.
+- A heading is one clause and stops at about twelve words. The heading sweep of
+  2026-11-16 found the same four rhythms of Section 3.4 living in the table of
+  contents, and one mould above all: `<clause>, and <second clause>`, in $14$
+  of roughly $50$ content headings, including four consecutive subsections of
+  the background chapter. Two of them survive, which is the right number. The
+  longest heading was $18$ words and is now $14$, and only the part titles wrap
+  in the printed contents. A heading that needs a second clause is usually two
+  findings, and the second one belongs in the prose. Check a retitle in the
+  rendered contents and not in the source, because the wrap is what the reader
+  sees.
 - Every results section opens with the finding, then the setup that produced it,
   then the evidence, then the controls. Setup does not come first.
 - The first sentence of a section connects to the result of the previous one.

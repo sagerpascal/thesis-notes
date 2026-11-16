@@ -136,7 +136,7 @@ started with fixed for the whole of training. A rule conserving their
 difference can reshape them. \Cref{chap:grokking} turns that observation into a
 condition on the update.
 
-\subsection{This literature characterises global properties and leaves the working units aside}
+\subsection{The working units are missing from these characterisations}
 \label{sec:bg_biasgap}
 
 The properties this literature characterises are global. Norm, margin, rank
@@ -345,7 +345,7 @@ leaves the first alone. The evidence for the second comes entirely from
 networks trained one way, by backpropagation under an adaptive optimizer.
 
 
-\section{How far a computation spreads has been measured in neuroscience, and the measures disagree}
+\section{Neuroscience has measured how far a computation spreads, with measures that disagree}
 \label{sec:bg_coding}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: supply the measure the thesis uses, and the evidence
@@ -355,7 +355,7 @@ networks trained one way, by backpropagation under an adaptive optimizer.
 % when the spine changed to credit assignment, because what the thesis takes
 % from this literature is the measure rather than the question.
 
-\subsection{The question comes from neuroscience, and so does the measure}
+\subsection{Neuroscience supplies both the question and the participation ratio}
 \label{sec:bg_sparsedistributed}
 
 Whether a stimulus is represented by a few highly selective cells or by a
@@ -390,7 +390,7 @@ sparsity from an explicit prior in an efficient coding objective, where here
 it arrives as an unintended consequence of a regulariser. This thesis borrows
 the measure from that literature and makes no claim to model a brain.
 
-\subsection{Each end of the range buys something and gives something up}
+\subsection{Spreading a representation costs capacity and concentrating it costs robustness}
 \label{sec:bg_codingprice}
 % This subsection is the one the thesis leans on hardest, because the trade off
 % it describes is the one Chapter~\ref{chap:grokking} measures.
@@ -418,7 +418,7 @@ dropping units at random during training~\cite{srivastava_dropout_2014} or by
 imposing sparse high dimensional activity by
 design~\cite{ahmad_can_2019}.
 
-\subsection{Participation ratio counts the parts that contribute, and some measures mislead}
+\subsection{Participation ratio counts the contributing parts of a layer}
 \label{sec:bg_measures}
 
 The quantity this thesis measures is the participation ratio, defined in
@@ -441,7 +441,7 @@ which is why \cref{chap:grokking} reports measures tied to the computation
 alongside the structural one, and why the two do not always agree.
 
 
-\section{The two pretraining objectives differ in which token pairs enter the update}
+\section{The objective decides which token pairs reach a Transformer's attention weights}
 \label{sec:bg_attention}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: get the reader to the object Chapter~\ref{chap:attention}
@@ -515,7 +515,7 @@ trained. None of it derives what structure a training objective must leave in
 the weights, and \cref{chap:attention} starts from there.
 
 
-\section{A world model is scored through a probe, and the probe's own behaviour has rarely been checked}
+\section{Latent world models are scored through a probe that few papers check}
 \label{sec:bg_supplied}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: cover the three side chapters of Part IV at background
@@ -523,7 +523,7 @@ the weights, and \cref{chap:attention} starts from there.
 % those papers has its own related work; this section gives only what the
 % frame's argument needs.
 
-\subsection{A learner needs a bias, and it can be placed at several points}
+\subsection{The bias a learner needs can be placed at several points}
 \label{sec:bg_inductive}
 
 No procedure generalises from finite data without a preference among the
@@ -550,7 +550,7 @@ retrieval against learned embeddings~\cite{karpukhin_dense_2020} and a cross
 encoder that rescores the shortlist~\cite{nogueira_passage_2019}.
 \Cref{sec:retrieval} is a system of that kind.
 
-\subsection{A latent world model predicts forward, and its errors compound}
+\subsection{Rolling a latent world model forward compounds its errors}
 \label{sec:bg_worldmodels}
 
 A latent world model encodes an observation, applies a learned transition in
@@ -569,7 +569,7 @@ linear with a bounded spectral radius, the product of Lipschitz constants
 collapses into a bound that does not grow with the
 horizon~\cite{lusch_deep_2018, azencot_forecasting_2020, mamakoukas_memory_2020}.
 
-\subsection{Scoring a rollout needs a readout, and the readout responds to a free quantity}
+\subsection{The readout that scores a rollout responds to a quantity the loss leaves free}
 \label{sec:bg_scoring}
 
 Because nothing in the latent space is directly interpretable, a rollout is
@@ -622,7 +622,7 @@ phases~\cite{etal_boltzmann_1984, smolensky_information_1987}, which became
 practical only once the connectivity was restricted so that one phase could be
 sampled in closed form~\cite{hinton_reducing_2006}.
 
-\subsection{Dynamic links, nets and the binding problem}
+\subsection{A representation can be carried by connections selected for the moment}
 \label{sec:bg_binding}
 
 Correlation theory proposed that a representation is carried by connections
@@ -646,7 +646,7 @@ with the assembly tradition the idea that a representation has parts standing
 in relations, and they stopped short of scaling to the inputs that
 convolutional networks handle routinely.
 
-\subsection{Where these models stop}
+\subsection{Three limits run through the whole lineage}
 \label{sec:bg_substratelimits}
 
 Three limits run through the whole lineage. The features these models compose
@@ -658,7 +658,7 @@ the world being represented, so there is nothing in them to plan with.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Unused neurons have been described one mechanism at a time, and never as a quantity a rule sets}
+\section{No account treats unused neurons as a quantity the rule sets}
 \label{sec:bg_gap}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: name the gap and stop. Half a page. No results, no

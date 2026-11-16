@@ -481,22 +481,21 @@ Retitled the same day, because five of the seven were built to one mould, two
 named nothing, and one stated the thesis's own setup as a finding.
 
 This list is the Level 1 plan. The chapter as written has eight sections, not
-seven, and the titles below were revised again on 2026-11-16. What follows is
-what `sections/2-1_related_work.tex` prints.
+seven, and the titles below were revised again on 2026-11-16, then a third
+time the same day in the heading sweep described at the end of this section.
+What follows is what `sections/2-1_related_work.tex` prints.
 
 1. Many parameter settings fit the same data, and the procedure picks one
 2. Credit assignment algorithms and optimizers have been compared on
    convergence and accuracy
 3. In modular addition the grokked solution has been read neuron by neuron
-4. How far a computation spreads has been measured in neuroscience, and the
-   measures disagree
-5. The two pretraining objectives differ in which token pairs enter the update
-6. A world model is scored through a probe, and the probe's own behaviour has
-   rarely been checked
-7. Mutual support between neurons has been built into architectures rather
-   than trained
-8. Unused neurons have been described one mechanism at a time, and never as a
-   quantity a rule sets
+4. Neuroscience has measured how far a computation spreads, with measures that
+   disagree
+5. The objective decides which token pairs reach a Transformer's attention
+   weights
+6. Latent world models are scored through a probe that few papers check
+7. Architectures have been built in which neurons hold one another in place
+8. No account treats unused neurons as a quantity the rule sets
 
 The coding material was promoted from a subsection of section 3 to section 4
 of its own, with the reason recorded in the file: the measures and the
