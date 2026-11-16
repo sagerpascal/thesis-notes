@@ -1,336 +1,236 @@
 % Introduction. Thesis owned. The story it follows is in
-% 00_ADMIN/05_thesis_concept.md. Section titles are statements. "Layout",
-% "credit assignment algorithm", "optimizer" and "learning rule" have their
-% single definition site here, see imports/glossary.toml.
+% 00_ADMIN/05_thesis_concept.md, and the paragraph plan this file was written
+% to is in 00_ADMIN/07_writing_plan.md, "Level 3 for chap:introduction".
+%
+% DEFINITION SITES THAT LIVE HERE AND NOWHERE ELSE, see imports/glossary.toml:
+%   circuit, credit assignment algorithm, optimizer, learning rule,
+%   grokking (glossed inline, not coined by the thesis),
+%   agent for computer use.
 %
 % TWO RULES THIS FILE FOLLOWS.
 %
-% Each section opens on the question the section before it left open, and says
-% why the next study was the one to run rather than some other.
+% No finding is stated in full. Each appears in one line here and in full in
+% its chapter. The file this replaced stated six findings in six sections,
+% restated them as questions, and restated them again as contributions.
 %
-% Each study is given in the same order: why it was run, how it was designed,
-% what it shows, and what that rules out. A sentence that does none of those
-% four things does not belong.
+% Every number that appears beside the headline result appears with its price
+% and its scope. The accuracy cost and the width dependence are not footnotes.
 
-Two networks can fit the same data equally well and still be built differently
-inside. One carries its computation on a few of its neurons and leaves the rest
-idle. The other spreads the same computation over all of them. Both reach the
-same training loss, so nothing in the data chooses between them. Something
-does, and this thesis is about what.
+A network trained to add two numbers modulo a prime, with $2048$ neurons in
+its hidden layer, solves the task perfectly and carries the computation on
+about $332$ of them. The rest contribute almost nothing. Changing one thing in
+how the network is trained, namely what the update treats as a group when it
+normalises, takes that number to $2046$ out of $2048$. The task is the same,
+the data are the same, the architecture and the width are the same, and test
+accuracy falls by about two points, from $0.998$ to
+$0.976$~\cite{sager_grokking_2026}.
 
-It matters which of the two a network becomes, because the two fail in
-different ways. A computation spread over many neurons survives the loss of any
-one of them, since none is essential. A computation held on a few can be
-repurposed for a new task without disturbing much of what is already there.
-Robustness and adaptability are among the properties that deployed systems are
-most often found to lack, and they turn out to be the two ends of this single
-axis rather than two independent goals.
-
-Machine learning has treated the position on that axis as something the task
-settles. This thesis shows that the training procedure settles it, that its
-choice can be read off the procedure's update equation before the procedure is
-ever run, and that neither end of the axis is free. It closes by arguing that a
-property with consequences this large should be designed rather than inherited.
+So how much of a network ends up doing the work is not settled by what the
+network is asked to do. It is settled by how the network is trained, and more
+precisely by how training divides the error among the neurons. This thesis is
+about that, about what it costs, and about what else is left open in a trained
+network once the task has had its say.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{A task fixes what a network computes, not how the computation is laid out}
-\label{sec:intro_layout}
+\section{A trained network uses some of its neurons and not others, and the task does not set which}
+\label{sec:intro_question}
 % ─────────────────────────────────────────────────────────────────────────────
 
-A neural network that has learned a task has found one of many parameter
-settings that solve it. Those settings compute the same function on the
-training data and reach the same loss. What separates them is where the
-computation sits. It can be carried by a few of the network's neurons while the
-rest stay idle, or spread across all of them. Inside a weight matrix it can
-concentrate on a few rows or columns, or spread evenly over both. The way a
-computation is distributed over a network's parts, whether those parts are
-neurons or the rows and columns of a weight matrix, is what this thesis calls
-the solution's \emph{layout}.
+The two ends of that range fail differently, which is why the question is
+worth asking. A computation spread over many neurons survives the loss of any
+one of them, because none of them carries much on its own. A computation held
+on a few leaves the rest of the network idle, so there is more to prune away
+and more room to put to a new use. The second effect holds under a condition
+and the condition belongs with it. A concentrated network adapts roughly twice
+as fast to a task that needs new combinations of the features it already has,
+and not to a task that only changes which answer each feature votes
+for~\cite{sager_grokking_2026}.
 
-Neuroscience has argued about the right layout for
-decades~\cite{barlow_single_1972,hinton_distributed_1986,olshausen_emergence_1996}.
-The argument is not aesthetic, because each end buys something the other
-cannot. A distributed code degrades gracefully under the loss of neurons, and
-population coding makes that precise, since the more neurons carry a signal the
-smaller the fluctuation when some are removed~\cite{averbeck_neural_2006}. A
-sparse code interferes less when something new is learned, because fewer
-neurons are shared between what is stored.
+Machine learning has mostly assumed that the task answers the question. The
+clearest case is grokking, where a network fits its training data perfectly,
+sits at chance on held out data for thousands of epochs, and then generalises
+abruptly~\cite{power_grokking_2022}. For addition modulo a prime the
+generalising solution has been taken apart neuron by neuron: the embedding
+maps each operand onto a few frequencies and the hidden layer combines them
+into the sine and cosine of the sum~\cite{nanda_progress_2023}. That solution
+uses few of the available neurons, and the strongest reading of the
+observation is universality, the claim that networks solving the same task
+find the same features and the same construction~\cite{chughtai_toy_2023}.
+Universality is a claim about what is computed, and nothing here contradicts
+it. What is worth noticing is that every network behind the evidence was
+trained with backpropagation and an adaptive optimizer, which is one procedure
+among many, so the evidence cannot separate what the task requires from what
+that procedure produces.
 
-Machine learning has largely not asked the question, because it has assumed the
-task answers it. The clearest case is grokking, where a network fits its
-training data perfectly, sits at chance on held out data for thousands of
-epochs, and then generalises abruptly~\cite{power_grokking_2022}. For modular
-addition the generalising solution has been read neuron by neuron and is
-sparse, meaning a few neurons carry the computation~\cite{nanda_progress_2023}.
-That sparsity is taken to be what the task demands, and the strongest version
-of the reading is universality, the claim that every network solving a task
-finds the same circuit, so that one network's circuit stands for the
-task~\cite{chughtai_toy_2023}. Every network behind that evidence was trained
-with backpropagation, which is one procedure among many. The evidence therefore
-cannot separate what the task requires from what that one procedure produces,
-and separating them is what this thesis does.
+The object measured throughout needs a name. The set of neurons that carry a
+computation, counted as the participation ratio of a layer's outgoing weight
+norms, is what this thesis calls the solution's \emph{circuit}. The
+participation ratio of a set of non negative numbers is the square of their
+sum divided by the sum of their squares, meaning a count of how many of them
+effectively contribute: it equals the number of neurons when all contribute
+equally, and falls towards one when a few dominate. Two things about the word.
+It is narrower here than in mechanistic interpretability, where a circuit is a
+subgraph of components rather than a count of participating units. And the
+measure is borrowed from the neuroscience literature on how far a
+representation spreads over a population, a borrowing that
+\cref{sec:bg_sparsedistributed} states along with the three respects in which
+the analogy fails.
 
-Three choices inside the procedure are kept apart throughout, because the
-thesis varies them one at a time. The computation that assigns each weight its
-share of the error at the output is the \emph{credit assignment algorithm}, and
-backpropagation is one such algorithm. The procedure that turns those shares
-into a change of the weights, such as stochastic gradient descent or Adam, is
-the \emph{optimizer}. The pair of the two is the \emph{learning rule}. The
-training objective is the third choice, and Section~\ref{sec:intro_objective}
-shows that it fixes a layout of its own.
+Training a network involves a set of choices, and this thesis varies them one
+at a time, so they are worth separating. There is the target function and the
+data drawn from it. There is the loss written to get the network there. There
+is the architecture and the width. There is the computation that assigns each
+weight its share of the error at the output, the \emph{credit assignment
+algorithm}, of which backpropagation is one. There is the procedure that turns
+those shares into a change of the weights, such as stochastic gradient descent
+or Adam, which is the \emph{optimizer}. The pair of the last two is the
+\emph{learning rule}. And there is the scale at which the weights start.
 
+Each results chapter holds most of that list fixed and moves one entry.
+\Cref{chap:grokking} fixes the target function, the data, the architecture and
+the width, and varies the learning rule. \Cref{chap:attention} fixes
+backpropagation and varies the loss, which in a decoder is realised partly by
+a mask over which positions may attend to which, so the architecture moves
+with it, which that chapter states. \Cref{chap:bounded} varies nothing in
+training and asks instead whether the measurement applied afterwards reports
+what it claims. \Cref{chap:cna} gives up the list and fixes the structure in
+the architecture.
 
-% ─────────────────────────────────────────────────────────────────────────────
-\section{The gaps that motivate the question are properties of the trained network}
-\label{sec:intro_agents}
-% ─────────────────────────────────────────────────────────────────────────────
+What credit assignment means here needs a word, because the thesis is examined
+where the term usually means how an error signal reaches a synapse. The
+condition \cref{chap:grokking} derives compares the credit a neuron receives
+against the part of its own update that does not come from the gradient. All
+three such terms the chapter unifies are supplied by the optimizer: a weight
+decay term added to the gradient, the numerical floor in an adaptive method's
+denominator, and the decay of a trainable gain. The quantity the condition is
+about is therefore set jointly by the backward pass and by whatever the
+optimizer shares a normaliser over, and an account that gives credit
+assignment to the backward pass alone cannot state the condition at all. The
+cost of using the term this way should be said plainly. Of the rules compared
+in \cref{chap:grokking}, exactly one assigns credit by something other than
+backpropagation, which is deep feedback control. Feedback alignment, its
+direct form and sign based descent do not generalise on the task and are
+excluded. Everything else that is varied is an optimizer.
 
-The question did not start as a question about layout. It started with agents
-for computer use, systems that carry out tasks on a computer or a phone from an
-instruction in natural language, by controlling software through clicks,
-keystrokes and gestures. Chapter~\ref{chap:acu} surveys $87$ such agents
-and $33$ datasets in that field~\cite{sager_survey_2026}. The field is
-converging on one recipe, a pretrained foundation model adapted by prompting or
-by behaviour cloning from human demonstrations, observing the screen as an
-image. Agents built that way share six gaps.
-
-Four of the six can be closed by building harder benchmarks and agreeing on how
-to score them. Two cannot, because they are properties of the trained network
-rather than of the task or the measurement. The first is insufficient
-generalisation to interfaces and task formulations not seen in training. The
-second is inefficient learning, meaning large demonstration sets and poor
-transfer to related tasks. Those are the two properties that
-Section~\ref{sec:intro_layout} placed at opposite ends of the layout axis,
-which is the connection this thesis pursues and which the survey neither shows
-nor claims.
-
-A survey cannot say what produces those two gaps, and the reason it cannot
-determines what has to be done next. The field varies the model, the data and
-the prompt, and it does not vary the training procedure, so the procedure
-cannot appear in its results. It also measures task success, and a success rate
-cannot separate two networks that score the same while being built differently
-inside. Section~\ref{sec:llmbench} shows how far a score can sit from the
-property it is taken to stand for. Quantisation advertised as nearly lossless
-costs text quality that human raters notice and the standard metrics
-miss~\cite{tuggener_private_2024}, and architectures carrying the inductive
-biases thought to support composition score well in distribution and fail on
-rule combinations they have not seen~\cite{cogitao}. The thesis author's role
-in both was an evaluation rather than the design, and each chapter says so.
-
-If the score does not expose the property, the property has to be measured
-inside the network. That is the step from Part~\ref{part:agents} to
-Part~\ref{part:procedure}, and it fixes three requirements on the study that
-follows. The task must have a solution that can be read at the level of single
-neurons, or a difference in layout cannot be seen at all. Everything except one
-component of the procedure must be held fixed, or a difference cannot be
-attributed to that component. And the networks compared must be matched on
-loss, margin and weight norm, or a difference in layout can be dismissed as one
-network simply fitting the data better than another.
+The question did not begin in any of this. It began with agents for computer
+use, systems that carry out tasks on a computer or a phone from an instruction
+in natural language, by controlling software through clicks, keystrokes and
+gestures. A survey of $87$ such agents and $33$ datasets finds six gaps that
+recur across the field, four of which concern how the field measures what it
+builds and the conditions it builds for~\cite{sager_survey_2026}. Two concern
+what training produced, which is where this thesis starts, and \cref{chap:acu}
+gives the sort in full. \Cref{chap:further} summarises four further papers,
+two of which sharpen those gaps and two of which supply structure from outside
+the data.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The learning rule decides the layout, and the layout has a price}
+\section{The learning rule sets how much of a network carries the computation}
 \label{sec:intro_rule}
 % ─────────────────────────────────────────────────────────────────────────────
 
-One setting meets all three requirements, and it is the setting the sparsity
-claim came from. Grokking on modular arithmetic has a solution that has been
-read neuron by neuron, it uses networks small enough to train hundreds of times
-over, and weight decay drives every run to a comparable norm.
-Chapter~\ref{chap:grokking} therefore holds task, data, architecture, optimizer
-and weight decay fixed, and varies only the learning
-rule~\cite{sager_grokking_2026}.
+Modular addition earns the detailed work because it is one of the few settings
+where the answer can be read off a trained network directly. The algorithm is
+known, so counting how many neurons implement it measures something whose
+meaning is not in doubt, and the network is small enough that every neuron can
+be examined.
 
-A third of the rules never arrive. Four of twelve published rules stay at
-chance on held out data however long they train, and what separates them from
-the rest is where training comes to rest. A rule whose update still pushes
-somewhere at the minima of the loss has different stationary points than the
-loss has, so it cannot stop where gradient descent stops. The displacement is
-largest along the directions the loss leaves flat, and those are the directions
-the layout lives in, which is why such a rule fits the training data and never
-finds the generalising solution. Whether a rule reaches that solution can
-therefore be decided in advance by asking whether the part of its update that
-is not the gradient fades as the loss falls.
+A neuron stays in use when the credit it receives is large relative to the
+part of its update that does not come from the gradient. That one condition
+covers three mechanisms which had no common account before. Equalising credit
+across neurons expands the circuit from $60\%$ to $99\%$ of the layer at width
+$256$, and switching the intervention on after the network has already
+generalised produces the same expansion, so the rule holds the circuit open
+for as long as training runs. The price is two points of test accuracy, from
+$0.998$ to $0.976$, with margin and parameter norm unchanged to within a few
+percent.
 
-Among the rules that do arrive, the layout is not the same twice. Loss, margin
-and weight norm agree across them, and the number of neurons carrying the
-solution runs from about $154$ to $254$ of $256$. The task offers every rule
-the same set of solutions and each rule stops at a different member of it, so
-the sparse circuit that the literature reads as what modular arithmetic demands
-is what backpropagation produces on modular arithmetic.
+The intervention changes a property of the update, so on its own it leaves
+open whether the circuit followed the credit or something that travels with
+it. The control that closes this imposes a credit profile directly and uses a
+random permutation, drawn once per run, to decide which neuron receives which
+magnitude, so the assignment has nothing to do with what any neuron is
+computing. Circuit participation follows the imposed value, from $0.637$ to
+$0.990$, tolerance of neuron deletion rises with it, and test accuracy stays
+above $0.96$.
 
-Two rules differ in many ways at once, so that comparison shows a difference
-without showing its cause. Isolating the cause needs an intervention that
-changes how credit is divided between neurons and changes nothing else, and the
-chapter builds one. A rescaling of each neuron's share of the error provably
-leaves the objective untouched and leaves every neuron's update direction
-untouched, altering only how much of the total each neuron receives. It moves
-the count across the whole range. It does so whether it is applied from the
-first step or switched on after the network has already generalised, which
-answers a second question at the same time. A layout that can be reorganised
-after the fact is a state the rule holds in place, not a state locked in at the
-moment of generalisation.
+Two limits belong beside this result rather than after it. The first is width.
+The effect grows as the layer gets wider, and at width $32$ there is nothing
+to do, because the untouched network already uses $30$ of its $32$ neurons and
+the intervention reaches $31$. The second is the reference setting, and it is
+the sharper limit. That reference adds an L2 penalty to the gradient before an
+adaptive optimizer, a combination whose side effects have been known for
+years, and the paper says the setting is there to test the condition rather
+than as a recommendation. Under decoupled weight decay, which is what current
+training code uses, the reference network is already distributed in most of
+the places the chapter looks. What survives is the condition, which is
+general, and two of its three non gradient terms are live under decoupled
+decay: an adaptive optimizer's numerical floor dominates in a wide transformer
+whose normalisation parameters are decayed, and so does the decay of a
+trainable gain.
 
-An intervention built for a purpose invites the objection that it demonstrates
-only itself, so the next question is whether rules in ordinary use behave the
-same way. They do, and which of them move the layout can be read from their
-update equation without training any of them. A normaliser shared by a group of
-neurons rescales the whole group by one factor and therefore cannot alter the
-inequality between the neurons inside it, so only a rule that normalises one
-neuron at a time can move the layout at all. A model small enough to solve
-exactly turns that observation into the shape of the whole curve, and the
-prediction places all eight published optimizers that were tested. One of them
-is the sharpest case, because it spreads credit perfectly evenly and still
-leaves the layout concentrated, its normaliser being per parameter rather than
-per neuron.
-
-What remains is whether the layout is worth choosing, and it is, in both
-directions. Deleting neurons at random costs every solution the same expected
-fraction of its summed contributions, so what separates solutions is the
-fluctuation around that average, and that fluctuation falls as one over the
-square root of the effective number of units. Solutions spread over many
-neurons therefore survive random and targeted deletion far better. Concentrated
-solutions adapt to a new task about twice as fast, partly because they leave
-idle neurons a new task can claim without disturbing working structure. Neither
-end is better than the other. Choosing a learning rule is choosing between the
-two properties that Section~\ref{sec:intro_agents} identified as the survey's
-two structural gaps.
+What the circuit costs is measured in four currencies and only one of the four
+is a surprise. A computation spread over more neurons tolerates random
+deletion better, and a network with more neurons left idle has more to prune,
+and both follow from what the measure counts. Test accuracy falls by the two
+points above. The surprise is transfer, where the concentrated network reaches
+a new task about twice as fast, largely by recruiting the neurons it was not
+using, under the condition stated at the top of this chapter.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The training objective decides a layout of its own}
-\label{sec:intro_objective}
+\section{The objective, the readout and the architecture settle three further properties}
+\label{sec:intro_others}
 % ─────────────────────────────────────────────────────────────────────────────
 
-Three things about that result invite doubt. It rests on networks of a few
-hundred neurons, on one family of tasks, and on an intervention constructed for
-the experiment. All three are answered by asking the same question about a
-component the field does vary, in an architecture built at scale, while holding
-the credit assignment at backpropagation. Chapter~\ref{chap:attention} does
-that with the training objective~\cite{saponati_structures_2025}.
+The learning rule is not the only component that leaves structure behind. With
+backpropagation held fixed and the training objective varied, the update to a
+Transformer's attention weights is a sum over whichever ordered pairs of
+tokens the objective admits. Bidirectional training enters each pair in both
+orders and the weights stay close to symmetric, while autoregressive training
+makes a token the target once and the context of every later token, and a few
+columns come to dominate~\cite{saponati_structures_2025}. The measured object
+there is a column of a bilinear form rather than a count of neurons, so this
+is a second component settling a second property and not a second measurement
+of the first. What it adds is scale, in models far larger than the grokking
+setting reaches.
 
-The object of the analysis is the product of a Transformer's query and key
-matrices, which is the one bilinear form through which the two ever act. Its
-update is a sum over the pairs of tokens the objective lets one token use to
-predict another, and the two standard objectives differ in exactly which pairs
-those are. Autoregressive training uses each token as context for every later
-token and as a target only once, so a few columns of the form accumulate most
-of the update and come to dominate it. Bidirectional training enters every pair
-in both orders, so the update is symmetric and the structure spreads over rows
-and columns alike. Both layouts are found in ModernBERT, GPT, LLaMA3 and
-Mistral, and across text, vision and audio.
+A third property is left free by the loss altogether. A latent world model is
+scored by fitting a probe from latent space to the physical state on encoded
+observations and then applying it to predicted latents. Where the training
+loss compares directions and ignores magnitudes, nothing fixes the magnitude,
+and during a rollout the norm of a predicted latent drifts while its direction
+stays accurate. The probe responds to the norm~\cite{sager_bounded_2026}.
+Rescaling each prediction to a reference norm taken from the encodings, which
+needs no retraining, removes most of the probe's error.
 
-The result answers the three doubts and pays for itself twice. It is not a
-property of small networks, because it holds in models with billions of
-parameters. It is not an artefact of an intervention of our own, because the
-objectives compared are the ones the field already uses. Initialising the form
-symmetrically follows from the derivation and speeds up the training of
-bidirectional models, which is the layout being chosen deliberately for the
-first time in this thesis. And the argument closes back on
-Section~\ref{sec:intro_agents}, because autoregressive prediction is the
-objective behind every foundation model the survey found, so the agents whose
-gaps opened this chain carry a layout their objective imposed on them.
+That chapter sets a standard for readouts, and the standard is the one thing
+in this thesis that crosses chapters. Its four checks apply to the
+participation ratio, which is itself a readout taken from weight norms, and
+the discussion runs them. The answer is partly uncomfortable: the measures
+tied to the computation place the untouched network lower than the structural
+one does, so the direction of the result survives and the level does not. One
+piece of evidence is clean, which is that an optimizer normalising per neuron
+reaches a distributed circuit while holding each neuron's incoming weight norm
+fixed, so its result cannot be scale moved between a neuron's incoming and
+outgoing weights. Beyond that standard nothing is shared. No single
+measurement runs across the chapters, and two that were planned are not
+available, because no checkpoints survive from the attention work and the code
+behind \cref{chap:cna} no longer runs.
 
-The thesis author designed and ran most of the experiments of that paper. The
-mathematical framework is Matteo Saponati's, and the contribution statement of
-the chapter says so in detail.
-
-
-% ─────────────────────────────────────────────────────────────────────────────
-\section{A property the procedure fixes can be mistaken for one the model learned}
-\label{sec:intro_outside}
-% ─────────────────────────────────────────────────────────────────────────────
-
-Together the two preceding chapters say that a training procedure can fix a
-structural property of a network that the data leaves open. That creates a
-hazard for measurement. If a readout is sensitive to a property the procedure
-fixes on its own, the procedure can satisfy the readout with nothing having
-been learned, and the resulting number will look like evidence about the model.
-
-Chapter~\ref{chap:bounded} is where this thesis walked into
-that~\cite{sager_bounded_2026}. The study began on the third of the survey's
-gaps, since planning over several steps needs a model that predicts several
-steps ahead, and the standard remedy for the compounding error of such a model
-is to bound the spectrum of its transition operator. The comparison was built
-to be clean, with one encoder and one objective and four dynamics modules
-differing only in that bound. The bounded operator wins by five orders of
-magnitude under the readout this literature uses, a linear probe from the
-latent space to the physical state.
-
-Two controls that cost nothing overturn the result. Predictors that learn no
-dynamics at all, one repeating the first latent and one predicting the mean
-state, beat every learned model at horizons of ten steps and more. Scoring the
-identical rollouts again with a readout that ignores the scale of the latent
-collapses the five orders of magnitude to nothing. The mechanism explains both.
-The prediction loss is invariant to the scale of the latent, so training never
-fixes that scale, the bound fixes how fast it grows under rollout, and the
-probe is fitted at the training scale and therefore measures exactly that
-growth. Rescaling a trained operator's spectrum moves the probe curve
-monotonically, and retraining with a scale aware loss removes the gap at its
-source. The bound does what its theory promises. A bounded error curve is not a
-better model.
-
-This chapter is what justifies the discipline of the two before it. Every claim
-about layout in Chapter~\ref{chap:grokking} is made at matched loss, margin and
-weight norm, and against trivial constructions, among them a credit profile
-drawn to a chosen shape and dealt to neurons at random, and backpropagation's
-own credit magnitudes permuted between neurons at every step. Those controls
-exist because a procedure that can fix a structure can also fix a measurement,
-and the only defence is a comparison the procedure alone cannot win.
-
-Structure supplied from outside the data is not discredited by any of this, and
-two further studies supply it and survive the same controls.
-Section~\ref{sec:hounsfield} adds binary masks derived from the Hounsfield
-unit ranges of tissue types to the input of a CT segmentation model, which
-improves accuracy against the same model without masks and matches the baseline
-with half of the training data~\cite{meyer_hounsfield_2025}.
-Section~\ref{sec:retrieval} retrieves scientific sources for social media
-posts with a pipeline combining lexical search, dense retrieval and a cross
-encoder, placing first on the development set and third of $31$ teams on the
-test set of a shared task without external training
-data~\cite{sager_deep_2025}. Both are summarised in
-Chapter~\ref{chap:further} rather than reproduced, and each summary opens with
-the thesis author's role.
-
-
-% ─────────────────────────────────────────────────────────────────────────────
-\section{A layout with a price need not be left to the learning rule}
-\label{sec:intro_proposal}
-% ─────────────────────────────────────────────────────────────────────────────
-
-Four things are established by this point. The learning rule decides the
-layout. The layout can be predicted from the rule's update equation. The rule
-holds the layout in place rather than locking it in, so it goes on paying for
-it against the pull of the gradient for as long as training runs. And the
-layout charges for itself in one of two currencies, robustness or adaptability.
-
-Read together they make the usual arrangement look indirect. If a spread layout
-of mutually supporting neurons is what buys tolerance to damage, then obtaining
-one by selecting a learning rule, and having that rule hold it against the
-gradient, is a long way round. The short way is to build the layout into the
-architecture and leave learning to fill in its parts.
-
-Chapter~\ref{chap:cna} is a first implementation of that
-proposal~\cite{sager_cooperative_2025}. The Cooperative Network Architecture
-represents a sensory pattern by a net, a set of neurons each of which is
-supported by several others through recurrent connections, assembled from
-fragments learned by Hebbian plasticity~\cite{hebb_organization_1949}. Support
-is a structural property of the representation and not something the training
-was asked to produce, and three consequences follow from it without being
-optimised for. A neuron stays active only while the pattern around it is one
-the network has seen often, so noise, which has no support, is filtered even
-when more than half of the input is corrupted. A missing part of a figure
-receives support from its surroundings and is completed. Fragments learned on
-straight lines recombine into digits, characters and line drawings that never
-appeared in training.
-
-The implementation does not yet scale beyond line drawings, uses fixed feature
-detectors rather than learned ones, and needs a hand set attenuation schedule.
-It is therefore a proposal with a first implementation and not a finished
-alternative. The chapter states those limits and lists what a representation of
-this kind would need in order to serve as the state of an agent's model of its
-environment.
+The last chapter asks what it would mean to stop leaving the structure to
+training. The Cooperative Network Architecture represents a sensory pattern as
+a set of neurons each of which is held in place by several others, assembled
+from fragments learned by Hebbian plasticity. Noise, which nothing supports,
+is filtered even when more than half the input is corrupted, occluded figures
+are completed, and fragments learned separately recombine into patterns the
+network never saw~\cite{sager_cooperative_2026}. It reaches by construction
+the redundancy of support that a learning rule can be made to produce by
+training, and it reached it first: that work was submitted in $2024$ and the
+grokking work is from $2026$, so the two lines meet at a mechanism rather than
+one following from the other. It does not scale beyond line drawings, and the
+chapter is offered as a proposal.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -338,30 +238,35 @@ environment.
 \label{sec:intro_questions}
 % ─────────────────────────────────────────────────────────────────────────────
 
-The chain above is organised by four questions.
-
 \begin{enumerate}
-    \item Is the layout of a learned solution fixed by the task, or by the
-    procedure that trained the network? Chapters~\ref{chap:grokking}
-    and~\ref{chap:attention} answer it by varying one part of the procedure at
-    a time with everything else held fixed, the learning rule in the first case
-    and the training objective in the second.
-    \item Can the layout be predicted from the procedure without running it,
-    and can it be chosen? Chapter~\ref{chap:grokking} derives the prediction
-    from the update equation and tests it on published optimizers, and
-    Chapter~\ref{chap:attention} does the same for the training objective.
-    \item What does a layout cost? Chapter~\ref{chap:grokking} proves and
-    measures the trade between tolerance to deletion and speed of adaptation.
-    \item Given that the rule decides the layout and the layout has a price,
-    can the layout be fixed by construction instead, and what would that buy?
-    Chapter~\ref{chap:cna} answers with a proposal and a first implementation.
+    \item What sets how much of a trained network's width carries the
+    computation? (\cref{chap:grokking})
+
+    \item Which rules change it, and can that be read off the form of their
+    update? (\cref{chap:grokking})
+
+    \item What is given up when a computation is spread over more neurons, in
+    test accuracy, in tolerance of neuron deletion, in how far the network
+    prunes and in how fast it transfers? (\cref{chap:grokking})
+
+    \item Does a second component of the training setup leave its own
+    structure in a trained network's weights? (\cref{chap:attention})
+
+    \item Does a readout used to make claims about a trained network report
+    the quantity it names, or one the loss left free? (\cref{chap:bounded})
+
+    \item Does a structural measure of a trained network report the structure,
+    or a quantity the training procedure left free? (\cref{chap:bounded}
+    and~\cref{chap:grokking})
+
+    \item What does an architecture that builds in redundancy of support
+    achieve without training it, and where does it stop? (\cref{chap:cna})
 \end{enumerate}
 
-Chapter~\ref{chap:acu} supplies the two gaps that make the first three
-questions worth asking. Chapter~\ref{chap:bounded} supplies the measurement
-discipline the answers depend on, and Chapter~\ref{chap:further} two cases of
-structure that survives it. Neither tests the four questions, and the thesis
-does not claim that they do.
+Question $6$ is the only one that two chapters bear on. It costs no
+experiments, because it applies the method of one chapter to the measure of
+another, and it is the question a reader with both chapters open will ask
+first.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -369,98 +274,60 @@ does not claim that they do.
 \label{sec:intro_contributions}
 % ─────────────────────────────────────────────────────────────────────────────
 
-This is a cumulative thesis. Each results chapter is built around one paper,
-reproduced as published, and the thesis author's role is stated at the opening
-of each chapter. The contributions, in the order the thesis presents them, are
-these.
+\begin{itemize}
+    \item A survey and taxonomy of agents for computer use, covering $87$
+    agents and $33$ datasets and identifying six recurring gaps. Shared first
+    authorship with Benjamin Meyer. \Cref{chap:acu}.
 
-\paragraph{A survey and taxonomy of agents for computer use.} Shared first
-authorship with Benjamin Meyer. A taxonomy along the domain, interaction and
-agent perspectives, applied to $87$ agents and $33$ datasets, and six research
-gaps derived from the classification~\cite{sager_survey_2026}. The reading of
-two of those gaps as properties of the trained network, and as the two ends of
-one trade, is thesis work and appears in no paper.
+    \item The finding that the learning rule, and not the task, sets how much
+    of a network's width carries a grokked solution, together with the
+    condition that decides it, an intervention that moves it across its range,
+    and a measurement of what the move costs. First authorship.
+    \Cref{chap:grokking}.
 
-\paragraph{The learning rule decides the layout of a grokked solution.} First
-authorship. Twelve published rules compared at a matched setting, a criterion
-for which rules generalise at all, a per neuron rescaling of credit that moves
-the layout while provably leaving the objective and every update direction
-unchanged, a law that predicts from a rule's update equation whether it spreads
-the solution, and the trade between deletion tolerance and adaptation speed,
-proven in a tractable model and measured~\cite{sager_grokking_2026}. The paper
-also shows grokking under a control driven learning rule, to our knowledge for
-the first time.
+    \item A derivation of the structure that each of the two pretraining
+    objectives leaves in a Transformer's attention weights, checked in trained
+    models at scale, with a symmetric initialisation that follows from it.
+    Shared first authorship, led by Matteo Saponati. \Cref{chap:attention}.
 
-\paragraph{The training objective decides the layout of the attention
-weights.} Shared first authorship with Matteo Saponati, who developed the
-mathematical framework. The thesis author designed and ran most of the
-experiments across model families and modalities. Bidirectional training
-induces symmetry in the query key form and autoregressive training induces
-column dominance, and symmetric initialisation speeds up bidirectional
-training~\cite{saponati_structures_2025}.
+    \item The finding that the standard probe for latent world models responds
+    mostly to a quantity the training loss leaves free, and a correction that
+    needs no retraining, with four checks on what the corrected score reports.
+    First authorship. \Cref{chap:bounded}.
 
-\paragraph{A protocol for evaluating latent rollouts.} First authorship. A
-controlled study in which a bound that wins by five orders of magnitude under
-the standard readout is shown to be a property of the readout, the mechanism
-measured directly and then removed at the loss, and a short protocol whose
-every item is tied to a failure it would have
-caught~\cite{sager_bounded_2026}.
+    \item An architecture in which a sensory pattern is represented by
+    mutually supporting neurons assembled from Hebbian fragments, filtering
+    noise, completing occluded figures and recombining learned fragments into
+    unseen patterns. First authorship. \Cref{chap:cna}.
 
-\paragraph{The Cooperative Network Architecture.} First authorship. The first
-formal definition of nets and net fragments, a computational framework that
-learns fragments by Hebbian plasticity, and the evidence that the resulting
-representation filters noise, completes figures and recombines fragments into
-unseen patterns~\cite{sager_cooperative_2025}. Its reading as a layout fixed by
-construction, and the proposal built on it, are thesis work.
+    \item Four further studies, summarised rather than reproduced: a benchmark
+    of efficient language models, a framework for compositional generalisation,
+    domain knowledge supplied in the input of a segmentation model, and a
+    retrieval system that holds its knowledge in an index. Roles are stated per
+    paper. \Cref{chap:further}.
 
-\paragraph{Two studies of structure supplied from outside the data.}
-Hounsfield unit masks as an input constraint for data efficient CT
-segmentation, shared first authorship with Benjamin Meyer, with the thesis
-author responsible for the framing rather than the
-implementation~\cite{meyer_hounsfield_2025}. A hybrid retrieval pipeline for
-scientific source retrieval, first authorship~\cite{sager_deep_2025}. In the
-benchmark of efficient language models the thesis author ran the model
-evaluation~\cite{tuggener_private_2024}, and in the compositional reasoning
-framework the thesis author evaluated one of the baseline
-models~\cite{cogitao}.
+    \item Three contributions of the frame itself. The vocabulary above. A
+    sort of the survey's six gaps by what each one is a property of. And the
+    application of one chapter's standard for readouts to another chapter's
+    measure, which is the only argument in this thesis that runs between two
+    chapters.
+\end{itemize}
 
-\paragraph{The frame.} The definition of layout, the chain that connects the
-grokking, attention and Cooperative Network Architecture results, the reading
-of the survey's gaps as properties of the trained network, and the proposal of
-Part~\ref{part:construction} are the thesis author's work and appear in no
-paper.
+What is left if the grokking chapter is removed is worth saying, because a
+cumulative thesis invites the question. The claim about circuits would go with
+it, since that chapter is where it is established. What would remain is an
+independent structural result about attention weights in models at scale, a
+methodological correction to how latent world models are scored, a survey that
+sets the stake, and an architecture that reaches the same mechanism by another
+route. That is a body of work and it is not this thesis's argument. The
+argument has one pillar, and saying so is more useful than implying five.
 
-
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Structure of the thesis}
-\label{sec:intro_structure}
-% ─────────────────────────────────────────────────────────────────────────────
-
-Chapter~\ref{chap:background} gives the background the later chapters rest on.
-It covers the set of parameter settings that fit a given task and what is known
-about how a procedure selects among them, sparse and distributed coding and the
-measures that quantify it, grokking and the circuits found in it, credit
-assignment rules other than backpropagation and the optimizers that differ in
-what they normalise, self attention as a bilinear form, the assemblies the
-closing proposal descends from, and the evaluation of latent rollouts.
-
-The five parts that follow are the argument of
-Sections~\ref{sec:intro_agents} to~\ref{sec:intro_proposal} in order.
-Part~\ref{part:agents} establishes the two gaps and shows why a score cannot
-explain them. Part~\ref{part:procedure} varies the learning rule and then the
-training objective. Part~\ref{part:readout} supplies structure from outside
-the data and shows what has to be controlled when doing so.
-Part~\ref{part:construction} builds the layout into an architecture.
-Part~\ref{part:synthesis} states what the task fixes and what the procedure
-fixes, what follows for the design of learning rules and architectures, and
-what the thesis leaves open.
-
-Every paper backed chapter has the same shape. A box gives the full citation
-and the status of the published paper. A contribution statement names the
-co-authors and the thesis author's share. A chapter introduction, written for
-this thesis, connects the previous chapter's result to this one and gives the
-mapping between the paper's notation and the thesis notation where they differ.
-The body of the paper follows as published. A chapter summary, written for this
-thesis, states the chapter's findings once in full and hands off to the next
-chapter. The thesis frame uses British spelling, and the imported chapters keep
-the spelling they were published with.
+Five chapters reproduce a published or submitted paper. Each opens with the
+full citation and a statement of the thesis author's share, then a chapter
+introduction written for this thesis, then the paper's own text as it was
+published, then a chapter summary. The imported text keeps the spelling,
+notation and figure numbering it was published with, so a reader will find
+American spelling inside those chapters and British spelling around them, and
+where a chapter's notation differs from the thesis's the chapter introduction
+gives the mapping. A citation in the margin is a work at its first mention in
+a chapter, and the bibliography carries all of them in full.

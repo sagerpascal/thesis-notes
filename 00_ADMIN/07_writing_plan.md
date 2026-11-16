@@ -833,116 +833,158 @@ is marked in the bib and the publication box prints whatever is there.
 
 ## Level 3 for `chap:introduction`
 
-Five sections, from the Level 1 plan. About eight pages, roughly twenty
-paragraphs and two lists. The file it replaces runs eleven pages, argues the
-retired story throughout and uses the retired frame term forty-one times.
+Criticised once and rewritten. The first draft of this plan opened on the
+retired spine, put nine paragraphs of setup before the first result, tried to
+discharge two definitional obligations in a sentence each, and left out both
+the strongest evidence in the thesis and the hardest objection to it. What
+follows is the revision, with the reversals recorded.
 
-Three obligations land in section 1 and nowhere else. The admissions and the
-viva questions above say why each one is owed, and none can be repaired later.
+### Five reversals from the critique
 
-### Section 1. The task and the loss leave open how far a computation spreads over a network's neurons
+**The opening changes.** The first draft kept the current file's first two
+paragraphs, which are sparse against distributed coding stated as the thesis's
+first words. The spine was changed on 2026-11-16 precisely so that nothing
+would lean on that framing, and an opening that leans on it entirely, three
+paragraphs before the analogy is declared, teaches the reader to read the
+whole thesis as a coding thesis. Those paragraphs also claim the clean trade
+that admission 4 scopes down, and "nothing in the data chooses between them,
+something does" is the unscoped sole determination claim the title was
+rewritten to avoid. The chapter now opens on a measurement, which is also the
+voice the one finished chapter already uses.
 
-1. Two networks fit the same data equally well and are built differently
-   inside. One carries the computation on a few neurons, the other spreads it.
-   Nothing in the data chooses. Something does.
-2. Why it matters: the two fail differently. A spread computation survives the
-   loss of any one neuron. A concentrated one leaves room to be extended.
-3. What the thesis shows, one clause each: the training procedure settles it,
-   the condition can be read off the update equation, neither end is free.
-   The verb for the second is "read off", never "predicted before training",
-   which CLAUDE.md 3.7 bans and which the old opening asserted.
-4. The definition site for circuit, definition before name. The set of neurons
-   that carry a computation, counted as the participation ratio of a layer's
-   outgoing weight norms. Say in the same paragraph that this is narrower than
-   the mechanistic interpretability sense, where a circuit is a subgraph of
-   components. Admission 8.
-5. The three choices inside the procedure, kept apart because the thesis
-   varies them one at a time: the credit assignment algorithm, the optimizer,
-   and the learning rule which is the pair. This paragraph survives from the
-   current file almost unchanged and is the best thing in it.
-6. What credit assignment means here. It covers how an optimizer distributes
-   credit across neurons, not only how an algorithm propagates error. Without
-   this sentence the title names an axis on which the thesis has one data
-   point besides backpropagation, which is viva question 3 and admission 9.
-7. What separates a task from a training objective. A task is what the network
-   is asked to compute; an objective is a particular loss written to get it
-   there. One sentence. Without it Part III's title covers neither of its two
-   chapters, and a reader meets "the task does not decide" in one chapter and
-   "the objective decides" in the next.
-8. The declared analogy to sparse and distributed coding, one paragraph,
-   naming the three disanalogies: the measure here is structural rather than
-   taken over a stimulus ensemble, the mechanisms unified have no counterpart
-   in a brain, and classical sparse coding derives sparsity from a prior where
-   here it is an unintended effect of a regulariser. The participation ratio
-   is borrowed from that literature and the borrowing is stated.
-9. Why machine learning has assumed the task decides: grokking, the Fourier
-   solution read neuron by neuron, and universality. Every network behind that
-   evidence was trained with backpropagation, so the evidence cannot separate
-   what the task requires from what one procedure produces. Do not stage a
-   refutation of universality, which is a claim about the algorithm and holds.
-   Admission 7.
+**The analogy paragraph goes to the background.** The first draft gave it a
+paragraph in the introduction, naming three disanalogies about a framing the
+reader has not met and will not meet again. It belongs where the measure is
+introduced, which is `sec:bg_sparsedistributed`, and that is where the three
+disanalogies now live. The introduction keeps one clause at the definition of
+circuit saying the measure is borrowed and pointing there. This deviates from
+the concept file's "one paragraph in the introduction and one in the outlook",
+and the concept file is updated.
 
-### Section 2. A survey of agents for computer use finds six gaps, and two of them are properties of the trained network
+**Credit assignment is argued, not stipulated.** The first draft wrote one
+sentence defining credit assignment to cover how an optimizer distributes
+credit across neurons. Admission 9 records the motive in writing, so the
+sentence is evidence for the objection it answers, and it stipulates against
+the house meaning at the institute examining the thesis. The defensible
+version is an argument and takes a short paragraph: the condition compares a
+neuron's credit against the non gradient term of its own update, and all three
+such terms the chapter unifies are supplied by the optimizer, so the quantity
+the condition is about is set jointly by the backward pass and the optimizer's
+normaliser, and no account that assigns credit to the backward pass alone can
+state it. It ends by conceding admission 9 out loud. A concession the
+candidate makes is not a finding for the committee.
 
-10. Where the question came from. The definition of an agent for computer use
-    lives here and in no other file, so \cref{chap:acu} may not re-gloss it.
-11. The six gaps named, and the two the thesis takes. One sentence each. The
-    sort is two ways, not four: four of the six are about how the field
-    measures and the conditions it builds for. Planning is named as the one
-    the survey splits between the model and the environment, and the thesis
-    measures neither. The current file says four of the six "can be closed by
-    building harder benchmarks and agreeing on how to score them", which is
-    false of the deployment gap. Fix it here.
-12. Why a survey cannot settle the two it hands over: it never varies the
-    procedure with the task, the data, the architecture and the width held
-    fixed, and a success rate cannot separate two networks that score alike.
-    So the thesis measures inside the network.
+**The task against objective boundary is not drawn.** The first draft defined
+it in a sentence. The boundary would be drawn by what the designer intended,
+which is not a property of the training setup and is not checkable, and the
+two chapters are not parallel in the way the sentence implies: the grokking
+chapter holds the task literally fixed, while the attention chapter changes
+the loss, the index set the update sums over, and in a decoder the causal
+mask, which is architecture. The introduction instead lists the training setup
+as components and says for each chapter which were held fixed and which
+varied. Part III is retitled to name the two components rather than to rest on
+the boundary.
 
-### Section 3. Credit assignment fixes how far a computation spreads, and the training objective fixes a structure of its own
+**Section 3 is reweighted and gains two paragraphs.** The permutation control
+is the strongest evidence in the thesis and the only answer to viva question
+2, and the first draft left it out. The AdamW scope is the hardest objection
+and admission 5, and the first draft left that out too. Both are in. The
+paragraph that admits no measurement is shared moves earlier and leads with
+the positive, because one standard does cross the chapters and that is
+research question 7, which the concept file calls the thesis's one integrative
+claim.
 
-13. The grokking setting and why it earns the detailed work: modular addition
-    is where the solution can be read neuron by neuron.
-14. The condition and the intervention, in the one sentence version. The
-    accuracy cost goes in the same sentence, every time: $0.998$ to $0.976$.
-    The width scope goes in a clause: the expansion is from $60\%$ to $99\%$
-    at width $256$, and at width $32$ there is nothing to redistribute.
-15. The price. Deletion tolerance up, pruning and transfer down, with the
-    transfer scope in a clause, because two of the three follow from the
-    measure and only transfer is surprising. Admission 4.
-16. The second determinant. Backpropagation held fixed, the objective varied,
-    the symmetry of a Transformer's attention weights decided, at a scale the
-    grokking setting cannot reach. Not a second measurement of the same claim.
-17. The third. A quantity the loss never constrains at all, the norm of a
-    predicted latent, and a probe that reports it in place of the state.
-18. The fourth. Structure built into an architecture instead of produced by
-    training. A convergence on one mechanism, redundancy of support, and not a
-    consequence: CNA was submitted in 2024 and the grokking work is from 2026.
-19. What is not shared, said plainly rather than left for a reader to notice.
-    No measurement runs across the chapters. Two were planned and are not
-    available. Admission 6.
+### The sections
 
-### Section 4. Research questions
+**Section 1. A trained network uses some of its neurons and not others, and the task does not set which.** Seven paragraphs.
 
-The eight from `05_thesis_concept.md`, each phrased so the answer is not in
-it, each naming the chapter that answers it. Question 7 is the only one two
-chapters bear on and the list says so.
+1. Open on the measurement. A network that has solved modular addition at
+   width $2048$ carries the computation on $332$ of its $2048$ neurons.
+   Changing what the update normalises takes that to $2046$ at a cost of two
+   points of test accuracy. Credit assignment by sentence two, scoped by
+   construction, the price beside the headline, and no coined vocabulary.
+2. Why it matters, with admission 4's scope in the same paragraph. A spread
+   computation survives the loss of any one neuron. A concentrated one has
+   more to prune and transfers faster to a task that recombines the same
+   features, and not to one that only changes the readout.
+3. Why the field has assumed the task settles it. Grokking, glossed inline at
+   first use, because `imports/glossary.toml` names this file as the gloss
+   site. The Fourier solution read neuron by neuron, and universality. Every
+   network behind that evidence was trained with backpropagation and an
+   adaptive optimizer. Do not stage a refutation: universality is a claim
+   about the algorithm and it holds. Admission 7.
+4. The definition site for circuit, definition before name, with participation
+   ratio glossed inline because the reader meets the measure here and the
+   background twenty pages later. The narrower sense than mechanistic
+   interpretability, admission 8, and one clause saying the measure is
+   borrowed from the neuroscience literature with a pointer to
+   `sec:bg_sparsedistributed`.
+5. The training setup as a list of components: the target function and the
+   data, the loss, the architecture and width, the credit assignment
+   algorithm, the optimizer, the initialisation. Then one sentence per
+   results chapter saying which were held fixed and which varied. This
+   replaces the task against objective definition and makes the attention
+   chapter's mask a row rather than an embarrassment.
+6. What credit assignment means here, argued as above, ending on the
+   concession.
+7. Where the question came from, in four sentences. Agents for computer use
+   defined, the survey, the six gaps and the two the thesis takes, and that
+   `\cref{chap:further}` holds four further papers. One line, not the full
+   version, which `sec:acu_takes` already carries in the same words.
 
-### Section 5. Contributions
+**Section 2. The learning rule sets how much of a network carries the computation.** Five paragraphs.
 
-One line each, naming the chapter, in the order the parts run. A final short
-paragraph for what the frame itself contributes, which is the vocabulary, the
-sort of the survey's gaps, and the application of one chapter's standard to
-another chapter's measure.
+8. The grokking setting and why it earns the detailed work.
+9. The condition, then the intervention. Two sentences, not one: headline then
+   price. The honesty rule is satisfied by adjacency, and a single sentence
+   carrying four numbers breaks 3.2.
+10. The permutation control. A profile imposed with a random permutation
+    deciding which neuron receives which magnitude, participation following
+    the imposed value from $0.637$ to $0.990$, accuracy above $0.96$.
+11. The scope, in one paragraph rather than scattered in clauses. Width: $30$
+    of $32$ at width $32$ and nothing to redistribute. The reference setting
+    is Adam with L2 added to the gradient and the manuscript says it is not a
+    recommended setting, so under AdamW the reference is already distributed
+    on modular addition, on MNIST, on the canonical transformer and in the
+    language model. The condition is general and two of its three non gradient
+    terms are live under AdamW. Admissions 3 and 5.
+12. The price, with admission 4's scope.
 
-Noun labels for sections 4 and 5, under the exemption now in CLAUDE.md 3.8.
-No "Structure of the thesis" section: 3.8 bans roadmaps and the six part
-titles do that work.
+**Section 3. The objective, the readout and the architecture settle three further properties.** Four paragraphs.
 
-### What this section does not do
+13. Attention. Backpropagation held fixed, the objective varied, at a scale
+    the grokking setting cannot reach. Not a second measurement.
+14. The world model. A quantity the loss never constrains, and a probe that
+    reports it in place of the state.
+15. The standard that crosses the chapters, positive first. One chapter sets a
+    standard for readouts and the discussion holds this thesis's own measure
+    to it, which is research question 7 and the answer is partly
+    uncomfortable. Then, in the same paragraph, that no measurement is shared
+    and two that were planned are not available. Admissions 2 and 6, with
+    Nero as the one clause that answers the gauge objection.
+16. CNA, stating what it shows, not only what it is not. Noise filtering,
+    completion and recombination, then the convergence and the two dates.
 
-It does not state any finding in full. Each appears in one line here and in
-full in its chapter. The file it replaces stated six findings in six sections,
-restated them as questions and restated them again as contributions.
+**Section 4. Research questions.** Seven, not eight, weighted three to the
+lead paper rather than four. The first draft's question 3 was inside question
+1, its question 8 contained its own answer, and its question 5 had a defence
+against an objection stapled to it. Each names the chapter that answers it.
+
+**Section 5. Contributions.** One line each, with the authorship share per
+item, because `3-2_further_contributions.tex` invokes the institute's
+expectation that a cumulative thesis separates the candidate's own
+contribution from collaborative work and a committee reads the shares
+together. Then two short paragraphs: what is left of the claim without the
+grokking paper, said plainly rather than left for the discussion, and how to
+read the thesis, which is not a roadmap but the facts a reader needs, that
+imported bodies appear as published with their own spelling and numbering and
+that the frame is written fresh.
+
+### What this chapter does not do
+
+It states no finding in full. The file it replaces stated six findings in six
+sections, restated them as questions, and restated them again as
+contributions.
 
 ## Critique record
 
