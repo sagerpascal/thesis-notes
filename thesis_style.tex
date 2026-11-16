@@ -251,6 +251,22 @@
         \par\vspace{3pt}%
         \textcolor{ThesisRule}{\rule{\linewidth}{0.4pt}}%
         \par\vspace{5pt}%
+        % No margin citation from inside this box. Section 6 of CLAUDE.md
+        % already rules that a citation outside running text does not go to
+        % the margin, and this box is the case that rule had missed. The box
+        % sits at the top of a chapter's first page, which is the one page
+        % whose margin is already holding the \margintoc, and marginnote
+        % overprints rather than relocating. Before 2026-11-16 the note landed
+        % on top of a margin toc line on four of the five paper backed chapter
+        % openings, leaving both unreadable. The marker in the box is
+        % unaffected, and the work gets its margin note at its first mention
+        % in the chapter's running text instead.
+        %
+        % \thesisnosidecite rather than the switch itself, because this box
+        % is defined outside the file's \makeatletter regions: a runtime
+        % \makeatletter cannot rejoin \ts and @sidecitefalse, which tcolorbox
+        % has already tokenised separately by then.
+        \thesisnosidecite
     },
 }
 
@@ -364,6 +380,11 @@
 }
 
 \newif\ifts@sidecite \ts@sidecitetrue   % the feature switch
+
+% A public name for turning the margin citation off, for the parts of this
+% file and of a chapter that sit outside a \makeatletter region. It is local
+% to the group it is used in.
+\newcommand{\thesisnosidecite}{\ts@sidecitefalse}
 \newif\ifts@margfree \ts@margfreetrue   % is the margin usable right here?
 \newif\ifts@parfree  \ts@parfreetrue    % has this paragraph had one yet?
 \newif\ifts@useside

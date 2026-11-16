@@ -159,3 +159,49 @@ reason = "CNA's \\bibitem list and references/manual.bib, same paper"
 [[merge]]
 keys = ["ha2018world"]
 reason = "preprint and conference version of one paper"
+
+# ---------------------------------------------------------------------------
+# The CNA \bibitem list, continued: entries whose author field is a surname
+# followed by "et al."
+# ---------------------------------------------------------------------------
+#
+# Found by reading the rendered PDF on 2026-11-16. The CNA paper carried its
+# references inline as \bibitem entries, and scripts/merge_bib.py converted
+# them. Where the \bibitem printed "Vaswani et al.", the converter wrote
+# author = {Vaswani et~al.}, which biblatex parses as the given name "Vaswani
+# et" and the family name "al.". The bibliography then prints "Vaswani et al."
+# and reads acceptably, but the margin note prints the family name alone, so
+# six margin notes read "et al. (2017)" with no author at all.
+#
+# The full and correct author list is in each entry's note field, which is
+# where the converter put the original \bibitem string. These restore it.
+#
+# One of them was also a duplicate. Rule 3 of the merge matches on title plus
+# first author surname plus year, and it compared "al." against "vaswani", so
+# the Transformer paper was printed twice in the bibliography, once from this
+# list and once from a proper entry. That is the [[merge]] at the end.
+
+[entry.etal_binding_2020]
+author = "Greff, Klaus and van Steenkiste, Sjoerd and Schmidhuber, Jürgen"
+
+[entry.etal_boltzmann_1984]
+author = "Hinton, Geoffrey E. and Sejnowski, Terrence J. and Ackley, David H."
+
+[entry.etal_century_2012]
+author = "Wagemans, Johan and Elder, James H. and Kubovy, Michael and Palmer, Stephen E. and Peterson, Mary A. and Singh, Manish and von der Heydt, Rüdiger"
+
+[entry.etal_gradient_1998]
+author = "LeCun, Yann and Bottou, Léon and Bengio, Yoshua and Haffner, Patrick"
+
+[entry.etal_imagenet_2009]
+author = "Deng, Jia and Dong, Wei and Socher, Richard and Li, Li-Jia and Li, Kai and Fei-Fei, Li"
+
+[entry.etal_neural_1992]
+author = "Geman, Stuart and Bienenstock, Elie and Doursat, René"
+
+# Named by the source keys, not the generated ones: a directive is matched
+# against the keys the source bibliographies use, because the generated keys
+# do not exist yet when it is applied.
+[[merge]]
+keys = ["attention2017", "vaswani2017attention"]
+reason = "the Transformer paper, from CNA's \\bibitem list and from the ACU bibliography; the merge missed it because the converted author field parses with the family name \"al.\", so the title and first author rule compared \"al\" against \"vaswani\""

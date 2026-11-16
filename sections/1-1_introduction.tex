@@ -44,8 +44,9 @@ trained network.
 \label{sec:intro_question}
 % ─────────────────────────────────────────────────────────────────────────────
 
-The two ends of that range fail differently. A computation spread over many neurons survives the loss of any
-one of them, because none of them carries much on its own. A computation held
+A concentrated circuit and a spread one fail differently. A computation
+spread over many neurons survives the loss of any one of them, because none of
+them carries much on its own. A computation held
 on a few leaves the rest of the network idle, so there is more to prune away
 and more room to put to a new use. The second effect is narrow. A concentrated network reaches a task that needs new
 combinations of the features it already has in $640$ epochs where the spread
@@ -195,8 +196,7 @@ the weight matrices alone the untouched network sits at $0.82$ and the
 intervention lifts it to $0.91$, a gap the paper's own limitations say the
 condition does not explain.
 
-Of the four prices named at the start of this chapter, three follow from what
-the measure counts. The fourth has a different source. A concentrated
+Of the four prices named so far, three follow from what the measure counts. The fourth has a different source. A concentrated
 network reaches a new task faster by recruiting the neurons it had left idle,
 and the idle capacity is what does the work there.
 

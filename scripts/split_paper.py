@@ -520,7 +520,15 @@ def thebibliography_to_bib(text: str, manifest: dict, result: Result) -> str | N
                   ("journal", flat(journal)), ("year", flat(year))]
         out.append(f"@article{{{it.group('key').strip()},")
         out += [f"  {k:8s} = {{{v}}}," for k, v in fields if v]
-        # The note keeps the original string for a human to check against.
+        # The original string is kept for a human to check against, in a
+        # field biblatex does not know and therefore never prints. It used to
+        # go in `note`, which kaobiblio prints at the end of the entry, so
+        # thirty one entries of the printed bibliography carried the whole
+        # reference twice, once formatted and once as the raw APA string. That
+        # was found by reading the PDF on 2026-11-16. `note` has to stay free
+        # for its real use, which is the status line of the thesis author's
+        # own papers: "Under review", "In preparation", "Article 34".
+        #
         # It has to be plain text: \newblock and {\em ...} survive otherwise,
         # and truncating a string that contains braces leaves them unbalanced,
         # which silently kills the rest of the file for the bib parser.
@@ -529,7 +537,7 @@ def thebibliography_to_bib(text: str, manifest: dict, result: Result) -> str | N
         plain = re.sub(r"\\[a-zA-Z@]+\s*", " ", plain)
         plain = plain.replace("{", "").replace("}", "").replace("\\", "")
         plain = " ".join(plain.split())[:400]
-        out.append(f"  note     = {{{plain}}}")
+        out.append(f"  origentry = {{{plain}}}")
         out.append("}")
         out.append("")
     result.notes.append(

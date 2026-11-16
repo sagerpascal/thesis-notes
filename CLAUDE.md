@@ -971,7 +971,24 @@ way.
 
 A citation outside running text does not. Beside a float the margin already
 carries that float's caption, a caption's citation is re-executed when the
-list of figures is typeset, and a table cell has no margin of its own.
+list of figures is typeset, and a table cell has no margin of its own. The
+publication header box is the case this rule had missed until 2026-11-16, and
+it was the worst of them: the box sits at the top of a chapter's first page,
+which is the one page whose margin already holds the `\margintoc`, and the
+note landed on top of a toc line on four of the five paper backed chapter
+openings. Both texts were then unreadable. `publicationbasis` now calls
+`\thesisnosidecite`, a public name for the switch, because the box is defined
+outside this file's `\makeatletter` regions and a runtime `\makeatletter`
+cannot rejoin `\ts` and `@sidecitefalse` after tcolorbox has tokenised the key
+value. The work still gets its margin note at its first mention in the
+chapter's running text.
+
+This is the failure mode to look for after any change to the margin, and the
+log does not report it. Render the five chapter openings and look at them:
+
+```bash
+pdftoppm -png -r 110 -f 45 -l 45 main.pdf /tmp/chapter-opening
+```
 
 A work already introduced in this chapter does not. Of the 588 single key
 citations only 276 are a work's first mention in its chapter, and at 276 five
@@ -1160,26 +1177,45 @@ finalised, or is cosmetic.
     and that is an artefact, because `trimclip` hides the end of a clipped
     entry and leaves it in the text layer.
 
-13. **Three float list entries still clip.** Option 2 of
+13. **About half of the float list entries clip, and this item was wrong
+    until 2026-11-16.** Option 2 of
     `00_ADMIN/06_float_presentation_concept.md` is implemented in
     `thesis_import.sty`: inside a block `\caption` is patched to compute a
     short form, taking the contents of a leading `\textbf` group where the
     paper writes its claim in bold, and otherwise the first sentence, with a
     width guard so that an abbreviation such as "Fig." does not end the
-    sentence early. The clipping in `thesis_style.tex` stays as the fallback
-    and now fires on three entries of about $130$ rather than on all of them.
+    sentence early. The clipping in `thesis_style.tex` stays as the fallback.
+
+    This item used to say the fallback fired on three entries of about $130$.
+    A read of the rendered PDF put it at roughly $51$ of the $93$ entries the
+    two lists hold, which is about half. The earlier number was never measured
+    on the page. Measure it the only way that works, by looking:
+
+    ```bash
+    pdftoppm -png -r 110 -f 19 -l 21 main.pdf /tmp/lists
+    ```
+
+    A clipped entry ends mid word before the page number, as in "ranked by
+    first" or "the squared-error l". The short form is doing its job, and the
+    first sentence of a published caption is simply longer than one line of a
+    $304$pt measure.
 
     Cross references are dropped from the short form, because a float list is
     an index and a reference there points at something the reader has not
     reached. That also keeps the attention paper's upstream-broken equation
     label from printing a second `??`, this time in the list of figures. The
-    cost is a stray parenthesis in one clipped entry, where the reference sat
-    inside brackets.
+    cost shows in four entries, which print a dangling reference word: Figure
+    6.1 ends "see Equation )", Table A.15 has "same networks as Table ,", and
+    Tables C.13 and C.14 have "as in Table :" and "of Table under".
 
-    The three that still clip are the cases Option 3 of that note exists for,
-    which is a declared summary keyed by label. That needs the entry to be
-    stashed at `\caption` and written at `\label`, and it has not been built.
-    Two of the three open with a panel label rather than a claim.
+    Two routes are open and neither has been taken. Option 3 of that note is a
+    declared summary keyed by label, which needs the entry stashed at
+    `\caption` and written at `\label`. The other is to stop clipping and let
+    an entry wrap to a second line, which is what every other thesis does and
+    what the three entries that already wrap in the table of contents show is
+    survivable. The second is a one line change in `thesis_style.tex` and
+    costs nothing but the one line per entry layout. Ask before changing it:
+    the one line rule was a deliberate choice.
 14. **Table style is uniform enough, and the rest cannot be made uniform.**
     Checked on 2026-11-16. The four reproduced papers use booktabs
     throughout: not one `\hline` survives in the build, and the caption below
