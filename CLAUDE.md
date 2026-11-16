@@ -1006,41 +1006,42 @@ finalised, or is cosmetic.
 10. **The CNA bibliography is converted, not real.** Its 52 references came
     from `\bibitem` entries, so author and title are as good as a formatted
     string allows. Ask for the paper's original `.bib`.
-11. **Untested on Overleaf.** Linux is case sensitive and has no Python. Every
-    generated artefact is committed, so the build should not need a script,
-    but nobody has run it there. The one known case sensitivity problem,
-    COGITAO's `Figures` against `figures`, left the build with the cut.
+11. **Overleaf should work, and nobody has run it there.** Checked on
+    2026-11-16, and four of the five things that could have broken are ruled
+    out. `build.sh` calls pdflatex and biber and nothing else, so no script
+    runs at build time. All $56$ files under `generated/` are committed. No
+    graphics file anywhere in the repository is untracked or ignored, so
+    nothing the build reads is missing from a clone. And case sensitivity is
+    settled rather than assumed, because this machine is Linux and the build
+    passes on it; the one known problem, COGITAO's `Figures` against
+    `figures`, left the build with the cut.
+
+    What is left is the TeX distribution. This builds with TeX Live 2023 and
+    biber 2.19, and Overleaf's version has to match biber to biblatex or
+    biber refuses to run. Set it in the Overleaf menu, build once, and delete
+    this item.
 
 ### Style
 
-12. **17 overfull hboxes.** Most are display equations set
-    for a wider measure, the rest paragraphs. The count was 101 before the cut
-    of 2026-11-14 and 30 after it. Forty-four of the first batch were the rows
-    of one table, `probe-norm/tables/table_literature.tex`, which left the
-    build when the world model appendix was trimmed, and the rest went with
-    the four summarised papers. Thirteen more went with the survey's body and
-    appendix on 2026-11-16.
+12. **No overfull hboxes.** The count was $101$ before the cut of
+    2026-11-14, $30$ after it, $17$ after the survey was summarised, and $0$
+    since the two math-heavy appendix files were set wide on 2026-11-16 with
+    `\importpartwide` and `\importsectionwide`.
 
     ```bash
     uv run --no-project python scripts/check_layout.py --overfull
     ```
 
-    reports each with the file and the PDF page it came from. `build.sh`'s
-    `badboxes` count is higher, because it counts underfull boxes and vboxes
-    as well. `\emergencystretch` inside the block was tried and changes nothing,
-    because what is left has no legal break to find.
+    `build.sh`'s `badboxes` count stays around $91$, because it counts
+    underfull boxes and vboxes as well, and those are the ordinary cost of a
+    narrow measure.
 
-    Most of the displays overflow into the margin, which is white space, and
-    read as wide rather than broken. Two do not: both are in the self
-    attention proof appendix and put an equation number within 4mm of the
-    paper edge. Their page numbers moved with the 2026-11-14 re imports and
-    were not measured again. Fixing them means scaling display math, which would leave
-    the mathematics at two sizes across the thesis to repair two pages, so it
-    has been left. The measurement that finds them is the maximum x of any
-    word on the page against the 597pt paper width. That measurement also
-    flags the two float list pages, and there it is an artefact: `trimclip`
-    hides the end of a clipped caption but leaves it in the text layer, so its
-    boxes still run past the edge with nothing visible there.
+    The check that matters is not the log but the page: the maximum x of any
+    word against the $595$pt paper width. No page of content now comes within
+    $66$pt of the edge. The two float lists still report text past the edge
+    and that is an artefact, because `trimclip` hides the end of a clipped
+    entry and leaves it in the text layer.
+
 13. **Three float list entries still clip.** Option 2 of
     `00_ADMIN/06_float_presentation_concept.md` is implemented in
     `thesis_import.sty`: inside a block `\caption` is patched to compute a

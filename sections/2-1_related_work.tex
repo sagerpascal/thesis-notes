@@ -60,7 +60,7 @@ no property of the data stands in the way of memorisation and that reaching
 zero training loss says almost nothing about which function was
 found~\cite{zhang_rethinking_2017}. Fitting is not the constraint.
 
-What fits is therefore a set rather than a point. Many parameter settings
+What fits is therefore a set and not a point. Many parameter settings
 reach the same training loss, and they differ in properties the loss never
 sees: how large the weights are, how wide the margin is, how the computation
 is arranged across the network's parts. Classical accounts of generalisation
@@ -140,8 +140,8 @@ and effective dimension are all properties of the whole parameter vector, and
 a network can be described completely in those terms without any statement
 about which of its units are doing the work. The closest the literature comes
 to a structural claim is the bias of deep matrix factorisation towards
-solutions of low rank, which is a statement about the spectrum rather than
-about the parts~\cite{arora_implicit_2019,gunasekar_characterizing_2018}.
+solutions of low rank, which is a statement about the spectrum and not about
+the parts~\cite{arora_implicit_2019,gunasekar_characterizing_2018}.
 
 The part of the procedure these results vary is also narrow. They vary the
 optimizer, or the geometry of the update, or the scale of the initialisation.
@@ -172,12 +172,12 @@ Random feedback turned out to be enough. Routing the error through a fixed
 random matrix still trains a network, because the forward weights move into
 rough alignment with that matrix instead of the other way
 round~\cite{lillicrap_random_2016}, and the direct form delivers the error to
-every layer at once rather than passing it down the
+every layer at once instead of passing it down the
 chain~\cite{nokland_direct_2016}. The alignment happens early in training and
 what follows it is largely memorisation of the training
 set~\cite{refinetti_align_2021}.
 
-A second family changes the geometry rather than the path. Natural gradient
+A second family leaves the path alone and changes the geometry. Natural gradient
 preconditions the update by the curvature of the loss in function
 space~\cite{amari_natural_1998}, and a Kronecker factored approximation makes
 that affordable for a deep network~\cite{martens_optimizing_2015}. At the
@@ -193,7 +193,7 @@ Predictive coding networks approximate backpropagation with local error units
 when the network relaxes to equilibrium~\cite{whittington_approximation_2017},
 equilibrium propagation reads the gradient off the difference between two
 settled states~\cite{scellier_equilibrium_2017}, target propagation sends
-targets rather than errors backwards and corrects the inversion
+targets backwards in place of errors and corrects the inversion
 error~\cite{lee_difference_2015}, and the forward-forward algorithm replaces
 the backward pass with a second forward pass on contrasting
 data~\cite{hinton_forward_2022}. Deep feedback control drives the network
@@ -317,7 +317,7 @@ computation is spread over is another, and this thesis is about the second.
 
 Even with backpropagation held fixed, the circuit is not unique. A different
 algorithm appears under other hyperparameters, one that composes rotations
-rather than reading off a sum~\cite{zhong_clock_2023}. A sparse generalising
+instead of reading off a sum~\cite{zhong_clock_2023}. A sparse generalising
 subnetwork can be separated from the dense memorising network around
 it~\cite{merrill_tale_2023}. And a small initialisation drives a network into
 a condensed regime in which few effective neurons remain active at
@@ -363,7 +363,7 @@ specificity~\cite{barlow_single_1972}, and the second in the argument that a
 concept is better held as a pattern over many units, each of which
 participates in many concepts~\cite{hinton_distributed_1986}.
 
-Sparsity can be derived rather than assumed. Optimising a linear code of
+Sparsity can be derived and need not be assumed. Optimising a linear code of
 natural images for sparse activity yields filters that are localised, oriented
 and bandpass, which is what receptive fields in primary visual cortex look
 like~\cite{olshausen_emergence_1996}, and the argument has been developed as a
@@ -678,11 +678,11 @@ zero~\cite{yaguchi_adam_2018,mehta_implicit_2019}. The numerical floor in that
 optimizer's denominator lets units with very small second moment estimates
 die~\cite{dufortlabbe_maxwell_2025}. A decayed per unit gain acts as a gate
 that induces sparsity~\cite{mehta_implicit_2019,kolb_differentiable_2025}.
-Persistently small row updates leave neurons dead in large language models
-trained with a matrix preconditioner~\cite{dewulf_aurora_2026}. And under
-coupled decay a neuron's equilibrium depends on its own gradient
-norm~\cite{kosson_rotational_2024}. Each of these is treated as a pathology to
-be avoided or as a lever for pruning.
+In large language models trained with a matrix
+preconditioner, neurons whose rows are updated by persistently small amounts
+simply die~\cite{dewulf_aurora_2026}. And under coupled decay, where a neuron
+settles depends on its own gradient norm~\cite{kosson_rotational_2024}. Each
+of these is treated as a pathology to be avoided or as a lever for pruning.
 
 What has not been done is to treat them as one thing. There is no account that
 derives a single condition covering the separate routes, and none that reads

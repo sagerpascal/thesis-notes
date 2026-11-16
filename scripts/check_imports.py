@@ -43,10 +43,12 @@ WRAPPER_PARTS = {
 }
 
 IMPORT_ENV = re.compile(r"\\begin\{importedpaper\}\{([^}]*)\}")
-# \importsectionrotated is \importsection on a turned page, so it counts as
+# \importsectionrotated is \importsection on a turned page, and
+# \importsectionwide is \importsection on a page that reclaims the margin
+# column, so both count as
 # an include for coverage exactly the same way.
-IMPORT_SECTION = re.compile(r"\\importsection(?:rotated)?\{([^}]*)\}")
-IMPORT_PART = re.compile(r"\\importpart\{([^}]*)\}")
+IMPORT_SECTION = re.compile(r"\\importsection(?:rotated|wide)?\{([^}]*)\}")
+IMPORT_PART = re.compile(r"\\importpart(?:wide)?\{([^}]*)\}")
 # \subfile is the subfiles package's include. COGITAO uses it throughout, and
 # its leaves carry no standalone preamble, so it behaves exactly like \input.
 # thesis_import.sty aliases it to \input for the same reason.
@@ -414,7 +416,7 @@ def check_monolithic(m: Manifest, report: Report) -> None:
 
 
 CLOSER = re.compile(
-    r"\\importsection(?:rotated)?\[(.*?)\]\{([^}]*)\}")
+    r"\\importsection(?:rotated|wide)?\[(.*?)\]\{([^}]*)\}")
 
 
 def importsection_closers(m: Manifest) -> dict[str, dict[str, int]]:

@@ -173,6 +173,10 @@ ANTITHESIS = re.compile(
     r"\brather than\b|\bis not (just|merely|only)\b|\bnot\b[^.]{0,40}\bbut\b|"
     r",\s*not\s+\w", re.I)
 ANTITHESIS_PER_1000 = 4.0
+# A rate alone fires on a short file for three instances, where three is not a
+# habit and the rate is mostly noise. Both have to be exceeded.
+ANTITHESIS_MIN = 6
+DENSITY_MIN = 4
 
 
 def heading_lines(text: str) -> set[int]:
@@ -360,7 +364,8 @@ def check_file(path: Path) -> tuple[list, list]:
     words = len(prose.split())
     anti = [(n, m.group(0).strip())
             for n, line in lines for m in ANTITHESIS.finditer(line)]
-    if words > 400 and len(anti) / words * 1000 > ANTITHESIS_PER_1000:
+    if (words > 400 and len(anti) >= ANTITHESIS_MIN
+            and len(anti) / words * 1000 > ANTITHESIS_PER_1000):
         soft.append(("antithesis density", 0,
                      f"{len(anti)} in {words} words, "
                      f"{len(anti) / words * 1000:.1f} per 1000"))
@@ -370,12 +375,14 @@ def check_file(path: Path) -> tuple[list, list]:
             soft.append(("antithesis", n, what[:60]))
 
     n_disc = len(DISCLAIMER.findall(prose))
-    if words > 400 and n_disc / words * 1000 > DISCLAIMER_PER_1000:
+    if (words > 400 and n_disc >= DENSITY_MIN
+            and n_disc / words * 1000 > DISCLAIMER_PER_1000):
         soft.append(("disclaimer density", 0,
                      f"{n_disc} passages say what the text does not claim, "
                      f"{n_disc / words * 1000:.1f} per 1000 words"))
     n_cnt = len(COUNTED_OPENER.findall(prose))
-    if words > 400 and n_cnt / words * 1000 > COUNTED_OPENER_PER_1000:
+    if (words > 400 and n_cnt >= DENSITY_MIN
+            and n_cnt / words * 1000 > COUNTED_OPENER_PER_1000):
         soft.append(("counted opener density", 0,
                      f"{n_cnt} sentences announce a count before delivering "
                      f"it, {n_cnt / words * 1000:.1f} per 1000 words"))
