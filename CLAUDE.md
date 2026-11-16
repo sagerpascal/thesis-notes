@@ -924,150 +924,50 @@ and `generated/` trees, and all seven scripts.
 
 ### Blocking the thesis
 
-0. **The arc and the paper selection are settled. The cut is not done.**
-   Settled on 2026-11-14 in sections 12 and 13 of
-   `00_ADMIN/04_story_framings.md`. `00_ADMIN/05_thesis_concept.md` carries
-   the result and is the file to read before writing any frame prose.
-   Sections 1 to 11 of the framings file are retired.
+The thesis frame is written end to end as of 2026-11-16: both abstracts, the
+introduction, the background, five chapter wrappers, the discussion and the
+conclusion. What is left here needs the author, or needs a paper to be
+finalised, or is cosmetic.
 
-   The spine is credit assignment, settled on 2026-11-16. A task fixes what a
-   network computes and leaves open how the computation is distributed over
-   its neurons. The rule that assigns credit during training fixes that, the
-   condition deciding it can be read off the update equation and intervened
-   on, and the choice trades damage tolerance against compressibility and
-   transfer speed. Other chapters take other properties the objective leaves
-   open: the training objective fixes the symmetry of an attention matrix, and
-   the norm of a predicted latent is left free altogether and dominates the
-   probe that is supposed to read the state. The thesis wide noun is
-   **circuit**.
+0. **The story is settled and the frame is written to it.** The spine is
+   credit assignment, set on 2026-11-16, and
+   `00_ADMIN/05_thesis_concept.md` carries it. The paragraph plans every
+   chapter was written to, and four rounds of critique with what was done
+   about each, are in `00_ADMIN/07_writing_plan.md`. Read both before
+   changing any frame prose. The retired word "layout" is gone from thesis
+   owned prose; the only remaining matches are a kaobook class option and a
+   comment about visual layout.
 
-   Sparse against distributed coding framed the thesis for one day and is now
-   a declared analogy, one paragraph in the introduction and one in the
-   outlook. The participation measure is still borrowed from that literature
-   and the borrowing is stated. The reasoning is in the decision record in
-   `00_ADMIN/07_writing_plan.md`. Do not restore the coding framing without
-   answering the three disanalogies recorded there.
+1. **Seven things need the author and nobody else.**
+   - `figures/Titelblatt_E_POV2011.pdf` is still the faculty's blank form,
+     see item 7 below.
+   - `sections/0-3_acknowledgements.tex` is a placeholder.
+   - `sections/9-1_declarations.tex` carries the originality declaration as a
+     placeholder, and the faculty may prescribe its own wording.
+   - Three contribution statements are reconstructions and are marked
+     `TODO(author)`: grokking, CNA and the survey. The survey's is also in a
+     more bureaucratic register than the other four, which one reviewer read
+     as advocacy in two places.
+   - `sections/0-4_publications.tex` prints a status line per entry that
+     should be checked against the published record.
+   - `references/manual.bib` has `pages = {34}` for `acu_survey`, which may
+     be a JAIR article number rather than a first page.
+   - The working title. Alternatives are in `00_ADMIN/05_thesis_concept.md`.
 
-   Two facts about the central paper that the frame got wrong once and must
-   not get wrong again. The reference setting is Adam with L2 added to the
-   gradient, and the manuscript says it "serves here to test the condition at
-   scale and not as a recommended setting"; under AdamW the reference is
-   already distributed almost everywhere the paper looks. And credit
-   participation does not order circuit participation across optimizers, since
-   Lion and credit equalisation share $1.000$ and land at $0.535$ and $0.992$.
-   The guardrails in `00_ADMIN/05_thesis_concept.md` carry both.
+2. **Three papers are not final.** COGITAO, grokking and the world model
+   paper are still moving. Run `scripts/reimport.py <slug> <path>`, which
+   replaces the directory and reruns everything downstream. The world model
+   manuscript is not yet submitted and its publication box says so; when it
+   is, update the box, `references/manual.bib` and the chapter introduction.
 
-   The title, subtitle, three part titles and all five chapter titles were
-   rewritten on 2026-11-16. The title page is "The Learning Rule Decides How
-   Much of a Network Carries the Computation", subtitled "Credit Assignment,
-   and What a Task Leaves Open in a Trained Network".
-
-   The cut is done, on 2026-11-14. Five papers are reproduced as full
-   imported chapters: grokking, attention, CNA, the ACU survey and the world
-   model paper. Four are summarised in
-   `sections/3-2_further_contributions.tex`: the LLM benchmark, COGITAO,
-   Hounsfield and retrieval. The world model appendix was trimmed in the same
-   pass, by the rule that an appendix holds what the kept text points at. Only
-   its Literature Survey section could go, because the other four are all
-   referenced from the body and cutting a referenced section would print `??`.
-   That is 3 pages of 22, and it is as far as the rule reaches without editing
-   published text, which this repository does not do. The thesis went from 369
-   pages to 281, the overfull boxes from 101 to 30, the `??` from 2 to 1, and
-   `check_imports.py` from 6 warnings to 4. Nothing under `imported_papers/`
-   was touched.
-
-   One job is left. The "layout" sweep. The part titles, the subtitle and the
-   grokking appendix title no longer say it, but the word remains in thesis
-   owned prose, most of it in `sections/1-1_introduction.tex`. Do it while
-   writing the new introduction, not as a pass of its own. The introduction
-   also still argues the old story throughout, and its chapter and section
-   references were repointed at the summary chapter rather than rewritten.
-
-   Two measurements that earlier drafts listed as optional glue are withdrawn
-   for good: participation ratio on attention weights, and unit deletion on
-   CNA nets. No checkpoints survive and the CNA code no longer runs. Do not
-   promise either anywhere.
-
-1. **The chapter wrappers are mostly placeholders.** Every paper backed
-   chapter has a publication box, contribution statement, chapter introduction
-   and chapter summary. The imported bodies below them are real and compile.
-   Write the framing prose, then flip each manifest to `status = "wired"`.
-
-   Two chapters are further along. `sections/5-1_grokking.tex` and
-   `sections/4-1_bounded.tex` carry a real publication header box and a real
-   contribution statement as of 2026-11-14. Only their chapter introduction
-   and chapter summary are still placeholders, because those are the parts
-   that commit to an arc and the arc is item 0. The grokking contribution
-   statement is reconstructed from the author list, since that manuscript
-   carries no contributions section, and is marked `TODO(author)`. The world
-   model one follows the paper's own author contributions section.
-
-   One chapter carries a specific obligation, marked `TODO(story)` in the
-   file. The CNA chapter summary is where the paper's discussion label now
-   lives, because the chapter drops the paper's discussion. The grokking
-   chapter had an obligation of the same kind and no longer does: the
-   2026-11-14 version defines its learning rules in the experimental setup,
-   which the chapter includes.
-1b. **Both abstracts are a correctness problem, not a style problem.**
-   `sections/0-1_abstract_en.tex` states two results the grokking manuscript
-   no longer carries, four of twelve rules never generalising and the one over
-   root effective count law, and its fifth paragraph describes the bounded
-   operator paper that the Frontiers norm drift paper replaced. It also uses
-   the retired frame term as a term, names "net" before defining it, uses
-   "effective neuron count" with no gloss where 3.5 allows no coined
-   vocabulary at all, and says the choice can be read off the update equation
-   "before the procedure is run", which 3.7 bans by name. Its header comment
-   claims none of this is true. The German abstract mirrors all of it. Quote
-   nothing from either until both are rewritten.
-
-2. **The background chapter is a structure with no prose.**
-   `sections/2-1_related_work.tex` has its eight sections, its subsections and
-   a `\paragraph` stub per paragraph, each carrying a comment with the claim to
-   make and the keys to cite. All 121 keys it names resolve. Write the prose
-   against that plan. The old content argued the retired story and was removed
-   on 2026-09-07, `git show 9f332ab:sections/2-1_related_work.tex` retrieves
-   it.
-3. **Three papers are not final.** COGITAO, grokking and the world model paper
-   are still moving. Run `scripts/reimport.py <slug> <path>`, which replaces
-   the directory and reruns everything downstream.
-
-   Grokking and the world model paper were both re-imported on 2026-11-14 and
-   both had changed structurally. Grokking renamed and reorganised every
-   section, so its manifest, its split and the `\importpart` lists in the
-   chapter and the appendix were rewritten. The world model paper is no longer
-   the TMLR rewrite: it is a Frontiers manuscript at
-   `imported_papers/probe-norm`, titled "Correcting state-probe evaluation of
-   world models for norm drift", with a separate supplement that now supplies
-   the appendix parts. The slug stays `bounded`, so the chapter file, its label
-   and the appendix chapter kept their names.
-
-   Both `\chapter` titles still state the old findings. `chap:bounded` is "A
-   Constraint on Latent Dynamics Passes the Standard Readout Without
-   Predicting", which is the previous paper, and `chap:grokking` says "units"
-   where the thesis noun is now circuit. A chapter title is a statement of the
-   finding and belongs to the frame, so both are rewritten with the chapter
-   introductions, under item 0.
-4. **Discussion and conclusion are outlines in comments.** Write them last.
-5. **Own paper entries in `manual.bib` carry TODO fields.** The attention
-   paper is now ICML 2025 and COGITAO is the 2nd ICML Workshop on
-   Compositional Learning, both set on 2026-09-07. Still open: the COGITAO
-   year is inferred from the workshop being the second of its series and from
-   the vendored directory name, the COGITAO author list reads `and others`,
-   and the CNA entry has no volume or pages. The world model entry was
-   completed on 2026-11-14 and the grokking title corrected to the one the
-   2026-11-14 manuscript carries, so neither is open any more. The list
-   of publications in `sections/0-4_publications.tex` prints these entries with
-   `\fullcite`, so fixing the bib fixes the list.
-6. **The title is a working title.** Alternatives are in
-   `00_ADMIN/05_thesis_concept.md`.
-7. **Page 1 of the PDF is the faculty's blank title form.** It is the title
-   page of the thesis, and kaobook's own title page is deliberately not
-   produced, so `main.tex` has no `\maketitle`. The vendored copy at
-   `figures/Titelblatt_E_POV2011.pdf` is still the blank template, instruction
-   bubbles and dotted lines included. It needs the committee names, the
-   citizenship line and the year of graduation, and its bold text has to be
-   adopted verbatim, so it cannot be filled in from here. Drop the completed
-   PDF in over it.
+3. **The frame's numbers come from the current manuscripts and will drift.**
+   Every quantitative claim in thesis owned prose was checked against the
+   vendored source on 2026-11-16, and the check caught six errors. Two were
+   serious: the opening sentence of both abstracts and the introduction had
+   fused the width-2048 neuron counts with the width-256 accuracy cost, and
+   "a few columns come to dominate" misread the attention paper's measure,
+   which means columns of high norm outnumbering rows of high norm. After any
+   re import, run that check again rather than trusting the prose.
 
 ### Correctness
 

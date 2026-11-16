@@ -1064,3 +1064,47 @@ corrections they announced live here instead, and `scripts/check_prose.py`
 gained six checks: per line antithesis reporting, the self congratulation
 phrases, the meta label family, draft reference density, counted headings
 against list length, and the anaphoric triple.
+
+### Round 3, 2026-11-16, the finished frame
+
+Two readers took the frame end to end once every file was prose. Every
+quantitative claim either made was checked against the vendored manuscripts
+before being accepted, and six factual errors came out of it.
+
+**Examiner.** The worst was in the thesis's first sentence, in both abstracts
+and the introduction: it gave the width-2048 neuron counts and attached the
+width-256 accuracy cost to them, where the manuscript says "At width $2048$
+the reference and equalization both start at $0.998$". Next worst, "a few
+columns come to dominate" misread the attention paper in five places; its
+theorem reads "more columns with high norms than rows with high norms", so
+column dominance is columns against rows. The thesis's "circuit across
+columns" analogy rested entirely on that misreading and is gone, which is the
+cleaner position. Also: the background claimed no literature had asked what
+sets the number of neurons in use, where the grokking paper's own related
+work cites seven works for the separate routes; the world model chapter
+omitted its paper's own negative result, that the four checks reject every
+ranking between the authors' trained modules; the transfer result was given
+as its flattering half in four places; the survey gap sort contradicted
+itself inside one chapter; the Hounsfield summary inverted where the
+thresholds come from; and the introduction said five chapters reproduce a
+paper where four do. All fixed, with the quoted source line checked in each
+case.
+
+Two of its findings were not acted on. The learning-strategy and modality
+counts in the survey chapter are read off figures rather than prose and sum
+to $85$ of $87$, so they need checking against the source spreadsheet before
+submission. And the frame still has no answer to the manuscript's own line
+that the decoupled-decay reference "has nearly equal outgoing norms but
+prunes to about as few neurons as the Adam reference"; the discussion now
+states the problem rather than solving it.
+
+**AI smell audit.** Found the frame disciplined at sentence level and
+repetitive across files. Six of its findings are now checks in
+`scripts/check_prose.py`, the important one being cross-file shingle
+duplication, which nothing looked for before. It found twenty-three copies,
+including the abstract and introduction opening on the same twenty-five
+words. All twenty-three are rewritten so each file says the thing in its own
+words. The audit also warned against homogenising
+`3-2_further_contributions.tex`, whose plainer voice reads as a second hand
+and is worth keeping, so only its mechanical markers were changed.
+
