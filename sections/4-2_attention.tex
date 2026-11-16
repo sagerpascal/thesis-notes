@@ -27,11 +27,39 @@ vision and audio, and the symmetric initialisation study. Pau Vilimelis
 Aceituno, Thilo Stadelmann and Benjamin F. Grewe supervised and contributed to
 the framing and the writing.
 
-%% TODO(story): written by the framing pass. Placeholder until then.
 \section{Chapter Introduction}
 
-Placeholder. Connects the previous chapter's result to this one and
-states what the chapter contributes to the thesis argument.
+\Cref{chap:grokking} varied the learning rule with everything else fixed and
+found that the rule sets how much of a network carries the computation. The
+natural next question is whether that is a peculiarity of the one component
+that was varied, or whether other components of the training setup also leave
+structure of their own in a trained network. This chapter answers that for a
+second component, in a different substrate and at a scale the previous setting
+cannot reach.
+
+The design is the mirror image of the previous chapter's. Backpropagation is
+held fixed and the training objective is varied, between predicting a masked
+token from the whole sequence and predicting each token from its predecessors.
+The object measured is the product of the query and key matrices of an
+attention head, which is the bilinear form through which the two matrices act
+on the embeddings, and the structure in question is whether that form stays
+close to symmetric or whether a few of its columns come to dominate.
+
+What this chapter contributes to the thesis argument is one claim and not
+another. It shows that a second component of the training setup leaves its own
+structure in the weights, which is what makes the previous chapter's finding a
+case of something rather than a curiosity. It is not a second measurement of
+the circuit. No participation ratio over neurons is computed here, the object
+is a weight matrix rather than a layer, and reading column dominance as a
+circuit spread across columns is this thesis's analogy and not the paper's
+claim.
+
+One point of notation. The paper speaks of \emph{symmetry} and
+\emph{directionality} of the attention weights, which are properties of the
+query key product under transposition, and of \emph{column dominance} for the
+concentration of that product on few columns. Neither is the thesis's circuit
+measure, and the two vocabularies are kept apart. The chapter's $W_{qk}$ is
+the product written $W_Q^\top W_K$ elsewhere in the literature.
 
 % ---------------------------------------------------------------------------
 % The published paper, included verbatim. Do not edit imported_papers/.
@@ -56,9 +84,42 @@ states what the chapter contributes to the thesis argument.
 \importsection{ICML2025/sections/results-experiments}
 \end{importedpaper}
 
-%% TODO(story): written by the framing pass. Placeholder until then.
 \section{Chapter Summary}
 
-Placeholder. States the chapter's findings once in full and hands off
-to the next chapter.
+The update to a Transformer's attention weights is a sum over the ordered
+pairs of tokens that the training objective admits, and the two standard
+objectives admit different sets. Bidirectional training enters every pair in
+both orders, once with each token as the masked target, so the contributions
+cancel antisymmetrically and the query key product stays close to symmetric.
+Autoregressive training makes each token the target exactly once and the
+context of every token after it, so the sum is one sided and a small number of
+columns come to dominate the product. The derivation needs no assumption about
+the data beyond which pairs enter the sum.
+
+The prediction is borne out in trained models of both kinds. Twelve layer
+encoders and decoders trained under matched conditions on three corpora
+separate cleanly on the two measures across training, and the same separation
+appears in released models, in ModernBERT on one side and in GPT, LLaMA3 and
+Mistral on the other, and across text, vision and audio. The matched runs are
+the controlled evidence and the released models show that the effect survives
+at the scale the field works at.
+
+One consequence of the derivation is practical. If bidirectional training
+drives the query key product towards symmetry, then initialising it symmetric
+starts the network closer to where training is going, and it does: symmetric
+initialisation speeds up bidirectional training, and does not help
+autoregressive training, which is what the account predicts.
+
+What this chapter does not show is also worth stating. It measures no
+participation ratio and counts no neurons, so it neither confirms nor
+contradicts the previous chapter's measurement. The objective is varied here
+rather than the learning rule, and in a decoder part of that variation is
+carried by the mask over which positions may attend to which, which belongs to
+the architecture rather than to the loss. The common claim across the two
+chapters is at the level of the training setup, that more than one of its
+components leaves structure behind that the task alone does not fix.
+
+Both chapters so far have measured a trained network and drawn a conclusion
+from the measurement. \Cref{chap:bounded} asks what has to be true of such a
+measurement before the conclusion follows.
 

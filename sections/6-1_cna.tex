@@ -25,11 +25,38 @@ representation of a sensory pattern by a net of mutually supporting units, and
 shaped the model's design. Jan M. Deriu, Benjamin F. Grewe and Thilo
 Stadelmann supervised and contributed to the framing and the writing.
 
-%% TODO(story): written by the framing pass. Placeholder until then.
 \section{Chapter Introduction}
 
-Placeholder. Connects the previous chapter's result to this one and
-states what the chapter contributes to the thesis argument.
+Every chapter so far has taken a property that training leaves open and asked
+what settles it. The learning rule settles how much of a network carries the
+computation, the training objective settles the symmetry of a weight matrix,
+and the norm of a predicted latent is settled by nothing at all until a probe
+is asked to read it. In each case the property is a consequence of how the
+network was trained, and in each case it could have come out otherwise.
+
+This chapter asks what it would mean to stop leaving the property to training.
+The Cooperative Network Architecture represents a sensory pattern as a set of
+neurons each of which is held in place by several others, so that redundancy
+of support is a property of the architecture rather than something a
+regulariser has to be coaxed into producing. The parts are learned, by Hebbian
+plasticity from data, and how they are joined is not.
+
+The relation to \cref{chap:grokking} is a convergence and not a consequence,
+and the dates on the two publication boxes say why. This work was submitted in
+$2024$ and the grokking work is from $2026$, so no argument runs from the one
+to the other. What is true is that an architecture designed for its own
+reasons arrives at the same mechanism, redundancy of support, that a credit
+assignment rule can be made to produce by training. The chapter is offered as
+a proposal, and \cref{chap:discussion} says what would have to be measured
+before it is more than that.
+
+A note on vocabulary. The paper's \emph{net} is a representation of one
+sensory pattern, a set of neurons bound together by recurrent connections, and
+a \emph{net fragment} is a reusable piece of one. Neither is the thesis's
+circuit, which is a count of participating units in a trained feedforward
+layer. This chapter computes no participation ratio and runs no deletion
+protocol, so the connection to the earlier chapters is through the mechanism
+and not through a shared measurement.
 
 % ---------------------------------------------------------------------------
 % The published paper, included verbatim. Do not edit imported_papers/.
@@ -50,6 +77,36 @@ states what the chapter contributes to the thesis argument.
 % the paper's discussion, move the label or reword the reference.
 \importedlabel{cna}{sec:discussion}
 
-Placeholder. States the chapter's findings once in full and hands off
-to the next chapter.
+A net represents a sensory pattern as a set of neurons bound to one another by
+recurrent connections, assembled from fragments that Hebbian plasticity learns
+from data. Because a neuron belongs to the representation only while other
+neurons hold it there, support is structural, and three consequences follow
+that the chapter demonstrates.
+
+Noise is filtered without being modelled. A spurious activation has nothing
+supporting it, so it fails to join a net, and the pattern remains
+distinguishable with up to about $59\%$ of the input corrupted. Occluded
+figures are completed, because the fragments that are present support the
+parts that are missing. And fragments learned separately recombine: a network
+whose fragments were learned on straight lines assembles representations of
+digits and characters it was never trained on, which is compositional
+generalisation obtained from the structure of the representation rather than
+from more data.
+
+What the chapter does not do should be as clear as what it does. It measures
+no participation ratio and runs no deletion protocol, so nothing here is a
+second measurement of the thesis's central claim, and the connection to
+\cref{chap:grokking} is the shared mechanism alone. The features the model
+composes are hand designed rather than learned end to end. The demonstrations
+are on line drawings, and the architecture does not scale to natural images.
+And no dynamics are defined over a net, so there is nothing in the
+representation to plan with. These are the three limits that
+\cref{sec:bg_substratelimits} identifies in the whole lineage this work
+belongs to, and this work inherits all three.
+
+\Cref{chap:discussion} brings the four results together, states what the
+thesis has shown about what a task leaves open, applies the standard of
+\cref{chap:bounded} to the measure of \cref{chap:grokking}, and says what
+would have to be built and measured for the proposal in this chapter to stand
+on more than a demonstration.
 
