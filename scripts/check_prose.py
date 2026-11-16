@@ -48,9 +48,41 @@ TELLS = [
     "vastly", "we believe", "we argue", "effectively", "notably",
     # Self congratulation: it asks the reader to credit the candour before
     # the content arrives, and implies the alternatives were dishonest.
-    "the honest answer", "to be fair", "it is fair to say", "in truth",
+    "the honest answer", "the honest shape", "the honest thing",
+    "what is true is more interesting", "what has to be admitted",
+    "will find anyway", "before it is asked",
+    "to be fair", "it is fair to say", "in truth",
     "the real question", "the key point",
 ]
+
+# Saying that a thing will be labelled honestly, in place of labelling it.
+# "The survey is motivation and is called that" asserts a future act of
+# candour and leaves the reader with the assertion. Eight of these turned up
+# in one file, which is a tic rather than a choice.
+META_LABEL = re.compile(
+    r"\band (is|are) called that\b|\bis declared as one\b|"
+    r"\b(is|are) introduced as (that|one)\b|\band (is|are) said to be\b|"
+    r"\band the frame says so\b|\bsays so plainly\b", re.I)
+
+# A paragraph that announces a revision instead of performing one. One is a
+# correction. Three is a template, and the content was already fixed above,
+# so the paragraph exists only to mark that it was.
+DRAFT_REF = re.compile(
+    r"(?m)^\s*(The first draft|An earlier draft|The earlier draft|"
+    r"The earlier proposal|The earlier wording)\b", re.I)
+DRAFT_REF_MAX = 2
+
+# Three clauses in one sentence opening on the same two words. Narrower than
+# the parallel triples count, which needs three in a paragraph before it
+# fires, and catches the anaphoric shape that count misses.
+ANAPHORIC_TRIPLE = re.compile(
+    r"\b(\w+\s+\w+)\b[^.!?]{3,90},\s*\1\b[^.!?]{3,90},?\s*and\s+\1\b", re.I)
+
+# A heading that counts its items, followed by a list of a different length.
+# The count in the heading is what the author decided; the list is what the
+# author wrote. When they disagree the heading usually kept a rhythm.
+COUNT_WORDS = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+               "seven": 7, "eight": 8, "nine": 9, "ten": 10}
 
 HARD = {
     "em dash": re.compile(r"[—–]"),
@@ -81,6 +113,8 @@ SOFT = {
     "question in prose": re.compile(r"\?"),
     # 3.6: these may not act. A measure, a benchmark or a document deciding
     # something is the personification the guide rules out.
+    "meta label": META_LABEL,
+    "anaphoric triple": ANAPHORIC_TRIPLE,
     "personified abstraction": re.compile(
         r"\b(the thesis|the chapter|the benchmark|the task|the dataset|"
         r"the literature|the field|the measure)\s+"
@@ -212,6 +246,32 @@ def check_rhythm(path: Path, paras: list[tuple[int, str]]) -> list[tuple[str, in
     return hits
 
 
+def check_counted_headings(text: str) -> list[tuple[str, int, str]]:
+    """A heading that says how many items follow, against how many do."""
+    hits = []
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        m = re.match(r"\s*(#{1,6}|\\(?:sub)*section\*?\{|\\paragraph\{)\s*"
+                     r"(?:\d+\.\s*)?(.*)$", line)
+        if not m:
+            continue
+        head = m.group(2)
+        cm = re.search(r"\b(" + "|".join(COUNT_WORDS) + r")\s+\w+", head, re.I)
+        if not cm:
+            continue
+        want = COUNT_WORDS[cm.group(1).lower()]
+        got = 0
+        for nxt in lines[i + 1:]:
+            if re.match(r"\s*(#{1,6}\s|\\(?:sub)*section|\\chapter)", nxt):
+                break
+            if re.match(r"\s*\d+[.)]\s+\S", nxt) or re.match(r"\s*\\item\b", nxt):
+                got += 1
+        if got and got != want:
+            hits.append(("counted heading", i + 1,
+                         f"heading says {cm.group(1).lower()}, {got} items follow"))
+    return hits
+
+
 def check_file(path: Path) -> tuple[list, list]:
     text = path.read_text(encoding="utf-8")
     lines = strip_latex(text)
@@ -230,11 +290,24 @@ def check_file(path: Path) -> tuple[list, list]:
 
     prose = " ".join(l for _, l in lines)
     words = len(prose.split())
-    n_anti = len(ANTITHESIS.findall(prose))
-    if words > 400 and n_anti / words * 1000 > ANTITHESIS_PER_1000:
+    anti = [(n, m.group(0).strip())
+            for n, line in lines for m in ANTITHESIS.finditer(line)]
+    if words > 400 and len(anti) / words * 1000 > ANTITHESIS_PER_1000:
         soft.append(("antithesis density", 0,
-                     f"{n_anti} in {words} words, "
-                     f"{n_anti / words * 1000:.1f} per 1000"))
+                     f"{len(anti)} in {words} words, "
+                     f"{len(anti) / words * 1000:.1f} per 1000"))
+        # A density figure alone gives the author no way to read the hits,
+        # so list them once the file is over the gate.
+        for n, what in anti:
+            soft.append(("antithesis", n, what[:60]))
+
+    drafts = [text.count("\n", 0, m.start()) + 1
+              for m in DRAFT_REF.finditer(text)]
+    if len(drafts) > DRAFT_REF_MAX:
+        soft.append(("draft reference template", drafts[0],
+                     f"{len(drafts)} paragraphs open by naming an earlier "
+                     f"draft, on lines {', '.join(str(d) for d in drafts)}"))
+    soft.extend(check_counted_headings(text))
     return hard, soft
 
 

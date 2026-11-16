@@ -232,6 +232,12 @@ Patterns to avoid:
 
 - Section titles are statements of the finding. "Whether a rule groks is decided
   at the minima of the loss", not "Does the rule decide grokking?".
+- One exemption, taken deliberately on 2026-11-16. A section whose content is
+  structural rather than a finding keeps a noun label: "Research questions",
+  "Contributions", "Introduction and Background", "Synthesis", "Further
+  Contributions". Statement forms for these come out worse than the labels.
+  The exemption covers part titles of the same kind and nothing else, and a
+  section that states a finding does not get it.
 - Every results section opens with the finding, then the setup that produced it,
   then the evidence, then the controls. Setup does not come first.
 - The first sentence of a section connects to the result of the previous one.
@@ -274,8 +280,9 @@ is thesis work, and it happens in the thesis frame, never by editing the papers.
   uses it, even if an imported chapter also defines it. The imported definition
   is left alone and the frame definition is the one the reader is sent to.
 - The six argument parts are numbered and labelled, so a chapter may refer to
-  one: `part:background`, `part:agents`, `part:measurement`, `part:procedure`,
-  `part:construction`, `part:synthesis`. The appendix part is deliberately
+  one: `part:background`, `part:agents`, `part:procedure`, `part:readout`,
+  `part:construction`, `part:synthesis`. `part:readout` was `part:measurement`
+  until 2026-11-16 and was renamed with its part. The appendix part is deliberately
   unnumbered, because it is not part of the argument. Rename a label with its
   part, and keep the two in step.
 - Keep a ledger of thesis wide terms in `imports/glossary.toml`, one entry per
@@ -920,12 +927,37 @@ and `generated/` trees, and all seven scripts.
    the result and is the file to read before writing any frame prose.
    Sections 1 to 11 of the framings file are retired.
 
-   The spine is sparse against distributed coding, posed as a credit
-   assignment question for a committee at the Institute of Neuroinformatics:
-   the learning rule, not the task, decides how many neurons carry a
-   computation, it can be read off the update and chosen, and the choice
-   trades damage tolerance against compressibility and transfer speed. The
-   thesis wide noun is **circuit**.
+   The spine is credit assignment, settled on 2026-11-16. A task fixes what a
+   network computes and leaves open how the computation is distributed over
+   its neurons. The rule that assigns credit during training fixes that, the
+   condition deciding it can be read off the update equation and intervened
+   on, and the choice trades damage tolerance against compressibility and
+   transfer speed. Other chapters take other properties the objective leaves
+   open: the training objective fixes the symmetry of an attention matrix, and
+   the norm of a predicted latent is left free altogether and dominates the
+   probe that is supposed to read the state. The thesis wide noun is
+   **circuit**.
+
+   Sparse against distributed coding framed the thesis for one day and is now
+   a declared analogy, one paragraph in the introduction and one in the
+   outlook. The participation measure is still borrowed from that literature
+   and the borrowing is stated. The reasoning is in the decision record in
+   `00_ADMIN/07_writing_plan.md`. Do not restore the coding framing without
+   answering the three disanalogies recorded there.
+
+   Two facts about the central paper that the frame got wrong once and must
+   not get wrong again. The reference setting is Adam with L2 added to the
+   gradient, and the manuscript says it "serves here to test the condition at
+   scale and not as a recommended setting"; under AdamW the reference is
+   already distributed almost everywhere the paper looks. And credit
+   participation does not order circuit participation across optimizers, since
+   Lion and credit equalisation share $1.000$ and land at $0.535$ and $0.992$.
+   The guardrails in `00_ADMIN/05_thesis_concept.md` carry both.
+
+   The title, subtitle, three part titles and all five chapter titles were
+   rewritten on 2026-11-16. The title page is "The Learning Rule Decides How
+   Much of a Network Carries the Computation", subtitled "Credit Assignment,
+   and What a Task Leaves Open in a Trained Network".
 
    The cut is done, on 2026-11-14. Five papers are reproduced as full
    imported chapters: grokking, attention, CNA, the ACU survey and the world
@@ -973,6 +1005,18 @@ and `generated/` trees, and all seven scripts.
    chapter had an obligation of the same kind and no longer does: the
    2026-11-14 version defines its learning rules in the experimental setup,
    which the chapter includes.
+1b. **Both abstracts are a correctness problem, not a style problem.**
+   `sections/0-1_abstract_en.tex` states two results the grokking manuscript
+   no longer carries, four of twelve rules never generalising and the one over
+   root effective count law, and its fifth paragraph describes the bounded
+   operator paper that the Frontiers norm drift paper replaced. It also uses
+   the retired frame term as a term, names "net" before defining it, uses
+   "effective neuron count" with no gloss where 3.5 allows no coined
+   vocabulary at all, and says the choice can be read off the update equation
+   "before the procedure is run", which 3.7 bans by name. Its header comment
+   claims none of this is true. The German abstract mirrors all of it. Quote
+   nothing from either until both are rewritten.
+
 2. **The background chapter is a structure with no prose.**
    `sections/2-1_related_work.tex` has its eight sections, its subsections and
    a `\paragraph` stub per paragraph, each carrying a comment with the claim to

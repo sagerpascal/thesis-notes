@@ -2,15 +2,15 @@
 # site in the thesis frame and the name each imported chapter uses for the
 # same idea. See CLAUDE.md 3.5 and 3.9. Add a term the day it is coined.
 
-# DECIDED 2026-11-14, NOT YET APPLIED. The author chose "circuit" as the thesis
-# wide noun, replacing "layout". The entry below is written as decided. The
-# prose is not swept yet, because the arc it sits in is being rethought: 64
-# occurrences of "layout" remain in thesis owned files, 41 of them in
-# sections/1-1_introduction.tex, and two part titles in main.tex carry it.
-# See 00_ADMIN/04_story_framings.md section 11 for the sweep and its cost.
+# DECIDED 2026-11-14, PARTLY APPLIED. The author chose "circuit" as the thesis
+# wide noun, replacing "layout". The part titles and the subtitle were swept on
+# 2026-11-14. The prose is not swept, because most of it is in
+# sections/1-1_introduction.tex, which argues the retired story throughout and
+# is rewritten rather than edited. 56 occurrences of "layout" remain in thesis
+# owned files, 41 of them in that file. The sweep happens with the rewrite.
 [circuit]
-definition = "the way a computation is distributed over a network's parts, whether those parts are neurons or the rows and columns of a weight matrix"
-site = "sections/1-1_introduction.tex, section A task fixes what a network computes"
+definition = "the set of neurons that carry a computation, counted as the participation ratio of a layer's outgoing weight norms. Narrower than the mechanistic interpretability sense, where a circuit is a subgraph of components, and the introduction says so at the definition site"
+site = "sections/1-1_introduction.tex, section A task fixes what a network computes, not how the computation is distributed over its neurons"
 synonyms = { grokking = "circuit, circuit size, circuit concentration", attention = "structure, as in symmetric or directional structure and column dominance" }
 # The word the thesis frame used until 2026-11-14. It is not a synonym any
 # chapter uses, it is the retired frame term, kept here so a sweep can be
@@ -19,17 +19,17 @@ retired_frame_term = "layout"
 
 [credit_assignment_algorithm]
 definition = "the computation that assigns each weight its share of the error at the output; backpropagation is one"
-site = "sections/1-1_introduction.tex, section A task fixes what a network computes"
+site = "sections/1-1_introduction.tex, section A task fixes what a network computes, not how the computation is distributed over its neurons"
 synonyms = { grokking = "credit assignment algorithm" }
 
 [optimizer]
 definition = "the procedure that turns each weight's share of the error into a change of the weights, such as SGD or Adam"
-site = "sections/1-1_introduction.tex, section A task fixes what a network computes"
+site = "sections/1-1_introduction.tex, section A task fixes what a network computes, not how the computation is distributed over its neurons"
 synonyms = { grokking = "optimizer" }
 
 [learning_rule]
 definition = "a credit assignment algorithm paired with an optimizer"
-site = "sections/1-1_introduction.tex, section A task fixes what a network computes"
+site = "sections/1-1_introduction.tex, section A task fixes what a network computes, not how the computation is distributed over its neurons"
 synonyms = { grokking = "learning rule, rule" }
 
 [grokking]

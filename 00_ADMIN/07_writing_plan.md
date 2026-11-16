@@ -12,22 +12,44 @@ written until the level above it has been criticised and has come through.
 Levels 0 and 1 were drafted on 2026-11-14 and criticised the same day by
 three readers who were given the material and the standard but not the
 reasoning. Their findings are at the end of this file, with what was done
-about each. Level 0 below is the revised version. Two questions came out of
-the critique that are the author's to answer, and they are in their own
-section because the rest of the plan depends on them.
+about each. Two questions came out of that critique that were the author's to
+answer. The first was answered on 2026-11-16: the spine is credit assignment,
+not sparse against distributed coding. Level 0 and Level 1 below are written
+to that answer. The second is still open and is in its own section.
 
 ---
 
 ## Level 0: what the thesis claims
+
+### The shape of the argument
+
+A task and a loss fix what a network computes and leave the layout of that
+computation open. Each chapter takes one property left open that way. Credit
+assignment decides how far a computation spreads over the neurons available,
+and that pair is studied in depth. The training objective decides whether a
+Transformer's attention weights stay symmetric. The norm of a predicted latent
+is left free entirely, and a state probe reports it in place of the state. CNA
+fixes the structure in the architecture rather than leaving it to training.
+What each settlement costs is asked in every case.
+
+`05_thesis_concept.md` carries this in full and is the file to read. It is not
+restated there and here.
+
+One objection the frame has to survive. The objective is not something other
+than the objective, so the attention chapter is not an instance of a task
+leaving a property open. What it shows is that a second component of the
+training setup leaves its own structure in the weights. Part III's title
+covers both chapters only if the introduction says, in one sentence at the
+definition site, what a task is in this thesis and what a procedure is. Write
+that sentence before the part title has to be defended.
 
 ### The claim
 
 With the task, the data, the architecture and the width held fixed, the rule
 that assigns credit during training decides how far the computation spreads
 over the available neurons. The task does not decide it. The condition that
-keeps a neuron in use follows from the update equation, the ordering across
-rules follows from that condition, and intervening on credit moves the spread
-across its whole range. The move is not free. It costs two points of test
+keeps a neuron in use follows from the update equation, and intervening on
+credit moves the spread from the reference to full distribution. The move is not free. It costs two points of test
 accuracy on modular addition, and it buys tolerance of neuron deletion while
 giving up how far the network prunes and how fast it transfers.
 
@@ -39,19 +61,42 @@ $0.834$ against measured $0.623$, $0.695$ and $0.753$. That reproduces a
 shape. It is not a prediction of a circuit from a rule alone, and CLAUDE.md
 3.7 bans the claim in any case.
 
+It does not say the condition orders the rules. Table `tab:zoo` refuses that.
+Lion and credit equalisation both have credit participation $1.000$ and land
+at circuit participation $0.535$ and $0.992$, and across the eight optimizers
+credit participation ranges from $0.478$ to $1.000$ while circuit
+participation stays between $0.470$ and $0.613$. What follows from the
+condition is a binary. Does the rule change each neuron's ratio of credit to
+the non gradient term of its own update? Nero and credit equalisation do, per
+neuron. The other seven normalise over groups larger than a neuron and cannot.
+
 It also does not say the rule is the only thing that decides. Width matters
 more for the untouched network: holding the rule fixed and growing the hidden
 layer from $32$ to $2048$ takes reference participation from $0.937$ to
-$0.162$. The honest shape of the result is that the rule decides how much of
-the available width gets used, and that the effect grows with width rather
-than shrinking. At width $32$ the reference already uses $30$ of $32$ neurons
-and equalisation reaches $31$, so there is nothing to redistribute. At width
-$2048$ the reference uses $332$ and the equalised network $2046$.
+$0.162$. The rule decides how much of the available width gets used, and the
+effect grows with width. At width $32$ the reference already uses $30$ of $32$
+neurons and equalisation reaches $31$, so there is nothing to redistribute. At
+width $2048$ the reference uses $332$ and the equalised network $2046$. The
+claim holds where there is width to spend and says nothing at width $32$.
+
+Normalised participation and effective count move in opposite directions here,
+and the frame carries both or neither. From width $128$ to $512$ the
+reference's participation falls from $0.791$ to $0.400$ while its effective
+count grows from $101$ to $205$. A reader can propose from this that the task
+selects a circuit of roughly fixed functional size and that the rule only
+decides how much idle width sits around it. Nothing in the manuscript refutes
+that reading. Prepare an answer rather than a sentence.
+
+Two settings where the intervention has nothing to do are in the manuscript's
+own scope table and belong in the frame. On MNIST the reference is at $0.99$
+and equalisation leaves it at $0.99$. On the canonical transformer both are at
+$0.96$. The mechanism needs a concentrated reference before it has anything to
+redistribute.
 
 ### The grokking study: where the claim comes from
 
 First author. This is the chapter that establishes the claim, and the thesis
-should say plainly that it is the one that does.
+says so.
 
 A neuron stays in use when its credit is large relative to the non gradient
 term of its own update. That one condition covers three routes to unused
@@ -64,22 +109,25 @@ parameter norm stay within a few percent. Mean test accuracy falls from
 $0.998$ to $0.976$, and that number belongs next to the headline every time it
 appears.
 
-The strongest evidence is causal and the first draft of this plan left it out.
-A credit profile is imposed on the network, and a random permutation drawn
-once per run decides which neuron receives which magnitude, so the assignment
-has nothing to do with what any neuron is doing. Circuit participation follows
-the imposed value from $0.637$ to $0.990$, deletion tolerance rises with it,
-and test accuracy stays above $0.96$.
+The strongest evidence is causal. A credit profile is imposed on the network,
+and a random permutation drawn once per run decides which neuron receives
+which magnitude, so the assignment has nothing to do with what any neuron is
+doing. Circuit participation follows the imposed value from $0.637$ to
+$0.990$, deletion tolerance rises with it, and test accuracy stays above
+$0.96$.
 
-On whether this is a toy. The first draft conceded that it was, which was both
-wrong and expensive, because the paper already answers the objection. The same
-condition governs the MLP units of a $30$M parameter language model trained
-with Adam and L2 regularisation, where balancing each unit's decay leaves
-$1.3\%$ of units nearly unused instead of $24\%$, at lower validation loss,
-and AdamW leaves $0.9\%$. The redistribution also holds on modular subtraction
-and multiplication, on permutation composition in $S_5$, on sparse parity and
-on a transformer with a wide MLP. Modular addition is where the circuit can be
-read neuron by neuron, which is why the detailed work is there.
+Whether this is a toy. The condition itself reaches scale: it governs the MLP
+units of a $30$M parameter language model trained with Adam and L2
+regularisation, where balancing each unit's decay leaves $1.3\%$ of units
+nearly unused instead of $24\%$, at lower validation loss. The redistribution
+holds on modular subtraction and multiplication, on permutation composition in
+$S_5$, on sparse parity and on a transformer with a wide MLP. What does not
+reach scale is the rest of the claim. At the scale of the language model there
+is no deletion comparison beyond one column, no transfer experiment and no
+pruning, so circuit size is not shown there to be a steerable quantity with a
+measured price. Claim the condition at scale and the price in the small
+setting, separately. Modular addition is where the circuit can be read neuron
+by neuron, which is why the detailed work is there.
 
 ### The attention study: a second determinant, not a second data point
 
@@ -89,22 +137,32 @@ The update to a Transformer's attention weights sums over whichever token
 pairs the objective allows. Bidirectional training enters each pair twice,
 once in each order, so the update stays symmetric. Autoregressive training
 uses a token as context many times and as a target once, and a few columns end
-up dominating. The paper checks this in ModernBERT, GPT, LLaMA3 and Mistral,
-on text, vision and audio, and shows that symmetric initialisation speeds up
-bidirectional training.
+up dominating. The controlled evidence is twelve layer transformers trained in
+both encoder and decoder modes on Jigsaw, Wikipedia and Red Pajama, with
+median symmetry and directionality measured across epochs. Cite those first.
+The cross family comparison in ModernBERT, GPT, LLaMA3 and Mistral, across
+text, vision and audio, is observational and comes second. Symmetric
+initialisation follows from the derivation and speeds up bidirectional
+training.
 
-The first draft called this "the same question one level up" and it is not.
 Backpropagation is held fixed here and the objective is varied, so the
-determinant is the objective, which belongs to the task specification. The
-measured object differs too: columns of a query key bilinear form, against the
-participation ratio of outgoing weight norms over hidden units. Treating this
-chapter as a second measurement of the grokking claim will not survive a
-reader who has both chapters open. What it does establish is that a second
-component of the training procedure leaves its own structure in the trained
-weights, at a scale the grokking setting cannot reach. The frame should say
-that and stop there.
+determinant is the objective. The measured object differs too: columns of a
+query key bilinear form, against the participation ratio of outgoing weight
+norms over hidden units. This chapter is not a second measurement of the
+grokking claim. What it establishes is that a second component of the training
+setup leaves its own structure in the trained weights, at a scale the grokking
+setting cannot reach. The frame says that and stops there.
 
-### The world model study: the same kind of readout failure
+Two cautions. The mechanism is the index set the update sums over, and in a
+decoder that set is realised by a causal mask, which is architecture. "The
+objective decides" is the paper's framing and the thesis may adopt it, but it
+is a framing, and a thesis whose spine rests on the boundary between task,
+architecture and procedure cannot be casual about which side this falls on.
+Second, a reader will ask what separates a task from an objective in this
+thesis, having read that the task does not decide in one chapter and that the
+objective decides in the next. One sentence, at the definition site.
+
+### The world model study: the standard the measure is held to
 
 First author, not yet submitted.
 
@@ -117,28 +175,44 @@ drifts less can rank above a better one. Re projection rescales each
 prediction to a reference norm taken from the encodings, and four checks test
 what is left.
 
-The first draft said this chapter "licenses" the controls the grokking chapter
-uses, and that is a non sequitur. Those controls were designed in the grokking
-paper and depend on nothing here. Deleting this chapter would not change one
-of them.
+The link to the grokking chapter is the only cross chapter argument the thesis
+has, and it has to be stated as a standard rather than as a parallel. Not that
+both chapters are about a readout responding to a free degree of freedom: that
+is a metaphor doing an argument's work, and it is also false in one direction,
+because the ReLU rescaling gauge is a symmetry of the loss and coupled decay
+pins it, whereas the latent norm really is loose and drifts. What is true is
+that this chapter sets a standard for readouts, and the discussion holds the
+participation measure to it. Running the four checks honestly:
 
-There is a real link and it is worth building, because it is the only genuine
-cross chapter argument in the thesis. Both chapters are about a readout that
-responds to a degree of freedom the loss never constrains. In the world model
-it is the norm of a latent. In the grokking study it is the rescaling gauge of
-a ReLU unit: multiply a neuron's incoming weights and bias by a positive
-constant, divide its outgoing weights by the same constant, and the function
-is unchanged while the outgoing norm moves. The grokking paper raises this
-itself and answers it with two measures tied to the computation, with the
-deletion and pruning experiments, and with the permuted profiles. The
-discussion should apply the world model chapter's four checks to the
-participation measure and say which survive. That costs no new experiments and
-it answers the hardest question in the viva before it is asked.
+- The support check has no analogue. Drop it or invent one and say so.
+- The radius check does transfer, and it costs something. The measures tied to
+  the computation put the reference at $0.343$ and $0.422$ where the
+  structural measure puts it at $0.602$. The direction survives and the level
+  does not. Budget for the concession rather than presenting the exercise as
+  an answer.
+- Probe agreement transfers. Three measures, same direction, different levels.
+- Null controls transfer, and they are strong: permuted credit profiles,
+  the outgoing norm constraint, and from scratch training as the transfer
+  baseline.
+
+Nero belongs in this paragraph. Because it holds each neuron's incoming weight
+norm fixed, its participation cannot come from scale moving between a neuron's
+incoming and outgoing weights.
+
+One further observation worth taking seriously. The world model paper is
+explicit that the objective decides whether the norm is free at all: TCRL uses
+a cosine loss that ignores the norm, while squared error and SimNorm keep it
+in check. Read that way, this chapter is a second instance of the attention
+chapter's claim rather than a third category, and Parts III and IV would share
+a claim instead of an umbrella. That reading is available and has not been
+taken. Decide before the discussion is written.
 
 ### The Cooperative Network Architecture: a convergence, not a consequence
 
 First author. Published in Neural Computation, from a manuscript submitted in
-2024. The grokking work is from 2026.
+2024. The grokking work is from 2026, and the publication boxes print both
+dates on the same page, so no claim running from the rule to the architecture
+is available.
 
 CNA represents a sensory pattern by a net in which every active neuron is
 supported by several others, assembled from fragments learned by Hebbian
@@ -146,43 +220,77 @@ plasticity. The network filters noise, which nothing supports, even when more
 than half the input is corrupted. It completes occluded figures. Fragments
 learned separately recombine into patterns the network was never trained on.
 
-The first draft presented this as the consequence of the grokking result, with
-an if-then that runs from the rule to the architecture. The dates make that
-impossible and the publication box prints them on the same page. What is true
-is more interesting: an architecture designed earlier, for its own reasons,
-builds in by construction the redundancy of support that a credit assignment
-rule produces by training, and the two lines of work meet at that mechanism.
-CNA does not measure participation, does not run the deletion protocol, and
-the code no longer runs, so nothing will be added to it.
+The link is one mechanism. CNA builds redundancy of support into its
+architecture, and credit equalisation produces redundancy of support by
+training. The chapter is presented as a proposal that reached the same
+mechanism by another route. CNA does not measure participation, does not run
+the deletion protocol, and the code no longer runs, so nothing will be added
+to it.
 
 ### The survey: motivation
 
-Shared first author. One recipe, six gaps. Three of the gaps are properties of
-the trained network, three concern how the field measures what it claims. It
+Shared first author. One recipe, six gaps: insufficient generalisation,
+inefficient learning, limited planning, low task complexity in benchmarks, non
+standardised evaluation, and a disconnect between research and practical
+conditions. Two of the six are properties of the trained network, the first
+two. Limited planning is a property of the scaffold around the model rather
+than of the trained network, and the last three concern how the field measures
+and deploys what it builds. An earlier version of this file said three and
+three, which the survey refuses and which contradicted the concept file. It
 does not predict the grokking result and the frame should never imply that it
 does.
 
 ### What has to be admitted, in the frame
 
-The first draft listed three and two of them were cheap. These eight are the
-ones a reader will find anyway.
+Nine, and a reader will find every one of them in the manuscript.
 
 1. The headline intervention costs test accuracy, $0.998$ to $0.976$.
 2. The central measure has a gauge freedom. Outgoing weight norms move under
-   ReLU rescaling with the function unchanged. The paper checks this; the
-   frame has to carry the check rather than the conclusion.
+   ReLU rescaling with the function unchanged. Two answers exist and the frame
+   carries both. The measures tied to the computation put the reference lower
+   than the structural one does, at $0.343$ activation weighted and $0.422$ by
+   ablation against $0.602$, rising to $0.813$ and $0.801$ under equalisation.
+   So the direction survives and the level does not, and $60\%$ to $99\%$ is
+   the gauge sensitive pair of numbers. The second answer is Nero, which holds
+   each neuron's incoming weight norm fixed, so its participation of $0.986$
+   at test accuracy $0.985$ cannot come from scale moving between a neuron's
+   incoming and outgoing weights. That is one distributed circuit which
+   provably is not a gauge artefact, and it was produced by an optimizer
+   rather than by the intervention. It is the cleanest answer to the gauge
+   objection in the manuscript and the frame should use it.
 3. The rule is one determinant among several. Width alone moves reference
    participation from $0.937$ to $0.162$, and at width $32$ there is nothing
-   for the intervention to do.
+   for the intervention to do. On MNIST and on the canonical transformer the
+   reference is already distributed and the intervention changes nothing.
 4. Two of the three prices follow from the measure rather than being
    discovered. A computation spread over more neurons survives random deletion
    better, and a circuit with more nearly unused neurons has more to prune.
-   Faster transfer is the surprising one and deserves the room.
-5. Among the optimizers in general use there is no choice on offer. Adam,
-   Adam-mini, Lion, SGD with momentum, RMSProp, Muon and Shampoo all stay
-   concentrated. Only Nero and DFC distribute, and only credit equalisation
-   distributes fully. For the field as it stands the finding reads: every
-   model you have is concentrated.
+   Faster transfer is the surprising one, and its scope is narrow enough that
+   the frame states the scope with the number. The advantage appears for
+   targets that need new hidden combinations of the operand frequencies and
+   not for targets that change only the readout. On multiplication every
+   pretrained network is slower than training from scratch, $1800$ to $2020$
+   epochs against $1200$. The distributed circuit at $1540$ epochs is itself
+   slower than from scratch at $1410$.
+5. The concentration is produced by a coupling, and the field's default
+   already avoids it. The reference adds L2 to the gradient before Adam.
+   Loshchilov and Hutter described that coupling and the paper cites them for
+   it. Under AdamW the paper's own numbers read the other way: the reference
+   is distributed in both kinds of measure on modular addition, $0.96$ against
+   $0.91$ at the end of training; the wide transformer with decay on weight
+   matrices only, "as in most current training code", sits at $0.82$; the
+   canonical transformer at $0.96$; MNIST at $0.99$; and the language model
+   has fewer than $1\%$ nearly unused units. The manuscript says plainly that
+   "Adam with L2 serves here to test the condition at scale and not as a
+   recommended setting", and its limitations say the residual AdamW effect is
+   "not explained by the condition". An earlier version of this list said the
+   opposite, that every model in the field is concentrated. That is false and
+   would not have survived ten minutes of a viva. The claim that does survive:
+   the condition is general, it bites wherever a non gradient term dominates a
+   neuron's update, and coupled L2 is one such term among three. The other two
+   are live under AdamW. Adam's $\epsilon$ dominates in a wide transformer
+   whose normalisation parameters are decayed, and the decay of a trainable
+   per neuron gain does the same in a layer normalised net.
 6. No measurement is shared across the chapters. Two were planned and are not
    available, because no attention checkpoints survive and the CNA code no
    longer runs.
@@ -195,59 +303,99 @@ ones a reader will find anyway.
    interpretability uses it, where a circuit is a subgraph of components. Here
    it is a count of participating units derived from weight norms. Say so at
    the definition site.
+9. One credit assignment algorithm other than backpropagation survives the
+   comparison, which is DFC. Feedback alignment, direct feedback alignment and
+   sign-SGD do not generalise and are excluded. Everything else varied is an
+   optimizer. The thesis therefore has $n = 1$ on the axis its title names
+   unless the introduction defines credit assignment to cover how an optimizer
+   distributes credit across neurons, which is what the condition is about and
+   what the measure measures. Write that definition or change the title.
 
-### Three questions to prepare for the viva
+### Questions to prepare for the viva
 
-1. Your own chapter on readouts says a probe can report a quantity the loss
-   never fixed. Your circuit measure is a participation ratio of outgoing
-   weight norms, weight decay acts on norms, and your intervention equalises
-   per neuron magnitudes before you measure per neuron magnitudes. Apply your
-   four checks to your own measure. What survives?
-2. Holding the rule fixed and varying width moves participation further than
-   holding width fixed and varying the rule. On what grounds does the title
-   say the rule decides?
-3. Take away the grokking paper. What is left of the claim?
+1. Your reference adds L2 to the gradient before Adam. Your own appendix shows
+   that with decoupled decay the reference is already distributed, $0.91$ on
+   modular addition, $0.82$ in the wide transformer with decay on weight
+   matrices only, $0.96$ on the canonical transformer, $0.99$ on MNIST, and
+   under $1\%$ dead units in your language model. Your limitations say the
+   residual AdamW effect is not explained by the condition. Loshchilov and
+   Hutter described this coupling and you cite them for it. Is the thesis
+   about how credit assignment decides circuit size, or about what happens
+   when you keep using an optimizer configuration the field replaced?
+2. Your circuit measure is a participation ratio of outgoing weight norms,
+   weight decay acts on norms, and your intervention equalises per neuron
+   magnitudes before you measure per neuron magnitudes. Apply your own four
+   checks to your own measure. What survives?
+3. You are examined at an institute whose own work on credit assignment is
+   deep feedback control, and your comparison contains one credit assignment
+   algorithm other than backpropagation. Everything else you vary is an
+   optimizer, and your abstract says Nero wins because it normalises per
+   neuron. On this evidence, why is the title not about the optimizer?
+4. Your appendix says the AdamW reference has nearly equal outgoing norms and
+   prunes to about as few neurons as the Adam reference. One network your
+   measure calls distributed and one it calls concentrated reduce to the same
+   minimal circuit. In what sense is the computation spread over more neurons
+   in one of them, and which number is the finding, $0.60$ or $0.343$?
+5. Holding the rule fixed and varying width moves participation further than
+   holding width fixed and varying the rule, and the effective count grows
+   from $101$ at width $128$ to $332$ at $2048$, sublinearly. Why is this not
+   a task selecting a circuit of roughly fixed functional size, with the rule
+   deciding only how much idle width sits around it?
+6. Take away the grokking paper. What is left of the claim?
 
-Question 3 is the one that decides whether the committee reads this as a
-thesis or as one paper with a long preamble. The answer has to be prepared,
-and it has to be honest: the grokking study is where the claim is established,
-and the other chapters are an independent structural result in a different
-substrate, a methodological correction about readouts, and an earlier
-architecture whose mechanism converges with the finding.
+Questions 1, 3 and 4 are the three hardest and none of them was on the list
+before 2026-11-16. Question 1 is answerable and the answer is admission 5.
+Question 3 is answerable only by the definition demanded in admission 9.
+Question 4 is answerable in numbers, by the activation weighted and ablation
+measures together with Nero, and not by a sentence saying the paper checks it.
 
----
+Question 6 decides whether the committee reads this as a thesis or as one
+paper with a long preamble. The answer has to be honest: the grokking study is
+where the claim is established, and the other chapters are an independent
+structural result in a different substrate, a methodological correction about
+readouts, a survey that sets the stake, and an earlier architecture whose
+mechanism converges with the finding.
 
-## Two questions for the author
+## Decision record and one open question
 
-Both came out of the critique, both reverse a decision taken earlier today,
-and neither should be decided without the author.
+### 1. The spine is credit assignment. Decided 2026-11-16.
 
-### 1. Is the sparse against distributed framing earned, or is it a costume?
+The thesis was framed for one day as sparse against distributed coding, on the
+grounds that the committee sits at an institute of neuroinformatics. The
+examiner's case against it was specific. Sparse against distributed coding is
+a claim about how a population represents stimuli, measured over a stimulus
+ensemble. The thesis measures the participation ratio of outgoing weight norms
+in a hidden layer, which the source paper itself calls a structural measure.
+The three routes to unused neurons that the chapter unifies are coupled weight
+decay, Adam's $\epsilon$ and a decaying per neuron gain, none of which has a
+counterpart in a brain. Classical sparse coding derives sparsity from an
+explicit prior in an efficient coding objective, where here it is an
+unintended effect of a regulariser. The concept file had also written down
+that the framing was chosen for the audience and that the two framings are the
+same claim, which is an awkward sentence to leave where a committee might read
+it.
 
-The examiner's case against it is specific and it is not easy to dismiss.
-Sparse against distributed coding in neuroscience is a claim about how a
-population represents stimuli, measured over a stimulus ensemble. The thesis
-measures the participation ratio of outgoing weight norms in a hidden layer,
-which the paper itself calls a structural measure. The three routes to unused
-neurons that the chapter unifies are coupled weight decay, Adam's $\epsilon$
-and a decaying per neuron gain, none of which has a counterpart in a brain.
-Classical sparse coding derives sparsity from an explicit prior on an
-efficient coding objective, where here it is an unintended effect of a
-regulariser.
+Credit assignment needs no analogy to carry it. The condition the grokking
+chapter derives compares a neuron's credit against the non gradient term of
+its own update, so credit assignment is what the result is about and what the
+participation measure measures. The three disanalogies above do not apply to
+it, because nothing has been borrowed.
 
-What is earned without argument is credit assignment, which is the
-institute's own subject and is what the result is actually about. The concept
-file currently says the framing was chosen because of the audience and that
-the two framings are the same claim, which is an awkward sentence to have
-written down if a committee ever reads it.
+What follows from the decision:
 
-The options are to keep the framing and give it real weight, which means
-confronting the three disanalogies above in the introduction, or to open on
-credit assignment and underdetermination and keep sparse against distributed
-as one declared analogy in the introduction and one paragraph in the outlook.
-The second is safer. The first is the one the author chose this morning.
+- The title and subtitle change, and so do two part titles. Part III is now
+  the training procedure rather than the learning rule, because its second
+  chapter varies the objective.
+- The introduction opens on underdetermination rather than on coding.
+- The background leads with underdetermination. Sparse and distributed coding
+  shrinks to a subsection, placed where the participation measure is
+  introduced, because that is what the thesis actually takes from it.
+- Sparse against distributed keeps one paragraph in the introduction, which
+  names the three disanalogies above, and one in the outlook. Nothing in
+  between leans on it.
+- No result changes, and no chapter changes role.
 
-### 2. Does the survey keep 56 pages?
+### 2. Does the survey keep 56 pages? Still open.
 
 The cut of 2026-11-14 reduced COGITAO to two pages because the author's
 contribution was testing one model, and reduced the retrieval paper to two
@@ -259,87 +407,174 @@ that a first author paper was cut to two pages while a shared first paper with
 no evidential role kept 56 will ask what the rule was.
 
 Either give it a second role that is real, or cut it to the four to six pages
-the others got.
-
----
+the others got. Nothing below depends on the answer, so the writing continues
+either way.
 
 ## Level 1: titles
 
-Revised after the title audit. The replacements adopted below fix agency,
-unsupported scope, back references that name nothing, and metaphors standing
-in for explanations.
+Revised after the title audit, then again on 2026-11-16 when the spine
+changed. The replacements fix agency, unsupported scope, back references that
+name nothing, metaphors standing in for explanations, and the introduction
+stating its findings three times.
 
 ### Abstract
 
 No coined vocabulary at all, per CLAUDE.md 3.5, so the word circuit cannot
 appear. The abstract puts it in plain words: how many of a network's neurons
-end up carrying the computation.
+end up carrying the computation. "Credit assignment" is not coined by this
+thesis and is glossed inline at first use, which the title page makes
+necessary anyway.
 
 ### Introduction
 
-1. The task leaves open how many neurons carry the computation
-2. Two of the survey's six gaps are properties of the trained network, not of
-   the task
-3. The learning rule decides how many neurons carry the computation
-4. The training objective decides which columns of an attention matrix
-   dominate
-5. Rescaling a predicted latent to the encodings' norm removes most of a state
-   probe's error
-6. The redundancy of support that a learning rule has to produce can be built
-   into the architecture instead
-7. Research questions
-8. Contributions
+Restructured on 2026-11-16, for two reasons. The spine changed, and the title
+audit had found a problem the first revision did not fix: six sections each
+stated a finding, a seventh restated them as questions and an eighth restated
+them as contributions, which is the same finding three times inside one
+chapter. CLAUDE.md 3.8 says a finding is stated once in full, in its chapter,
+and that the introduction gives the one sentence version. So the introduction
+now sets up, asks, and answers in one line each, and states nothing in full.
 
-Sections 7 and 8 stay as noun labels. CLAUDE.md 3.8 asks for statements, and
-statement forms for these two come out worse than the labels, so the exemption
-is taken deliberately and a line is added to 3.8 naming structural sections.
-The former section 9, "Structure of the thesis", is cut: 3.8 bans roadmaps
-without exception, and the six part titles already do that work.
+1. The task and the loss leave open how far a computation spreads over a
+   network's neurons
+2. A survey of agents for computer use finds six gaps, and two of them are
+   properties of the trained network
+3. Credit assignment fixes how far a computation spreads, and the training
+   objective fixes a structure of its own
+4. Research questions
+5. Contributions
 
-One problem is not yet fixed. Sections 1 to 6 state six findings, section 7
-restates them as questions and section 8 restates them as contributions, which
-is the same finding three times inside one chapter. The research questions
-have to be phrased as questions the chapters answer rather than as their
-answers, and each contribution has to be one line.
+Section 1 is the definition site and carries four things that the rest of the
+thesis assumes and that nothing later can repair. The word circuit, definition
+before name, with the note that it is narrower here than in mechanistic
+interpretability. What credit assignment means in this thesis, which has to
+cover how an optimizer distributes credit across neurons, or admission 9
+stands unanswered. What separates a task from a training objective, or Part
+III's title covers neither of its chapters. And the declared analogy to sparse
+and distributed coding, one paragraph, naming the three disanalogies rather
+than asserting the parallel.
+
+Section 2 was a finding title built on the same contrast as section 1, and it
+referred back to a survey the reader of page 3 has not met. It is now a
+statement about what a survey found. It may yet be folded into the end of
+section 1: the ordering runs question, aside, answer, and 3.8 asks that each
+section connect to the result of the one before. Decide when the prose is
+written, not now.
+
+Section 3 names the determinant. "Different parts of the training procedure
+fix different structural properties" announced plurality where 3.7 asks the
+thing to be named.
+
+Sections 4 and 5 stay as noun labels, under the exemption now written into
+CLAUDE.md 3.8. The former section 9, "Structure of the thesis", is cut: 3.8
+bans roadmaps without exception, and the six part titles already do that work.
+
+Each research question is a question the chapter answers, phrased so that the
+answer is not in it. Each contribution is one line and names its chapter.
 
 ### Background
 
 Titled by what the literature covers, per CLAUDE.md 3.8, not by what the
-thesis found.
+thesis found. Reordered on 2026-11-16: underdetermination leads, and sparse
+and distributed coding is now a subsection rather than the opening section.
+Retitled the same day, because five of the seven were built to one mould, two
+named nothing, and one stated the thesis's own setup as a finding.
 
-1. Sparse and distributed coding is an old question, and the measures for it
-   already exist
-2. Many parameter settings fit the same data, and the procedure picks one
-3. The training procedure has parts, and each of them can be varied
-4. Grokking in modular addition gives a setting where the circuit can be read
-   neuron by neuron
-5. The same question arises for a weight matrix, where the training objective
-   takes the place of the learning rule
-6. A world model is scored through a probe, and the probe's own behaviour has
+1. Many parameter settings fit the same data, and the procedure picks one
+2. The training procedure has parts, and each of them can be varied
+3. In modular addition the grokked solution has been read neuron by neuron
+   - The participation ratio used here comes from the neuroscience literature
+     on how far a representation spreads
+4. Attention weights have been read for structure, and the two pretraining
+   objectives differ in which token pairs enter the update
+5. A world model is scored through a probe, and the probe's own behaviour has
    rarely been checked
-7. A circuit can also be built into the architecture rather than learned
-8. The implicit bias literature has asked about norms, not about how many
-   neurons carry the computation
+6. Mutual support between neurons has been built into architectures rather
+   than trained
+7. No literature has asked how many neurons carry a computation, or what sets
+   the number
 
-Section 1 moves to the front only if question 1 above is answered in favour of
-keeping the coding framing. If it is not, section 2 leads and section 1 shrinks
-to a subsection.
+Section 7 is the chapter's gap, which 3.8 asks for at the end. It is not the
+implicit bias gap: that one already exists as a subsection in the file, at
+`sec:bg_biasgap`, and promoting it would open and close the chapter on the
+same literature with five sections in between.
+
+The coding subsection sits under section 3 rather than opening the chapter,
+because what the thesis takes from that literature is the measure and not the
+question. Putting it where the measure is introduced makes the borrowing
+visible and keeps it from reading as a claim about brains.
+
+One thing not done. Sections 3 to 6 are ordered by chapter rather than by what
+is varied, so the chapter reads as a list keyed to the thesis's own structure
+where 3.8 asks related work to read as one argument. Grouping by what is
+varied would use the same material and the same 121 citation keys. It is a
+Level 2 decision and it is recorded here so it is taken rather than inherited.
+
+### Part titles
+
+Set in `main.tex` on 2026-11-16. Parts III, IV and V changed, because two of
+them applied the word circuit to chapters whose papers never measure one,
+which the concept file's own guardrails forbid in prose.
+
+| | Title | Label |
+| --- | --- | --- |
+| I | Introduction and Background | `part:background` |
+| II | Agents Built by One Recipe | `part:agents` |
+| III | The Training Procedure Fixes What the Task Leaves Open | `part:procedure` |
+| IV | What the Loss Leaves Free Can Dominate a Readout | `part:readout` |
+| V | Mutual Support Can Be Built into an Architecture Instead of Trained | `part:construction` |
+| VI | Synthesis | `part:synthesis` |
+
+I and VI are noun labels under the exemption now written into CLAUDE.md 3.8.
+Part II is the open structural question: it sits over the survey and over the
+four summarised papers, only one of which is about agents, and the concept
+file's own table calls it "The Stake" rather than what `main.tex` prints.
+That question is the same as the open question about the survey's 56 pages,
+and both are below.
 
 ### Chapter titles
 
-- `chap:grokking`: Every Rule That Groks Recovers the Same Algorithm in
-  Circuits of Different Size. The earlier proposal repeated the part title
-  above it and read as a universal law.
-- `chap:bounded`: Rescaling Predicted Latents to a Reference Norm Removes Most
-  of a State Probe's Error. The earlier proposal generalised from one
-  published model to all state probes and took the cautionary reading the
-  concept file rejects.
-- `chap:cna`: An Architecture of Mutually Supporting Neurons Filters Noise and
-  Completes Occluded Figures. The earlier proposal claimed a distributed code,
-  which CNA never measured, and said "without the rule", which is false
-  because its fragments are learned by Hebbian plasticity.
+All five set in the files on 2026-11-16.
 
----
+- `chap:acu`: One Recipe Builds Agents for Computer Use, and Six Gaps Are
+  Shared Across Them. It was "Agents for Computer Use: A Comprehensive
+  Survey", which is the published title and a colon label. The published title
+  stays in the publication box and in the bibliography, where it belongs.
+- `chap:grokking`: The Learning Rule Decides How Many Neurons Carry a Grokked
+  Solution. The plan had proposed "Every Rule That Groks Recovers the Same
+  Algorithm in Circuits of Different Size", which spends its first six words
+  on the part of the result nobody disputes, reaches the finding in a trailing
+  phrase against 3.2's result first, and universally quantifies over rules
+  where the evidence is twelve.
+- `chap:attention`: The Training Objective Decides Whether Attention Weights
+  Stay Symmetric. It was "...Decides the Circuit of the Attention Weights",
+  and the measured object is columns of a query key bilinear form.
+- `chap:bounded`: Rescaling Predicted Latents to a Reference Norm Removes Most
+  of a State Probe's Error. It was the previous paper's finding entirely.
+- `chap:cna`: An Architecture of Mutually Supporting Neurons Filters Noise and
+  Completes Occluded Figures. It was the architecture's name.
+
+### The abstract is the next liability, and it is worse than a rewrite
+
+Both abstracts still argue the retired story, and the English one breaks rules
+the thesis cannot break. Its header comment claims no coined vocabulary, which
+is false: it uses "layout" as a term, which is the retired frame term; it
+names "net" before defining it; and it uses "effective neuron count" with no
+gloss, in the one place CLAUDE.md 3.5 allows no coined vocabulary at all. It
+says the choice "can be read off the procedure's update equation before the
+procedure is run", which is the construction 3.7 bans by name.
+
+Two of its claims are no longer in the manuscripts. It says four of twelve
+rules never generalise and that the deletion fluctuation shrinks as one over
+the root of the effective neuron count. The concept file's guardrails record
+both as withdrawn. Its fifth paragraph describes the bounded operator paper
+that the Frontiers norm drift paper replaced. The German abstract mirrors all
+of it.
+
+So the abstract is not waiting on a style pass. It states two withdrawn
+results and describes a paper that is no longer in the thesis. It is rewritten
+at Level 4 with everything else, and until then nothing should be quoted from
+it.
 
 ## Critique record
 
@@ -374,3 +609,48 @@ to one template, a padded list of three, and a promised critique record that
 did not exist. The mechanisable parts are now in `scripts/check_prose.py`,
 which gained checks for label sentences, antithesis density, rhetorical
 questions and personified abstractions. The rest was rewritten by hand.
+
+### Round 2, 2026-11-16, the spine changed and was criticised again
+
+The author answered the first escalated question in favour of credit
+assignment. The three readers were sent again, on the revision.
+
+**Examiner.** Checked every Level 0 number against the manuscripts; all were
+right except two sentences, and both were corrected after the quoted lines
+were verified here. The claim asserted that the condition orders the rules,
+which `tab:zoo` refuses, because Lion and credit equalisation share credit
+participation $1.000$ and land at $0.535$ and $0.992$. Admission 5 asserted
+that every model the field trains is concentrated, which is the opposite of
+the manuscript's AdamW results and of its own sentence that Adam with L2 is
+"not a recommended setting". Both are rewritten. The report also found that
+the spine's own sentence excluded the attention chapter, that "across its
+whole range" was not earned, that the toy objection is half answered rather
+than answered, that the grokking and world model chapters were linked by a
+metaphor where a standard would do, that the survey gap split contradicted the
+concept file, and that the three hardest viva questions were not on the list.
+All adopted. Three recommendations are reflected rather than copied: the
+spine's umbrella problem is now stated as an objection to survive, the
+task against objective distinction is assigned to the definition site, and the
+cross chapter argument became research question 7.
+
+**Title audit.** Found the coined noun circuit applied to the attention and
+CNA chapters and to two part titles, against the concept file's own
+guardrails; a part label no longer matching its part; the title's bare
+"decides" claiming sole determination the width sweep refuses; a dangling
+pronoun in the subtitle; two chapter titles never proposed at all; and the
+3.8 exemption the plan relied on never written into CLAUDE.md. Adopted in
+full. The title, the subtitle, three part titles and five chapter titles
+changed, and the exemption is now in CLAUDE.md. It also found that both
+abstracts still argue the retired story, which turned out to understate the
+problem.
+
+**AI smell audit.** Found the rewrite cleaner on vocabulary and worse on
+shape: 43 definitions by negation, five paper blocks built to one template
+with six paragraphs opening on "The first draft", a tricolon claiming it
+needed no argument, honesty labels standing in for corrections, a heading
+promising three items over a list of four, and one argument written twice in
+two voices across the two files. The templated paragraphs are gone, the
+corrections they announced live here instead, and `scripts/check_prose.py`
+gained six checks: per line antithesis reporting, the self congratulation
+phrases, the meta label family, draft reference density, counted headings
+against list length, and the anaphoric triple.

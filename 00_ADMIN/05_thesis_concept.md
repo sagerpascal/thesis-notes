@@ -1,48 +1,109 @@
 # Thesis concept
 
-**The settled story, as of 2026-11-14 (evening revision).** The arc was
-reopened on 2026-09-12, settled once on 2026-11-14 as arc A, and revised the
-same evening when two constraints came to light: the CNA code no longer runs
-and no attention checkpoints survive, so the cross chapter measurements that
-would have tightened the argument are not available, and the author reopened
-which papers the thesis reproduces at all. Sections 12 and 13 of
+**The settled story, as of 2026-11-16.** The arc was reopened on 2026-09-12,
+settled once on 2026-11-14 as arc A, and revised the same evening when two
+constraints came to light: the CNA code no longer runs and no attention
+checkpoints survive, so the cross chapter measurements that would have
+tightened the argument are not available, and the author reopened which papers
+the thesis reproduces at all. Sections 12 and 13 of
 [04_story_framings.md](04_story_framings.md) hold the reasoning. Everything
 earlier in that file is retired.
 
+**The spine changed on 2026-11-16.** The thesis was framed for one day as
+sparse against distributed coding. A critique of the writing plan made the case
+that the framing is borrowed rather than earned: the measure is structural
+rather than a coding measure over a stimulus ensemble, and the three routes to
+unused neurons that the thesis unifies are coupled weight decay, Adam's
+epsilon and a decaying gain, none of which has a counterpart in a brain. The
+author chose credit assignment instead. Sparse against distributed survives as
+one declared analogy in the introduction and one paragraph in the outlook, and
+the participation measure is still borrowed from that literature and is said to
+be. What changed is which claim the thesis is making, not which results it
+reports.
+
 ## Working title
 
-**Sparse or Distributed Is a Choice.** Subtitle: How the Learning Rule Decides
-the Circuit a Network Learns, and What the Circuit Costs.
+**The Learning Rule Decides How Much of a Network Carries the Computation.**
+Subtitle: Credit Assignment, and What a Task Leaves Open in a Trained Network.
+
+Three constraints shaped it. The title page comes before every definition
+site, so the title carries no coined vocabulary. The verb is scoped to the
+fraction of available width, because width alone moves reference participation
+from $0.937$ to $0.162$ and a bare "decides" claims sole determination the
+evidence does not support. And the subject is the learning rule rather than
+credit assignment, because twelve learning rules were varied while only one
+credit assignment algorithm other than backpropagation survives the
+comparison. Credit assignment is the subject the thesis is about and it sits
+in the subtitle, where the introduction's definition can reach it.
+
+Alternatives, if the committee wants something shorter: "What a Task Leaves
+Open", with everything else in the subtitle, and "Credit Assignment Decides
+How Far a Computation Spreads", which is the stronger sentence and the weaker
+claim.
 
 ## Thesis in one sentence
 
-Whether a computation is carried by a few neurons or spread across many is not
-decided by the task but by how the learning rule assigns credit across
-neurons, it can be read off the update equation and chosen, and the choice
-trades robustness to damage against compressibility and speed of transfer.
+A task fixes what a network computes and leaves open how much of the network
+carries it, the rule that assigns credit during training fixes that, the
+condition deciding it can be read off the update equation and intervened on,
+and the choice trades tolerance of damage against how far the network prunes
+and how fast it transfers.
 
 ## The spine
 
-Neuroscience has asked for a century whether a representation is sparse,
-carried by few cells, or distributed across many. A trained network poses the
-same question, and the object that answers it is the set of neurons that carry
-a computation, which this thesis calls the solution's circuit. The term is
-defined once, in the introduction, definition before name.
+A task and a loss fix what a network computes. They do not fix how that
+computation is laid out across the network's parts. Several structural
+properties of a trained network are left open, and something settles each one
+that the person who chose the task never chose. Which part of the training
+setup settles which property, and what each settlement costs, is the subject
+of this thesis.
+
+One distinction has to be made in the introduction and made once, because the
+whole spine rests on it. A task is what the network is asked to compute. A
+training objective is a particular loss written to get it there, and in the
+attention chapter the objective is what varies. So the objective is on the
+near side of the line and the task on the far side, and the sentence saying so
+belongs at the definition site, not in a chapter introduction four parts
+later.
+
+The property studied in depth is how far a computation spreads over the
+neurons available to it, which this thesis calls the solution's circuit. The
+term is defined once, in the introduction, definition before name, and in a
+narrower sense than mechanistic interpretability uses it: here it is a count of
+participating units derived from weight norms, not a subgraph of components.
+
+The determinant is credit assignment. A neuron stays in use when the credit it
+receives is large relative to the non gradient term of its own update, which is
+a property of the rule and not of the task. That is a credit assignment claim
+and so sits in the institute's own subject. The literature it answers to is the
+implicit bias of training procedures and the conservation laws of gradient
+flow, which varies the optimizer and asks which minimum is reached. This thesis
+asks a different question about the minimum: not how large the weights are, but
+over how many neurons the computation is spread.
 
 Machine learning has mostly assumed the task decides. The grokking literature
-reads the sparse circuit as what the task offers, and the universality claim
-says every network solving a task finds the same one. This thesis shows the
-task does not decide. The learning rule does, through how it assigns and
-normalises credit across neurons, which is a credit assignment claim and so
-sits in the institute's own subject.
+reads a concentrated circuit as what the task offers, and the universality
+claim says every network solving a task finds the same one. The algorithm is
+indeed the same. The number of neurons implementing it is not, and it is the
+rule that sets it.
 
-The thesis is written for a committee at the Institute of Neuroinformatics.
-That is why the question is posed as sparse against distributed coding rather
-than as underdetermination of a loss, although the two are the same claim. The
-machine learning literature it sits in is implicit bias and the conservation
-laws of gradient flow, which varies the optimizer and asks which minimum is
-reached. This thesis varies the credit assignment rule and asks how the
-solution is laid out across neurons at the same minimum.
+The other chapters take other properties. The training objective, not the
+learning rule, decides whether a Transformer's attention weights stay
+symmetric or a few columns come to dominate, which is a second component of
+the training setup fixing a second structural property. The norm of a
+predicted latent is a quantity the loss never constrains at all, and the probe
+the field uses to score predicted latents responds to it, so a readout can
+report a free quantity in place of the one it names. The Cooperative Network
+Architecture asks what happens if the structure is fixed in the architecture
+instead of being left to the procedure.
+
+Sparse against distributed coding is an analogy and is declared as one. The
+participation ratio this thesis measures comes from that literature and the
+introduction says so. The claim itself is not a claim about brains, the
+measure here is structural rather than taken over a stimulus ensemble, and the
+mechanisms unified here have no counterpart in a brain. The analogy gets one
+paragraph in the introduction and one in the outlook, and carries no weight in
+between.
 
 ## The arc
 
@@ -65,33 +126,71 @@ Stake, finding, measurement, construction.
    in use, which separates Nero from Adam, RMSProp, Muon, Shampoo and the
    others tested. The circuit
    has a price: distributed circuits tolerate neuron deletion, concentrated
-   ones prune further and transfer about twice as fast. The same question
-   asked of a Transformer's attention weights gives the same answer one level
-   up, where the objective's index set decides whether a few columns dominate.
-3. The measurement. A claim about a trained network is only as good as the
-   readout behind it. The probe the field uses to score predicted latents is
-   mostly reporting a quantity the loss never fixed, and re projection
-   corrects it. This chapter states the standard the circuit claims are made
-   to: matched loss, margin and weight norm, and imposed and permuted controls
-   that the free quantity alone cannot satisfy.
-4. The construction. If the rule decides the circuit and the circuit has a
-   price, fix the circuit in the architecture and let learning fill in its
-   parts. CNA represents a pattern by a net in which every active neuron is
-   supported by several others, which is a distributed code by construction.
-   Presented as a proposal, with what it shows and what it lacks.
+   ones prune further and transfer about twice as fast. A second determinant
+   is then established in a different substrate and at a scale the grokking
+   setting cannot reach. Holding backpropagation fixed and varying the
+   objective, the index set the update sums over decides whether a
+   Transformer's attention weights stay symmetric or a few columns dominate.
+   That is the objective fixing a structural property, not a second
+   measurement of the credit assignment claim, and the frame says so.
+3. The measurement. Some quantities are left free by the loss altogether, and
+   a readout can report one of those in place of the quantity it names. The
+   probe the field uses to score predicted latents responds mostly to the norm
+   of a predicted latent, which the loss never constrains, and re projection
+   corrects it. The chapter is a constructive correction to an evaluation
+   protocol. It also sets the standard this thesis's own measure is held to,
+   and the discussion applies its four checks to the participation measure.
+4. The construction. The last chapter asks what it would mean to fix the
+   structure in the architecture instead of leaving it to the procedure. CNA
+   represents a pattern by a net in which every active neuron is supported by
+   several others. It was submitted in 2024 and the grokking work is from
+   2026, so it is a convergence on one mechanism, redundancy of support, and
+   not a consequence of the finding. Presented as a proposal, with what it
+   shows and what it lacks.
 
 ## Research questions
 
-1. Is the circuit of a learned solution fixed by the task or by the rule that
-   assigned credit during training? (grokking, attention)
-2. Can the circuit be predicted from the rule without training it, and can it
-   be chosen? (grokking, attention)
-3. What does a circuit cost? (grokking)
-4. Does the readout used to make such a claim report the quantity it names?
-   (world model)
-5. Given that the rule decides the circuit and the circuit has a price, can
-   the circuit be fixed by construction instead, and what would that buy?
-   (CNA, as a proposal)
+1. How much of a trained network's width carries the computation, and what
+   sets the number? (grokking)
+2. Can the condition that keeps a neuron in use be read off the update
+   equation? (grokking)
+3. Can the circuit be chosen by intervening on credit? (grokking)
+4. What is given up when a computation is spread over more neurons, in test
+   accuracy, in tolerance of neuron deletion, in how far the network prunes
+   and in transfer speed? (grokking)
+5. Does the training objective fix a structural property of a Transformer's
+   attention weights, at a scale the modular arithmetic setting cannot reach?
+   (attention)
+6. Does a readout used to make claims about a trained network report the
+   quantity it names, or one the loss left free? (world model)
+7. Does a structural measure of a trained network report the structure, or a
+   quantity the training procedure left free? (world model and grokking)
+8. Can redundancy of support be built into an architecture instead of produced
+   by training? (CNA, as a proposal)
+
+Question 7 is the only one two chapters bear on, and it is new as of
+2026-11-16. It costs no experiments: the world model chapter's four checks are
+applied to the participation measure in the discussion, and the answer is
+partly uncomfortable, because the measures tied to the computation put the
+reference at $0.343$ and $0.422$ where the structural measure puts it at
+$0.602$. It converts the thesis's weakest point, that no measurement is shared
+across chapters, into its one integrative claim. Do not drop it to tidy the
+list.
+
+Question 2 asks whether the condition can be read off the update equation. It
+does not ask whether a circuit can be predicted from a rule before training.
+The grain law is calibrated from one measured value and reproduces a shape
+from there, CLAUDE.md 3.7 bans the stronger claim, and an earlier wording of
+this question made it. Do not restore it.
+
+Questions 1 to 4 are the grokking paper's contributions reworded, and a
+committee that opens the paper will see the mapping. That is what a lead paper
+in a cumulative thesis looks like, and the frame says so rather than
+disguising it.
+
+The survey has no research question. That is the clearest statement of the
+open question below about what Part II is for: a chapter holding a fifth of
+the body appears in no question and in no contribution.
 
 ## Paper selection
 
@@ -132,10 +231,10 @@ submission.
 | | Background | `sections/2-1_related_work.tex` | `chap:background` | thesis owned, needs rewrite to the new story | |
 | II The Stake | ACU survey | `sections/3-1_acu_survey.tex` | `chap:acu` | shared first with Benjamin Meyer | full chapter, motivation |
 | | Further Contributions | `sections/3-2_further_contributions.tex` | `chap:further` | four papers, roles stated | 6 pp |
-| III The Learning Rule Decides the Circuit | Grokking | `sections/4-1_grokking.tex` | `chap:grokking` | first author | pillar, leads the part |
+| III The Training Procedure Fixes What the Task Leaves Open | Grokking | `sections/4-1_grokking.tex` | `chap:grokking` | first author | pillar, leads the part |
 | | Attention | `sections/4-2_attention.tex` | `chap:attention` | shared first, Matteo Saponati led | full chapter |
-| IV Reading a Network Out | World model | `sections/5-1_bounded.tex` | `chap:bounded` | first author, unsubmitted | short chapter |
-| V A Circuit Fixed by Construction | CNA | `sections/6-1_cna.tex` | `chap:cna` | first author | the proposal |
+| IV What the Loss Leaves Free Can Dominate a Readout (`part:readout`) | World model | `sections/5-1_bounded.tex` | `chap:bounded` | first author, unsubmitted | short chapter |
+| V Mutual Support Can Be Built into an Architecture Instead of Trained | CNA | `sections/6-1_cna.tex` | `chap:cna` | first author | the proposal |
 | VI Synthesis | Discussion, Conclusion | `sections/7-1_discussion.tex`, `sections/7-2_conclusion.tex` | `chap:discussion`, `chap:conclusion` | thesis owned | short |
 
 The part order is the September one, so the file numbering matches the part
@@ -145,8 +244,15 @@ off to it. Demoting the survey to motivation and shortening the world model
 chapter removed that premise, so the swap was reverted the same day. Do not
 swap them again without a reason that outlives one session.
 
-`part:structure` is now `part:measurement`, titled "Reading a Network Out", and
-`part:procedure` is "The Learning Rule Decides the Circuit".
+`part:structure` became `part:measurement` and is now `part:readout`, titled
+"What the Loss Leaves Free Can Dominate a Readout". CLAUDE.md 3.9 requires the
+label and the part to stay in step, and "measurement" no longer named it.
+`part:procedure` is "The Training Procedure Fixes What the Task Leaves Open".
+Part III was titled for the learning rule alone until 2026-11-16, which named
+only the first of its two chapters, and then for the circuit, which the
+attention chapter never measures. Part V lost "circuit" for the same reason:
+CNA computes no participation ratio, and the guardrails below forbid extending
+the term to it.
 
 The cut was carried out on 2026-11-14. The four summarised papers lost their
 wrapper files and their appendix chapters, their manifests carry
@@ -252,8 +358,32 @@ that number it cites the paper.
 - The grokking paper no longer claims that four of twelve rules never
   generalise, and no longer reports the one over square root of the effective
   unit count law for deletion. Do not cite either.
-- The neuroscience framing is the spine, not decoration, but the thesis does
-  not claim to model a brain. The outlook paragraph says so.
+- The reference setting is Adam with L2 added to the gradient, and the
+  manuscript says plainly that this "serves here to test the condition at
+  scale and not as a recommended setting". Under AdamW the reference is
+  already distributed on modular addition, on MNIST, on the canonical
+  transformer, in the wide transformer with decay on weight matrices only, and
+  in the language model. Never write that the models the field trains are
+  concentrated. The condition is general and bites wherever a non gradient
+  term dominates a neuron's update, and two of the three such terms are live
+  under AdamW: Adam's $\epsilon$ in a wide transformer whose normalisation
+  parameters are decayed, and the decay of a trainable per neuron gain.
+- Credit participation does not order circuit participation across optimizers.
+  Lion and credit equalisation both sit at credit participation $1.000$ and
+  land at $0.535$ and $0.992$. What follows from the condition is whether a
+  rule changes each neuron's ratio of credit to its non gradient term, which
+  only per neuron normalisation does.
+- Sparse against distributed coding is a declared analogy, not the spine. It
+  gets one paragraph in the introduction, where the three disanalogies are
+  named, and one in the outlook. The participation measure is borrowed from
+  that literature and the borrowing is stated. Nothing in between leans on it,
+  and the thesis does not claim to model a brain.
+- The attention chapter is a second determinant, not a second measurement of
+  the credit assignment claim. Backpropagation is held fixed there and the
+  objective is varied, and the measured object is columns of a query key
+  bilinear form rather than a participation ratio over hidden units.
+- CNA predates the grokking work. Call it a convergence on one mechanism, not
+  a consequence of the finding. The publication boxes print both dates.
 - Chapter introductions and summaries of the ACU chapter are still written for
   the old story and must be reframed.
 
