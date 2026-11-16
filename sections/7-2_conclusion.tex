@@ -9,9 +9,9 @@ how many neurons carry a grokked solution, and the settlement is not small:
 the same Fourier construction is implemented by about $154$ of $256$ neurons
 or by about $254$, depending on the rule.
 
-Which rules move it can be read off the form of their update. A neuron falls out of use when its
-share of the error is small beside whatever else is moving its weights, and
-that criterion unifies three mechanisms the literature had kept apart. The
+Which rules move it can be read off the form of their update. A neuron falls out of use when its credit is small
+beside the non gradient part of its own update, and that criterion unifies
+three mechanisms the literature had kept apart. The
 ratio it compares can be altered only by a normalising factor belonging to a
 single neuron, which is a yes or no about
 a rule rather than a ranking among rules. Of the rules compared, Nero is the only
@@ -44,7 +44,7 @@ most of the error without retraining anything.
 That standard applies to this thesis's own measure, and applying it changes
 the answer in part. The two measures anchored in what the network
 actually computes put the untouched case lower than the structural one does,
-and all three rise together under every intervention, so the direction of the central result
+and all three rise together under credit equalisation, so the direction of the central result
 survives the check and the level reported by the structural measure is the
 largest of the three.
 

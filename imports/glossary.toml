@@ -9,22 +9,32 @@
 [circuit]
 definition = "the set of neurons that carry a computation, counted as the participation ratio of a layer's outgoing weight norms. Narrower than the mechanistic interpretability sense, where a circuit is a subgraph of components, and the introduction says so at the definition site"
 site = "sections/1-1_introduction.tex, section A trained network uses some of its neurons and not others, and the task does not set which"
-synonyms = { grokking = "circuit, circuit size, circuit concentration", attention = "structure, as in symmetric or directional structure and column dominance" }
+synonyms = { grokking = "circuit, circuit size, circuit concentration" }
+# The attention chapter is deliberately NOT listed as a synonym site. Its
+# column dominance is an asymmetry between the rows and the columns of a
+# weight matrix, not a count of participating units, and reading the two as
+# the same thing is the misreading removed from five sentences on 2026-11-16.
 # The word the thesis frame used until 2026-11-14. It is not a synonym any
 # chapter uses, it is the retired frame term, kept here so a sweep can be
 # checked against it.
 retired_frame_term = "layout"
 
+# A term of the field, not coined by this thesis. The site is where the
+# thesis first uses it and says what it means.
 [credit_assignment_algorithm]
 definition = "the computation that assigns each weight its share of the error at the output; backpropagation is one"
 site = "sections/1-1_introduction.tex, section A trained network uses some of its neurons and not others, and the task does not set which"
 synonyms = { grokking = "credit assignment algorithm" }
 
+# A term of the field, not coined by this thesis. The site is where the
+# thesis first uses it and says what it means.
 [optimizer]
 definition = "the procedure that turns each weight's share of the error into a change of the weights, such as SGD or Adam"
 site = "sections/1-1_introduction.tex, section A trained network uses some of its neurons and not others, and the task does not set which"
 synonyms = { grokking = "optimizer" }
 
+# A term of the field, not coined by this thesis. The site is where the
+# thesis first uses it and says what it means.
 [learning_rule]
 definition = "a credit assignment algorithm paired with an optimizer"
 site = "sections/1-1_introduction.tex, section A trained network uses some of its neurons and not others, and the task does not set which"
@@ -49,7 +59,19 @@ synonyms = { cna = "net, assembled from net fragments" }
 # clause that describes these systems again, which is a gloss in a chapter
 # opening and not a second definition site, and the chapter was written that
 # way deliberately.
+# A term of the field, not coined by this thesis. The site is where the
+# thesis first uses it and says what it means.
 [agent_for_computer_use]
 definition = "a system that carries out tasks on a computer or a phone from an instruction in natural language, by controlling software through clicks, keystrokes and gestures"
 site = "sections/1-1_introduction.tex, section A trained network uses some of its neurons and not others, and the task does not set which"
 synonyms = { acu = "ACU, agent for computer use" }
+
+[participation_ratio]
+definition = "for a layer of n units, the square of the sum of their outgoing weight norms divided by the sum of the squares, running from 1 to n, so that it reads as a count of units in use and, divided by n, as the fraction of the layer in use"
+site = "sections/1-1_introduction.tex, section A trained network uses some of its neurons and not others, and the task does not set which"
+synonyms = { grokking = "circuit participation for the fraction, effective unit count for the count" }
+
+[net_fragment]
+definition = "a reusable piece of a net, learned by Hebbian plasticity, which the architecture assembles with others into the representation of one pattern"
+site = "sections/6-1_cna.tex, chapter introduction, in the note on vocabulary"
+synonyms = { cna = "net fragment, fragment" }

@@ -111,8 +111,8 @@ property of this comparison and not of the optimizers in general use. Unless
 stated otherwise the measurements concern the first of the network's two
 hidden layers.
 
-A neuron survives when its share of the error is large beside whatever else
-is moving its weights. That one criterion accounts for three mechanisms which
+A neuron survives when its credit is large beside the part of its update that
+no gradient supplies. That one criterion accounts for three mechanisms which
 had been described separately: a weight decay term
 added to the gradient before an adaptive optimizer, the numerical floor in
 that optimizer's denominator, and the decay of a trainable per neuron gain.
@@ -153,15 +153,14 @@ the network survives, how far it prunes, and how quickly it transfers. A distrib
 tolerates random deletion of neurons better. A concentrated circuit prunes
 further, and on a target built from fresh combinations of the features it
 already holds it arrives in $640$ epochs against $1540$ for the spread one,
-largely by recruiting the neurons it was not using. Three limits belong in the same breath. The distributed circuit's $1540$
-epochs are no better than the $1410$ needed from scratch, so the result is
+largely by recruiting the neurons it was not using. The distributed circuit's
+$1540$ epochs are no better than the $1410$ needed from scratch, so the result is
 that concentration helps and not that spreading hurts. Neither circuit helps when a target leaves the
 features alone and changes only which answer they support. And on modular multiplication no pretrained network beats training
 from scratch at all, at any setting of the intervention. The
 move itself costs the two points of test accuracy above.
 
-The result comes with limits, and they belong beside it. The effect grows with width: across
-widths from $32$ to $2048$ the untouched network's participation falls from
+The effect grows with width: across widths from $32$ to $2048$ the untouched network's participation falls from
 $0.937$ to $0.162$, so at width $32$ there are $30$ of $32$ neurons in use
 before anything changes and the intervention finds a thirty first, while at
 width $2048$ it uses $332$ and the

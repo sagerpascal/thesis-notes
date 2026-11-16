@@ -67,14 +67,16 @@ Benjamin Grewe, and Thilo Stadelmann.
 
 The reading of the survey given below belongs to the thesis and not to the
 paper. It sorts the six gaps by whether they are about what training produced,
-and it reads the first of them in a way the survey raises only in passing. The
-sentences that do so are marked. This paper is summarised, as the four in
+and it reads the first of them in a way the survey raises only in passing,
+which the sentence that does so says. This paper is summarised, as the four in
 \cref{chap:further} are, and it keeps a chapter of its own because the
 authorship here is shared first where the contribution to those four was
 partial, and because the thesis takes its question from this work.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The Survey Reviews 87 Agents and Leaves Out the Systems a Reader Thinks of First}
+% \texorpdfstring, because hyperref strips math from a PDF bookmark and warns
+% about it. 3.3 wants the number in math mode in the printed heading.
+\section{The survey classifies \texorpdfstring{$87$}{87} agents and leaves out the systems a reader thinks of first}
 \label{sec:acu_scope}
 % ─────────────────────────────────────────────────────────────────────────────
 
@@ -108,7 +110,7 @@ discussion. About a third of the cited works are preprints, and the survey
 says these may lack validation and should be read with that in mind.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{A Taxonomy Built on Agent Theory Brings Two Literatures Into One Scheme}
+\section{A taxonomy built on agent theory brings two literatures into one scheme}
 \label{sec:acu_taxonomy}
 % ─────────────────────────────────────────────────────────────────────────────
 
@@ -138,7 +140,7 @@ survey applies it only to interaction patterns that do not, which is a choice
 of scope and not a limit of the scheme.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The Field Is Moving to Foundation Agents and Has Not Settled How They Learn}
+\section{The field is moving to foundation agents and has not settled how they learn}
 \label{sec:acu_field}
 % ─────────────────────────────────────────────────────────────────────────────
 
@@ -164,12 +166,11 @@ images go from none in $2022$ to $12$ in $2023$ and $19$ in $2024$, while the
 text counts over the same years are $3$, $10$ and $8$.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Six Gaps Recur Across the Field Whatever the Architecture}
+\section{Six gaps recur across the classified agents}
 \label{sec:acu_gaps}
 % ─────────────────────────────────────────────────────────────────────────────
 
-Applying the taxonomy to the $87$ agents yields six limitations that recur
-whatever the architecture or the platform.
+Applying the taxonomy to the $87$ agents yields six limitations that recur across them.
 
 \begin{enumerate}
     \item \textbf{Insufficient generalisation.} Agents rely on input
@@ -224,15 +225,15 @@ complexity, standardised metrics and success rates in particular, and research
 grounded in the conditions under which these agents would actually run.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Two of the Six Gaps Are About What Training Produced}
+\section{Two of the six gaps are about what training produced}
 \label{sec:acu_takes}
 % ─────────────────────────────────────────────────────────────────────────────
 
 Two of the six gaps are about what training produced, and those two are where
 the thesis begins. Three are about evaluation and about the conditions the field assumes when it
 builds. The remaining one, planning over many steps,
-does not sort, for the reason given below. All four of the others are real and none is
-this thesis's subject.
+does not sort, for the reason given below. None of the other four is this
+thesis's subject.
 
 Taking the first that way is a reading, and the survey supports it only in
 passing. Its own diagnosis of insufficient generalisation is the input
@@ -250,8 +251,7 @@ so it already reaches partway into what follows. The component this thesis
 takes is the narrower one, how much data a network needs before it generalises
 and how well what it learnt carries to a related task.
 
-Planning is the gap that does not sort, which is why three of the six were
-counted as measurement and deployment gaps above and not four. The survey puts the difficulty in a model whose planning over
+Planning is the gap that does not sort. The survey puts the difficulty in a model whose planning over
 long horizons is weak and in an environment whose dynamics are unknown, and
 its recommendation asks for better policy architectures while one of its two
 remedies is a hybrid with symbolic planning. So it is partly about what

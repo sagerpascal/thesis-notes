@@ -8,12 +8,19 @@
 %
 % Eight sections that read as one argument, in the order the argument needs
 % them, not in the order of the thesis parts. The argument: a trained network
-% is one of many that fit, the procedure picks which one, that literature has
-% asked about norms and never about how many units carry the computation, the
-% question is old in neuroscience and has measures, grokking is where it can be
-% read off, the procedure has parts that nobody has varied for this purpose,
-% the same question can be asked of a weight matrix, structure can instead be
-% supplied or built in, and the gap follows.
+% is one of many that fit and the procedure picks which one, that literature
+% has asked about norms and never about how many units carry the computation,
+% the procedure has parts that nobody has varied for this purpose, grokking is
+% the one setting where the answer can be read off, the measures for it come
+% from neuroscience and disagree, the same question can be asked of a weight
+% matrix with the objective as the variable, a rollout is scored through a
+% probe whose own behaviour is rarely checked, structure can be built into the
+% substrate instead, and the gap follows.
+%
+% The sections keyed to chapters, 3 to 7, are ordered by chapter rather than
+% by what is varied. 00_ADMIN/07_writing_plan.md records that as a Level 2
+% decision not taken. Taking it is free while no prose for those sections has
+% been rewritten around the order.
 %
 % Every \paragraph below is scaffolding, one paragraph of prose to write. Each
 % carries a comment with the claim it has to make and the keys it cites.
@@ -151,7 +158,7 @@ property the literature has not asked about, and a component of the procedure
 it has not varied.
 
 
-\section{The training procedure has parts, and each of them can be varied}
+\section{Credit assignment algorithms and optimizers have been compared on convergence and accuracy}
 \label{sec:bg_rules}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: give the reader the rules Chapter~\ref{chap:grokking}
@@ -337,12 +344,11 @@ measures, and the two senses are kept apart here.
 The claim operates at two levels that the evidence does not separate. One is
 what is computed, and for modular addition the answer is the Fourier
 construction above. The other is how many neurons carry it. This thesis does
-not contest the first. What is worth noticing about the evidence for the
-second is that all of that evidence comes from networks trained one
+not contest the first. What the evidence for the second shares is that all of that evidence comes from networks trained one
 way, by backpropagation under an adaptive optimizer.
 
 
-\section{How far a computation spreads has been measured, and the measure has to be chosen}
+\section{How far a computation spreads has been measured in neuroscience, and the measures disagree}
 \label{sec:bg_coding}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: supply the measure the thesis uses, and the evidence
@@ -375,8 +381,8 @@ across photographs, drawings and the written
 name~\cite{quianquiroga_invariant_2005}. That is evidence for one end of the range
 and not a settlement of the question.
 
-The relation between that literature and this thesis is an analogy, and it is
-worth saying where it fails before the measure is borrowed from it. Sparse
+The relation between that literature and this thesis is an analogy, and where it fails should
+be said before the measure is borrowed from it. Sparse
 against distributed coding is a claim about how a population represents
 stimuli, measured over an ensemble of stimuli, where the quantity this thesis
 measures is structural and is read off the weights. The mechanisms that
@@ -418,12 +424,10 @@ design~\cite{ahmad_can_2019}.
 \subsection{Participation ratio counts the parts that contribute, and some measures mislead}
 \label{sec:bg_measures}
 
-The quantity this thesis measures is the participation ratio. Given a set of non negative
-quantities, it divides the squared total by the total of the squares, which equals the number of quantities when they are all equal
-and falls towards one as a few of them dominate. Multiplying the normalised
-form by the number of units reads as an effective count of how many units
-contribute. The measure is standard in both
-literatures~\cite{litwinkumar_optimal_2017, gao_simplicity_2015}.
+The quantity this thesis measures is the participation ratio, defined in
+\cref{sec:intro_question} and read off a layer's outgoing weight norms. It is
+standard in both
+literatures~\cite{litwinkumar_optimal_2017,gao_simplicity_2015}.
 
 A different question is sometimes asked with similar words. How many features
 one unit carries, and whether a network packs more features into a layer than
@@ -440,7 +444,7 @@ which is why \cref{chap:grokking} reports measures tied to the computation
 alongside the structural one, and why the two do not always agree.
 
 
-\section{Attention weights have been read for structure, and the two pretraining objectives differ in which token pairs enter the update}
+\section{The two pretraining objectives differ in which token pairs enter the update}
 \label{sec:bg_attention}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: get the reader to the object Chapter~\ref{chap:attention}

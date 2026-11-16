@@ -116,9 +116,10 @@ layers and about $35\%$ faster at twelve. The paper reports this for encoders
 and runs no matching comparison on decoders, so the account's prediction that
 it should not help there is untested.
 
-The common claim across this chapter and the one before it is at the level of
-the training setup, that more than one of its components leaves structure
-behind that the task alone does not fix.
+Two components of the training setup now have a structure attached to them.
+The learning rule settles how much of a layer carries a computation, the
+objective settles whether a query key product stays symmetric, and the task
+fixes neither.
 
 Both chapters so far have measured a trained network and drawn a conclusion
 from the measurement. \Cref{chap:bounded} asks what has to be true of such a

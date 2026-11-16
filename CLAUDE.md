@@ -247,9 +247,18 @@ Patterns to avoid:
 - One exemption, taken deliberately on 2026-11-16. A section whose content is
   structural rather than a finding keeps a noun label: "Research questions",
   "Contributions", "Introduction and Background", "Synthesis", "Further
-  Contributions". Statement forms for these come out worse than the labels.
+  Contributions", "Limitations", "Outlook", the wrapper's "Chapter
+  Introduction" and "Chapter Summary", the two declarations, and the appendix
+  chapter titles. Statement forms for these come out worse than the labels.
   The exemption covers part titles of the same kind and nothing else, and a
-  section that states a finding does not get it.
+  section that states a finding does not otherwise get it.
+
+  One of those needs its reason written down, because it looks like a breach.
+  Section 4.3 says a chapter summary states the chapter's findings once in
+  full, so by this section's own test it is a finding section. It keeps the
+  label anyway, because a statement title there would repeat the chapter title
+  two pages above it. The wrapper's two headings are also matched as literal
+  strings by `scripts/check_imports.py`, so renaming them is not free.
 - Every results section opens with the finding, then the setup that produced it,
   then the evidence, then the controls. Setup does not come first.
 - The first sentence of a section connects to the result of the previous one.

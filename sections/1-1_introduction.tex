@@ -38,12 +38,10 @@ in a trained network.
 \label{sec:intro_question}
 % ─────────────────────────────────────────────────────────────────────────────
 
-The two ends of that range fail differently, which is why the question is
-worth asking. A computation spread over many neurons survives the loss of any
+The two ends of that range fail differently. A computation spread over many neurons survives the loss of any
 one of them, because none of them carries much on its own. A computation held
 on a few leaves the rest of the network idle, so there is more to prune away
-and more room to put to a new use. The second effect is narrow and the
-limits belong with it. A concentrated network reaches a task that needs new
+and more room to put to a new use. The second effect is narrow. A concentrated network reaches a task that needs new
 combinations of the features it already has in $640$ epochs where the spread
 one needs $1540$, which is no better than the $1410$ it takes from scratch.
 Neither arrangement helps where the target keeps the same features and only
@@ -62,18 +60,20 @@ uses few of the available neurons, and the strongest reading of the
 observation is universality, the claim that networks solving the same task
 find the same features and the same construction~\cite{chughtai_toy_2023}.
 Universality is a claim about what is computed, and nothing here contradicts
-it. What is worth noticing is that every network behind the evidence was
-trained the same way, by backpropagation under an adaptive update rule, which
-is one procedure among many, so the evidence cannot separate what the task requires from what
-that procedure produces.
+it. Every network behind the evidence for it was trained the same way, by
+backpropagation under an adaptive update rule. That is one procedure among
+many, so the evidence cannot separate what the task requires from what the
+procedure produces.
 
 The object measured throughout needs a name. The set of neurons that carry a
 computation, counted as the participation ratio of a layer's outgoing weight
-norms, is what this thesis calls the solution's \emph{circuit}. The
-participation ratio of a set of non negative numbers is the square of their
-sum divided by the sum of their squares, meaning a count of how many of them
-effectively contribute: it equals the number of neurons when all contribute
-equally, and falls towards one when a few dominate. Two things about the word.
+norms, is what this thesis calls the solution's \emph{circuit}. For a
+layer of $n$ units, the participation ratio of the outgoing weight norms is
+the square of their sum divided by the sum of their squares. It runs from $1$,
+when one unit carries everything, to $n$, when all contribute equally, so it
+reads directly as a count of units in use. Divided by $n$ it reads as the
+fraction of the layer in use, and this thesis reports it both ways and says
+each time which it means. Two things about the word.
 It is narrower here than in mechanistic interpretability, where a circuit is a
 subgraph of components rather than a count of participating units. And the
 measure is borrowed from the neuroscience literature on how far a
@@ -161,8 +161,7 @@ computing. Circuit participation follows the imposed value, from $0.637$ to
 $0.990$, tolerance of neuron deletion rises with it, and test accuracy stays
 above $0.96$.
 
-Two limits belong beside this result rather than after it. The first is width.
-The effect grows as the layer gets wider, and at width $32$ there is nothing
+The first limit is width. The effect grows as the layer gets wider, and at width $32$ there is nothing
 to do, because the untouched network already uses $30$ of its $32$ neurons and
 the intervention reaches $31$. The second is the reference setting, and it is
 the sharper limit. That reference adds an L2 penalty to the gradient before an
@@ -176,17 +175,14 @@ decay: an adaptive optimizer's numerical floor dominates in a wide transformer
 whose normalisation parameters are decayed, and so does the decay of a
 trainable gain.
 
-The circuit costs test accuracy, tolerance of deletion, room to prune and
-speed of transfer, and only transfer is a surprise. A computation spread over more neurons tolerates random
-deletion better, and a network with more neurons left idle has more to prune,
-and both follow from what the measure counts. Test accuracy falls by the two
-points above. The surprise is transfer, where the concentrated network reaches
-a new task about twice as fast, largely by recruiting the neurons it was not
-using, under the condition stated at the top of this chapter.
+Of the four prices named at the start of this chapter, three follow from what
+the measure counts. The fourth does not: the concentrated network reaches a
+new task faster by recruiting the neurons it was not using, which is a use for
+idle capacity rather than a consequence of counting it.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The objective, the readout and the architecture settle three further properties}
+\section{A second component settles a second property, and a third is left free by the loss}
 \label{sec:intro_others}
 % ─────────────────────────────────────────────────────────────────────────────
 

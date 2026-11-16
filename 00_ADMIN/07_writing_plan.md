@@ -480,19 +480,32 @@ and distributed coding is now a subsection rather than the opening section.
 Retitled the same day, because five of the seven were built to one mould, two
 named nothing, and one stated the thesis's own setup as a finding.
 
+This list is the Level 1 plan. The chapter as written has eight sections, not
+seven, and the titles below were revised again on 2026-11-16. What follows is
+what `sections/2-1_related_work.tex` prints.
+
 1. Many parameter settings fit the same data, and the procedure picks one
-2. The training procedure has parts, and each of them can be varied
+2. Credit assignment algorithms and optimizers have been compared on
+   convergence and accuracy
 3. In modular addition the grokked solution has been read neuron by neuron
-   - The participation ratio used here comes from the neuroscience literature
-     on how far a representation spreads
-4. Attention weights have been read for structure, and the two pretraining
-   objectives differ in which token pairs enter the update
-5. A world model is scored through a probe, and the probe's own behaviour has
+4. How far a computation spreads has been measured in neuroscience, and the
+   measures disagree
+5. The two pretraining objectives differ in which token pairs enter the update
+6. A world model is scored through a probe, and the probe's own behaviour has
    rarely been checked
-6. Mutual support between neurons has been built into architectures rather
+7. Mutual support between neurons has been built into architectures rather
    than trained
-7. No literature has asked how many neurons carry a computation, or what sets
-   the number
+8. Unused neurons have been described one mechanism at a time, and never as a
+   quantity a rule sets
+
+The coding material was promoted from a subsection of section 3 to section 4
+of its own, with the reason recorded in the file: the measures and the
+ablation literature are not coding-framing content, and the thesis's own
+price results sit against them. The neuroscience framing stays inside it as
+one subsection and is declared as the analogy it is.
+
+The gap section was retitled because its earlier title claimed no literature
+had asked the question, which the grokking paper's own related work refutes.
 
 Section 7 is the chapter's gap, which 3.8 asks for at the end. It is not the
 implicit bias gap: that one already exists as a subsection in the file, at

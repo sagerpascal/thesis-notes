@@ -12,7 +12,7 @@
 % and it holds, so staging a refutation would be arguing with nobody.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{What the task fixes, and what is left to the procedure}
+\section{The task fixes what is computed and the procedure fixes how far it spreads}
 \label{sec:disc_levels}
 % ─────────────────────────────────────────────────────────────────────────────
 
@@ -25,8 +25,8 @@ across the parts available to it, and there the answer is not settled by the
 task. The same algorithm is implemented by about $154$ neurons or by about
 $254$ at width $256$, depending on the rule that trained the network.
 
-Nobody had claimed otherwise, which is worth saying because it would be easy
-to present this as a refutation. The literature read the concentrated
+Nobody had claimed otherwise, and it would be easy to present this as a
+refutation. The literature read the concentrated
 solutions it found as what the task offers, and did so on evidence from
 networks that were all trained the same way. What was missing was the comparison.
 
@@ -36,13 +36,13 @@ objective settles whether a Transformer's attention weights stay close to
 symmetric, at a scale where the question can be asked of models people use.
 \Cref{chap:bounded} takes the limiting case, a quantity that a loss comparing
 directions alone does not constrain at all, and shows what happens when a measurement is taken of
-it without anyone noticing. Put together, these say that a trained network has
-structural properties the objective does not reach, that different components
-of the training setup reach different ones, and that which component reaches
-which is worth knowing before a property is read as a fact about the task.
+it without anyone noticing. Together these say that different components of the
+training setup settle different structural properties, and that the objective
+settles none of them directly. Which component settled a property has to be
+established before that property is read as a fact about the task.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{The standard of \cref{chap:bounded}, applied to the measure of \cref{chap:grokking}}
+\section{The structural measure reports the direction of the central result and overstates its level}
 \label{sec:disc_standard}
 % ─────────────────────────────────────────────────────────────────────────────
 
@@ -74,10 +74,11 @@ intervention they rise to about $0.81$ and $0.80$. So the direction of the
 result survives the check and the level does not. The headline therefore reads that the intervention raises every measure of spread, with the
 structural one giving the largest numbers.
 
-The check on agreement between readouts is passed. Three measures computed on
-different principles move the same way under the intervention. Under the
-imposed profiles the structural measure and deletion tolerance move together,
-and the other two are not reported there.
+The check on agreement between readouts is passed. The three participation
+measures, structural, contribution weighted and ablation weighted, move the
+same way under credit equalisation. Under the imposed profiles only the
+structural measure and the deletion tolerance curve are reported, and those
+two move together.
 
 The check on null controls is passed. A credit profile imposed under a random
 permutation moves the circuit while having nothing to do with what any neuron
@@ -99,7 +100,7 @@ the pruning does not. Participation and minimal circuit size are different
 quantities, and which of them a claim about spread should rest on is open.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Three places where the structure can be settled}
+\section{The structure can be chosen by the rule, by imposing a profile, or by the architecture}
 \label{sec:disc_design}
 % ─────────────────────────────────────────────────────────────────────────────
 
