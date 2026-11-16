@@ -1386,8 +1386,17 @@ CITE_RE = re.compile(
     r"\\(" + "|".join(CITE_COMMANDS) + r")(\*?)((?:\[[^\]]*\])*)\{([^{}]*)\}")
 
 
-def apply_keys(keymap: dict[str, str]) -> list[str]:
-    """Rewrite citation keys in thesis owned .tex files. Never imported ones."""
+def apply_keys(keymap: dict[str, str],
+               canonical: set[str] | None = None) -> list[str]:
+    """Rewrite citation keys in thesis owned .tex files. Never imported ones.
+
+    `keymap` maps a source bibliography's own key to the generated one. A key
+    that is already the generated key was never anybody's old key, so it is
+    absent from that map and has to be recognised separately, or every key
+    the thesis already has right is reported as missing. That reported 69
+    non-problems in the background chapter alone.
+    """
+    canonical = canonical or set()
     messages: list[str] = []
     for pattern in THESIS_TEX:
         for path in sorted(ROOT.glob(pattern)):
@@ -1408,6 +1417,8 @@ def apply_keys(keymap: dict[str, str]) -> list[str]:
                         if keymap[k] != k:
                             changes += 1
                         out.append(keymap[k])
+                    elif k in canonical:
+                        out.append(k)
                     else:
                         unknown.add(k)
                         out.append(k)
@@ -1419,8 +1430,9 @@ def apply_keys(keymap: dict[str, str]) -> list[str]:
                 messages.append(f"{path.relative_to(ROOT)}: rewrote {changes} keys")
             if unknown:
                 messages.append(
-                    f"{path.relative_to(ROOT)}: {len(unknown)} keys not in the "
-                    f"bibliography: {', '.join(sorted(unknown))}")
+                    f"{path.relative_to(ROOT)}: {len(unknown)} keys that are "
+                    f"neither an entry nor an alias, so they resolve to "
+                    f"nothing: {', '.join(sorted(unknown))}")
     return messages
 
 

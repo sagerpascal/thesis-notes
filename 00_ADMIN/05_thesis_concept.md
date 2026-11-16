@@ -237,7 +237,7 @@ submission.
 | --- | --- | --- | --- | --- | --- |
 | I Introduction and Background | Introduction | `sections/1-1_introduction.tex` | `chap:introduction` | thesis owned | |
 | | Background | `sections/2-1_related_work.tex` | `chap:background` | thesis owned, needs rewrite to the new story | |
-| II Today's Agents Share One Recipe, and Two of Their Gaps Are About Training | ACU survey | `sections/3-1_acu_survey.tex` | `chap:acu` | shared first with Benjamin Meyer | summarised, 6 pp, the stake |
+| II The Field Is Converging on Foundation Models, and Two of Its Gaps Are About Training | ACU survey | `sections/3-1_acu_survey.tex` | `chap:acu` | shared first with Benjamin Meyer | summarised, 6 pp, the stake |
 | | Further Contributions | `sections/3-2_further_contributions.tex` | `chap:further` | four papers, roles stated | 6 pp |
 | III The Learning Rule and the Objective Each Leave Their Own Structure in the Weights | Grokking | `sections/4-1_grokking.tex` | `chap:grokking` | first author | pillar, leads the part |
 | | Attention | `sections/4-2_attention.tex` | `chap:attention` | shared first, Matteo Saponati led | full chapter |

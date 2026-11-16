@@ -519,7 +519,7 @@ which the concept file's own guardrails forbid in prose.
 | | Title | Label |
 | --- | --- | --- |
 | I | Introduction and Background | `part:background` |
-| II | Today's Agents Share One Recipe, and Two of Their Gaps Are About Training | `part:agents` |
+| II | The Field Is Converging on Foundation Models, and Two of Its Gaps Are About Training | `part:agents` |
 | III | The Learning Rule and the Objective Each Leave Their Own Structure in the Weights | `part:procedure` |
 | IV | What the Loss Leaves Free Can Dominate a Readout | `part:readout` |
 | V | Mutual Support Can Be Built into an Architecture Rather Than Left to the Learning Rule | `part:construction` |

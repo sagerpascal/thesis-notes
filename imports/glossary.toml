@@ -2,12 +2,10 @@
 # site in the thesis frame and the name each imported chapter uses for the
 # same idea. See CLAUDE.md 3.5 and 3.9. Add a term the day it is coined.
 
-# DECIDED 2026-11-14, PARTLY APPLIED. The author chose "circuit" as the thesis
-# wide noun, replacing "layout". The part titles and the subtitle were swept on
-# 2026-11-14. The prose is not swept, because most of it is in
-# sections/1-1_introduction.tex, which argues the retired story throughout and
-# is rewritten rather than edited. 56 occurrences of "layout" remain in thesis
-# owned files, 41 of them in that file. The sweep happens with the rewrite.
+# DECIDED 2026-11-14, APPLIED 2026-11-16. The author chose "circuit" as the
+# thesis wide noun, replacing "layout". The sweep is done: no thesis owned
+# prose uses the retired term, and the only matches left are the kaobook class
+# option \pagelayout and a comment about visual layout.
 [circuit]
 definition = "the set of neurons that carry a computation, counted as the participation ratio of a layer's outgoing weight norms. Narrower than the mechanistic interpretability sense, where a circuit is a subgraph of components, and the introduction says so at the definition site"
 site = "sections/1-1_introduction.tex, section A trained network uses some of its neurons and not others, and the task does not set which"
@@ -39,12 +37,12 @@ synonyms = { grokking = "grokking, groks" }
 
 [effective_unit_count]
 definition = "n times the participation ratio of a layer's outgoing weight norms, for a layer of n units"
-site = "chapter grokking, imported. The frame uses it as plain text and sends the reader there"
+site = "sections/4-1_grokking.tex, chapter introduction, where the chapter maps the paper's vocabulary onto the thesis's"
 synonyms = { grokking = "effective unit count, n PR" }
 
 [net]
 definition = "a set of neurons each of which is supported by several others through recurrent connections, the representation of one sensory pattern in the Cooperative Network Architecture"
-site = "chapter cna, imported. The frame describes it in plain words and sends the reader there"
+site = "sections/6-1_cna.tex, chapter introduction, in the note on vocabulary"
 synonyms = { cna = "net, assembled from net fragments" }
 
 # Defined in the introduction and nowhere else. chap:acu opens on a relative

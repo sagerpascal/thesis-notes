@@ -58,7 +58,7 @@ A network with more parameters than training examples can fit its training
 data exactly. It can do so even when the labels are random, which means that
 no property of the data stands in the way of memorisation and that reaching
 zero training loss says almost nothing about which function was
-found~\cite{zhang_rethinking_2017}. Fitting is not the constraint.
+found~\cite{zhang_understanding_2017}. Fitting is not the constraint.
 
 What fits is therefore a set and not a point. Many parameter settings
 reach the same training loss, and they differ in properties the loss never
@@ -66,7 +66,7 @@ sees: how large the weights are, how wide the margin is, how the computation
 is arranged across the network's parts. Classical accounts of generalisation
 were built for the regime in which that set is small, and the behaviour of
 modern networks past the interpolation threshold does not fit
-them~\cite{neyshabur_search_2015,belkin_reconciling_2019}. This thesis is
+them~\cite{neyshabur_search_2015, belkin_reconciling_2019}. This thesis is
 about one property that the loss leaves open, which is how many of a network's
 neurons end up carrying the computation.
 
@@ -141,7 +141,7 @@ a network can be described completely in those terms without any statement
 about which of its units are doing the work. The closest the literature comes
 to a structural claim is the bias of deep matrix factorisation towards
 solutions of low rank, which is a statement about the spectrum and not about
-the parts~\cite{arora_implicit_2019,gunasekar_characterizing_2018}.
+the parts~\cite{arora_implicit_2019, gunasekar_characterizing_2018}.
 
 The part of the procedure these results vary is also narrow. They vary the
 optimizer, or the geometry of the update, or the scale of the initialisation.
@@ -184,7 +184,7 @@ that affordable for a deep network~\cite{martens_optimizing_2015}. At the
 other extreme the sign methods throw the magnitude away and keep only the
 direction of each coordinate, which converges under conditions that separate
 the plain sign update from one that carries an error feedback
-term~\cite{bernstein_signsgd_2018,karimireddy_error_2019}, and a search over
+term~\cite{bernstein_signsgd_2018, karimireddy_error_2019}, and a search over
 such update rules produced one that is in current
 use~\cite{chen_lion_2024}.
 
@@ -200,7 +200,7 @@ data~\cite{hinton_forward_2022}. Deep feedback control drives the network
 towards the target with a controller and reads the credit off the control
 signal, which makes the resulting update interpretable as an approximation to
 a known optimisation
-method~\cite{meulemans_credit_2021,meulemans_least_2022}.
+method~\cite{meulemans_credit_2021, meulemans_least_2022}.
 
 What every one of these is asked is the same question. Does it match the
 accuracy of backpropagation, and does it converge? Which member of the
@@ -228,7 +228,7 @@ momentum~\cite{chen_lion_2024}.
 
 Further along, one factor covers a layer or a whole matrix. Layerwise trust
 ratios rescale every weight in a layer by one scalar derived from the ratio of
-weight norm to gradient norm~\cite{you_batch_2017,you_batch_2020}. Shampoo
+weight norm to gradient norm~\cite{you_batch_2017, you_batch_2020}. Shampoo
 preconditions a weight matrix with factored second moment
 matrices~\cite{gupta_shampoo_2018}, and Muon orthogonalises the momentum
 matrix before the step~\cite{jordan_muon_2024}. In each case the transformation
@@ -284,7 +284,7 @@ places it on the axis between the kernel and the feature learning regimes,
 where the delay is the time the network takes to leave the first for the
 second~\cite{kumar_grokking_2024}. An effective theory of representation
 learning describes the same transition in terms of the structure that forms in
-the embedding~\cite{liu_towards_2022}, and there is evidence that progress is
+the embedding~\cite{liu_understanding_2022}, and there is evidence that progress is
 continuous underneath and only the standard metrics are
 flat~\cite{barak_hidden_2022}.
 
@@ -330,7 +330,7 @@ Running through this work is the assumption that the task settles the answer.
 Its strongest form is universality, the claim that networks solving the same
 task converge on the same features and the same construction, so that an
 account read out of one network stands for the
-task~\cite{chughtai_toy_2023,olah_zoom_2020}. The word circuit is used in that
+task~\cite{chughtai_toy_2023, olah_zoom_2020}. The word circuit is used in that
 literature for a subgraph of components, which is not the count this thesis
 measures, and the two senses are kept apart here.
 
@@ -372,7 +372,7 @@ in learning rules that produce sparse
 representations~\cite{foldiak_sparse_1995}. Cells of remarkable specificity do
 exist: single neurons in the human medial temporal lobe respond to one person
 across photographs, drawings and the written
-name~\cite{quiroga_invariant_2005}. That is evidence for one end of the range
+name~\cite{quianquiroga_invariant_2005}. That is evidence for one end of the range
 and not a settlement of the question.
 
 The relation between that literature and this thesis is an analogy, and it is
@@ -400,7 +400,7 @@ argument~\cite{averbeck_neural_2006}. A representation carried by few cells
 buys something else. Fewer shared cells means that storing something new
 disturbs less of what is already there, and capacity arguments favour sparse
 connectivity for the same
-reason~\cite{rolls_relative_1990,litwinkumar_optimal_2017}.
+reason~\cite{rolls_relative_1990, litwinkumar_optimal_2017}.
 
 Both effects appear in artificial networks, where they have been studied under
 other names. Removing parameters by their effect on the loss is an old
@@ -408,12 +408,12 @@ compression technique~\cite{lecun_optimal_1989} and remains the basis of
 modern pruning~\cite{han_learning_2015}. How much a trained network depends on
 single directions in activation space varies, and depending on few of them
 goes with worse
-generalisation~\cite{morcos_importance_2018,zhou_revisiting_2018}. Sparse
+generalisation~\cite{morcos_importance_2018, zhou_importance_2018}. Sparse
 subnetworks exist inside dense ones that train to full accuracy on their
 own~\cite{frankle_lottery_2019}. And redundancy can be bought deliberately, by
 dropping units at random during training~\cite{srivastava_dropout_2014} or by
 imposing sparse high dimensional activity by
-design~\cite{ahmad_dense_2019}.
+design~\cite{ahmad_can_2019}.
 
 \subsection{Participation ratio counts the parts that contribute, and some measures mislead}
 \label{sec:bg_measures}
@@ -423,12 +423,12 @@ quantities, it divides the squared total by the total of the squares, which equa
 and falls towards one as a few of them dominate. Multiplying the normalised
 form by the number of units reads as an effective count of how many units
 contribute. The measure is standard in both
-literatures~\cite{litwinkumar_optimal_2017,gao_simplicity_2015}.
+literatures~\cite{litwinkumar_optimal_2017, gao_simplicity_2015}.
 
 A different question is sometimes asked with similar words. How many features
 one unit carries, and whether a network packs more features into a layer than
 it has units, is the subject of superposition and
-polysemanticity~\cite{elhage_toy_2022,bricken_monosemanticity_2023}. That is
+polysemanticity~\cite{elhage_toy_2022, bricken_monosemanticity_2023}. That is
 not the same as how many units carry one computation, and the two should not
 be run together.
 
@@ -477,7 +477,7 @@ some point part of the context.
 
 Autoregressive pretraining asks for the next token given its predecessors
 only~\cite{radford_improving_2018}, which is the objective behind the models
-that followed~\cite{brown_language_2020,touvron_llama_2023a}. Here a token is
+that followed~\cite{brown_language_2020, touvron_llama_2023a}. Here a token is
 the target exactly once and is context for every token after it, so a pair
 enters in one order.
 
@@ -503,7 +503,7 @@ on what the explanation is wanted for~\cite{wiegreffe_attention_2019}.
 
 A more recent line recovers features and circuits. Sparse autoencoders pull
 interpretable features out of activations that are individually
-uninterpretable~\cite{huben_sparse_2024,bricken_monosemanticity_2023}, circuit
+uninterpretable~\cite{huben_sparse_2024, bricken_monosemanticity_2023}, circuit
 analysis identifies subgraphs of a network that implement a specific
 behaviour~\cite{olah_zoom_2020}, induction heads are the best understood
 example~\cite{olsson_context_2022}, and feedforward blocks have been read as
@@ -529,7 +529,7 @@ No procedure generalises from finite data without a preference among the
 hypotheses that fit it. Averaged over all problems no learner beats any
 other~\cite{wolpert_free_1997}, so the question is never whether to have a
 bias but which one, and the classical statement of the cost is the trade
-between bias and variance~\cite{etal_neural_1992,mitchell_need_1980}.
+between bias and variance~\cite{etal_neural_1992, mitchell_need_1980}.
 
 The bias can be placed in the architecture. Sharing weights across positions
 makes a network equivariant to translation~\cite{etal_gradient_1998}, and the
@@ -558,7 +558,7 @@ itself~\cite{lecun_path_2022}. Training the encoder to predict its own
 representations rather than pixels is the self supervised version of the same
 idea~\cite{assran_self_2023}, and models of this family are what current model
 based agents plan
-with~\cite{hafner_mastering_2023,schwarzer_data_2021}.
+with~\cite{hafner_mastering_2023, schwarzer_data_2021}.
 
 Rolling such a model forward composes the transition with itself. Each
 application can magnify whatever error is already present by its Lipschitz
@@ -567,7 +567,7 @@ constant, so over a horizon of many steps the error can grow without bound.
 The standard remedy constrains the transition. If the latent dynamics are
 linear with a bounded spectral radius, the product of Lipschitz constants
 collapses into a bound that does not grow with the
-horizon~\cite{lusch_deep_2018,azencot_forecasting_2020,mamakoukas_memory_2020}.
+horizon~\cite{lusch_deep_2018, azencot_forecasting_2020, mamakoukas_memory_2020}.
 
 \subsection{Scoring a rollout needs a readout, and the readout responds to a free quantity}
 \label{sec:bg_scoring}
@@ -575,18 +575,18 @@ horizon~\cite{lusch_deep_2018,azencot_forecasting_2020,mamakoukas_memory_2020}.
 Because nothing in the latent space is directly interpretable, a rollout is
 scored through a probe: a regressor fitted from latent to physical state on
 encoded observations, then applied to predicted
-latents~\cite{belinkov_probing_2022,hewitt_designing_2019}.
+latents~\cite{belinkov_probing_2022, hewitt_designing_2019}.
 
 A prediction loss computed in latent space need not fix the scale of that
 space. Where the loss compares directions and ignores magnitudes, the
 magnitude is free, and the collapse phenomena studied in self supervised
 learning are what a free direction in the representation can
-do~\cite{grill_bootstrap_2020,chen_exploring_2021,jing_understanding_2022}.
+do~\cite{grill_bootstrap_2020, chen_exploring_2021, jing_understanding_2022}.
 
 The control that catches a readout reporting the wrong quantity is a predictor
 that learns nothing. Several fields have found headline results that a trivial
 baseline matches once someone ran
-one~\cite{dacrema_really_2019,musgrave_metric_2020,lin_neural_2019}, and in
+one~\cite{ferraridacrema_really_2019, musgrave_metric_2020, lin_neural_2019}, and in
 each case the response was a protocol rather than a better
 model~\cite{henderson_deep_2018}. That is the standard this thesis holds its
 own comparisons to.
@@ -619,7 +619,7 @@ while the stored states overlap little.
 Stochastic recurrent networks gave the same machinery a learning rule.
 A Boltzmann machine settles into configurations that satisfy its constraints
 and is tuned by a rule comparing two
-phases~\cite{etal_boltzmann_1984,smolensky_information_1987}, which became
+phases~\cite{etal_boltzmann_1984, smolensky_information_1987}, which became
 practical only once the connectivity was restricted so that one phase could be
 sampled in closed form~\cite{hinton_reducing_2006}.
 
@@ -642,7 +642,7 @@ place~\cite{etal_century_2012}.
 Deep learning has its own structured alternatives. Capsules replace a unit's
 scalar activation with a vector that carries the pose of a part and route
 information between levels by agreement between
-predictions~\cite{hinton_transforming_2011,sabour_dynamic_2017}. They share
+predictions~\cite{hinton_transforming_2011, sabour_dynamic_2017}. They share
 with the assembly tradition the idea that a representation has parts standing
 in relations, and they stopped short of scaling to the inputs that
 convolutional networks handle routinely.
@@ -674,10 +674,10 @@ inherits all three.
 Neurons that end up carrying nothing have been described several times over,
 each time as one mechanism. An L2 penalty added to the gradient before an
 adaptive optimizer drives whole units and filters to
-zero~\cite{yaguchi_adam_2018,mehta_implicit_2019}. The numerical floor in that
+zero~\cite{yaguchi_adam_2018, mehta_implicit_2019}. The numerical floor in that
 optimizer's denominator lets units with very small second moment estimates
 die~\cite{dufortlabbe_maxwell_2025}. A decayed per unit gain acts as a gate
-that induces sparsity~\cite{mehta_implicit_2019,kolb_differentiable_2025}.
+that induces sparsity~\cite{mehta_implicit_2019, kolb_differentiable_2025}.
 In large language models trained with a matrix
 preconditioner, neurons whose rows are updated by persistently small amounts
 simply die~\cite{dewulf_aurora_2026}. And under coupled decay, where a neuron

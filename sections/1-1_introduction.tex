@@ -46,7 +46,7 @@ and more room to put to a new use. The second effect is narrow and the
 limits belong with it. A concentrated network reaches a task that needs new
 combinations of the features it already has in $640$ epochs where the spread
 one needs $1540$, which is no better than the $1410$ it takes from scratch.
-Neither circuit helps where the target keeps the same features and only
+Neither arrangement helps where the target keeps the same features and only
 reassigns which answer each supports,
 and on modular multiplication no pretrained network beats training from
 scratch~\cite{sager_grokking_2026}.
@@ -63,8 +63,8 @@ observation is universality, the claim that networks solving the same task
 find the same features and the same construction~\cite{chughtai_toy_2023}.
 Universality is a claim about what is computed, and nothing here contradicts
 it. What is worth noticing is that every network behind the evidence was
-trained with backpropagation and an adaptive optimizer, which is one procedure
-among many, so the evidence cannot separate what the task requires from what
+trained the same way, by backpropagation under an adaptive update rule, which
+is one procedure among many, so the evidence cannot separate what the task requires from what
 that procedure produces.
 
 The object measured throughout needs a name. The set of neurons that carry a
@@ -126,9 +126,9 @@ measures what it builds and the conditions it builds for, and one, planning
 over many steps, the survey places partly in the model and partly in an
 environment whose dynamics are unknown. Two concern what training produced,
 which is where this thesis starts, and \cref{chap:acu} gives the sort in
-full. \Cref{chap:further} summarises four further papers,
-two of which sharpen those gaps and two of which supply structure from outside
-the data.
+full. \Cref{chap:further} summarises four further papers.
+One sharpens the first of those two gaps, one shows that a score can miss what
+it is taken to stand for, and two supply structure from outside the data.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -197,7 +197,7 @@ tokens the objective admits. Bidirectional training enters each pair in both
 orders and the weights stay close to symmetric, while autoregressive training
 makes a token the target once and the context of every later token, and the
 weights become directional, meaning that columns of high norm come to
-outnumber rows of high norm~\cite{saponati_structures_2025}. The measured object
+outnumber rows of high norm~\cite{saponati_underlying_2025}. The measured object
 there is a column of a bilinear form rather than a count of neurons, so this
 is a second component settling a second property and not a second measurement
 of the first. What it adds is scale, in models far larger than the grokking
@@ -212,19 +212,18 @@ stays accurate. The probe responds to the norm~\cite{sager_bounded_2026}.
 Rescaling each prediction to a reference norm taken from the encodings, which
 needs no retraining, removes most of the probe's error.
 
-That chapter sets a standard for readouts, and the standard is the one thing
-in this thesis that crosses chapters. Its four checks apply to the
+That chapter sets a standard for readouts, and the standard is the one method
+in this thesis that crosses chapters. Three of its four checks apply to the
 participation ratio, which is itself a readout taken from weight norms, and
-the discussion runs them. The answer is partly uncomfortable: the measures
+the discussion runs those three. The answer is partly uncomfortable: the measures
 tied to the computation place the untouched network lower than the structural
 one does, so the direction of the result survives and the level does not. One
 piece of evidence is clean, which is that an optimizer normalising per neuron
 reaches a distributed circuit while holding each neuron's incoming weight norm
 fixed, so its result cannot be scale moved between a neuron's incoming and
 outgoing weights. Beyond that standard nothing is shared. No single
-measurement runs across the chapters, and two that were planned are not
-available, because no checkpoints survive from the attention work and the code
-behind \cref{chap:cna} no longer runs.
+measurement runs across the chapters, and two that were planned were never
+made. \Cref{chap:discussion} says which and why.
 
 The last chapter asks what it would mean to stop leaving the structure to
 training. The Cooperative Network Architecture represents a sensory pattern as
@@ -316,8 +315,8 @@ first.
     \item Three contributions of the frame itself. The vocabulary above. A
     sort of the survey's six gaps by what each one is a property of. And the
     application of one chapter's standard for readouts to another chapter's
-    measure, which is the only argument in this thesis that runs between two
-    chapters.
+    measure, which is the one place where the method of one chapter is turned on
+    the measure of another.
 \end{itemize}
 
 What is left if the grokking chapter is removed is worth saying, because a
@@ -329,7 +328,8 @@ sets the stake, and an architecture that reaches the same mechanism by another
 route. That is a body of work and it is not this thesis's argument. The
 argument has one pillar, and saying so is more useful than implying five.
 
-Four chapters reproduce a published or submitted paper, and the survey of
+Four chapters reproduce a paper, three of them published and one not yet
+submitted, and the survey of
 \cref{chap:acu} is summarised in thesis owned prose like the four papers of
 \cref{chap:further}. Each opens with the
 full citation and a statement of the thesis author's share, then a chapter

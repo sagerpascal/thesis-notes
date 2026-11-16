@@ -64,10 +64,10 @@ establishes it again. Everything \cref{sec:intro_rule} states in one line is
 stated here in full, with the controls that support it and the settings where
 it does not apply.
 
-The paper's vocabulary differs from the thesis's in three places. It writes \emph{circuit participation} for
-the normalised measure that this thesis calls the circuit, and \emph{effective
-unit count} for the same quantity multiplied by the width of the layer, which
-reads as a number of neurons. \emph{Credit participation} is the same measure
+The paper's vocabulary differs from the thesis's in three places. It writes \emph{effective unit
+count} for the participation ratio as a count of neurons, and \emph{circuit
+participation} for the same quantity divided by the width of the layer. Both
+are the circuit this thesis defines, reported two ways. \emph{Credit participation} is the same measure
 applied to the credit each neuron receives rather than to its outgoing weight
 norm, and the two are distinct quantities that happen to agree in some of the
 comparisons and not in others. And the paper's \emph{grain} is the number of
@@ -104,9 +104,9 @@ is the axis \cref{sec:bg_grain} lays the optimizers along.
 Every learning rule that groks modular addition recovers the same Fourier
 construction, and the count of neurons implementing it varies from rule to
 rule at one width, with everything outside the rule held constant. Among the
-eight published optimizers compared the spread is modest, from $0.470$ to
-$0.613$ of the layer. Nero and the credit equalisation
-introduced below reach the other end, near $0.99$, so the full range is a
+eight that concentrate the spread is modest, from $0.470$ to $0.613$ of the
+layer. Nero and the credit equalisation this
+chapter introduces reach the other end, near $0.99$, so the full range is a
 property of this comparison and not of the optimizers in general use. Unless
 stated otherwise the measurements concern the first of the network's two
 hidden layers.
@@ -153,11 +153,11 @@ the network survives, how far it prunes, and how quickly it transfers. A distrib
 tolerates random deletion of neurons better. A concentrated circuit prunes
 further, and on a target built from fresh combinations of the features it
 already holds it arrives in $640$ epochs against $1540$ for the spread one,
-largely by recruiting the neurons it was not using. Two limits belong in the
-same breath. The distributed circuit's $1540$ epochs are no better than the
-$1410$ needed from scratch, so the result is that concentration helps rather
-than that spreading hurts. And on modular multiplication no pretrained network
-beats training from scratch at all, at any setting of the intervention. The
+largely by recruiting the neurons it was not using. Three limits belong in the same breath. The distributed circuit's $1540$
+epochs are no better than the $1410$ needed from scratch, so the result is
+that concentration helps and not that spreading hurts. Neither circuit helps when a target leaves the
+features alone and changes only which answer they support. And on modular multiplication no pretrained network beats training
+from scratch at all, at any setting of the intervention. The
 move itself costs the two points of test accuracy above.
 
 The result comes with limits, and they belong beside it. The effect grows with width: across

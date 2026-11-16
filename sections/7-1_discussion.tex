@@ -20,7 +20,7 @@ The results of this thesis separate two levels at which a question about a
 trained network can be asked. At one level the question is what the network
 computes, and for modular addition the answer is settled: every rule that
 generalises arrives at the same Fourier construction, which is what the
-universality claim says and what \cref{chap:grokking} confirms. At the other level the question is how that computation is laid out
+universality claim says and what \cref{chap:grokking} confirms. At the other level the question is how that computation is spread
 across the parts available to it, and there the answer is not settled by the
 task. The same algorithm is implemented by about $154$ neurons or by about
 $254$ at width $256$, depending on the rule that trained the network.
@@ -34,8 +34,8 @@ The separation is not peculiar to neurons. \Cref{chap:attention} holds the
 credit assignment algorithm fixed and varies the objective, and finds that the
 objective settles whether a Transformer's attention weights stay close to
 symmetric, at a scale where the question can be asked of models people use.
-\Cref{chap:bounded} takes the limiting case, a quantity that training
-constrains not at all, and shows what happens when a measurement is taken of
+\Cref{chap:bounded} takes the limiting case, a quantity that a loss comparing
+directions alone does not constrain at all, and shows what happens when a measurement is taken of
 it without anyone noticing. Put together, these say that a trained network has
 structural properties the objective does not reach, that different components
 of the training setup reach different ones, and that which component reaches
@@ -75,8 +75,9 @@ result survives the check and the level does not. The headline therefore reads t
 structural one giving the largest numbers.
 
 The check on agreement between readouts is passed. Three measures computed on
-different principles move the same way under the intervention and under the
-imposed profiles.
+different principles move the same way under the intervention. Under the
+imposed profiles the structural measure and deletion tolerance move together,
+and the other two are not reported there.
 
 The check on null controls is passed. A credit profile imposed under a random
 permutation moves the circuit while having nothing to do with what any neuron
@@ -148,8 +149,8 @@ and claiming them at scale would be claiming more than was run.
 The reference setting of \cref{chap:grokking} is one the field has largely
 moved away from. Adding an L2 penalty to the gradient before an adaptive
 optimizer produces the concentration most directly, and under decoupled weight
-decay the untouched reference already spreads its computation almost
-everywhere that chapter measures. The general claim, that a neuron drops out when its credit is
+decay the untouched reference already spreads its computation across most of
+the settings that chapter measures. The general claim, that a neuron drops out when its credit is
 small relative to a non gradient term of its update, survives that change, and
 two of the three such terms remain live under decoupled decay. The headline
 numbers belong to the coupled setting and should be quoted with it.
@@ -178,10 +179,11 @@ demonstrations are on line drawings, it defines no dynamics over a
 representation, and the code behind it no longer runs, so the measurements
 that would connect it to \cref{chap:grokking} cannot now be made.
 
-Finally, no single measurement runs across the chapters. Two were planned,
-participation over the attention weights of pretrained models and neuron
-deletion on the nets of \cref{chap:cna}, and neither is available, because no
-checkpoints survive from the first and the code no longer runs for the second.
+Finally, no single measurement runs across the chapters. Two were planned, participation over the attention
+weights of pretrained models and neuron deletion on the nets of
+\cref{chap:cna}, and neither was made. The second cannot be made now, because
+the code no longer runs. The first could be, on models anyone can download,
+and it was not.
 What crosses the chapters is a standard and an argument about a shared
 mechanism, which is less than a shared measurement and is what this thesis
 has.

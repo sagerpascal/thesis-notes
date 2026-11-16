@@ -9,24 +9,28 @@
 %
 % Keine geprägten Begriffe, nach CLAUDE.md 3.5.
 
-Ein Netzwerk, das zwei Zahlen modulo einer Primzahl addieren lernt und $2048$
-Neuronen in seiner verborgenen Schicht hat, löst die Aufgabe fehlerfrei und
-trägt die Berechnung auf etwa $332$ davon. Ändert man eine einzige Sache am
-Training, nämlich welche Parameter sich im Aktualisierungsschritt einen
-Normierungsfaktor teilen, steigt diese Zahl auf $2046$. Aufgabe, Daten,
-Architektur und Breite bleiben gleich, und die Testgenauigkeit fällt von
-$0.998$ auf $0.976$. Wie viel eines Netzwerks am Ende die Arbeit leistet, wird
+Zwei Netzwerke können dieselbe Arithmetik gleich gut lernen und dabei sehr
+unterschiedlich viel von sich selbst einsetzen. Bei der Addition modulo einer
+Primzahl trägt eine Schicht aus $256$ Einheiten die Lösung auf etwa $154$
+davon, bei einer Testgenauigkeit von $0.998$. Ändert man eine einzige
+Eigenschaft der Aktualisierung, nämlich welche Parameter sich einen
+Normierungsfaktor teilen, so belegt dieselbe Lösung etwa $254$ Einheiten, bei
+$0.976$. An der Aufgabe hat sich nichts geändert. Verbreitert man die Schicht
+auf $2048$, nutzen die beiden Einstellungen $332$ Einheiten und $2046$, beide
+bei $0.998$. Wie viel eines Netzwerks am Ende die Arbeit leistet, wird
 also nicht dadurch entschieden, was das Netzwerk berechnen soll. Es wird
 dadurch entschieden, wie das Training den Fehler unter den Neuronen aufteilt,
 es lässt sich wählen, und die Wahl hat einen Preis.
 
 Die Frage entstammt einer Übersicht über $87$ Agenten für die Computernutzung
-und $33$ Datensätze. Das Feld nähert sich einem Rezept an, einem vortrainierten
-Modell mit Bild- und Sprachfähigkeiten, das durch Prompting oder durch Klonen
-menschlicher Demonstrationen angepasst wird, und sechs Einschränkungen treten
-immer wieder auf. Vier betreffen, wie das Feld misst, was es baut, und unter
-welchen Bedingungen es baut. Zwei betreffen das, was das Training
-hervorgebracht hat: Diese Systeme verallgemeinern schlecht über die Situationen
+und $33$ Datensätze. Spezialisierte Agenten weichen solchen, die auf
+vortrainierten Grundlagenmodellen aufbauen, während offen bleibt, wie diese
+Agenten lernen und was sie beobachten, und sechs Einschränkungen treten im
+Feld immer wieder auf. Drei der sechs betreffen die Evaluation und die
+Einsatzbedingungen, und eine vierte, die Planung über viele Schritte, ordnet
+die Übersicht teils dem Modell und teils einer Umgebung zu, die niemand
+charakterisiert hat. Zwei betreffen das, was das Training hervorgebracht
+hat: Diese Systeme verallgemeinern schlecht über die Situationen
 hinaus, auf denen sie trainiert wurden, und benötigen grosse Mengen an
 Demonstrationsdaten. Eine Übersicht kann diese beiden nicht erklären, weil sie
 nie eine Aufgabe festhält und das Training variiert, und weil eine Erfolgsrate
@@ -75,8 +79,9 @@ Trainingsziel, so ist die Aktualisierung der Aufmerksamkeitsgewichte eines
 Transformers eine Summe über die geordneten Token-Paare, die das Ziel zulässt.
 Bidirektionales Training nimmt jedes Paar in beiden Reihenfolgen auf, und die
 Gewichte bleiben nahezu symmetrisch, während autoregressives Training ein Token
-einmal zum Ziel und vielfach zum Kontext macht, sodass einige wenige Spalten
-dominieren. Die Herleitung bestätigt sich in gleich aufgesetzten Modellen mit
+einmal zum Ziel und vielfach zum Kontext macht, sodass die Gewichte gerichtet
+werden: Spalten mit grosser Norm überwiegen dann gegenüber Zeilen mit grosser
+Norm. Die Herleitung bestätigt sich in gleich aufgesetzten Modellen mit
 zwölf Schichten, und die Struktur zeigt sich in veröffentlichten Modellen über
 Text, Bild und Audio hinweg. Eine Initialisierung, die aus der Herleitung
 folgt, beschleunigt bidirektionales Training.
