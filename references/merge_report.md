@@ -542,6 +542,12 @@ author = "Yan, Peng and Abdulkadir, Ahmed and Luley, Paul-Philipp and Rosenthal,
 
 These break the build or cite the wrong work. Fix them.
 
+None.
+
+## Incomplete, and cited by nothing in the build
+
+Missing an author, a title or a year, in an entry no included text cites. Most arrive in the bibliography of a paper the thesis summarises rather than reproduces, so nothing can reach them. They are listed because wiring that paper back in would promote them to errors. This section is computed from `main.bcf`, so it is empty until the thesis has been built once.
+
 - `deriu_probing_nodate` has no year (from imported_papers/Llama2_benchmark_sds/references.bib)
 - `dettmers_bit_nodate` has no year (from imported_papers/Llama2_benchmark_sds/references.bib)
 - `dettmers_llm_nodate` has no year (from imported_papers/Llama2_benchmark_sds/references.bib)

@@ -42,6 +42,26 @@ ROOT = Path(__file__).resolve().parent.parent
 # CONFIGURATION
 # ============================================================================
 
+
+def cited_keys() -> set[str]:
+    """The citation keys the last build asked for, from main.bcf.
+
+    A merged entry missing a year is only a problem if something cites it.
+    Most of the bibliographies read here belong to papers the thesis
+    summarises rather than reproduces, so they carry hundreds of references
+    no included text can reach. Reporting those as errors to fix buries the
+    ones that matter.
+
+    Returns an empty set when there is no build to consult, and the caller
+    then treats every entry as cited, which is the safe direction.
+    """
+    import re as _re
+    bcf = Path(__file__).resolve().parent.parent / "main.bcf"
+    if not bcf.exists():
+        return set()
+    text = bcf.read_text(errors="replace")
+    return set(_re.findall(r"<bcf:citekey[^>]*>([^<]+)</bcf:citekey>", text))
+
 # Every bibliography that feeds the thesis, in a fixed order. The order is a
 # tie breaker during merging, so put the most trustworthy source first.
 # Paths are relative to the repository root.
@@ -1146,6 +1166,7 @@ def fix_crossrefs(groups: list[Group], report_lines: dict[str, list[str]]) -> No
 
 
 def check_quality(groups: list[Group], report_lines: dict[str, list[str]]) -> None:
+    _cited = cited_keys()
     for group in sorted(groups, key=lambda g: g.new_key):
         f = group.fields
         missing = []
@@ -1156,9 +1177,16 @@ def check_quality(groups: list[Group], report_lines: dict[str, list[str]]) -> No
         if not year_of(f):
             missing.append("year")
         if missing:
-            report_lines["errors"].append(
+            where = "errors"
+            note = ""
+            reachable = {group.new_key, *group.aliases,
+                         *(r.key for r in group.records)}
+            if _cited and not (reachable & _cited):
+                where = "uncited_incomplete"
+                note = ""
+            report_lines[where].append(
                 f"`{group.new_key}` has no {', '.join(missing)} "
-                f"(from {group.records[0].source})")
+                f"(from {group.records[0].source}){note}")
 
         if not f.get("doi") and not f.get("eprint") and not f.get("url"):
             report_lines["no_pointer"].append(
@@ -1266,6 +1294,13 @@ def write_report(path: Path, groups: list[Group], records: list[Record],
     conflicts = [g for g in groups if g.conflicts]
     sections = [
         ("errors", "Errors", "These break the build or cite the wrong work. Fix them."),
+        ("uncited_incomplete", "Incomplete, and cited by nothing in the build",
+         "Missing an author, a title or a year, in an entry no included text "
+         "cites. Most arrive in the bibliography of a paper the thesis "
+         "summarises rather than reproduces, so nothing can reach them. They "
+         "are listed because wiring that paper back in would promote them to "
+         "errors. This section is computed from `main.bcf`, so it is empty "
+         "until the thesis has been built once."),
         ("blocked", "Merges an override prevented", None),
         ("fuzzy", "Possible duplicates, not merged",
          "Titles that look alike but share no DOI, arXiv id or exact title. "

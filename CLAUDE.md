@@ -62,6 +62,18 @@ Gates before every commit that touches the text:
   come from kaobiblio's `backref` option, print nothing, and are not worth
   chasing.
 - Zero missing bibliography keys in `build-biber.log`.
+- Zero entries in the bibliography that nothing cites. After content is
+  removed from the thesis an incremental build keeps printing the references
+  that content used to cite, because the citation keys survive in `main.bcf`
+  and three passes never converge back. The cut of 2026-11-14 left $143$ of
+  them and every other check passed.
+
+  ```bash
+  uv run --no-project python scripts/check_layout.py --bibliography
+  ```
+
+  The fix is `./build.sh clean` followed by a full build, and any measurement
+  taken after content is removed should be taken on one.
 - Zero banned words and zero em dashes in thesis owned files (Section 3.10).
 - After any trim, no number, citation key or label was lost. Compare the sets of
   numeric tokens, `\cite` keys and `\label` names between `HEAD` and the working

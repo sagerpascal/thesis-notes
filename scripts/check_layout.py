@@ -243,8 +243,44 @@ def report_pdf() -> int:
     return 1 if hits else 0
 
 
+def report_stale_bibliography() -> int:
+    """Entries the bibliography prints that nothing in the build cites.
+
+    After content is removed from the thesis, an incremental build can keep
+    printing the references that content used to cite: the citation keys
+    survive in main.bcf, biber keeps writing them into main.bbl, and three
+    passes never converge back. The cut of 2026-11-14 left 143 such entries
+    and nobody noticed, because every other check passed.
+
+    A clean build fixes it. This says when one is needed.
+    """
+    bcf = ROOT / "main.bcf"
+    bbl = ROOT / "main.bbl"
+    if not bcf.exists() or not bbl.exists():
+        print("  no build to check, run ./build.sh first")
+        return 0
+    cited = set(re.findall(r"<bcf:citekey[^>]*>([^<]+)</bcf:citekey>",
+                           bcf.read_text(errors="replace")))
+    printed = set(re.findall(r"\\entry\{([^}]+)\}",
+                            bbl.read_text(errors="replace")))
+    orphan = sorted(k for k in printed if k not in cited)
+    if not orphan:
+        print(f"  {len(printed)} entries printed, every one of them cited")
+        return 0
+    print(f"  {len(orphan)} entries are printed and cited by nothing:")
+    for k in orphan[:10]:
+        print(f"    {k}")
+    if len(orphan) > 10:
+        print(f"    and {len(orphan) - 10} more")
+    print("\n  These are left over from content that was removed. Run")
+    print("  ./build.sh clean && ./build.sh errors")
+    return 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--bibliography", action="store_true",
+                        help="entries the bibliography prints that nothing cites")
     parser.add_argument("--overfull", action="store_true",
                         help="only the overfull box summary")
     parser.add_argument("--pdf", action="store_true",
@@ -252,6 +288,9 @@ def main() -> int:
     parser.add_argument("--margins", action="store_true",
                         help="how full the margin column gets, and where")
     args = parser.parse_args()
+
+    if args.bibliography:
+        return report_stale_bibliography()
 
     if args.pdf:
         return report_pdf()
