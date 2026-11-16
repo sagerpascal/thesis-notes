@@ -100,13 +100,14 @@ probe reports the drift.
 
 The size of the effect is large enough to decide a comparison. In synthetic
 latents that hold the state in their direction, a norm error of $5\%$ per
-prediction step compounds within a few dozen steps until the probe's error is
-$27$ times that of always predicting the mean state. When the norm varies
+prediction step multiplies the norm by ten within $47$ steps, and the probe's
+error reaches $27$ times that of always predicting the mean state. When the norm varies
 independently of the true error, the probe orders only about $61\%$ of pairs
 of latents correctly, where chance is $50\%$. So a worse model that drifts
-less can rank above a better one, which is not a hypothetical: under the
-ordinary probe the worse of one pair of models ranks first in every one of
-$120$ paired comparisons.
+less can rank above a better one, which is not a hypothetical. Against models
+built to have a known accuracy, the ordinary probe ranks the worse model first
+in all $120$ pairs, and re-projection recovers $88$ of those rankings with no
+false confirmation.
 
 The same distortion appears in published models. For TCRL on pendulum,
 rescaling the predictions to the norm of the encodings removes $97\%$ of the
@@ -122,6 +123,14 @@ applied again. It needs no retraining and can be added to any state probe
 evaluation. Four checks come with it, testing whether what the re-projected
 error reports is what the model predicts rather than an artefact of the
 rescaling.
+
+Run on the paper's own trained world models, those checks fail. None of the
+rankings between the four dynamics modules holds, because the rollouts do no
+better than a probe fitted from the initial encoding, or they land away from
+the directions the encoder produces. That is a negative result about the
+authors' own models, and it is the strongest evidence in the chapter that the
+checks do real work. A protocol that never rejects anything is not a
+protocol.
 
 Where the training design already keeps the norm in check, the correction
 changes nothing and should not be applied blindly. Squared error training

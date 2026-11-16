@@ -73,35 +73,41 @@ computation, which weight a neuron by what it contributes on real inputs or by
 what is lost when it is removed, place the untouched network at about $0.34$
 and $0.42$ where the structural measure places it at about $0.60$. Under the
 intervention they rise to about $0.81$ and $0.80$. So the direction of the
-result survives the check and the level does not, and the honest form of the
-headline is that the intervention raises every measure of spread, with the
+result survives the check and the level does not. The headline therefore reads that the intervention raises every measure of spread, with the
 structural one giving the largest numbers.
 
 The check on agreement between readouts is passed. Three measures computed on
 different principles move the same way under the intervention and under the
 imposed profiles.
 
-The check on null controls is passed with room to spare, and this is where the
-thesis is strongest. A credit profile imposed under a random permutation moves
+The check on null controls is passed. A credit profile imposed under a random permutation moves
 the circuit while having nothing to do with what any neuron computes. And one
 rule settles the gauge question outright: an optimizer that holds each
 neuron's incoming weight norm fixed cannot move scale between the two sides of
 a neuron, and it reaches a distributed circuit anyway.
 
-The conclusion is not that the measure is sound, and not that it is broken. It
-is that the structural measure overstates the level while reporting the
-direction correctly, that this is visible because the chapter reports the
-other measures alongside it, and that a reader comparing circuit sizes across
-papers should ask which measure produced the number.
+So the structural measure overstates the level while reporting the direction
+correctly, and this is visible only because the chapter reports the other two
+alongside it. A reader comparing circuit sizes across papers should ask which
+measure produced the number.
+
+One question the checks do not settle sits in that chapter's own appendix. A
+network trained with decoupled decay has nearly equal outgoing norms, which
+the structural measure calls distributed, and it prunes to about as few
+neurons as the concentrated reference. One network the measure separates and
+the pruning does not. Participation and minimal circuit size are different
+quantities, and which of them a claim about spread should rest on is open.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Three ways to get the circuit one wants}
+\section{Three places where the structure can be settled}
 \label{sec:disc_design}
 % ─────────────────────────────────────────────────────────────────────────────
 
-If the circuit is settled by the procedure and has a price, then it is a thing
-to be chosen rather than inherited, and this thesis leaves three ways of
-choosing it.
+If a structural property is settled by the procedure and has a price, then it
+is a thing to be chosen rather than inherited, and this thesis leaves three
+places where the choice can be made. Only the first two concern the circuit as
+this thesis measures it. The third settles a different structure and is here
+because the mechanism is the same.
 
 The first is to choose the rule. The condition of \cref{chap:grokking} says
 which rules can move the circuit and which cannot, as a yes or no rather than
@@ -112,15 +118,13 @@ offers whichever circuits the available rules happen to produce.
 The second is to impose the circuit and then establish that the imposition did
 what it claims. The imposed profiles of \cref{chap:grokking} are an existence
 proof that the circuit can be set directly, and the standard of
-\cref{chap:bounded} is what keeps such an imposition from being a measurement
-artefact. The two chapters are not connected by a shared experiment, but they
-are connected by this: one supplies a lever and the other supplies the test a
-lever needs.
+\cref{chap:bounded} is what distinguishes a circuit that was set from a
+measurement artefact. No experiment runs across the two chapters.
 
 The third is to build the structure into the architecture, which is
-\cref{chap:cna}. There redundancy of support is not something a regulariser
-has to be coaxed into producing, because a neuron is part of a representation
-only while others hold it there.
+\cref{chap:cna}. There a neuron is part of a representation only while others hold it there,
+so the redundancy is in the architecture and no regulariser has to produce
+it.
 
 One structural parallel between the chapters is worth recording, as an
 observation rather than a result. A Hebbian update changes the connection
@@ -128,8 +132,8 @@ between two neurons by a quantity symmetric in the two, so repeated
 application accumulates a symmetric weight matrix. That is the same mechanism
 \cref{chap:attention} identifies in bidirectional training, where each pair of
 tokens enters the update in both orders and the antisymmetric parts cancel.
-Two literatures that do not cite each other arrive at symmetric weights for
-the same reason, which is that their updates are sums over unordered pairs.
+Both arrive at symmetric weights for the same reason, which is that their
+updates are sums over unordered pairs.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Limitations}
@@ -160,7 +164,7 @@ finding is about how much of the available width gets used, and a network
 whose width is already fully used is outside its scope.
 
 \Cref{chap:attention} establishes its mechanism by derivation and verifies it
-in matched twelve layer models; the comparison across released models is
+in matched twelve layer models. The comparison across released models is
 observational, since those models differ in more than their objective. Part of
 what distinguishes the two objectives in a decoder is the attention mask,
 which belongs to the architecture, so the clean statement is about the set of
@@ -192,11 +196,9 @@ has.
 The question this thesis asks has an older form in neuroscience, where it is
 asked of populations of cells rather than of a trained layer, and where the
 participation ratio used here comes from. The analogy is limited in the three
-respects \cref{sec:bg_sparsedistributed} names, and it is worth one sentence
-of speculation and no more. If how far a computation spreads is set in
-artificial networks by how credit is divided during learning, rather than by
-what the network has to compute, it would be worth asking what plays that role
-where learning is local and no global error is propagated at all.
+respects \cref{sec:bg_sparsedistributed} names. Where learning is local and no
+global error is propagated, nothing plays the role that credit assignment
+plays here, and what does is not known.
 
 The nearer prospect is the one \cref{chap:cna} opens. A representation in
 which the parts of a pattern are explicit and support one another is close to

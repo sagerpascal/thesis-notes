@@ -15,23 +15,26 @@
 % to about $800$ words. Cutting it further means dropping a step rather than
 % thinning every sentence.
 
-A network trained to add two numbers modulo a prime, with $2048$ neurons in
-its hidden layer, solves the task perfectly and carries the computation on
-about $332$ of them. Changing one thing in how it is trained, namely which
-parameters share a normalising factor in the update, takes that number to
-$2046$. The task, the data, the architecture and the width are unchanged, and
-test accuracy falls from $0.998$ to $0.976$. How much of a network ends up
-doing the work is therefore not settled by what the network is asked to do. It
-is settled by how training divides the error among the neurons, it can be
-chosen, and the choice has a price.
+A network trained to add two numbers modulo a prime, with $256$ neurons in its
+first hidden layer, reaches a test accuracy of $0.998$ and carries the
+computation on about $154$ of them. Changing one thing in how it is trained,
+namely which parameters share a normalising factor in the update, takes that
+to about $254$, with the task, the data, the architecture and the width
+unchanged, and test accuracy falls to $0.976$. The difference grows with the
+layer: at $2048$ neurons the untouched network uses $332$ and the changed one
+$2046$, and there both reach $0.998$. How much of a network ends up doing the
+work is therefore not settled by what the network is asked to do. It is
+settled by how training divides the error among the neurons.
 
 The question comes from a survey of $87$ agents for computer use and $33$
 datasets. The field is converging on one recipe, a pretrained model with
 vision and language capabilities adapted by prompting or by cloning human
-demonstrations, and six limitations recur across it. Four concern how the
-field measures what it builds and the conditions it builds for. Two concern
-what training produced, namely that these systems generalise poorly beyond the
-situations they were trained on and need large amounts of demonstration data.
+demonstrations, and six limitations recur across it. Three concern how the
+field measures what it builds and the conditions it builds for, and one, poor
+planning over many steps, the survey places partly in the model and partly in
+an environment whose dynamics are unknown. Two concern what training produced,
+namely that these systems generalise poorly beyond the situations they were
+trained on and need large amounts of demonstration data.
 A survey cannot explain those two, because it never holds a task fixed and
 varies how a network is trained, and because a success rate cannot separate
 two networks that score alike. They have to be measured inside the network.
@@ -39,7 +42,7 @@ two networks that score alike. They have to be measured inside the network.
 Doing that needs a task whose solution is known neuron by neuron, and
 arithmetic modulo a prime is such a task. Networks trained on it exhibit
 grokking, meaning that they fit the training data perfectly, sit at chance on
-held-out data for thousands of epochs, and then generalise abruptly. Holding
+held out data for thousands of epochs, and then generalise abruptly. Holding
 the task, the data, the architecture and the width fixed and varying only the
 rule that assigns credit, every rule that generalises recovers the same
 Fourier construction, and the number of neurons implementing it differs by
@@ -63,10 +66,12 @@ untouched network already uses all of it.
 
 The choice is paid for in both directions. A computation spread over many
 neurons tolerates the deletion of neurons far better. A computation held on
-few prunes further and adapts about twice as fast to a task that needs new
-combinations of the features already learned, by recruiting the neurons it was
-not using, although not to a task that only changes which answer each feature
-votes for.
+few prunes further and reaches a task that needs new combinations of the
+features already learned in $640$ epochs against $1540$ for the spread one,
+which is no faster than the $1410$ needed from scratch. The advantage is
+narrow: it does not appear for a task that only changes which answer each
+feature votes for, and on multiplication no pretrained network beats training
+from scratch at all.
 
 The learning rule is not the only part of training that leaves structure
 behind. Holding the credit assignment algorithm fixed and varying the training
@@ -74,8 +79,9 @@ objective, the update to a Transformer's attention weights is a sum over the
 ordered pairs of tokens the objective admits. Bidirectional training enters
 each pair in both orders and the weights stay close to symmetric, while
 autoregressive training makes a token a target once and context many times,
-and a few columns come to dominate. The derivation holds in matched
-twelve-layer models and the structure appears in released models across text,
+and the weights become directional, meaning that columns of high norm come to
+outnumber rows of high norm. The derivation holds in matched
+twelve layer models and the structure appears in released models across text,
 vision and audio. An initialisation that follows from the derivation speeds up
 bidirectional training.
 
@@ -91,9 +97,9 @@ the correction, and applying them to this thesis's own measure of how far a
 computation spreads shows that the direction of the central result survives
 while the level it reports is the highest of three measures.
 
-If how much of a network carries a computation is settled by training and has
-a price, it can instead be fixed in the architecture. The last study
-represents a sensory pattern as a set of neurons each held in place by several
+A structure that training settles can instead be built in, and one
+architecture did so before any of this was measured. The last study, submitted
+two years before the work above, represents a sensory pattern as a set of neurons each held in place by several
 others, assembled from fragments learned by Hebbian plasticity. Noise, which
 nothing supports, is filtered with more than half the input corrupted,
 partially hidden figures are completed, and fragments learned separately

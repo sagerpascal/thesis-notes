@@ -232,12 +232,12 @@ submission.
 | --- | --- | --- | --- | --- | --- |
 | I Introduction and Background | Introduction | `sections/1-1_introduction.tex` | `chap:introduction` | thesis owned | |
 | | Background | `sections/2-1_related_work.tex` | `chap:background` | thesis owned, needs rewrite to the new story | |
-| II What the Field Builds, and What Its Scores Do Not Show | ACU survey | `sections/3-1_acu_survey.tex` | `chap:acu` | shared first with Benjamin Meyer | summarised, 6 pp, the stake |
+| II Today's Agents Share One Recipe, and Two of Their Gaps Are About Training | ACU survey | `sections/3-1_acu_survey.tex` | `chap:acu` | shared first with Benjamin Meyer | summarised, 6 pp, the stake |
 | | Further Contributions | `sections/3-2_further_contributions.tex` | `chap:further` | four papers, roles stated | 6 pp |
-| III The Training Procedure Fixes What the Task Leaves Open | Grokking | `sections/4-1_grokking.tex` | `chap:grokking` | first author | pillar, leads the part |
+| III The Learning Rule and the Objective Each Leave Their Own Structure in the Weights | Grokking | `sections/4-1_grokking.tex` | `chap:grokking` | first author | pillar, leads the part |
 | | Attention | `sections/4-2_attention.tex` | `chap:attention` | shared first, Matteo Saponati led | full chapter |
 | IV What the Loss Leaves Free Can Dominate a Readout (`part:readout`) | World model | `sections/5-1_bounded.tex` | `chap:bounded` | first author, unsubmitted | short chapter |
-| V Mutual Support Can Be Built into an Architecture Instead of Trained | CNA | `sections/6-1_cna.tex` | `chap:cna` | first author | the proposal |
+| V Mutual Support Can Be Built into an Architecture Rather Than Left to the Learning Rule | CNA | `sections/6-1_cna.tex` | `chap:cna` | first author | the proposal |
 | VI Synthesis | Discussion, Conclusion | `sections/7-1_discussion.tex`, `sections/7-2_conclusion.tex` | `chap:discussion`, `chap:conclusion` | thesis owned | short |
 
 The part order is the September one, so the file numbering matches the part
@@ -359,9 +359,15 @@ that number it cites the paper.
 - No attention checkpoints survive, so the participation ratio measurement on
   attention weights that earlier drafts listed as optional glue is not
   available. Do not promise it.
-- The attention paper does not compute participation on the attention weights.
-  "Circuit across columns" is the thesis's reading of column dominance and is
-  introduced as that.
+- The attention paper does not compute participation on the attention weights,
+  and "circuit across columns" was a misreading of its measure. Column
+  dominance means that columns of high norm are more common than rows of high
+  norm, which is an asymmetry between the row space and the column space, not
+  a concentration of the computation on a few columns. The misreading was in
+  five thesis owned sentences and was removed on 2026-11-16. There is no
+  spread against concentration axis in that chapter, which is the cleaner
+  position: it removes the temptation to read the chapter as a second circuit
+  measurement.
 - Universality fails at the circuit level is a grokking result. Do not extend
   it to attention or CNA.
 - Never frame the thesis as non gradient rules being better. Backpropagation

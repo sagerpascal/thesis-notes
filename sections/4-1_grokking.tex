@@ -102,9 +102,14 @@ is the axis \cref{sec:bg_grain} lays the optimizers along.
 \section{Chapter Summary}
 
 Every learning rule that groks modular addition recovers the same Fourier
-construction, and the number of neurons that implement it differs by more than
-a factor of one and a half between rules at the same width, with the task, the
-data, the architecture and the width held fixed. A neuron stays in use when
+construction, and the number of neurons that implement it differs between
+rules at the same width, with the task, the data, the architecture and the
+width held fixed. Among the eight published optimizers compared the spread is
+modest, from $0.470$ to $0.613$ of the layer. Nero and the credit equalisation
+introduced below reach the other end, near $0.99$, so the full range is a
+property of this comparison and not of the optimizers in general use. Unless
+stated otherwise the measurements concern the first of the network's two
+hidden layers. A neuron stays in use when
 the credit it receives is large relative to the part of its own update that
 does not come from the gradient. That single condition accounts for three
 mechanisms which previously had no common explanation: a weight decay term
@@ -134,16 +139,25 @@ varying how many parameters share one factor leaves the circuit concentrated
 at groups of eight or more and distributes it fully only at one factor per
 neuron. Among the optimizers tested, Nero normalises per neuron and reaches a
 distributed circuit, while Adam, RMSProp, LARS, LAMB, Adafactor, Lion, Muon
-and Shampoo do not. Credit participation alone does not order them: two rules
-with the same credit participation land at circuit participation $0.535$ and
-$0.992$.
+and Shampoo do not. Credit participation alone does not order them. Lion and
+the credit equalisation of this chapter both equalise credit completely, at
+credit participation $1.000$, and land at circuit participation $0.535$ and
+$0.992$. The first is an optimizer in general use and the second is this
+chapter's intervention, so they are not two points on one scale of optimizers.
+What separates them is whether the normalisation is shared by exactly one
+neuron.
 
-The circuit has a price in four currencies. A distributed circuit tolerates
-random deletion of neurons better. A concentrated circuit prunes further, and
-adapts about twice as fast to a task that needs new combinations of the
-features already learned, largely by recruiting the neurons it was not using.
-That advantage does not appear for a task that only changes which answer each
-feature votes for. And the move costs the two points of test accuracy above.
+The circuit is paid for in test accuracy, in tolerance of neuron deletion, in
+how far the network prunes and in how fast it transfers. A distributed circuit
+tolerates random deletion of neurons better. A concentrated circuit prunes
+further, and reaches a task that needs new combinations of the features
+already learned in $640$ epochs where the distributed one needs $1540$,
+largely by recruiting the neurons it was not using. Two limits belong in the
+same breath. The distributed circuit's $1540$ epochs are no better than the
+$1410$ needed from scratch, so the result is that concentration helps rather
+than that spreading hurts. And on modular multiplication no pretrained network
+beats training from scratch at all, at any setting of the intervention. The
+move itself costs the two points of test accuracy above.
 
 Three limits belong with the result. The effect grows with width: across
 widths from $32$ to $2048$ the untouched network's participation falls from
@@ -172,11 +186,14 @@ brings to readouts, and gets it in \cref{chap:discussion}. The circuit is read
 off outgoing weight norms, and a rescaling that multiplies a neuron's incoming
 weights and divides its outgoing weights by the same factor changes those
 norms without changing the function. This chapter answers that with measures
-tied to the computation, which place the untouched network lower than the
-structural measure does while moving in the same direction, and with Nero,
-which holds each neuron's incoming weight norm fixed and still reaches a
-distributed circuit, so its result cannot be scale moved between the two sides
-of a neuron.
+tied to the computation. Weighting a neuron by what it contributes on real
+inputs puts the untouched network at $0.343$ and the equalised one at $0.813$,
+and measuring what is lost when a neuron is removed puts them at $0.422$ and
+$0.801$, against $0.602$ and $0.992$ for the structural measure. All three
+move the same way and the structural measure is the most generous of them. The
+second answer is Nero, which holds each neuron's incoming weight norm fixed
+and still reaches a distributed circuit, so its result cannot be scale moved
+between the two sides of a neuron.
 
 \Cref{chap:attention} asks the same kind of question about a different
 component. There the credit assignment algorithm is held fixed and the

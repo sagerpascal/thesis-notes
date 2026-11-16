@@ -90,13 +90,14 @@ The survey classifies $87$ agents and $33$ datasets from publications between
 $2018$ and $2024$. The number of papers read is larger, because agents and
 datasets are separated in the analysis and a paper may supply either.
 
-Four kinds of system are excluded, each for a reason. Agents that only give
+The survey draws its boundary in five places, each for a reason. Agents that only give
 advice are out, because the survey is about systems that act. Agents that play
 video games, control server facilities, write code or test software are out,
 because each is a field with its own literature. Only instructions given as
-text are covered. And only fully disclosed systems are covered, which leaves
-out some of the recent commercial products, the ones a reader in $2026$ thinks
-of first.
+text are covered, and only agents built on deep learning, which leaves out the
+rule based automation that does much of this work in practice. And only fully
+disclosed systems are covered, which leaves out some of the recent commercial
+products, the ones a reader in $2026$ thinks of first.
 
 The survey is not a systematic review, and says so. The field lacks a shared
 vocabulary, which makes a classic systematic review infeasible, so the
@@ -225,10 +226,11 @@ grounded in the conditions under which these agents would actually run.
 \label{sec:acu_takes}
 % ─────────────────────────────────────────────────────────────────────────────
 
-Four of the six gaps concern how the field measures what it builds and the
-conditions it builds for. They are real and they are not this thesis's
-subject. Two concern what training produced, and those two are where the
-thesis begins.
+Two of the six gaps are about what training produced, and those two are where
+the thesis begins. Three are about how the field measures what it builds and
+the conditions it builds for. The sixth, planning over many steps, does not
+sort, for the reason given below. All four of the others are real and none is
+this thesis's subject.
 
 Taking the first that way is a reading, and the survey supports it only in
 passing. Its own diagnosis of insufficient generalisation is the input
@@ -246,12 +248,12 @@ so it already reaches partway into what follows. The component this thesis
 takes is the narrower one, how much data a network needs before it generalises
 and how well what it learnt carries to a related task.
 
-Planning is the gap that does not sort. The survey puts the difficulty in a
-model whose planning over long horizons is weak and in an environment whose
-dynamics are unknown, and its recommendation asks for better policy
-architectures while one of its two remedies is a hybrid with symbolic
-planning. This thesis measures none of that, and the omission is a limit of
-scope and not a judgement about the gap.
+Planning is the gap that does not sort, which is why the count above is three
+and not four. The survey puts the difficulty in a model whose planning over
+long horizons is weak and in an environment whose dynamics are unknown, and
+its recommendation asks for better policy architectures while one of its two
+remedies is a hybrid with symbolic planning. So it is partly about what
+training produced and partly not. This thesis measures neither part.
 
 What the survey cannot do with the two gaps it hands over is settle what
 causes them. It classifies $87$ agents by learning strategy and compares

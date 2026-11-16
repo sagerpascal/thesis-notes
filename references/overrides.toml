@@ -103,3 +103,59 @@ reason = "same arXiv paper, title changed between v1 and the published version"
 [replace.booktitle]
 
 [replace.publisher]
+
+
+# ===========================================================================
+# The CNA paper's inline bibliography, resolved
+# ===========================================================================
+#
+# The Neural Computation manuscript pastes its references into the document as
+# \bibitem entries, so scripts/split_paper.py converts them and the author
+# field comes out as a formatted string: "LeCun et~al." rather than a list of
+# names. The merge therefore cannot see that these are the same works it
+# already has from a real .bib, and it generated a second entry for each.
+# merge_report.md reported every one of them as a citation key that would
+# resolve to the wrong reference, and all six are cited from the CNA chapter,
+# which the thesis reproduces.
+#
+# Each pair below was checked by title and author before being confirmed. The
+# entry with the real author list wins, so the chapter now cites a complete
+# reference.
+#
+# A directive names the keys the source bibliographies use, not the keys this
+# script generates: the generated ones do not exist yet when the directive is
+# applied. Five of these are one key that two bibliographies use for the same
+# work, so naming it once is the whole instruction.
+
+[[merge]]
+keys = ["lecun_backpropagation_1989"]
+reason = "the ACU bibliography and CNA's \\bibitem list, same paper"
+
+[[merge]]
+keys = ["lecun_deep_2015"]
+reason = "the ACU bibliography and CNA's \\bibitem list, same Nature review"
+
+[[merge]]
+keys = ["sager_unsupervised_2022"]
+reason = "the Hounsfield bibliography and CNA's \\bibitem list, same paper"
+
+[[merge]]
+keys = ["simmler_survey_2021"]
+reason = "three bibliographies and CNA's \\bibitem list, same survey"
+
+[[merge]]
+keys = ["tuggener_real_2024"]
+reason = "the Hounsfield bibliography and CNA's \\bibitem list, same paper"
+
+[[merge]]
+keys = ["meyer2025hounsfield", "meyer_hounsfield_2025"]
+reason = "CNA's \\bibitem list and references/manual.bib, same paper"
+
+# Not from the CNA list. The world models paper is cited as ha2018world by two
+# bibliographies, one holding the arXiv preprint titled "World Models" and the
+# other the NeurIPS version titled "Recurrent World Models Facilitate Policy
+# Evolution". Both citing chapters are summarised, so neither reaches the
+# build today, and the ambiguity would return the day either is wired back in.
+[[merge]]
+keys = ["ha2018world"]
+reason = "preprint and conference version of one paper"

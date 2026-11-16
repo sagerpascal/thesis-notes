@@ -13,14 +13,16 @@
 % chapter each one backs. They appear in no imported bibliography, because a
 % paper does not cite itself.
 
+% TODO verify pages. JAIR prints an article number as well as a page range,
+% and 34 may be the article number rather than the first page. The publication
+% box of sections/3-1_acu_survey.tex prints whatever is here. A comment inside
+% the entry is not a comment to merge_bib.py, which reports it as an ignored
+% fragment, so it stays out here.
 @article{acu_survey,
   author  = {Sager, Pascal J. and Meyer, Benjamin and Yan, Ping and von Wartburg-Kottler, Rebekka and Etaiwi, Layan and Enayati, Aref and Nobel, Gabriel and Abdulkadir, Ahmed and Grewe, Benjamin F. and Stadelmann, Thilo},
   title   = {A Comprehensive Survey of Agents for Computer Use: Foundations, Challenges, and Future Directions},
   journal = {Journal of Artificial Intelligence Research},
   volume  = {85},
-  % TODO verify. JAIR prints an article number as well as a page range, and 34
-  % may be the article number rather than the first page. The publication box
-  % of sections/3-1_acu_survey.tex prints whatever is here.
   pages   = {34},
   year    = {2026}
 }
@@ -49,12 +51,21 @@
   year      = {2025}
 }
 
-% TODO volume, pages, year. The vendored copy is submission NECO-D-24-00304.
-@article{sager_cooperative_2025,
+% Volume, pages and year taken from the reference list of the author's own
+% 2026 world-model manuscript, imported_papers/probe-norm/main.bib, which is
+% where the merge was already getting them. The vendored copy of this paper is
+% the submission NECO-D-24-00304 and predates the published version.
+% merge_bib.py generates the alias list itself, so a hand written ids field
+% here does not survive the merge. The thesis owned citations use the key
+% below directly.
+@article{sager_cooperative_2026,
+  ids     = {sager_cooperative_2025},
   author  = {Sager, Pascal J. and Deriu, Jan M. and Grewe, Benjamin F. and Stadelmann, Thilo and von der Malsburg, Christoph},
   title   = {The Cooperative Network Architecture: Learning Structured Networks as Representation of Sensory Patterns},
   journal = {Neural Computation},
-  year    = {2025}
+  volume  = {38},
+  pages   = {538--572},
+  year    = {2026}
 }
 
 % TODO venue. The vendored copy uses the IEEE conference template.

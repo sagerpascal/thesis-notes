@@ -597,8 +597,13 @@ def load_overrides(path: Path, problems: list[str]) -> Overrides:
             continue
         ov.entry[key] = patch
     for block in raw.get("merge") or []:
-        if len(block.get("keys", [])) < 2:
-            problems.append(f"{path.name}: a [[merge]] block needs at least two keys")
+        # One key is enough when that key is the whole problem. A citation key
+        # used by two source bibliographies for the same work resolves to two
+        # records, and naming it once says to fold them. Two keys are still
+        # the usual form, for the case where the same work arrived under
+        # different names.
+        if not block.get("keys"):
+            problems.append(f"{path.name}: a [[merge]] block needs a key")
             continue
         ov.merges.append(block)
     for block in raw.get("split") or []:
@@ -698,9 +703,17 @@ def build_groups(records: list[Record], ov: Overrides,
         missing = [k for k in keys if k not in key_to_indices]
         if missing:
             report_lines["stale"].append(
-                f"[[merge]] names unknown key(s) {', '.join(missing)}")
+                f"[[merge]] names unknown key(s) {', '.join(missing)}. "
+                f"A directive is matched against the keys the source "
+                f"bibliographies use, not against the keys this script "
+                f"generates, because the generated ones do not exist yet when "
+                f"the directive is applied.")
         else:
             ov.used.add(f"merge:{'+'.join(sorted(keys))}")
+        if len(idxs) < 2:
+            report_lines["stale"].append(
+                f"[[merge]] on {', '.join(keys)} matched fewer than two "
+                f"records and did nothing")
         for other in idxs[1:]:
             try_union(idxs[0], other, "an override")
 

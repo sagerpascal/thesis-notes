@@ -42,23 +42,28 @@ held fixed and the training objective is varied, between predicting a masked
 token from the whole sequence and predicting each token from its predecessors.
 The object measured is the product of the query and key matrices of an
 attention head, which is the bilinear form through which the two matrices act
-on the embeddings, and the structure in question is whether that form stays
-close to symmetric or whether a few of its columns come to dominate.
+on the embeddings. The structure in question is whether that form stays close
+to symmetric, or whether it becomes directional, meaning that its columns of
+high norm come to outnumber its rows of high norm.
 
 What this chapter contributes to the thesis argument is one claim and not
 another. It shows that a second component of the training setup leaves its own
 structure in the weights, which is what makes the previous chapter's finding a
 case of something rather than a curiosity. It is not a second measurement of
 the circuit. No participation ratio over neurons is computed here, the object
-is a weight matrix rather than a layer, and reading column dominance as a
-circuit spread across columns is this thesis's analogy and not the paper's
-claim.
+is a weight matrix rather than a layer, and the property measured is an
+asymmetry between the rows and the columns of that matrix rather than a
+concentration of the computation on a few of either. The variable is the
+objective, and in a decoder part of that variation is carried by the mask over
+which positions may attend to which, which belongs to the architecture.
 
-One point of notation. The paper speaks of \emph{symmetry} and
-\emph{directionality} of the attention weights, which are properties of the
-query key product under transposition, and of \emph{column dominance} for the
-concentration of that product on few columns. Neither is the thesis's circuit
-measure, and the two vocabularies are kept apart. The chapter's $W_{qk}$ is
+One point of notation, and it matters because the word invites a misreading.
+The paper speaks of \emph{symmetry} and \emph{directionality} of the attention
+weights, which are properties of the query key product under transposition,
+and of \emph{column dominance} when columns of high norm are more common than
+rows of high norm. Column dominance is columns against rows. It is not a few
+columns dominating the others, and it is not the thesis's circuit measure,
+which counts participating units in a layer. The chapter's $W_{qk}$ is
 the product written $W_Q^\top W_K$ elsewhere in the literature.
 
 % ---------------------------------------------------------------------------
@@ -92,8 +97,9 @@ objectives admit different sets. Bidirectional training enters every pair in
 both orders, once with each token as the masked target, so the contributions
 cancel antisymmetrically and the query key product stays close to symmetric.
 Autoregressive training makes each token the target exactly once and the
-context of every token after it, so the sum is one sided and a small number of
-columns come to dominate the product. The derivation needs no assumption about
+context of every token after it, so the sum is one sided and the product
+becomes directional, with columns of high norm outnumbering rows of high
+norm. The derivation needs no assumption about
 the data beyond which pairs enter the sum.
 
 The prediction is borne out in trained models of both kinds. Twelve layer
@@ -106,18 +112,15 @@ at the scale the field works at.
 
 One consequence of the derivation is practical. If bidirectional training
 drives the query key product towards symmetry, then initialising it symmetric
-starts the network closer to where training is going, and it does: symmetric
-initialisation speeds up bidirectional training, and does not help
-autoregressive training, which is what the account predicts.
+starts the network closer to where training is going, and it does. Encoder
+models initialised that way reach their final loss about $75\%$ faster at four
+layers and about $35\%$ faster at twelve. The paper reports this for encoders
+and runs no matching comparison on decoders, so the account's prediction that
+it should not help there is untested.
 
-What this chapter does not show is also worth stating. It measures no
-participation ratio and counts no neurons, so it neither confirms nor
-contradicts the previous chapter's measurement. The objective is varied here
-rather than the learning rule, and in a decoder part of that variation is
-carried by the mask over which positions may attend to which, which belongs to
-the architecture rather than to the loss. The common claim across the two
-chapters is at the level of the training setup, that more than one of its
-components leaves structure behind that the task alone does not fix.
+The common claim across this chapter and the one before it is at the level of
+the training setup, that more than one of its components leaves structure
+behind that the task alone does not fix.
 
 Both chapters so far have measured a trained network and drawn a conclusion
 from the measurement. \Cref{chap:bounded} asks what has to be true of such a

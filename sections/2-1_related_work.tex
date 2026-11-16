@@ -236,10 +236,11 @@ is shared by many neurons at once.
 
 At the other end sits a normaliser shared by exactly the weights entering one
 neuron. Nero normalises the update of each neuron's incoming weights and
-constrains their norm~\cite{liu_learning_2021}, and weight normalisation
-reaches a related place by reparameterising those weights into a direction and
-a length rather than by changing the
-update~\cite{salimans_weight_2016}.
+constrains their norm~\cite{liu_learning_2021}. Weight normalisation looks
+similar and is not: it reparameterises those weights into a direction and a
+length and leaves the update itself alone~\cite{salimans_weight_2016}, so it
+does not rescale a neuron's gradient against the other terms of its update.
+\Cref{chap:grokking} measures both, and only the first distributes.
 
 These methods are usually compared on convergence speed and final accuracy,
 and the axis above is not what they are usually sorted by. It is the axis
@@ -327,9 +328,11 @@ all~\cite{luo_phase_2021}.
 
 Running through this work is the assumption that the task settles the answer.
 Its strongest form is universality, the claim that networks solving the same
-task converge on the same features and the same circuit, so that a circuit
-read out of one network stands for the
-task~\cite{chughtai_toy_2023,olah_zoom_2020}.
+task converge on the same features and the same construction, so that an
+account read out of one network stands for the
+task~\cite{chughtai_toy_2023,olah_zoom_2020}. The word circuit is used in that
+literature for a subgraph of components, which is not the count this thesis
+measures, and the two senses are kept apart here.
 
 The claim operates at two levels that the evidence does not separate. One is
 what is computed, and for modular addition the answer is the Fourier
@@ -656,27 +659,55 @@ inherits all three.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{No literature has asked how many neurons carry a computation, or what sets the number}
+\section{Unused neurons have been described one mechanism at a time, and never as a quantity a rule sets}
 \label{sec:bg_gap}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: name the gap and stop. Half a page. No results, no
 % roadmap paragraph, no repetition of the contributions list from
 % Chapter~\ref{chap:introduction}. One clause per part at most.
+%
+% The earlier title claimed no literature had asked how many neurons carry a
+% computation. That is false, and the grokking manuscript's own related work
+% names the literature it is false against. The claim this section makes now
+% is the one that paper makes: the routes are known separately and have not
+% been unified or read as a quantity a rule selects.
 
-Three literatures above come close to the question and none of them asks it.
-\Cref{sec:bg_solutionset} gives a body of work that varies the optimizer and
-characterises which norm or margin the procedure selects.
-\Cref{sec:bg_coding} gives a question about how many units carry a
-computation, together with a measure for it and evidence that the answer has a
-price. \Cref{sec:bg_grokking} gives the one setting in which the answer can be
-read off a trained network neuron by neuron. Nobody has put the three
-together.
+Neurons that end up carrying nothing have been described several times over,
+each time as one mechanism. An L2 penalty added to the gradient before an
+adaptive optimizer drives whole units and filters to
+zero~\cite{yaguchi_adam_2018,mehta_implicit_2019}. The numerical floor in that
+optimizer's denominator lets units with very small second moment estimates
+die~\cite{dufortlabbe_maxwell_2025}. A decayed per unit gain acts as a gate
+that induces sparsity~\cite{mehta_implicit_2019,kolb_differentiable_2025}.
+Persistently small row updates leave neurons dead in large language models
+trained with a matrix preconditioner~\cite{dewulf_aurora_2026}. And under
+coupled decay a neuron's equilibrium depends on its own gradient
+norm~\cite{kosson_rotational_2024}. Each of these is treated as a pathology to
+be avoided or as a lever for pruning.
 
-Three specific things are missing. A comparison that holds the task, the data,
-the architecture and the width fixed, varies the rule that assigns credit, and
-reads the solution each rule reached. A statement of which rules change the
-number of neurons in use, derived from the form of their update rather than
-found by trying them. And a measurement of what the resulting circuit costs.
+What has not been done is to treat them as one thing. There is no account that
+derives a single condition covering the separate routes, and none that reads
+the number of neurons left in use as a property of the rule, to be compared
+across rules at a matched setting and priced. The closest work asks how
+grokking relates to the structure a network settles
+into~\cite{manningcoe_grokking_2025}, which is a question about the phenomenon
+rather than about the rule.
+
+Three literatures above come close from other directions and none of them asks
+it either. \Cref{sec:bg_solutionset} varies the optimizer and characterises
+which norm or margin the procedure selects, never which units are in use.
+\Cref{sec:bg_coding} supplies a measure for how far a computation spreads and
+evidence that the answer has a price, in populations of cells rather than in a
+trained layer. \Cref{sec:bg_grokking} supplies the one setting where the
+answer can be read off a network neuron by neuron, with the procedure held
+fixed throughout.
+
+So three specific things are missing. A comparison that holds the task, the
+data, the architecture and the width fixed, varies the rule that assigns
+credit, and reads the solution each rule reached. A statement of which rules
+change the number of neurons in use, derived from the form of their update
+rather than found by trying them. And a measurement of what the resulting
+circuit costs.
 
 Two smaller ones are missing too. The same question has not been asked of a
 Transformer's attention weights with the training objective as the variable.

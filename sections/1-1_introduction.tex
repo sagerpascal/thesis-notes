@@ -16,20 +16,21 @@
 % Every number that appears beside the headline result appears with its price
 % and its scope. The accuracy cost and the width dependence are not footnotes.
 
-A network trained to add two numbers modulo a prime, with $2048$ neurons in
-its hidden layer, solves the task perfectly and carries the computation on
-about $332$ of them. The rest contribute almost nothing. Changing one thing in
-how the network is trained, namely what the update treats as a group when it
-normalises, takes that number to $2046$ out of $2048$. The task is the same,
-the data are the same, the architecture and the width are the same, and test
-accuracy falls by about two points, from $0.998$ to
-$0.976$~\cite{sager_grokking_2026}.
+A network trained to add two numbers modulo a prime, with $256$ neurons in its
+first hidden layer, reaches a test accuracy of $0.998$ and carries the
+computation on about $154$ of them. The rest contribute almost nothing.
+Changing one thing in how the network is trained, namely what the update
+treats as a group when it normalises, takes that to about $254$, with the
+task, the data, the architecture and the width all unchanged, and test
+accuracy falls to $0.976$. The difference grows with the layer. At $2048$
+neurons the untouched network uses $332$ and the changed one $2046$, and there
+both networks reach $0.998$~\cite{sager_grokking_2026}.
 
 So how much of a network ends up doing the work is not settled by what the
 network is asked to do. It is settled by how the network is trained, and more
-precisely by how training divides the error among the neurons. This thesis is
-about that, about what it costs, and about what else is left open in a trained
-network once the task has had its say.
+precisely by how training divides the error among the neurons. This thesis
+measures that, measures what it costs, and asks what else a task leaves open
+in a trained network.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -41,11 +42,13 @@ The two ends of that range fail differently, which is why the question is
 worth asking. A computation spread over many neurons survives the loss of any
 one of them, because none of them carries much on its own. A computation held
 on a few leaves the rest of the network idle, so there is more to prune away
-and more room to put to a new use. The second effect holds under a condition
-and the condition belongs with it. A concentrated network adapts roughly twice
-as fast to a task that needs new combinations of the features it already has,
-and not to a task that only changes which answer each feature votes
-for~\cite{sager_grokking_2026}.
+and more room to put to a new use. The second effect is narrow and the
+limits belong with it. A concentrated network reaches a task that needs new
+combinations of the features it already has in $640$ epochs where the spread
+one needs $1540$, which is no better than the $1410$ it takes from scratch.
+Neither helps on a task that only changes which answer each feature votes for,
+and on modular multiplication no pretrained network beats training from
+scratch~\cite{sager_grokking_2026}.
 
 Machine learning has mostly assumed that the task answers the question. The
 clearest case is grokking, where a network fits its training data perfectly,
@@ -117,10 +120,12 @@ The question did not begin in any of this. It began with agents for computer
 use, systems that carry out tasks on a computer or a phone from an instruction
 in natural language, by controlling software through clicks, keystrokes and
 gestures. A survey of $87$ such agents and $33$ datasets finds six gaps that
-recur across the field, four of which concern how the field measures what it
-builds and the conditions it builds for~\cite{sager_survey_2026}. Two concern
-what training produced, which is where this thesis starts, and \cref{chap:acu}
-gives the sort in full. \Cref{chap:further} summarises four further papers,
+recur across the field~\cite{sager_survey_2026}. Three concern how the field
+measures what it builds and the conditions it builds for, and one, planning
+over many steps, the survey places partly in the model and partly in an
+environment whose dynamics are unknown. Two concern what training produced,
+which is where this thesis starts, and \cref{chap:acu} gives the sort in
+full. \Cref{chap:further} summarises four further papers,
 two of which sharpen those gaps and two of which supply structure from outside
 the data.
 
@@ -170,8 +175,8 @@ decay: an adaptive optimizer's numerical floor dominates in a wide transformer
 whose normalisation parameters are decayed, and so does the decay of a
 trainable gain.
 
-What the circuit costs is measured in four currencies and only one of the four
-is a surprise. A computation spread over more neurons tolerates random
+The circuit costs test accuracy, tolerance of deletion, room to prune and
+speed of transfer, and only transfer is a surprise. A computation spread over more neurons tolerates random
 deletion better, and a network with more neurons left idle has more to prune,
 and both follow from what the measure counts. Test accuracy falls by the two
 points above. The surprise is transfer, where the concentrated network reaches
@@ -189,8 +194,9 @@ backpropagation held fixed and the training objective varied, the update to a
 Transformer's attention weights is a sum over whichever ordered pairs of
 tokens the objective admits. Bidirectional training enters each pair in both
 orders and the weights stay close to symmetric, while autoregressive training
-makes a token the target once and the context of every later token, and a few
-columns come to dominate~\cite{saponati_structures_2025}. The measured object
+makes a token the target once and the context of every later token, and the
+weights become directional, meaning that columns of high norm come to
+outnumber rows of high norm~\cite{saponati_structures_2025}. The measured object
 there is a column of a bilinear form rather than a count of neurons, so this
 is a second component settling a second property and not a second measurement
 of the first. What it adds is scale, in models far larger than the grokking
@@ -322,7 +328,9 @@ sets the stake, and an architecture that reaches the same mechanism by another
 route. That is a body of work and it is not this thesis's argument. The
 argument has one pillar, and saying so is more useful than implying five.
 
-Five chapters reproduce a published or submitted paper. Each opens with the
+Four chapters reproduce a published or submitted paper, and the survey of
+\cref{chap:acu} is summarised in thesis owned prose like the four papers of
+\cref{chap:further}. Each opens with the
 full citation and a statement of the thesis author's share, then a chapter
 introduction written for this thesis, then the paper's own text as it was
 published, then a chapter summary. The imported text keeps the spelling,
