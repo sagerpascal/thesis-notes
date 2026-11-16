@@ -89,7 +89,7 @@ rule that sets it.
 
 The other chapters take other properties. The training objective, not the
 learning rule, decides whether a Transformer's attention weights stay
-symmetric or a few columns come to dominate, which is a second component of
+symmetric or become directional, which is a second component of
 the training setup fixing a second structural property. The norm of a
 predicted latent is a quantity the loss never constrains at all, and the probe
 the field uses to score predicted latents responds to it, so a readout can
@@ -133,7 +133,8 @@ Stake, finding, measurement, construction.
    is then established in a different substrate and at a scale the grokking
    setting cannot reach. Holding backpropagation fixed and varying the
    objective, the index set the update sums over decides whether a
-   Transformer's attention weights stay symmetric or a few columns dominate.
+   Transformer's attention weights stay symmetric or become directional,
+   with columns of high norm outnumbering rows of high norm.
    That is the objective fixing a structural property, not a second
    measurement of the credit assignment claim, and the frame says so.
 3. The measurement. Some quantities are left free by the loss altogether, and
@@ -153,32 +154,36 @@ Stake, finding, measurement, construction.
 
 ## Research questions
 
-1. How much of a trained network's width carries the computation, and what
-   sets the number? (grokking)
-2. Can the condition that keeps a neuron in use be read off the update
-   equation? (grokking)
-3. Can the circuit be chosen by intervening on credit? (grokking)
-4. What is given up when a computation is spread over more neurons, in test
-   accuracy, in tolerance of neuron deletion, in how far the network prunes
-   and in transfer speed? (grokking)
-5. Does the training objective fix a structural property of a Transformer's
-   attention weights, at a scale the modular arithmetic setting cannot reach?
-   (attention)
-6. Does a readout used to make claims about a trained network report the
-   quantity it names, or one the loss left free? (world model)
-7. Does a structural measure of a trained network report the structure, or a
-   quantity the training procedure left free? (world model and grokking)
-8. Can redundancy of support be built into an architecture instead of produced
-   by training? (CNA, as a proposal)
+These are the seven `sections/1-1_introduction.tex` prints, and this file
+follows that one rather than the other way round. An earlier version here
+listed eight, which is what the Level 1 critique asked to be cut: one was
+contained in another, one carried its own answer, and one had a defence
+against an objection stapled to it.
 
-Question 7 is the only one two chapters bear on, and it is new as of
-2026-11-16. It costs no experiments: the world model chapter's four checks are
-applied to the participation measure in the discussion, and the answer is
+1. What sets how much of a trained network's width carries the computation?
+   (grokking)
+2. Which rules change it, and can that be read off the form of their update?
+   (grokking)
+3. What is given up when a computation is spread over more neurons, in test
+   accuracy, in tolerance of neuron deletion, in how far the network prunes
+   and in how fast it transfers? (grokking)
+4. Does a second component of the training setup leave its own structure in a
+   trained network's weights? (attention)
+5. Does a readout used to make claims about a trained network report the
+   quantity it names, or one the loss left free? (world model)
+6. Does a structural measure of a trained network report the structure, or a
+   quantity the training procedure left free? (world model and grokking)
+7. What does an architecture that builds in redundancy of support achieve
+   without training it, and where does it stop? (CNA)
+
+Question 6 is the only one two chapters bear on, and it is new as of
+2026-11-16. It costs no experiments: the world model chapter's four checks
+are applied to the participation measure in the discussion, and the answer is
 partly uncomfortable, because the measures tied to the computation put the
-reference at $0.343$ and $0.422$ where the structural measure puts it at
-$0.602$. It converts the thesis's weakest point, that no measurement is shared
-across chapters, into its one integrative claim. Do not drop it to tidy the
-list.
+untouched network at $0.343$ and $0.422$ where the structural measure puts it
+at $0.602$. It converts the thesis's weakest point, that no measurement is
+shared across chapters, into its one integrative claim. Do not drop it to tidy
+the list.
 
 Question 2 asks whether the condition can be read off the update equation. It
 does not ask whether a circuit can be predicted from a rule before training.
@@ -186,14 +191,14 @@ The grain law is calibrated from one measured value and reproduces a shape
 from there, CLAUDE.md 3.7 bans the stronger claim, and an earlier wording of
 this question made it. Do not restore it.
 
-Questions 1 to 4 are the grokking paper's contributions reworded, and a
+Questions 1 to 3 are the grokking paper's contributions reworded, and a
 committee that opens the paper will see the mapping. That is what a lead paper
 in a cumulative thesis looks like, and the frame says so rather than
 disguising it.
 
 The survey has no research question, and after the cut of 2026-11-16 it does
-not need one. It sets the stake in six pages and carries no evidence, which is
-what the chapter now says of itself.
+not need one. It sets the stake in five pages and carries no evidence, which
+is what the chapter now says of itself.
 
 ## Paper selection
 
@@ -284,8 +289,12 @@ that number it cites the paper.
 
 ## What each chapter says, in one line
 
-- ACU. One recipe, six gaps. Gaps one and two, generalisation and inefficient
-  learning, are properties of the trained network.
+- ACU. A field converging on one recipe, six gaps. Two of them, insufficient
+  generalisation and inefficient learning, are what the thesis takes as being
+  about what training produced, and taking the first that way is a reading the
+  survey supports only in passing: its own diagnosis is the input modality.
+  Three are about evaluation and deployment. Planning does not sort, because
+  the survey puts it partly in the model and partly in the environment.
 - Grokking. Re-derived from the 2026-11-14 manuscript, "Grokking Can Be
   Steered: Selecting Desirable Solutions by Choice of Learning Rule". Learning
   rule varied, everything else fixed. Every rule that groks modular addition
@@ -311,10 +320,15 @@ that number it cites the paper.
   prune further and transfer about twice as fast to a task that recombines
   the same features, largely by recruiting their unused neurons.
 - Attention. Objective varied, backpropagation fixed. Autoregressive training
-  uses a token as context many times and as target once, so a few columns
-  dominate. Bidirectional training enters each pair in both orders, so the
-  update is symmetric and the structure spreads. Symmetric initialisation
-  speeds up bidirectional training.
+  uses a token as context many times and as target once, so the query key
+  product becomes directional, meaning that columns of high norm outnumber
+  rows of high norm. Bidirectional training enters each pair in both orders,
+  so the update stays symmetric. Column dominance is columns against rows and
+  not a few columns against the others; the thesis read it the second way in
+  five sentences until 2026-11-16, and with the misreading went the "circuit
+  across columns" analogy that rested on it. Symmetric initialisation speeds
+  up bidirectional training, by about $75\%$ at four layers and $35\%$ at
+  twelve, measured on encoders only.
 - World model. Re-derived from the 2026-11-14 Frontiers manuscript,
   "Correcting state-probe evaluation of world models for norm drift". A latent
   world model is scored with a state probe, a regressor fitted on encoded

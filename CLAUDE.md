@@ -303,9 +303,34 @@ is thesis work, and it happens in the thesis frame, never by editing the papers.
 
 ### 3.10 Checks
 
-Fix, then sweep. After every point fix, grep the whole thesis owned tree for the
-pattern. All greps are scoped to thesis owned files, because imported text is
-exempt.
+One command runs all of this:
+
+```bash
+uv run --no-project python scripts/check_prose.py
+```
+
+It screens thesis owned files only, because imported text is exempt, and it
+skips the lines inside an `importedpaper` block in a wrapper, because a
+reproduced float is published text. A `hard` finding is a style guide
+violation and blocks a commit. A `soft` finding needs a person: each has a
+legitimate use.
+
+What it carries beyond the greps below: label sentences, stacked hedges, the
+claim that something was predicted before training, code identifiers in
+prose, hyphens used as connectors, a bare `Chapter~\ref` where the frame uses
+`\cref`, and six measures of shape rather than vocabulary. Those are even
+sentence length, antithesis density, disclaimer density, counted openers
+announcing a number before delivering it, a heading that counts its items
+against how many follow, and duplication across files.
+
+The last one is the one no grep can do. A twelve word run appearing in two
+thesis owned files is a copy rather than a coincidence, and it is how the
+abstract and the introduction came to open on the same twenty five words.
+
+The greps below are still useful at a point fix, where running the whole
+screen is more than is needed. Fix, then sweep: after every point fix, search
+the whole thesis owned tree for the same pattern, because a flagged sentence
+is a sample of a habit.
 
 ```bash
 grep -rn '—\|–' main.tex preface.tex sections/
@@ -948,7 +973,7 @@ coverage check runs on them. `check_compile.py` reports zero errors across all
 nine and `check_imports.py` zero errors with four warnings. Machinery that
 works is not listed here: `build.sh`, `thesis_style.tex`,
 `thesis_import.sty`, the nine manifests, the `references/` and `generated/`
-trees, and all seven scripts.
+trees, and all eight scripts.
 
 ### Blocking the thesis
 

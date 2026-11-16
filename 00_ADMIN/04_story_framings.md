@@ -1,5 +1,13 @@
 # Thesis story: candidate framings and a recommendation
 
+> **Correction, 2026-11-16.** Everything below that reads column dominance as
+> "a few columns carry the computation" is a misreading of the attention
+> paper. Its theorem says there are more columns of high norm than rows of
+> high norm, so the property is an asymmetry between the row space and the
+> column space, not a concentration on a few columns. The framings in this
+> file are retired, but the misreading travelled from here into five
+> sentences of the thesis and is recorded so it does not travel again.
+
 Written 2026-09-06, after two changes to the paper set. The Koopman-JEPA world
 model paper became "Bounded Is Not Better", a controlled study showing that the
 spectral constraint's five order of magnitude win is a measurement artefact. A
