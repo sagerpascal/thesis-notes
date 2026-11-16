@@ -413,17 +413,51 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   \def\ip@pre{#1}%
   \def\ip@bf{#2}}
 
-% A cross reference does not belong in a list of figures entry. It is an
-% index rather than prose, the number it prints points at something the reader
-% has not reached, and a caption whose reference is broken upstream would
-% print ?? twice instead of once: the self-attention paper's
-% eq:weight-update-bilinear-form-prediction lives only in a variant the thesis
-% does not import. References are therefore dropped from the short form and
-% kept in the caption itself.
+% A cross reference in a float list entry is kept when it resolves and
+% dropped when it does not.
+%
+% Every reference was dropped between 2026-11-14 and 2026-11-16, on the
+% grounds that a list of floats is an index and the number points at something
+% the reader has not reached. Reading the rendered lists ended that: the cue
+% word stays behind when the number goes, so four entries printed "same
+% networks as Table ,", "as in Table :", "of Table under" and, three times in
+% one entry, "see Equation )". A dangling cue word reads as a fault, and it
+% was hidden only while the entries were being clipped.
+%
+% The one thing worth dropping is a reference whose target the thesis does not
+% have. The self-attention paper's eq:weight-update-bilinear-form-prediction
+% lives only in a variant the thesis does not import, and printing it here
+% would put a second ?? in the document for one upstream defect. So the test
+% is whether the label resolves, not whether it is a reference.
+%
+% The entry in the .lof holds the paper's own unprefixed label, and
+% \ip@withprefix has already restored the prefix and the prefixing \ref by
+% the time this runs, so the test is on \ip@prefix and the reference is left
+% to the \ref that is in force. \ip@slug is not set out here; that is the
+% mistake the first version of this made, and it dropped every reference.
+%
+% On the first pass of a clean build no label resolves yet and every reference
+% is dropped. The .lof written then is read back on the next pass, so three
+% passes are needed for the lists to settle, which is what build.sh runs.
+\providecommand{\ip@prefix}{}
+\newcommand{\ip@ifset}[2]{\@ifundefined{r@\ip@prefix#1}{}{#2}}
 \newcommand{\ip@shortform}[1]{{%
-  \let\ref\@gobble \let\eqref\@gobble \let\pageref\@gobble
-  \let\cref\@gobble \let\Cref\@gobble \let\autoref\@gobble
-  \let\nameref\@gobble
+  \let\ip@sf@ref\ref
+  \let\ip@sf@pageref\pageref
+  \let\ip@sf@nameref\nameref
+  \let\ip@sf@autoref\autoref
+  \def\ref##1{\ip@ifset{##1}{\ip@sf@ref{##1}}}%
+  \def\pageref##1{\ip@ifset{##1}{\ip@sf@pageref{##1}}}%
+  \def\nameref##1{\ip@ifset{##1}{\ip@sf@nameref{##1}}}%
+  \def\autoref##1{\ip@ifset{##1}{\ip@sf@autoref{##1}}}%
+  \@ifundefined{cref}{}{%
+    \let\ip@sf@cref\cref \let\ip@sf@Cref\Cref
+    \def\cref##1{\ip@ifset{##1}{\ip@sf@cref{##1}}}%
+    \def\Cref##1{\ip@ifset{##1}{\ip@sf@Cref{##1}}}}%
+  % \eqref sets its own brackets, so an unresolved one has to take them with
+  % it rather than leave "()" behind.
+  \def\eqref##1{\ip@ifset{##1}{(\ip@sf@ref{##1})}}%
+  \let\crefrange\@gobbletwo \let\Crefrange\@gobbletwo
   #1}}
 
 \newcommand{\ip@caption}{\@ifnextchar[{\ip@save@caption}{\ip@caption@auto}}

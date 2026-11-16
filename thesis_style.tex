@@ -515,34 +515,21 @@
 % list it is wrapped in the label prefixing of thesis_import.sty and in
 % hyperref's link, so it cannot be taken apart by pattern either.
 %
-% It can be cut after it is typeset. The entry goes into a box, and if the box
-% is wider than the space a single line has, the overflow is clipped away and
-% an ellipsis marks that something was dropped. This never inspects the
-% caption, so any macro inside it is safe.
-\RequirePackage{trimclip}
-
-\newlength{\ts@entrywidth}
-\newsavebox{\ts@entrybox}
-
-\newcommand{\ts@oneline}[1]{%
-    % Room for one line: the measure, less the indent this level uses, less
-    % the margin the page number needs, less room for the ellipsis.
-    \setlength{\ts@entrywidth}{\dimexpr\linewidth-1.5em-\@tocrmarg-2em\relax}%
-    \sbox\ts@entrybox{#1}%
-    \ifdim\wd\ts@entrybox>\ts@entrywidth
-        \clipbox{0pt 0pt {\dimexpr\wd\ts@entrybox-\ts@entrywidth\relax} 0pt}%
-                {\usebox\ts@entrybox}%
-        \textcolor{ThesisGrey}{\,\dots}%
-    \else
-        \usebox\ts@entrybox
-    \fi}
-
-% \@dottedtocline is not used for these two, because a cut caption ends in an
-% ellipsis and a row of leader dots immediately after it hides the ellipsis, so
-% the cut reads as a fault rather than as a decision. The page number is set
-% flush right with plain space in front of it instead. Otherwise this follows
-% \@dottedtocline: \@tempdima has to be set before the entry is typeset,
-% because the \numberline inside it sizes the number box from it.
+% The short form is what makes that workable, and an entry that is still too
+% long for one line wraps to a second.
+%
+% Clipping it was tried instead, from 2026-11-14 to 2026-11-16, with trimclip
+% cutting the overflow and an ellipsis marking the cut. It was abandoned after
+% the lists were read in the rendered PDF: about $51$ of the $93$ entries were
+% being cut, half of them mid word, so the lists read as broken rather than as
+% abbreviated. One line per entry is not worth that. A wrapped entry costs a
+% line and stays readable, which is what every other thesis does.
+%
+% This follows \@dottedtocline, with the leader dots it uses: they were
+% dropped while the entries were clipped, because a row of dots right after an
+% ellipsis hid the ellipsis, and nothing is cut now. \@tempdima has to be set
+% before the entry is typeset, because the \numberline inside it sizes the
+% number box from it.
 \newcommand*{\ts@floatentry}[2]{%
     \ifnum \c@tocdepth >\z@
         \vskip \z@ \@plus.2\p@
@@ -552,7 +539,14 @@
          \leavevmode
          \@tempdima 2.3em
          \advance\leftskip \@tempdima \hskip -\leftskip
-         \ts@oneline{#1}\nobreak\hfill\nobreak
+         % The 1em is a minimum gap before the page number. Leaders alone
+         % give none when the text happens to fill the last line exactly, and
+         % two entries then printed "...in parentheses)125" with the number
+         % against the bracket. Being unbreakable, it forces the earlier line
+         % break instead.
+         #1\nobreak\hskip 1em\relax
+         \leaders\hbox{$\m@th\mkern\@dotsep mu\hbox{.}\mkern\@dotsep mu$}%
+         \hfill\nobreak
          \hb@xt@\@pnumwidth{\hss #2}%
          \par}%
     \fi}

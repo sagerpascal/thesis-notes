@@ -111,13 +111,30 @@ Failure modes:
 - Every declared summary alongside the first characters of the caption it
   replaces, so a re import that rewrote a caption is visible.
 
-### TODO
+### What was built, and what this note got wrong
 
-1. Implement Option 2 with both guards, and measure how many entries still
-   overflow one line.
-2. Implement Option 3 for those, and write the summaries.
-3. Add the three checks above.
-4. Keep Option 1 as the fallback for anything that survives both.
+Settled on 2026-11-16 by reading the rendered lists rather than the source.
+
+Option 2 is implemented, with both guards, and it is what the lists use. A
+cross reference inside an entry is kept when it resolves and dropped when it
+does not, which is narrower than this note assumed: dropping all of them
+leaves the cue word behind, and four entries printed "as in Table :" and the
+like.
+
+Option 1 was the fallback from 2026-11-14 to 2026-11-16 and is now removed.
+The premise of this whole note, that an entry has to fit on one line, is the
+part that did not survive contact with the page. About $51$ of the $93$
+entries were being clipped, half of them mid word. An entry that does not fit
+now wraps to a second line, which is what every other thesis does, and the
+lists are complete and readable.
+
+Option 3 was never built and is no longer needed for length. It would still be
+the answer if a caption's first sentence were a panel label rather than a
+claim, which is a different problem from overflow and affects two entries.
+
+The three checks above were not added, for the same reason: there is no
+longer a list of entries that overflow, because overflow is no longer a
+failure.
 
 ## 2. A uniform table and figure style
 

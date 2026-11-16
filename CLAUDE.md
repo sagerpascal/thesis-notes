@@ -1177,45 +1177,49 @@ finalised, or is cosmetic.
     and that is an artefact, because `trimclip` hides the end of a clipped
     entry and leaves it in the text layer.
 
-13. **About half of the float list entries clip, and this item was wrong
-    until 2026-11-16.** Option 2 of
+13. **The float lists wrap and are complete.** Option 2 of
     `00_ADMIN/06_float_presentation_concept.md` is implemented in
     `thesis_import.sty`: inside a block `\caption` is patched to compute a
     short form, taking the contents of a leading `\textbf` group where the
     paper writes its claim in bold, and otherwise the first sentence, with a
     width guard so that an abbreviation such as "Fig." does not end the
-    sentence early. The clipping in `thesis_style.tex` stays as the fallback.
+    sentence early. An entry that is still too long for one line wraps to a
+    second, with the leader dots `\@dottedtocline` uses.
 
-    This item used to say the fallback fired on three entries of about $130$.
-    A read of the rendered PDF put it at roughly $51$ of the $93$ entries the
-    two lists hold, which is about half. The earlier number was never measured
-    on the page. Measure it the only way that works, by looking:
+    Clipping was tried instead, from 2026-11-14 to 2026-11-16. The entry went
+    into a box and the overflow was cut away with `trimclip`, with an ellipsis
+    marking the cut. Reading the rendered lists ended it: about $51$ of the
+    $93$ entries were being cut, half of them mid word, so the lists read as
+    broken rather than as abbreviated. One line per entry was not worth that,
+    and the three entries that already wrapped in the table of contents showed
+    the cost of wrapping is a line. The leader dots came back with it, having
+    been dropped only because a row of dots right after an ellipsis hid the
+    ellipsis.
+
+    Two things found by rendering the pages and not visible in the log. A
+    `1em` minimum gap sits before the page number, because leaders give none
+    when the text fills the last line exactly and two entries printed
+    "...in parentheses)125". And a cross reference in an entry is now kept
+    when it resolves and dropped when it does not. Dropping all of them left
+    the cue word behind, so four entries printed "same networks as Table ,",
+    "as in Table :", "of Table under" and, three times in one entry, "see
+    Equation )". The test is `\ip@prefix` and not `\ip@slug`: the .lof holds
+    the paper's own unprefixed label and `\ip@withprefix` has already restored
+    the prefix by the time the short form runs. Getting that wrong drops every
+    reference silently, which is what the first attempt did.
+
+    One dangling cue word is left, in the list of figures entry for Figure
+    6.1, where the self-attention paper's
+    `eq:weight-update-bilinear-form-prediction` lives only in a variant the
+    thesis does not import. Printing it would put a second `??` in the
+    document for one upstream defect, so it stays dropped.
+
+    Check this by looking at the pages, never at the log:
 
     ```bash
     pdftoppm -png -r 110 -f 19 -l 21 main.pdf /tmp/lists
     ```
 
-    A clipped entry ends mid word before the page number, as in "ranked by
-    first" or "the squared-error l". The short form is doing its job, and the
-    first sentence of a published caption is simply longer than one line of a
-    $304$pt measure.
-
-    Cross references are dropped from the short form, because a float list is
-    an index and a reference there points at something the reader has not
-    reached. That also keeps the attention paper's upstream-broken equation
-    label from printing a second `??`, this time in the list of figures. The
-    cost shows in four entries, which print a dangling reference word: Figure
-    6.1 ends "see Equation )", Table A.15 has "same networks as Table ,", and
-    Tables C.13 and C.14 have "as in Table :" and "of Table under".
-
-    Two routes are open and neither has been taken. Option 3 of that note is a
-    declared summary keyed by label, which needs the entry stashed at
-    `\caption` and written at `\label`. The other is to stop clipping and let
-    an entry wrap to a second line, which is what every other thesis does and
-    what the three entries that already wrap in the table of contents show is
-    survivable. The second is a one line change in `thesis_style.tex` and
-    costs nothing but the one line per entry layout. Ask before changing it:
-    the one line rule was a deliberate choice.
 14. **Table style is uniform enough, and the rest cannot be made uniform.**
     Checked on 2026-11-16. The four reproduced papers use booktabs
     throughout: not one `\hline` survives in the build, and the caption below
