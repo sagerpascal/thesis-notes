@@ -1122,3 +1122,80 @@ words. The audit also warned against homogenising
 `3-2_further_contributions.tex`, whose plainer voice reads as a second hand
 and is worth keeping, so only its mechanical markers were changed.
 
+### Round 5, 2026-11-16, the three critics again
+
+Sent on the finished frame, each briefed on what rounds 1 to 4 had settled so
+they would look for what survived. Every quantitative claim the examiner made
+was checked against the vendored manuscripts before being accepted.
+
+**Examiner.** Reported that every number in the frame is right, and that the
+problems are four omissions from the grokking manuscript's own
+qualifications, each of them printed in the appendix the thesis binds.
+
+- The sentence answering the thesis's hardest objection was wrong. "Two of
+  its three non gradient terms are live under decoupled decay" reads as two
+  independent routes surviving current practice. Both require the decay to
+  reach a network's normalisation parameters, which the manuscript says is
+  not what most current code does, and where it does not the untouched
+  network still moves from $0.82$ to $0.91$ under the intervention, a gap the
+  paper's limitations say the condition does not explain. Corrected in all
+  three places that carried it.
+- The three route unification was stated without the manuscript's own
+  qualifications. The control removes only about half the effect for the
+  numerical floor, and for the gain the intervention has to act on the gain
+  and the outgoing weights as well: equalising the incoming rows alone gives
+  $0.364$ against a reference of $0.366$, which is no effect. The outgoing
+  weights are what the participation ratio is computed from, so this belongs
+  beside the gauge audit and not in a footnote.
+- The language model result was quoted without its AdamW column. Decoupled
+  decay leaves $0.9\%$ of units nearly unused at a lower loss than the
+  intervention's $1.3\%$, and the manuscript says this is what the condition
+  predicts. Restoring it turns the frame's most exposed omission into
+  confirming evidence.
+- **DFC.** The chapter reports that deep feedback control groks and produces
+  a circuit of about $235$ of $256$ neurons at nearly perfect accuracy, with
+  credit that is already nearly equal, no intervention and no per neuron
+  normaliser. That is the title's claim demonstrated on the title's own axis
+  by a rule somebody else wrote, and the frame mentioned it once, as a count.
+  It is now in the introduction, the chapter and the conclusion, and the
+  conclusion no longer says two rules are on the far side of the line when
+  there are three. This is the round's most valuable finding.
+
+Also corrected: an assumption-free claim in the attention chapter that its own
+proofs refuse, a speed up quoted as typical where the paper says "up to" and
+one run of three shows none, an invented prediction about decoders, "no
+dynamics are defined over a net" where dynamics are that paper's central
+mechanism, "does not scale" where the paper defers the question, the survey's
+four taxonomy limits where it states six, the JAIR article number printed as
+a page, and a co-author's name.
+
+The attention contribution statement was reconstructed and marked
+`TODO(author)`. The arXiv version vendored in this repository carries the
+authors' own statement, so it is quoted instead and the marker is gone.
+
+Two findings not acted on. The survey's shared first authorship is not
+evidenced in the vendored copy, whose equal contribution note is commented
+out, so the chapter now says it has to be checked against the published
+article. And the examiner's point that the thesis opens on a bespoke pair,
+Adam with coupled L2 against credit equalisation, where a published pair
+exists in the same table, is a framing decision for the author.
+
+**AI smell audit.** Found the participation ratio defined twice, in two files,
+in wordings far enough apart to beat the shingle check and disagreeing about
+whether the ratio is a count or a fraction. The paper's own definition settles
+it and the frame now follows it. Also: a false "every" in the conclusion that
+the discussion's own sentence contradicts, the central condition stated five
+times with two different meanings, nine "worth saying" constructions, four
+sentences whose content is where the author put the next sentence, and six
+that are grammatical, correct and empty. Six of its suggestions are now checks
+in `scripts/check_prose.py`, including a paragraph level pass that catches
+multi-word patterns straddling a line break and a cross file numeric check
+that finds a finding stated in full in three or more places.
+
+**Title audit.** Found a `\cref` inside a section title, which hyperref cannot
+put in a PDF string, so the bookmark read "The standard of , applied to the
+measure of". Also the ACU chapter's Title Case headings against sentence case
+everywhere else, a section title claiming the gaps recur whatever the
+architecture where the survey says no such thing, and Part II stating one
+claim at three nested levels.
+

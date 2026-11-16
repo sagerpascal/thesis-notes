@@ -68,12 +68,12 @@ procedure produces.
 The object measured throughout needs a name. The set of neurons that carry a
 computation, counted as the participation ratio of a layer's outgoing weight
 norms, is what this thesis calls the solution's \emph{circuit}. For a
-layer of $n$ units, the participation ratio of the outgoing weight norms is
-the square of their sum divided by the sum of their squares. It runs from $1$,
-when one unit carries everything, to $n$, when all contribute equally, so it
-reads directly as a count of units in use. Divided by $n$ it reads as the
-fraction of the layer in use, and this thesis reports it both ways and says
-each time which it means. Two things about the word.
+layer of $n$ units, the participation ratio of the outgoing weight norms runs
+from $1/n$, when one unit carries everything, to $1$, when all of them
+contribute equally, so it reads as the fraction of the layer in use.
+Multiplied by $n$ it reads as a count of units, which \cref{chap:grokking}
+calls the effective neuron count. This thesis uses both and says each time
+which it means. Two things about the word.
 It is narrower here than in mechanistic interpretability, where a circuit is a
 subgraph of components rather than a count of participating units. And the
 measure is borrowed from the neuroscience literature on how far a
@@ -99,7 +99,12 @@ a mask over which positions may attend to which, so the architecture moves
 with it, which that chapter states. \Cref{chap:bounded} varies nothing in
 training and asks instead whether the measurement applied afterwards reports
 what it claims. \Cref{chap:cna} gives up the list and fixes the structure in
-the architecture.
+the architecture. Two entries are held fixed throughout and are not varied by
+any chapter: the loss, except where \cref{chap:attention} varies it, and the
+scale at which the weights start. The second is not a neutral omission, since
+a small initialisation is itself known to leave few neurons in use, and
+\cref{chap:grokking} checks that the effect it reports survives across a range
+of initialisation scales.
 
 What credit assignment means here needs a word, because the thesis is examined
 where the term usually means how an error signal reaches a synapse. The
@@ -117,6 +122,13 @@ backpropagation, which is deep feedback control. Feedback alignment, its
 direct form and sign based descent do not generalise on the task and are
 excluded. Everything else that is varied is an optimizer.
 
+That one case is worth more than its count suggests. Deep feedback control
+delivers credit that is already nearly equal across neurons, and it reaches a
+distributed circuit, about $235$ of $256$ neurons at nearly perfect test
+accuracy, with no intervention and with no per neuron normaliser in the
+optimizer. It is the claim of this thesis demonstrated on the axis the title
+names, by a rule somebody else wrote.
+
 The question did not begin in any of this. It began with agents for computer
 use, systems that carry out tasks on a computer or a phone from an instruction
 in natural language, by controlling software through clicks, keystrokes and
@@ -128,7 +140,8 @@ environment whose dynamics are unknown. Two concern what training produced,
 which is where this thesis starts, and \cref{chap:acu} gives the sort in
 full. \Cref{chap:further} summarises four further papers.
 One sharpens the first of those two gaps, one shows that a score can miss what
-it is taken to stand for, and two supply structure from outside the data.
+it is taken to stand for, one supplies structure from outside the data, and
+one holds its knowledge outside the weights altogether.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -170,10 +183,12 @@ years, and the paper says the setting is there to test the condition rather
 than as a recommendation. Under decoupled weight decay, which is what current
 training code uses, the reference network is already distributed in most of
 the places the chapter looks. What survives is the condition, which is
-general, and two of its three non gradient terms are live under decoupled
-decay: an adaptive optimizer's numerical floor dominates in a wide transformer
-whose normalisation parameters are decayed, and so does the decay of a
-trainable gain.
+general. Its other two terms, an adaptive optimizer's numerical floor and the
+decay of a trainable gain, dominate only where the decay reaches a network's
+normalisation parameters, which most current code does not do. With decay on
+the weight matrices alone the untouched network sits at $0.82$ and the
+intervention lifts it to $0.91$, a gap the paper's own limitations say the
+condition does not explain.
 
 Of the four prices named at the start of this chapter, three follow from what
 the measure counts. The fourth does not: the concentrated network reaches a
@@ -315,8 +330,8 @@ first.
     the measure of another.
 \end{itemize}
 
-What is left if the grokking chapter is removed is worth saying, because a
-cumulative thesis invites the question. The claim about circuits would go with
+A cumulative thesis invites the question of what is left if its lead paper is
+removed. The claim about circuits would go with
 it, since that chapter is where it is established. What would remain is an
 independent structural result about attention weights in models at scale, a
 methodological correction to how latent world models are scored, a survey that

@@ -36,8 +36,8 @@ out otherwise.
 This chapter asks what it would mean to stop leaving the property to training.
 In the Cooperative Network Architecture a sensory pattern is a set of neurons
 that hold one another in place, so redundancy of support belongs to the
-architecture rather than something a
-regulariser has to be coaxed into producing. What the parts are built from is designed: the
+architecture and not to anything a regulariser has to be made to produce.
+What the parts are built from is designed: the
 elementary feature detectors are specified rather than learned. The fragments
 assembled from them are learned, by Hebbian plasticity from data, and how
 those fragments are joined into a representation is fixed by the
@@ -96,8 +96,10 @@ from more data.
 
 The features the model composes are hand designed rather than learned end to
 end. The demonstrations
-are on line drawings, and the architecture does not scale to natural images.
-And no dynamics are defined over a net, so there is nothing in the
+are on line drawings, and the paper defers natural images rather than
+attempting them, so the architecture has not been shown to scale. And although
+a net has dynamics of its own, which is how it settles and how it filters, no
+transition over the represented world is defined, so there is nothing in the
 representation to plan with. These are the three limits that
 \cref{sec:bg_substratelimits} identifies in the whole lineage this work
 belongs to, and this work inherits all three.

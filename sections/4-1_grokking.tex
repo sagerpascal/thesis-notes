@@ -113,9 +113,15 @@ hidden layers.
 
 A neuron survives when its credit is large beside the part of its update that
 no gradient supplies. That one criterion accounts for three mechanisms which
-had been described separately: a weight decay term
-added to the gradient before an adaptive optimizer, the numerical floor in
-that optimizer's denominator, and the decay of a trainable per neuron gain.
+had been described separately: a weight decay term added to the gradient
+before an adaptive optimizer, the numerical floor in that optimizer's
+denominator, and the decay of a trainable per neuron gain. The control that
+establishes it, holding each neuron's ratio of credit to that term fixed while
+equalising the gradients, works fully for the decay and the gain and removes
+about half of the effect for the numerical floor. And for the gain the
+intervention has to act on the gain and the outgoing weights as well as the
+incoming rows: equalising the incoming rows alone gives $0.364$ against a
+reference of $0.366$, which is no effect at all.
 
 Acting on the condition moves the circuit. Equalising the credit each neuron
 receives, while leaving every gradient's direction untouched, lifts a layer of
@@ -140,7 +146,12 @@ varying how many parameters share one factor leaves the circuit concentrated
 at groups of eight or more and distributes it fully only at one factor per
 neuron. Among the optimizers tested, Nero normalises per neuron and reaches a
 distributed circuit, while Adam, RMSProp, LARS, LAMB, Adafactor, Lion, Muon
-and Shampoo do not. Credit participation alone does not order them. Lion and
+and Shampoo do not. Deep feedback control arrives at the same place from the
+other direction, without a per neuron normaliser, because the credit it
+delivers is already nearly equal: it groks with a delay of $520$ to $610$
+epochs and produces a circuit of about $235$ of $256$ neurons at nearly
+perfect test accuracy. Equal credit that arises on its own and equal credit
+imposed give the same kind of circuit. Credit participation alone does not order them. Lion and
 the credit equalisation of this chapter both equalise credit completely, at
 credit participation $1.000$, and land at circuit participation $0.535$ and
 $0.992$. The first is an optimizer in general use and the second is this
@@ -170,15 +181,21 @@ And the reference configuration puts an L2 penalty into the gradient ahead of
 an adaptive optimizer, a pairing the paper describes as a test bed for the
 condition and not as advice. Decouple the decay, as current training code
 does, and the untouched network already spreads its computation across most of
-the settings measured here. What survives that change is the
-condition itself, and two of its three non gradient terms remain live under
-decoupled decay.
+the settings measured here. What survives that change is the condition
+itself. Its other two terms dominate only where the decay reaches the
+normalisation parameters, which most current code does not do, and with decay
+on the weight matrices alone the reference sits at $0.82$ against $0.91$ under
+the intervention. That remaining gap, and the $0.91$ against $0.96$ on modular
+addition, the paper's limitations say the condition does not explain.
 
 The condition reaches beyond the toy setting even where the rest of the result
 has not been measured there. In a language model of $30$ million parameters
 trained with an adaptive optimizer and an L2 penalty, balancing each unit's
 decay against its gradient leaves $1.3\%$ of the units nearly unused instead
-of $24\%$, at a lower validation loss. The redistribution also holds on
+of $24\%$, at a lower validation loss. Decoupling the decay instead leaves
+$0.9\%$ at a lower loss still, which is what the condition predicts rather
+than a competing result: decoupling stops a non gradient term from dominating,
+and balancing the credit against it does the same thing another way. The redistribution also holds on
 modular subtraction and multiplication, on composition in a permutation group,
 on sparse parity and on a transformer with a wide feedforward block.
 

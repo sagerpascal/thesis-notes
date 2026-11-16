@@ -54,8 +54,8 @@ from vanishing, and a trainable gain that decays away. Only a normalising factor
 ratio, which places the optimizers in general use on one side of a line and
 two rules on the other. Equalising the credit neurons receive, while leaving
 every gradient's direction unchanged, moves the computation from $60$ to $99$
-per cent of the layer and costs the two points of test accuracy named above,
-from $0.998$ to $0.976$. Imposing a
+per cent of the layer, at a cost of two points of test accuracy, $0.998$ to
+$0.976$. Imposing a
 credit profile directly, with a random permutation deciding which neuron
 receives which magnitude, moves it the same way, which rules out the
 possibility that the credit merely followed what the neurons were already
@@ -101,7 +101,7 @@ hold one another in place, assembled from fragments that Hebbian plasticity
 learns from data. Noise, which
 nothing supports, is filtered with more than half the input corrupted,
 partially hidden figures are completed, and fragments learned separately
-recombine into patterns never seen in training. The model does not scale
+recombine into patterns never seen in training. The model has not been shown to work
 beyond line drawings, so the thesis closes by setting out what a
 representation of this kind would need in order to serve as the state of an
 agent's model of its environment.

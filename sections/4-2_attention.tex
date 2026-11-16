@@ -12,18 +12,19 @@ directionality, and emergent dynamics in Transformer training.
 (ICML)}. \cite{saponati_underlying_2025}
 \end{publicationbasis}
 
-%% TODO(author): reconstructed from the thesis author's own record of the
-%% division of work, since the published paper carries no contributions
-%% section. Check before submission.
+%% Taken from the authorship contributions section of the arXiv version of
+%% this paper, imported_papers/self_attention_geometry_project_ICML/arXiv/
+%% main-arxiv.tex, which the ICML camera ready drops. It is the authors' own
+%% statement and not a reconstruction.
 \contributionstatement
 
 Matteo Saponati and the thesis author are shared first authors, and Matteo
-Saponati led the work. He developed the mathematical framework and the
-derivations of the update structures. The thesis author ran most of the
-experiments, including the measurements on the pretrained models across text,
-vision and audio, and the symmetric initialisation study. Pau Vilimelis
-Aceituno, Thilo Stadelmann and Benjamin F. Grewe supervised and contributed to
-the framing and the writing.
+Saponati led the work. The paper's own statement of contributions reads:
+conceptualisation by Matteo Saponati, Thilo Stadelmann and Benjamin F. Grewe;
+mathematical analysis by Matteo Saponati and Pau Vilimelis Aceituno; analysis
+of the pretrained models by Matteo Saponati and the thesis author; experiments
+by the thesis author; writing by Matteo Saponati, the thesis author and
+Benjamin F. Grewe; supervision by Thilo Stadelmann and Benjamin F. Grewe.
 
 \section{Chapter Introduction}
 
@@ -97,8 +98,11 @@ cancel antisymmetrically and the query key product stays close to symmetric.
 Autoregressive training makes each token the target exactly once and the
 context of every token after it, so the sum is one sided and the product
 becomes directional, with columns of high norm outnumbering rows of high
-norm. The derivation needs no assumption about
-the data beyond which pairs enter the sum.
+norm. The derivation is not assumption free. It drops
+the softmax, omits layer normalisation and biases, takes one small step of
+plain gradient descent where the experiments use an adaptive optimizer, and
+the directionality result needs the token embeddings to be anisotropic and a
+corpus statistic to favour context over target.
 
 The prediction is borne out in trained models of both kinds. Twelve layer
 encoders and decoders trained under matched conditions on three corpora
@@ -111,10 +115,12 @@ at the scale the field works at.
 One consequence of the derivation is practical. If bidirectional training
 drives the query key product towards symmetry, then initialising it symmetric
 starts the network closer to where training is going, and it does. Encoder
-models initialised that way reach their final loss about $75\%$ faster at four
-layers and about $35\%$ faster at twelve. The paper reports this for encoders
-and runs no matching comparison on decoders, so the account's prediction that
-it should not help there is untested.
+models initialised that way reach the final loss of a randomly initialised
+model as much as $75\%$ sooner at four layers and $35\%$ sooner at twelve, and
+the spread across corpora is wide: at twelve layers the three runs give
+$35\%$, $20\%$ and nothing at all. The paper runs no matching comparison on
+decoders, so whether the same initialisation would help or hurt there is
+untested.
 
 Two components of the training setup now have a structure attached to them.
 The learning rule settles how much of a layer carries a computation, the

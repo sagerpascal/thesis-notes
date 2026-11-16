@@ -13,17 +13,17 @@
 % chapter each one backs. They appear in no imported bibliography, because a
 % paper does not cite itself.
 
-% TODO verify pages. JAIR prints an article number as well as a page range,
-% and 34 may be the article number rather than the first page. The publication
-% box of sections/3-1_acu_survey.tex prints whatever is here. A comment inside
-% the entry is not a comment to merge_bib.py, which reports it as an ignored
-% fragment, so it stays out here.
+% 34 is JAIR's article number, not a page. The author's own later manuscript
+% records it that way, imported_papers/probe-norm/main.bib, and printing it as
+% a page gave "85, 34" in the publication box. A comment inside the entry is
+% not a comment to merge_bib.py, which reports it as an ignored fragment, so
+% it stays out here.
 @article{acu_survey,
-  author  = {Sager, Pascal J. and Meyer, Benjamin and Yan, Ping and von Wartburg-Kottler, Rebekka and Etaiwi, Layan and Enayati, Aref and Nobel, Gabriel and Abdulkadir, Ahmed and Grewe, Benjamin F. and Stadelmann, Thilo},
+  author  = {Sager, Pascal J. and Meyer, Benjamin and Yan, Peng and von Wartburg-Kottler, Rebekka and Etaiwi, Layan and Enayati, Aref and Nobel, Gabriel and Abdulkadir, Ahmed and Grewe, Benjamin F. and Stadelmann, Thilo},
   title   = {A Comprehensive Survey of Agents for Computer Use: Foundations, Challenges, and Future Directions},
   journal = {Journal of Artificial Intelligence Research},
   volume  = {85},
-  pages   = {34},
+  note    = {Article 34},
   year    = {2026}
 }
 

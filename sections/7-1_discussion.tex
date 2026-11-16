@@ -19,9 +19,10 @@
 The results of this thesis separate two levels at which a question about a
 trained network can be asked. At one level the question is what the network
 computes, and for modular addition the answer is settled: every rule that
-generalises arrives at the same Fourier construction, which is what the
-universality claim says and what \cref{chap:grokking} confirms. At the other level the question is how that computation is spread
-across the parts available to it, and there the answer is not settled by the
+generalises arrives at the same Fourier construction. That is what the
+universality claim says, and \cref{chap:grokking} confirms it rather than
+disputing it. At the other level the question is how that computation is
+spread across the parts available to it, and there the answer is not settled by the
 task. The same algorithm is implemented by about $154$ neurons or by about
 $254$ at width $256$, depending on the rule that trained the network.
 
@@ -105,9 +106,9 @@ quantities, and which of them a claim about spread should rest on is open.
 % ─────────────────────────────────────────────────────────────────────────────
 
 If a structural property is settled by the procedure and has a price, then it
-is a thing to be chosen, and this thesis leaves three places where the choice can be made. Only the first two concern the circuit as
-this thesis measures it. The third settles a different structure and is here
-because the mechanism is the same.
+is a thing to be chosen. This thesis leaves three places where the choice can
+be made, of which the first two concern the circuit it measures and the third
+a different structure reached by the same mechanism.
 
 The first is to choose the rule. The condition of \cref{chap:grokking} says
 which rules can move the circuit and which cannot, as a yes or no and not as
@@ -123,8 +124,7 @@ measurement artefact. No experiment runs across the two chapters.
 
 The third is to build the structure into the architecture, which is
 \cref{chap:cna}. There a neuron is part of a representation only while others hold it there,
-so the redundancy is in the architecture and no regulariser has to produce
-it.
+so the redundancy sits in the architecture and no regulariser produces it.
 
 A structural parallel between two of the chapters is recorded here as an
 observation and not as a result. A Hebbian update changes the connection
@@ -151,10 +151,14 @@ The reference setting of \cref{chap:grokking} is one the field has largely
 moved away from. Adding an L2 penalty to the gradient before an adaptive
 optimizer produces the concentration most directly, and under decoupled weight
 decay the untouched reference already spreads its computation across most of
-the settings that chapter measures. The general claim, that a neuron drops out when its credit is
-small relative to a non gradient term of its update, survives that change, and
-two of the three such terms remain live under decoupled decay. The headline
-numbers belong to the coupled setting and should be quoted with it.
+the settings that chapter measures. The general claim, that a neuron drops out when its credit
+is small relative to a non gradient term of its update, survives that change.
+What does not survive is the claim that the condition explains what is left.
+Its other two terms dominate only where the decay reaches a network's
+normalisation parameters, and where it does not the untouched network still
+moves from $0.82$ to $0.91$ under the intervention, which the paper's
+limitations say the condition does not account for. The headline numbers
+belong to the coupled setting and should be quoted with it.
 
 The measure overstates the level, as \cref{sec:disc_standard} sets out, and
 the effect of the intervention depends on the width. At width $32$ the

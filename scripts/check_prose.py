@@ -49,6 +49,7 @@ TELLS = [
     # Self congratulation: it asks the reader to credit the candour before
     # the content arrives, and implies the alternatives were dishonest.
     "the honest answer", "the honest shape", "the honest thing",
+    "the honest comparison",
     "the honest form", "the honest comparison", "with room to spare",
     "where the thesis is strongest",
     "what is true is more interesting", "what has to be admitted",
@@ -125,6 +126,29 @@ BARE_REF = re.compile(r"\b(Chapter|Section|Figure|Table|Appendix)~\\ref\{")
 
 SHINGLE_N = 12
 
+# "it is worth noting" and "note that" are banned outright. "What is worth
+# noticing is that" is the same move with the ban's words filed off, and in
+# every instance found so far the clause can be deleted with no loss.
+WORTH = re.compile(
+    r"\b(is|are|was|were)\s+worth\s+"
+    r"(say|not|notic|know|ask|remember|stat|mention|point|record|add)\w*ing\b"
+    r"|\bWhat is worth \w+ing is\b", re.I)
+
+# A sentence whose content is where the author put the next sentence. Close
+# kin of META_LABEL: it reports the author's discipline rather than a result.
+PLACEMENT = re.compile(
+    r"\b(limits?|results?|numbers?|caveats?|prices?)\b[^.]{0,40}"
+    r"\bbelongs?\s+(beside|with it|in the same breath|here rather than)\b"
+    r"|\bin the same breath\b", re.I)
+
+# A back reference in prose has to name a label or a section title, not a
+# position on the page: "the condition stated at the top of this chapter"
+# resolved to nothing, and the page it meant moves whenever anything above it
+# changes.
+WORDY_REF = re.compile(
+    r"\b(stated|given|described|named|set out|quoted)\s+"
+    r"(at the top of|above|below|earlier|further on|further up)\b", re.I)
+
 
 HARD = {
     "em dash": re.compile(r"[—–]"),
@@ -157,6 +181,9 @@ SOFT = {
     # 3.6: these may not act. A measure, a benchmark or a document deciding
     # something is the personification the guide rules out.
     "meta label": META_LABEL,
+    "worth noting in disguise": WORTH,
+    "placement announcement": PLACEMENT,
+    "wordy cross reference": WORDY_REF,
     "anaphoric triple": ANAPHORIC_TRIPLE,
     "personified abstraction": re.compile(
         r"\b(the thesis|the chapter|the benchmark|the task|the dataset|"
@@ -358,7 +385,31 @@ def check_file(path: Path) -> tuple[list, list]:
         for name, pat in SOFT.items():
             for m in pat.finditer(line):
                 soft.append((name, n, m.group(0).strip()[:60]))
-    soft.extend(check_rhythm(path, paragraphs(lines)))
+    # Multi-word patterns miss any hit that straddles a line break, which is
+    # most of them in a file wrapped at 79 columns. Run them again over joined
+    # paragraphs, and report the paragraph's first line. The per line pass
+    # stays, because it gives the exact line for everything that fits on one.
+    paras = paragraphs(lines)
+    seen_pairs = {(n, w) for n, w in
+                  [(h[1], h[2]) for h in hard] + [(s[1], s[2]) for s in soft]}
+    for start, body in paras:
+        for name, pat in HARD.items():
+            if name in {"label sentence", "code identifier in prose",
+                        "hyphen as connector", "em dash"}:
+                continue
+            for m in pat.finditer(body):
+                what = m.group(0).strip()[:60]
+                if not any(what == w for _, w in seen_pairs):
+                    hard.append((name, start, what))
+        for name, pat in SOFT.items():
+            if name in {"semicolon", "question in prose"}:
+                continue
+            for m in pat.finditer(body):
+                what = m.group(0).strip()[:60]
+                if not any(what == w for _, w in seen_pairs):
+                    soft.append((name, start, what))
+
+    soft.extend(check_rhythm(path, paras))
 
     prose = " ".join(l for _, l in lines)
     words = len(prose.split())
@@ -432,6 +483,52 @@ def main() -> int:
                          f"also in {other.name}:{oline}: {key[:60]}..."))
                 seen.setdefault(key, (path, start))
 
+    # Cross file repetition of content rather than of wording. The shingle
+    # check finds copied sentences; rewording beats it, and rewording is what
+    # the last sweep did. A pair of numbers that co-occurs in a paragraph of
+    # three or more files is the same finding stated in full three or more
+    # times, which CLAUDE.md 3.8 says happens once in its chapter.
+    # strip_latex replaces math with a placeholder, so this reads the raw
+    # text: comments and imported blocks removed, paragraphs split on blank
+    # lines, numbers taken from the math they are set in.
+    # The German abstract is a translation of the English, so the two are one
+    # site. Three sites for one set of numbers is a finding stated in full
+    # three times, which is one more than the abstract and its chapter.
+    def site(p: Path) -> str:
+        return "the abstract" if p.name.startswith("0-") and "abstract" in p.name \
+            else p.name
+
+    tuples: dict[tuple[str, str], set[str]] = {}
+    for path in targets:
+        raw = path.read_text(encoding="utf-8")
+        skip = imported_lines(raw)
+        kept = [l for n, l in enumerate(raw.split("\n"), 1)
+                if n not in skip and not l.lstrip().startswith("%")]
+        for block in re.split(r"\n\s*\n", "\n".join(kept)):
+            nums = sorted(set(re.findall(r"\$([\d][\d.,]*)\\?%?\$", block)))
+            for i in range(len(nums)):
+                for j in range(i + 1, len(nums)):
+                    tuples.setdefault((nums[i], nums[j]), set()).add(site(path))
+    # Three pairs drawn from one set of four numbers are one finding, not
+    # three, so collapse by the set of files they appear in.
+    clusters: dict[frozenset[str], set[str]] = {}
+    for (a, b), files in tuples.items():
+        if len(files) >= 3:
+            key = frozenset(files)
+            clusters.setdefault(key, set()).update((a, b))
+    repeated = sorted(((sorted(nums), sorted(files)) for files, nums
+                       in clusters.items()),
+                      key=lambda kv: (-len(kv[1]), kv[0]))
+    # Corpus level disclaimer count. The per file gate is cleared forever by
+    # one hit per file, which is how seven statements of one disclaimer
+    # survived a sweep.
+    disc_files = {}
+    for path in targets:
+        body = " ".join(l for _, l in strip_latex(path.read_text(encoding="utf-8")))
+        n = len(DISCLAIMER.findall(body))
+        if n:
+            disc_files[path.name] = n
+
     n_hard = n_soft = 0
     for path in targets:
         hard, soft = check_file(path)
@@ -446,6 +543,19 @@ def main() -> int:
             print(f"  {rel}:{n}  [soft] {name}: {what}")
         n_hard += len(hard)
         n_soft += len(soft)
+    if repeated:
+        print("\n  numbers stated together in three or more places, which is a "
+              "finding\n  given in full more than once:")
+        for nums, files in repeated[:8]:
+            print(f"    {', '.join(nums)}\n      in {', '.join(files)}")
+        n_soft += 1
+    if len(disc_files) >= 4:
+        total = sum(disc_files.values())
+        print(f"\n  {total} passages across {len(disc_files)} files say what "
+              f"the text does not\n  claim, which no per file gate catches: "
+              + ", ".join(f"{k} ({v})" for k, v in sorted(disc_files.items())))
+        n_soft += 1
+
     print(f"\n  {len(targets)} files, {n_hard} hard, {n_soft} soft")
     if n_hard:
         print("  Hard findings are style guide violations and block a commit.")
