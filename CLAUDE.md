@@ -655,7 +655,7 @@ design.
 
 | Slug | Directory | Chapter | Layout |
 | --- | --- | --- | --- |
-| `acu` | `imported_papers/ACU_JAIR` | `sections/3-1_acu_survey.tex` | sections |
+| `acu` | `imported_papers/ACU_JAIR` | summarised | sections |
 | `grokking` | `imported_papers/grokking` | `sections/4-1_grokking.tex` | monolithic, `iclr2027_conference_v2.tex` |
 | `attention` | `imported_papers/self_attention_geometry_project_ICML` | `sections/4-2_attention.tex` | sections, under `ICML2025/` |
 | `bounded` | `imported_papers/probe-norm` | `sections/5-1_bounded.tex` | monolithic, `main.tex` plus `body` |
@@ -665,11 +665,14 @@ design.
 | `hounsfield` | `imported_papers/sds_hounsfield_features` | summarised | monolithic, `main.tex` |
 | `retrieval` | `imported_papers/CLEF_Checkthat_4b` | summarised | sections |
 
-The five reproduced papers are the argument. The four marked summarised carry
+The four reproduced papers are the argument. The five marked summarised carry
 `status = "summarised"` in their manifests, their bodies are included nowhere,
-their appendix chapters are gone, and
-`sections/3-2_further_contributions.tex` gives each a page or two of thesis
-owned prose with the author's role stated. Nothing under `imported_papers/`
+and their appendix chapters are gone.
+`sections/3-2_further_contributions.tex` gives four of them a page or two of
+thesis owned prose with the author's role stated. The survey is the fifth and
+keeps a chapter of its own, `sections/3-1_acu_survey.tex`, at six pages: the
+authorship is shared first, the source runs to over fifty pages, and the
+thesis takes its question from it. It was cut on 2026-11-16. Nothing under `imported_papers/`
 changed when they were cut, which is the point: any of them is wired back in
 by setting `status = "wired"` and writing the includes.
 `check_imports.py` checks that a summarised manifest gives a
@@ -912,10 +915,10 @@ something is done, delete its entry rather than marking it done, so the list
 stays short enough to read every session. Anything that has become permanent
 knowledge belongs in the sections above, not here.
 
-The thesis builds: 281 pages, zero LaTeX errors, zero duplicate labels, a
-working bibliography, and every one of the nine papers included with its
-appendix. `check_compile.py` reports zero errors across all nine, and
-`check_imports.py` zero. Machinery that works is not listed here: `build.sh`,
+The thesis builds: 229 pages, zero LaTeX errors, zero duplicate labels, a
+working bibliography, and four of the nine papers reproduced with their
+appendices. The other five are summarised. `check_compile.py` reports zero
+errors across all nine, and `check_imports.py` zero. Machinery that works is not listed here: `build.sh`,
 `thesis_style.tex`, `thesis_import.sty`, the nine manifests, the `references/`
 and `generated/` trees, and all seven scripts.
 
@@ -1110,12 +1113,13 @@ and `generated/` trees, and all seven scripts.
 
 ### Style
 
-12. **30 overfull hboxes.** Most are display equations set
+12. **17 overfull hboxes.** Most are display equations set
     for a wider measure, the rest paragraphs. The count was 101 before the cut
-    of 2026-11-14. Forty-four of those were the rows of one table,
-    `probe-norm/tables/table_literature.tex`, which left the build when the
-    world model appendix was trimmed, and the rest went with the four
-    summarised papers.
+    of 2026-11-14 and 30 after it. Forty-four of the first batch were the rows
+    of one table, `probe-norm/tables/table_literature.tex`, which left the
+    build when the world model appendix was trimmed, and the rest went with
+    the four summarised papers. Thirteen more went with the survey's body and
+    appendix on 2026-11-16.
 
     ```bash
     uv run --no-project python scripts/check_layout.py --overfull

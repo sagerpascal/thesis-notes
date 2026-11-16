@@ -9,7 +9,11 @@ dir     = "imported_papers/ACU_JAIR"
 chapter = "sections/3-1_acu_survey.tex"
 title   = "A Comprehensive Survey of Agents for Computer Use"
 citation_key = "sager_survey_2026"
-status  = "wired"
+status  = "summarised"
+summary_reason = """Shared first authorship, and the survey sets the stake rather than
+carrying evidence: it never varies the training procedure, so it cannot explain the two
+gaps the thesis takes from it. Cut from 56 pages to six on 2026-11-16, by the same rule
+that cut the other four, after the question was put to the author."""
 layout  = "sections"
 source  = "main.tex"
 
@@ -38,11 +42,10 @@ graphics = ["figures", "figures/data"]
 "acmauthoryear.cbx" = "ACM biblatex style"
 "acmdatamodel.dbx"  = "ACM biblatex data model"
 
-# Parts the thesis carries in its appendix rather than in the chapter.
+# The paper's appendix. It left the build with the body on 2026-11-16: an
+# appendix is what the kept text points at, and the chapter no longer includes
+# any of the paper's own text. The three fifteen column agent tables in 85
+# were the reason \importsectionrotated exists; the feature stays in
+# thesis_import.sty for the next paper that arrives with a table too wide for
+# the measure.
 [appendix]
-"sections/80_appendix.tex" = "appendix material of the paper"
-"sections/81_appendix_trends.tex" = "appendix material of the paper"
-"sections/82_appendix_image_vs_text.tex" = "appendix material of the paper"
-"sections/83_appendix_nature_envs.tex" = "appendix material of the paper"
-"sections/84_appendix_challenges_deployment.tex" = "appendix material of the paper"
-"sections/85_appendix_all_agents.tex" = "appendix material of the paper"

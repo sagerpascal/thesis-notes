@@ -110,10 +110,13 @@ between.
 Stake, finding, measurement, construction.
 
 1. The stake. A survey of 87 papers and 33 datasets on agents for computer use
-   finds one recipe and six gaps. Generalisation and sample efficiency are
-   properties of the trained network, so the thesis asks what in training
-   produces them. This is motivation and is called that. It is not evidence
-   for the thesis claim.
+   finds a field converging on one recipe, and six gaps. Four are about how
+   the field measures and deploys. Two are about what training produced, and
+   the thesis asks what in training produces them. Planning is the one the
+   survey splits between the model and the machinery around it, and the thesis
+   measures neither. This is motivation and is called that. It is not evidence
+   for the thesis claim. Summarised in six thesis owned pages as of
+   2026-11-16, not reproduced.
 2. The finding. With task, data, architecture and width fixed, every learning
    rule that groks modular addition recovers the same Fourier algorithm with
    circuits of different size. A neuron stays in use when its credit is large
@@ -188,9 +191,9 @@ committee that opens the paper will see the mapping. That is what a lead paper
 in a cumulative thesis looks like, and the frame says so rather than
 disguising it.
 
-The survey has no research question. That is the clearest statement of the
-open question below about what Part II is for: a chapter holding a fifth of
-the body appears in no question and in no contribution.
+The survey has no research question, and after the cut of 2026-11-16 it does
+not need one. It sets the stake in six pages and carries no evidence, which is
+what the chapter now says of itself.
 
 ## Paper selection
 
@@ -206,7 +209,7 @@ measured from the 367 page build of 2026-11-14.
 | Grokking | first author | 42 pp | full chapter, pillar |
 | Attention | shared first | 42 pp | full chapter |
 | CNA | first author | 26 pp | full chapter, the proposal |
-| ACU survey | shared first | 56 pp | full chapter, motivation only |
+| ACU survey | shared first | 56 pp | summarise, 6 pp, the stake (cut 2026-11-16) |
 | World model | first author | 34 pp | chapter kept, appendix trimmed to 19 pp |
 | COGITAO | tester | 54 pp with the LLM benchmark | summarise, 1 to 2 pp |
 | LLM benchmark | evaluator | see above | summarise, 1 to 2 pp |
@@ -229,7 +232,7 @@ submission.
 | --- | --- | --- | --- | --- | --- |
 | I Introduction and Background | Introduction | `sections/1-1_introduction.tex` | `chap:introduction` | thesis owned | |
 | | Background | `sections/2-1_related_work.tex` | `chap:background` | thesis owned, needs rewrite to the new story | |
-| II The Stake | ACU survey | `sections/3-1_acu_survey.tex` | `chap:acu` | shared first with Benjamin Meyer | full chapter, motivation |
+| II What the Field Builds, and What Its Scores Do Not Show | ACU survey | `sections/3-1_acu_survey.tex` | `chap:acu` | shared first with Benjamin Meyer | summarised, 6 pp, the stake |
 | | Further Contributions | `sections/3-2_further_contributions.tex` | `chap:further` | four papers, roles stated | 6 pp |
 | III The Training Procedure Fixes What the Task Leaves Open | Grokking | `sections/4-1_grokking.tex` | `chap:grokking` | first author | pillar, leads the part |
 | | Attention | `sections/4-2_attention.tex` | `chap:attention` | shared first, Matteo Saponati led | full chapter |
@@ -253,6 +256,14 @@ only the first of its two chapters, and then for the circuit, which the
 attention chapter never measures. Part V lost "circuit" for the same reason:
 CNA computes no participation ratio, and the guardrails below forbid extending
 the term to it.
+
+The survey was cut on 2026-11-16, after the question was put to the author.
+It keeps a chapter of its own and six thesis owned pages, because the
+authorship is shared first, the source runs to over fifty pages, and the
+thesis takes its question from this work. Its imported body and its appendix
+chapter left the build, and `00_ADMIN/07_writing_plan.md` holds the paragraph
+plan the chapter was written to and the critique that corrected it. Five
+papers are now summarised and four reproduced.
 
 The cut was carried out on 2026-11-14. The four summarised papers lost their
 wrapper files and their appendix chapters, their manifests carry

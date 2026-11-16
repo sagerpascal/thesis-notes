@@ -576,6 +576,261 @@ results and describes a paper that is no longer in the thesis. It is rewritten
 at Level 4 with everything else, and until then nothing should be quoted from
 it.
 
+## Level 3 for `chap:acu`: the survey cut to six pages
+
+Decided 2026-11-16, answering the second escalated question. The survey keeps
+a chapter of its own and six pages. Its imported body and its appendix chapter
+leave the build. The first draft of this plan was criticised the same day and
+one of its two claims was refuted by the survey; what follows is the revision.
+
+**Why a chapter of its own, rather than a fifth section of `chap:further`.**
+Four reasons, and the chapter gives them rather than asserting the status.
+Shared first authorship on a JAIR survey. Fifty-six pages of source against
+twelve to twenty for the others. The introduction leans on this chapter and on
+no other in Part II. And a survey is a different kind of object from a study:
+it is where the thesis's question comes from. Six pages against the four that
+the other four papers have **between them** is four to six times the per paper
+allowance, so the asymmetry is argued, not smuggled in as parity.
+
+**The cut is also a correctness fix.** Every thesis owned paragraph in the
+current wrapper argues the retired story, and its six gap list is embellished
+past the survey. "Relying on world models whose predictions diverge
+exponentially with rollout length", "the absence of structural priors" and
+"systems cannot recombine familiar components in novel configurations" are
+none of them in the survey; the last is COGITAO's result. Write the six gaps
+from `sections/09_conclusion.tex`, never from the current wrapper. There is
+also no challenges section to work from: `sections/08_challenges.tex` is 27
+bytes and reads `% MOVED THIS TO APPENDIX!!!`, and the current chapter imports
+it.
+
+### What the chapter claims, and what the survey will not support
+
+The first draft sorted the six gaps four ways: two properties of the trained
+network, planning a property of the scaffold around it, three about
+measurement and deployment. The survey refuses the middle term.
+`05_agent_perspective.tex:372` says "LLMs exhibit limited long-horizon
+planning capabilities", naming the model first; `:343` has specialised agents
+doing "implicit planning in their latent space"; and conclusion recommendation
+(c) is "advancing policy architectures that support long-horizon reasoning and
+planning", where the policy is the network. Only the second remedy, hybrid
+symbolic planning, sits outside the model. A singleton category that exists so
+the thesis faces two unexplained gaps instead of three is the sort working for
+the thesis rather than reporting the survey, in the one chapter whose
+guardrail says to lean no weight on it. Drop it. The word "scaffold" is
+dropped with it: it is coined nowhere, is in no glossary entry, and collides
+with the survey's own "conceptual scaffold" for the taxonomy.
+
+The sort is two ways, which is what `sections/1-1_introduction.tex` already
+says and what the concept file says. Two gaps are about what training
+produced. The other four are not what this thesis is about. Planning is named
+as the one the survey splits between the model and the machinery around it,
+and the thesis measures neither.
+
+Two honesty requirements that the first draft missed, both of which make the
+chapter better rather than weaker.
+
+The survey's own diagnosis for gap one is the input modality, not the network:
+conclusion (1) reads "reliance on structurally inconsistent input modalities
+that hinder generalization", and the remedy is to change what the agent
+observes. The thesis's reading runs through the survey's own aside that agents
+on such representations "may develop scenario-specific heuristics (shortcuts,
+cp. Geirhos et al.) that do not generalize well beyond the training data",
+which is a property of what training produced. That sentence is quoted and the
+reading is declared as a reading. The survey offers the brittleness as a
+hypothesis, so the chapter may not report it as a finding.
+
+Gap two is an equivocation waiting to happen. The survey means cost: learning
+strategies that are "highly resource-intensive, requiring either high-fidelity
+simulation environments or curated and labeled datasets", with recommendation
+(b) asking for "cost-efficient learning strategies". Sample efficiency is one
+component of that cost and is the component the thesis takes. Say which
+component in one sentence, or the chapter equivocates on "inefficient" in the
+sentence that licenses research question 4.
+
+One more correction. "The field builds those agents by one recipe" overstates,
+and so does the current chapter title. The survey says the field is
+transitioning, and its own counts refuse the present tense: 35 of 87 agents
+use textual observations against 31 image and 15 bi-modal, and 30 of 87 do no
+environment learning at all. The introduction already has the honest verb,
+"the field is converging on one recipe", and the chapter may not assert more
+than the introduction does. Likewise the image trend is growth, not
+replacement: image observations go from 0 to 12 to 19 across 2022 to 2024
+while textual stays flat at 3, 10, 8.
+
+**Chapter title.** Was "One Recipe Builds Agents for Computer Use, and Six
+Gaps Are Shared Across Them", which asserts the overstated recipe and a
+sharing the survey never claims. Now: "A Survey of Agents for Computer Use
+Finds Six Gaps, and Two Are About What Training Produced". It states the
+chapter's one claim, which is the sort.
+
+### The six pages
+
+About $2400$ words. A page of this thesis carries $400$ to $470$ words, and
+`3-2_further_contributions.tex` runs $1408$ words over four pages. The first
+draft of this plan budgeted twelve paragraphs and a list, which is $1300$ to
+$1650$ words and fills four pages, not six. The additions below are the
+missing two.
+
+**Publication header box.** Kept, in the APA form the reproduced chapters use,
+because this chapter keeps a `publicationbasis` and a `contributionstatement`
+while the four short summaries in `chap:further` carry their citation in
+running prose. The difference is deliberate and the reason is the four above.
+Check `references/manual.bib` first: `acu_survey` has `pages = {34}`, which is
+a JAIR article number rather than a page, and the box prints "85, 34".
+
+**Contribution statement.** Keep the first four paragraphs, which are factual
+and were written against the author list. Replace the last, which claims the
+thesis framing reads the gaps as symptoms of structural limits in the learning
+paradigm. The replacement states what this chapter's framing does: it sorts
+the six gaps by whether they are about what training produced, and declares
+the reading of gap one as a reading.
+
+**Opening.** No roadmap paragraph: CLAUDE.md 3.8 bans them by name, and the
+first draft opened with one whose whole content was the chapter's length and
+status. No second definition of an agent for computer use either, because
+`sections/1-1_introduction.tex` already defines it and 3.5 allows one site
+thesis wide. Open on the stake in a number, which the survey supplies and the
+first draft did not have: agents reach "almost six time lower success rates
+than humans", from failures on dynamic interfaces, on switching between
+applications, and in dense interfaces such as spreadsheets.
+
+**What the survey covers**, and what it does not.
+1. Scope and the exclusions, with the reason in the same sentence per 3.5:
+   no chatbots that only advise, no video game agents, no server control, no
+   coding agents, no software testing, text instructions only, and fully
+   disclosed systems only, which leaves out the commercial products a reader
+   of 2026 will think of first.
+2. How the 87 were chosen, and that this is not a systematic review: the field
+   "lacks a unified terminology, making a classic systematic review
+   infeasible", so the collection was iterative and semi-structured with
+   snowball sampling to saturation, two reviewers and a consensus discussion.
+   About a third of the cited works are preprints, which the survey says may
+   lack validation.
+3. The taxonomy, and why a technology agnostic one was needed: it is what lets
+   reinforcement learning agents and prompting based agents be compared in one
+   scheme, which the existing surveys could not do because each covered one
+   technology or one platform. This is the paper's claim to novelty and gets
+   a sentence of its own.
+4. What the taxonomy does not do, sourced rather than asserted: no capability
+   comparison across agents, because agents support different benchmarks and
+   report different metrics; no analysis of how design choices affect
+   performance; text instructions and static interaction patterns only.
+
+**What the field builds.** Two paragraphs: the converging recipe, and the
+three trends with the counts that qualify them.
+
+**The six gaps.** One list from the conclusion, each two sentences, stated
+once in full here and nowhere else in the thesis. Gap six is marked as the
+survey's own addition rather than a literature finding, because the conclusion
+says limitation (6) and recommendation (f) "concern real-world discrepancies
+that are not addressed in the current literature". The deployment gap is wider
+than a changing environment: non-stationarity, privacy, cost, availability and
+safety under conditional autonomy.
+
+**The six recommendations**, (a) to (f), in one short paragraph. Contribution
+four of the paper is "the proposal of strategic directions to address these
+challenges", and a chapter that lists the gaps and drops the directions
+reports half the paper.
+
+**The sort, and the hand off.** Three paragraphs, not five. The sort; why the
+survey cannot settle the two it hands over, which is not that it never varies
+the training procedure, since it classifies 87 agents by learning strategy,
+but that it never varies the procedure with task, data, architecture and width
+held fixed; and the hand off. The guardrails go in one sentence each at the
+end of the paragraph they belong to, the way `3-2_further_contributions.tex`
+does it, not in paragraphs of their own. A quarter of a chapter spent
+disclaiming one's own survey reads as anxiety, and 3.7 asks for limitations
+plain rather than apologetic.
+
+The guardrail about damage tolerance against environment tolerance is not in
+this chapter at all. The deletion protocol first appears two chapters later,
+so no reader of Part II can yet make the confusion. It belongs in the grokking
+chapter or the discussion, where it is possible.
+
+### Consequences of the cut
+
+- `imports/acu.toml` takes `status = "summarised"` and a `summary_reason`, and
+  its `[appendix]` table is emptied. `check_imports.py` skips coverage for a
+  summarised paper, so no drop entries are added.
+- The `app:acu` chapter leaves `sections/appendix.tex`, and with it the three
+  fifteen column agent tables that `\importsectionrotated` exists for. The
+  feature stays in `thesis_import.sty`: it is the only way a published table
+  too wide for the measure gets set, and the next paper that needs it will.
+- The reproduced overview figure goes with the block, and with it one of
+  `check_imports.py`'s reproduction notes. Nothing refers to it once the body
+  is gone.
+- Part II is retitled to cover both of its chapters.
+- `sections/3-2_further_contributions.tex` becomes false in its first
+  paragraph: "Four further publications" is five, and "the five papers the
+  argument rests on" is four. Both are fixed.
+- `00_ADMIN/05_thesis_concept.md` contradicts the cut in three places, the
+  paper selection table, the parts table and arc item 1, and its open question
+  about the survey is closed by it.
+- CLAUDE.md section 4.9 says five reproduced and four summarised, which is now
+  four and five.
+- `sections/1-1_introduction.tex` says "Four of the six can be closed by
+  building harder benchmarks and agreeing on how to score them", which is
+  false of gap six and was false of gap three under the retired sort. The file
+  is rewritten under item 0 and the line is fixed there.
+- Nothing under `imported_papers/` changes. Wiring the survey back in is
+  setting `status = "wired"` and restoring the includes.
+
+**Measured after the cut, 2026-11-16.** The thesis went from 281 pages to
+229, the overfull hboxes from 30 to 17, and the chapter from 56 pages to 5.
+Zero LaTeX errors, zero duplicate labels, zero missing bibliography keys, the
+one upstream `??`, `check_imports.py` at zero errors and four warnings, and
+`check_prose.py` at zero hard findings across 18 files. The chapter's one soft
+finding is "comprehensive" in the published title, which CLAUDE.md 3.4 carves
+out by name. Nothing under `imported_papers/` was touched.
+
+Five pages rather than six. The plan budgeted about $2400$ words and the
+chapter runs about $2000$, which is where the material ran out without
+padding. The additions the critique asked for are all in.
+
+### The finished chapter was checked and rewritten once
+
+A fourth reader checked the written chapter against the vendored survey and
+found fourteen accuracy problems, one of them a real error that had also
+reached the frame. $87$ is the number of agents the survey classifies, not the
+number of papers it read, which is larger: "we classify \numagents as ACU
+agents and \numdatasets as computer use datasets". The slip was in the
+abstract in both languages and twice in the introduction, and all five are
+fixed.
+
+The other thirteen were overstatements, each corrected against a quoted line.
+The chapter had said the paper's own warrant for gap six was that the first
+five are "discussed throughout the field", where the paper says "throughout
+the main text", meaning its own body. It had said every earlier survey covers
+one technology or one platform, where the paper names one of similar scope and
+claims depth against it. It had given the second location of the planning
+difficulty as machinery around the model, where the survey says the
+environment, whose dynamics are unknown. It had asserted a recipe the field
+converges on, where the survey says the field "has yet to converge on a
+unified framework" about how agents learn, so the claim is now scoped to the
+model class. It had drawn the gap two distinction as if the survey stopped at
+pipeline cost, where recommendation (b) already asks for adaptability. The
+modality counts omitted the four agents observing indirectly. "Accessibility
+tree" was the chapter's example and not the survey's, and dropped
+"inconsistent", which is the adjective carrying the gap's name. Safety had
+been folded into the privacy sentence. And the six times lower success rate
+now says it comes from one benchmark the survey cites rather than runs, and
+carries a citation.
+
+The same reader found the prose reading as a different author from
+`3-2_further_contributions.tex`: eight pseudo-clefts and three section titles
+of the form "What X does", five passages narrating the chapter's own honesty,
+six antitheses, four paragraphs that announce a count and then deliver it, and
+a verbless fragment. All rewritten. The section titles are statements now, per
+3.8. Hyphenated connectors were swept per 3.3, and three agency failures per
+3.6: benchmarks pursuing, a use demanding, privacy entering.
+
+Two things were left. The contribution statement's first four paragraphs state
+the author's own attribution and are the author's to make, so only a vague
+intensifier and the hyphens were touched, and the register point is marked
+`TODO(author)` in the file. And `references/manual.bib` has `pages = {34}` for
+`acu_survey`, which may be a JAIR article number rather than a first page; it
+is marked in the bib and the publication box prints whatever is there.
+
 ## Critique record
 
 ### Round 1, 2026-11-14, three readers on levels 0 and 1

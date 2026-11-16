@@ -1,8 +1,20 @@
 % =============================================================================
-\chapter{One Recipe Builds Agents for Computer Use, and Six Gaps Are Shared Across Them}
+\chapter{A Survey of Agents for Computer Use Finds Six Gaps, and Two Are About What Training Produced}
 \label{chap:acu}
 \margintoc
 % =============================================================================
+%
+% Thesis owned throughout. The survey is summarised rather than reproduced, so
+% this chapter opens no importedpaper block and the paper's appendix is not in
+% the thesis. imports/acu.toml carries the decision and the reason. Wiring the
+% paper back in means setting status = "wired" and restoring the includes.
+%
+% The six gaps are written from imported_papers/ACU_JAIR/sections/09_conclusion.tex
+% and nowhere else. The version of this chapter that reproduced the paper
+% embellished them past what the survey says. 87 is the number of agents
+% classified, not of papers read: the paper count is larger. The survey says
+% "we classify \numagents as ACU agents and \numdatasets as computer use
+% datasets".
 
 % ─────────────────────────────────────────────────────────────────────────────
 % PUBLICATION HEADER
@@ -21,23 +33,28 @@ Research}, \textit{85}, 34. \cite{acu_survey}
 \label{sec:acu_contribution}
 % ─────────────────────────────────────────────────────────────────────────────
 
-The thesis author holds shared first authorship on this work with Benjamin
-Meyer. The nature of the collaboration was deeply iterative and the
-contributions of both first authors are interleaved throughout the paper in a
-way that makes clean attribution of individual sections difficult. The following
-account reflects the thesis author's best reconstruction of the intellectual
-trajectory.
+% TODO(author): the four paragraphs below were written in an earlier session
+% and state the author's own attribution, which is the author's to make. They
+% are left as written. One reviewer found the register advocative in places,
+% in particular "initiated the survey independently" and the two separate
+% statements that attribution is unclear.
 
-The project originated with the thesis author, who identified the absence of
-a technology-agnostic, theoretically grounded taxonomy as a gap in the existing
-ACU literature and initiated the survey independently. The thesis author proposed the initial
-structure of the taxonomy in a first draft, together with the selection of the
-three analytical perspectives: domain, interaction, and agent.
-Benjamin Meyer subsequently refined the taxonomy structure substantially,
-improving its internal consistency and the precision of its category boundaries,
-after which the thesis author revised the framework again. The final taxonomy
-reflects this multi-pass collaborative development and cannot be attributed to
-either first author alone.
+The thesis author holds shared first authorship on this work with Benjamin
+Meyer. The collaboration was iterative and the contributions of both first
+authors are interleaved throughout the paper in a way that makes clean
+attribution of individual sections difficult. The following account reflects
+the thesis author's best reconstruction of how the work developed.
+
+The project originated with the thesis author, who identified the absence of a
+theoretically grounded taxonomy that did not depend on the technology as a gap
+in the existing ACU literature, and initiated the survey independently. The
+thesis author proposed the initial structure of the taxonomy in a first draft,
+together with the selection of the three analytical perspectives: domain,
+interaction, and agent. Benjamin Meyer subsequently refined the taxonomy
+structure substantially, improving its internal consistency and the precision
+of its category boundaries, after which the thesis author revised the framework
+again. The final taxonomy came out of several such passes and cannot be
+attributed to either first author alone.
 
 The paper collection and classification process was carried out collectively by
 all authors: each author independently read and classified a subset of the
@@ -48,198 +65,205 @@ inductively from the classification data through discussions involving both
 first authors and with input from the senior authors Ahmed Abdulkadir,
 Benjamin Grewe, and Thilo Stadelmann.
 
-The framing of the survey's findings within the broader thesis argument
-presented in this chapter is the intellectual contribution of the thesis
-author, and was developed in the context of this thesis rather than the
-original paper. That framing reads the six research gaps as symptoms of
-structural limitations in the learning paradigm rather than as incidental
-engineering shortcomings.
-
-
-% ─────────────────────────────────────────────────────────────────────────────
-\section{Chapter Introduction}
-\label{sec:acu_intro_thesis}
-% ─────────────────────────────────────────────────────────────────────────────
-
-The argument developed in Chapter~\ref{chap:introduction} rests on a specific
-empirical claim: that the failures of current deep learning systems are not
-distributed randomly across applications but form a consistent pattern,
-one that is predictable from the structural properties of what
-gradient-based learning produces. Establishing this claim requires an
-empirical anchor, a domain in which the failure modes can be observed
-concretely, measured systematically, and connected to the underlying learning
-paradigm. Agents for computer use (ACUs) provide precisely this anchor.
-
-ACUs are systems that execute complex tasks on digital devices given
-instructions in natural language, automating workflows by controlling software
-through low-level actions such as mouse clicks and touchscreen gestures. The
-combination of natural language understanding, visual perception, multi-step
-planning, and real-time interaction makes ACUs one of the most demanding
-evaluation settings for contemporary AI. They are also among the most
-practically consequential: a reliable general-purpose ACU would constitute a
-qualitative shift in how AI systems are deployed. The gap between this
-potential and the current reality, documented in detail in this chapter, is
-the gap that motivates the rest of this thesis.
-
-The contribution of this chapter is a comprehensive survey and taxonomy of the
-ACU literature, covering 87 original research papers and 33 datasets published
-between 2018 and 2024. We structure the literature using a three-perspective
-taxonomy grounded in established agent theory, taking the domain, the
-interaction and the agent in turn, and apply it to identify six persistent
-research gaps. These gaps are not presented here merely as a field-specific
-finding. They are the empirical foundation for the structural diagnosis
-developed in Part~\ref{part:procedure}.
-
-Sections~\ref{acu:sec:field} through~\ref{acu:sec:evaluation_agent} constitute the
-core survey content, reproduced from the published paper with minor
-reformatting for thesis consistency. Section~\ref{sec:acu_chapter_summary}
-provides a new chapter summary that draws out the specific implications of the
-survey findings for the thesis argument.
-
-A note on scope. This chapter surveys the ACU literature itself, so
-Chapter~\ref{chap:background} does not cover that field a second time and
-carries only the background the later chapters rest on.
-
-
-
-\begin{importedpaper}{acu}
-
-% The paper puts its overview figure in the introduction, which this chapter
-% drops, and then refers back to it from the body. Reproducing the float here,
-% inside the block and under the paper's own labels, is what keeps those
-% references resolving. check_imports.py holds it to the original.
-%
-% [htbp] and not [t]. This float is contributed before any of the paper's own,
-% and with [t] alone it was still pending when the environment's group closed,
-% which is a LaTeX Error: Float(s) lost. That error is reported as
-% `file:line: LaTeX Error', not as a line starting with `!', so grep for the
-% former or read ./build.sh errors rather than filtering the log by hand.
-\begin{figure}[htbp]
-\begin{subfigure}{0.49\linewidth}
-\includegraphics[width=\linewidth]{figures/ACU_example.png}
-\caption{Example of a computer use task.}
-\label{fig:ACU-example}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.49\linewidth}
-\includegraphics[width=\linewidth]{figures/ACU_taxonomy.png}
-\caption{Proposed taxonomy.}
-\label{fig:ACU-taxonomy}
-\end{subfigure}
-\caption{
-Overview: (a) An example of a task for an ACU: A user specifies a task
-(``propose meeting dates by email'') and the agent executes it.
-(b) We structure the literature on ACUs based on three key \emph{perspectives}
-corresponding to the main differentiating aspects:
-(1) The shared \emph{domain} properties across computer environments (e.g., Web, Android).
-(2) The means of \emph{interaction} between the agent and the environment as manifested in the observation and action spaces.
-(3) The \emph{agent} components: how an agent acts through a policy $\pi$ while tracking the past in memory and how an agent learns to act.}
-\label{fig:intro}
-\end{figure}
-
-\importsection{sections/02_field_of_agents}
-\importsection{sections/03_domain_perspective}
-\importsection{sections/04_interaction_perspective}
-\importsection{sections/05_agent_perspective}
-\importsection{sections/06_datasets}
-\importsection{sections/07_evaluation}
-\importsection{sections/08_challenges}
-\end{importedpaper}
-
+The reading of the survey given below belongs to the thesis and not to the
+paper. It sorts the six gaps by whether they are about what training produced,
+and it reads the first of them in a way the survey raises only in passing. The
+sentences that do so are marked. This paper is summarised, as the four in
+\cref{chap:further} are, and it keeps a chapter of its own because the
+authorship here is shared first where the contribution to those four was
+partial, and because the thesis takes its question from this work.
 
 % ─────────────────────────────────────────────────────────────────────────────
-\section{Chapter Summary}
-\label{sec:acu_chapter_summary}
+\section{The Survey Reviews 87 Agents and Leaves Out the Systems a Reader Thinks of First}
+\label{sec:acu_scope}
 % ─────────────────────────────────────────────────────────────────────────────
 
-This chapter has presented a comprehensive survey and taxonomy of agents for
-computer use, covering 87 original research papers and 33 benchmark datasets
-spanning the period 2018 to 2024. The three-perspective taxonomy, which takes the
-domain, the interaction and the agent in turn, provides a technology-agnostic
-organisational
-framework that bridges the previously fragmented literatures on
-reinforcement-learning-based agents and foundation-model-based agents, enabling
-systematic comparison across architectures and training paradigms.
+Agents that operate a computer from an instruction in natural language reach
+success rates almost six times lower than people. The survey cites three
+causes: the interface changes while the agent is working, the task requires
+switching between applications, and the interface is dense, as a spreadsheet
+is. The figure comes from one benchmark, which the survey cites rather than
+runs~\cite{acu_survey}. That distance between what these systems are asked to
+do and what they do is where this thesis starts.
 
-Three structural trends characterise the current state of the field. The field
-is transitioning from specialised, task-specific agents toward foundation-model-based
-agents built on pre-trained vision-language models for open-ended reasoning.
-The dominant observation modality is shifting from structured text
-representations, such as HTML and accessibility trees, toward raw screenshots,
-reflecting both the fragility of text-based observations and the improving
-visual capabilities of foundation models. Behaviour cloning from human
-demonstrations has emerged as the dominant learning paradigm among agents that
-do learn from experience, though its data requirements and limited adaptability
-represent significant practical constraints.
+The survey classifies $87$ agents and $33$ datasets from publications between
+$2018$ and $2024$. The number of papers read is larger, because agents and
+datasets are separated in the analysis and a paper may supply either.
 
-The primary finding of the survey, and its central contribution to the
-thesis argument, is the identification of six persistent research gaps that
-recur across the surveyed systems independently of their specific architecture,
-training procedure, or platform:
+Four kinds of system are excluded, each for a reason. Agents that only give
+advice are out, because the survey is about systems that act. Agents that play
+video games, control server facilities, write code or test software are out,
+because each is a field with its own literature. Only instructions given as
+text are covered. And only fully disclosed systems are covered, which leaves
+out some of the recent commercial products, the ones a reader in $2026$ thinks
+of first.
+
+The survey is not a systematic review, and says so. The field lacks a shared
+vocabulary, which makes a classic systematic review infeasible, so the
+collection was iterative, combining expert knowledge with backward and forward
+snowball sampling until no further relevant work appeared. Two researchers
+screened each candidate independently and resolved disagreements in
+discussion. About a third of the cited works are preprints, and the survey
+says these may lack validation and should be read with that in mind.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{A Taxonomy Built on Agent Theory Brings Two Literatures Into One Scheme}
+\label{sec:acu_taxonomy}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The survey organises the literature along three perspectives. The domain
+perspective characterises the computing environment the agent works in. The
+interaction perspective describes what the agent observes and what actions it
+can take. The agent perspective concerns the internal structure of the agent
+and how it learns.
+
+Building the scheme on agent theory, and on no particular technology, lets
+work that had never been compared be compared. Earlier surveys each cover one
+technology or one platform: some review only agents built on foundation models
+and leave out reinforcement learning as a design principle, others review
+reinforcement learning agents in general without treating computer use, and
+one covers mobile agents alone. One earlier survey has a similar scope, and
+the paper's claim against it is depth rather than breadth. A scheme that
+applies both to an agent trained by reinforcement learning and to an agent
+assembled by prompting is what allows the field to be read as one field.
+
+The paper states four limits of the taxonomy. It supports no comparison of
+capability across agents, because many of the surveyed systems cover only part
+of a benchmark and report different metrics, which makes a common ranking
+infeasible. It carries no analysis of how individual design choices affect
+performance. It covers instructions given as text. And although the scheme
+would accommodate an observation and action loop that changes over time, the
+survey applies it only to interaction patterns that do not, which is a choice
+of scope and not a limit of the scheme.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{The Field Is Moving to Foundation Agents and Has Not Settled How They Learn}
+\label{sec:acu_field}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Specialised agents built for one narrow task are giving way to agents built on
+foundation models, which is the shift that open ended reasoning over a general
+computer calls for. Specialised designs remain viable where the task is narrow
+and efficiency matters.
+
+How those agents learn is not settled, and the survey says in as many words
+that the field has yet to converge on a unified framework. Of the $87$ agents,
+$31$ clone human demonstrations, $12$ use reinforcement learning, $12$ keep a
+long term memory, and $30$ learn nothing from the environment at all. Among
+the agents that do learn from experience, behaviour cloning is the most common
+choice.
+
+What the agent sees is shifting in one direction without having arrived.
+Across the $87$ agents, $35$ observe through text alone, $31$ through images,
+$15$ through both and $4$ indirectly, so text is still the most common single
+modality. The movement is in the yearly counts: agents observing through
+images go from none in $2022$ to $12$ in $2023$ and $19$ in $2024$, while the
+text counts over the same years are $3$, $10$ and $8$.
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Six Gaps Recur Across the Field Whatever the Architecture}
+\label{sec:acu_gaps}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Applying the taxonomy to the $87$ agents yields six limitations that recur
+whatever the architecture or the platform.
 
 \begin{enumerate}
-    \item \textbf{Insufficient generalisation.} ACU systems fail reliably when
-    interface layouts, task formulations, or environmental conditions differ
-    from those encountered during training. The failure pattern is not one of
-    missing data but of missing representational structure: systems cannot
-    recombine familiar components in novel configurations.
+    \item \textbf{Insufficient generalisation.} Agents rely on input
+    modalities whose structure is inconsistent across applications, which
+    hinders generalisation. The survey's own diagnosis is the modality:
+    structured text such as a page's markup or a view hierarchy carries
+    semantic information that is optional, and is often absent, incomplete,
+    inconsistent or ambiguous in real settings.
 
-    \item \textbf{Inefficient learning.} Current systems require large volumes
-    of demonstration data and do not transfer learned behaviour effectively to
-    related tasks. Sample inefficiency is systematic, not incidental, and
-    reflects the absence of structural priors that would make infrequently
-    encountered situations tractable.
+    \item \textbf{Inefficient learning.} The survey finds no effective and
+    practical way for a foundation agent to learn from its environment.
+    Reinforcement learning and behaviour cloning both give a strong learning
+    signal, and both demand either a simulator of high fidelity or a curated
+    and labelled set of demonstrations. A long term memory is practical and
+    generalises poorly.
 
-    \item \textbf{Limited planning.} Reliable execution of long-horizon tasks
-    requires maintaining a coherent model of task state and anticipating the
-    effects of future actions. Current systems fail along both dimensions, either
-    drifting from the goal over long autoregressive sequences or relying on world
-    models whose predictions diverge exponentially with rollout length.
+    \item \textbf{Limited planning.} Executing a complex task over many steps
+    requires planning, and current agents plan poorly. The survey locates the
+    difficulty partly in the model, whose planning over long horizons is weak,
+    and partly in the environment, whose dynamics are usually unknown.
 
-    \item \textbf{Low task complexity in benchmarks.} Widely used benchmarks
-    evaluate agents on tasks that are systematically simpler than real-world
-    computer use in sequence length, environmental variability, and success
-    criterion complexity. Strong benchmark performance does not reliably predict
-    strong deployment performance.
+    \item \textbf{Low task complexity in benchmarks.} Benchmark designers have
+    pursued realistic perception ahead of realistic tasks. What is missing is
+    structural and causal dependency between the actions in a sequence, which
+    is what makes a real task hard.
 
-    \item \textbf{Non-standardised evaluation.} The absence of shared evaluation
-    protocols makes direct comparison between systems unreliable. Reported
-    success rates are not comparable across works, inflating the apparent
-    progress of the field.
+    \item \textbf{Non standardised evaluation.} Metrics differ between papers,
+    and success rates in particular are computed in ways that are not
+    comparable. Direct comparison between systems is therefore unreliable.
 
-    \item \textbf{Disconnect between research and practical conditions.} ACU
-    systems are developed and evaluated in static, deterministic, idealised
-    environments. Real-world deployment introduces dynamic interfaces,
-    non-stationarity from software updates, privacy constraints, and the need
-    for conditional rather than full autonomy, and these properties are absent
-    from virtually all existing research settings.
+    \item \textbf{A disconnect between research and practical conditions.}
+    Agents are built for environments assumed to be deterministic, static and
+    episodic, while real environments change under the agent and change again
+    when the software is updated. Privacy is a second difficulty, because a
+    user cannot control what an agent operating autonomously on their machine
+    observes and sends on, and safety a third, because the field studies full
+    autonomy while an agent that hands control back for a critical decision
+    would be safer.
 \end{enumerate}
 
-These six gaps are not independent failures of individual systems. They are
-manifestations of a common pattern: current AI systems exhibit high competence
-within the statistical regime of their training distribution and systematic
-brittleness outside it. The specificity of this pattern demands a specific
-explanation.
+The first five are discussed throughout the survey's own body. The sixth is
+different in kind: the paper presents it as a set of real world discrepancies
+that the current literature does not address, so it is the survey's own
+addition rather than a finding drawn from other people's work.
 
-The standard response in the field is to attribute the gaps to insufficient
-scale or to benchmark limitations, and to predict that they will close as
-models and datasets grow. The evidence presented in this chapter does not
-support this prediction. The generalisation and planning failures persist in
-the largest and most capable foundation models currently evaluated on ACU
-benchmarks. The benchmark complexity gap is not narrowing: as benchmarks
-become more realistic, the gap between evaluated performance and the minimum
-required for practical deployment remains substantial. And the disconnect
-between research conditions and deployment conditions is structural. It
-reflects assumptions built into experimental design, not a shortfall in
-model capacity that additional compute can correct.
+Against the six the paper sets six directions, which are as much of its
+contribution as the gaps are. It recommends observation spaces built on images
+for consistent perception, learning strategies that cost less and so scale and
+adapt better, policy architectures that support reasoning and planning over
+long horizons, benchmarks that combine realistic perception with task
+complexity, standardised metrics and success rates in particular, and research
+grounded in the conditions under which these agents would actually run.
 
-Part~\ref{part:procedure} takes up the question of what these failures do
-indicate. Chapter~\ref{chap:attention} establishes, at the level of
-mathematical proof, that the representational geometry produced by
-gradient-based training on standard objectives is determined by the structure
-of the training signal rather than by the causal structure of the world.
-The six gaps identified here are, under this account, predictable consequences
-of a learning paradigm that encodes statistical correlations rather than
-invariant structure. This reframing has direct implications for what kinds of
-interventions can address the gaps, a question taken up in
-Parts~\ref{part:readout} and~\ref{part:construction}.
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Two of the Six Gaps Are About What Training Produced}
+\label{sec:acu_takes}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Four of the six gaps concern how the field measures what it builds and the
+conditions it builds for. They are real and they are not this thesis's
+subject. Two concern what training produced, and those two are where the
+thesis begins.
+
+Taking the first that way is a reading, and the survey supports it only in
+passing. Its own diagnosis of insufficient generalisation is the input
+modality, and the remedy it proposes is to change what the agent observes. The
+sentence this thesis leans on is the survey's aside that an agent trained on
+such representations may develop heuristics specific to the situations it saw,
+which do not carry beyond the training data. A heuristic learned in training
+is a property of what training produced, not of the input format. The survey
+offers the point as a hypothesis.
+
+The second gap needs a distinction. The survey counts the cost of the whole
+training pipeline, simulators and labelled demonstrations included, and its
+recommendation asks for learning strategies that cost less and adapt better,
+so it already reaches partway into what follows. The component this thesis
+takes is the narrower one, how much data a network needs before it generalises
+and how well what it learnt carries to a related task.
+
+Planning is the gap that does not sort. The survey puts the difficulty in a
+model whose planning over long horizons is weak and in an environment whose
+dynamics are unknown, and its recommendation asks for better policy
+architectures while one of its two remedies is a hybrid with symbolic
+planning. This thesis measures none of that, and the omission is a limit of
+scope and not a judgement about the gap.
+
+What the survey cannot do with the two gaps it hands over is settle what
+causes them. It classifies $87$ agents by learning strategy and compares
+across them, so it does vary the procedure. It never varies the procedure with
+the task, the data, the architecture and the width held fixed, which is the
+only comparison in which a difference between two trained networks can be
+attributed to how they were trained, and no survey could. A success rate
+cannot separate two networks that score alike either. The rest of this thesis
+therefore measures inside the network, on tasks small enough that the solution
+can be read neuron by neuron.
+
+The survey does not predict the result of \cref{chap:grokking}, and no part of
+the argument rests on it. It is where the question came from.
+\Cref{chap:further} takes up two further papers that sharpen these gaps before
+\cref{part:procedure} turns to what decides them.
