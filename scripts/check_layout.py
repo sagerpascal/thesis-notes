@@ -283,7 +283,10 @@ def main() -> int:
 
     ov = overfull_from_log()
     if not ov:
-        print("  no build log, run ./build.sh first")
+        if any(ROOT.glob("build-pass-*.log")):
+            print("  no overfull hboxes in the last build")
+        else:
+            print("  no build log, run ./build.sh first")
         return 0
     widths = [w for w, _, _ in ov]
     print(f"  {len(ov)} overfull hboxes in the last build")

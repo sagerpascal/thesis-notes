@@ -555,5 +555,42 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   \input{generated/imported/\ip@slug/#1}%
 }
 
+% A file whose display equations will not fit the measure, set across the full
+% width instead. kaobook's own \pagelayout{wide} gives back the 153pt the
+% margin column takes, which is more than any of the overflows measured here.
+%
+% Declared per file, for the reason rotation is: the layout change is a
+% \clearpage at each end, so applying it per equation would strand headings on
+% half empty pages.
+%
+% Tried once for every imported chapter and abandoned, because with all nine
+% papers in the build it exhausted TeX's main memory in kaobook's output
+% routine and produced no PDF. That was a volume problem. One appendix part of
+% one paper is a different proposition, and the build is checked after each
+% file is added to this list rather than assumed.
+%
+% The margin is gone on these pages, so a margin citation has nowhere to go.
+% \ts@sidecitefalse turns the margin citations off for the duration, which is
+% the right call anyway: the thesis puts a citation in the margin to use the
+% margin, and here there is none.
+% The same for a paper included section by section.
+\newcommand{\importsectionwide}[1]{%
+  \pagelayout{wide}%
+  \begingroup
+    \@ifundefined{ts@sidecitefalse}{}{\ts@sidecitefalse}%
+    \importsection{#1}%
+  \endgroup
+  \pagelayout{margin}%
+}
+
+\newcommand{\importpartwide}[1]{%
+  \pagelayout{wide}%
+  \begingroup
+    \@ifundefined{ts@sidecitefalse}{}{\ts@sidecitefalse}%
+    \importpart{#1}%
+  \endgroup
+  \pagelayout{margin}%
+}
+
 \makeatother
 \endinput
