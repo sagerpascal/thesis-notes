@@ -182,6 +182,44 @@ Patterns to avoid:
 - Vague intensifiers: "significantly" without a test, "dramatically", "vastly".
 - Code identifiers in prose. Write "controller step size", never `target_lr`.
 
+#### The four rhythms, and why they matter more than the word list
+
+Added 2026-11-16, after a reader who reacts badly to machine written prose was
+named as the audience. A banned word is caught by a grep. These four are
+shapes, they survive any amount of word substitution, and together they were
+the voice of this thesis before that sweep. Each is a way of making an
+ordinary statement sound like a finding, which is why a generator reaches for
+them and why they read as padding to somebody who did the work.
+
+1. **The antithesis closer.** A sentence that asserts something and then
+   tacks on the thing it is not: "a yes or no about a rule rather than a
+   ranking among rules", "it is not a second measurement, it is a second
+   property", "the result is that concentration helps and not that spreading
+   hurts". The rejected half is usually a straw man nobody proposed. Write the
+   positive statement. Where the contrast is real, give it its own sentence
+   and say who holds the other view. There were $48$ of these across $21{,}600$
+   words of thesis owned prose, $2.21$ per $1000$; the sweep left $7$.
+2. **The pseudo-cleft.** "What survives is the condition", "What does not
+   exist is a comparison that", "What the thesis establishes is that". It
+   fronts the predicate so that a plain sentence arrives with the cadence of a
+   verdict. There were $25$; the sweep left $2$.
+3. **The punchline.** A long sentence followed by a short declarative that
+   lands the point: "Fitting is not the constraint", "The rest contribute
+   almost nothing", "A protocol that never rejects anything is not a
+   protocol". One of these in a chapter is emphasis. Four is a tic, and an
+   aphorism is worse than a tic because it claims more than the evidence does.
+4. **Sentence initial "And", "But", "So", "Or".** Used once it is a voice.
+   Used thirty times it is a metronome, and it clustered here at the end of
+   lists, where it was standing in for "finally".
+
+Three smaller ones travel with them: the tacked on ", which is ..." gloss, the
+list of three built for cadence rather than content, and five sentences in a
+row opening "There is".
+
+Fix these the way Section 3.1 says to fix anything: when one is flagged,
+sweep the whole thesis owned tree for its siblings. A flagged sentence is a
+sample of a habit.
+
 ### 3.5 Terms and definitions
 
 - Definition first, then the name. Write "the group of parameters that shares
@@ -327,10 +365,18 @@ legitimate use.
 What it carries beyond the greps below: label sentences, stacked hedges, the
 claim that something was predicted before training, code identifiers in
 prose, hyphens used as connectors, a bare `Chapter~\ref` where the frame uses
-`\cref`, and six measures of shape rather than vocabulary. Those are even
-sentence length, antithesis density, disclaimer density, counted openers
-announcing a number before delivering it, a heading that counts its items
-against how many follow, and duplication across files.
+`\cref`, the pseudo-cleft of Section 3.4, and six measures of shape rather
+than vocabulary. Those are even sentence length, antithesis density,
+disclaimer density, counted openers announcing a number before delivering it,
+a heading that counts its items against how many follow, and duplication
+across files.
+
+The antithesis gate was set at $4.0$ instances per $1000$ words until
+2026-11-16, where it never fired on prose carrying $2.21$. It is now $1.5$,
+with a floor of five instances in a file, which is just above what the sweep
+of that day left. Both have to be exceeded, so a short file is not flagged for
+three. The gate fires on every pre-sweep version of the two long files, which
+is the test to repeat if either number is ever changed.
 
 The last one is the one no grep can do. A twelve word run appearing in two
 thesis owned files is a copy rather than a coincidence, and it is how the

@@ -7,7 +7,7 @@
 Four further publications carry the thesis author's name and are not
 reproduced in this thesis. Each is summarised here in a page or two, with the
 author's own role stated first, because the contribution to each was partial
-or because the work sits beside the argument rather than inside it. The survey
+or because the work sits beside the argument instead of carrying it. The survey
 of the previous chapter is summarised for the same reason and on the same
 terms. The published papers stand on their own and are cited in full. This
 follows the University of Zurich and Institute of Neuroinformatics expectation
@@ -45,19 +45,18 @@ on the graphics card, a quantitative performance evaluation, and a qualitative
 study in which eight human raters judged the generated text.
 
 Two results matter here. Quantisation reduces the memory a model needs by a
-large factor, which is what it is sold on. It also costs text quality that the
-human raters noticed and that the standard automatic metrics did not report,
-which is the opposite of how these methods were advertised at the time.
-Low-rank adapters allow a model to be fine tuned with moderate compute without
-that cost.
+large factor, which is the saving it is sold on. It also costs text quality
+that the human raters noticed and that the standard automatic metrics missed,
+where the advertising of the day promised a saving without a cost. Low-rank
+adapters allow a model to be fine tuned with moderate compute and avoid that
+cost.
 
 The second result is the one the thesis uses. A method was accepted on a score
 that was not sensitive to the property the score was taken to stand for, and
 the gap only became visible when a different readout, human judgement, was
-applied to the same models. That is the same failure that
-\cref{chap:bounded} analyses in a setting where the readout can be
-corrected rather than replaced. They are two cases of one mistake rather than
-two instances of one mechanism.
+applied to the same models. \Cref{chap:bounded} analyses the same failure in
+a setting where the readout admits a correction. The two are cases of one
+mistake, and the mechanism behind each is its own.
 
 % ---------------------------------------------------------------------------
 \section{Architectures built for composition still fail on unseen rule combinations}
@@ -80,15 +79,15 @@ in the spirit of the ARC-AGI setting, by applying transformations to objects.
 It supports $28$ transformations that can be composed with one another, at a
 composition depth the experimenter sets, with control over the grid and the
 properties of the objects on it. The number of distinct task rules this allows
-runs into the millions, and any number of samples can be drawn per rule, which
-is what makes the in domain and out of domain conditions separable by
-construction rather than by held out sampling.
+runs into the millions, and any number of samples can be drawn per rule, so
+the in domain and out of domain conditions separate by construction with no
+need for held out sampling.
 
 The released baselines include architectures chosen because their inductive
 biases suit composition, among them a diffusion based Transformer and
-recurrent Transformers with adaptive computation time. All of them reach
-strong accuracy on the compositions they were trained on. All of them fail to
-generalise to compositions they were not, and the failure is consistent across
+recurrent Transformers with adaptive computation time. Every one of them
+reaches strong accuracy on the compositions it was trained on, and every one
+fails on compositions held out from training. The failure is consistent across
 the architectures tested.
 
 For this thesis the result is a measurement of the first gap named in
@@ -125,7 +124,7 @@ The comparison is against the same model without the masks, trained on the
 same data with the same budget. Adding the masks improves segmentation
 accuracy, and it improves data efficiency, so the model reaches the baseline's
 accuracy with less annotated training data. Annotation is the scarce resource
-in a clinical setting, which is what makes the second result the useful one.
+in a clinical setting, so the second result is the useful one.
 
 The work belongs in this thesis as a case where structure was supplied
 deliberately from outside the data and the gain was measured against the one
@@ -162,8 +161,8 @@ hidden test set, which placed third of $31$ teams and within two percentage
 points of the winning system. It runs open source models locally and uses no
 external training data.
 
-The reason this work sits beside the thesis argument is the form of its
-solution. The knowledge the system needs is not learned into its weights. It
-is held in an index and fetched while the system runs, which is an alternative
-to the question the rest of the thesis asks, namely what training writes into
-a network and where.
+This work sits beside the thesis argument because of the form its solution
+takes. The knowledge the system needs is held in an index and fetched while
+the system runs, with none of it written into the weights. That is one way
+around the question the rest of the thesis asks, namely what training writes
+into a network and where.

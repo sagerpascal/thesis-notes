@@ -36,19 +36,20 @@ out otherwise.
 This chapter asks what it would mean to stop leaving the property to training.
 In the Cooperative Network Architecture a sensory pattern is a set of neurons
 that hold one another in place, so redundancy of support belongs to the
-architecture and not to anything a regulariser has to be made to produce.
-What the parts are built from is designed: the
-elementary feature detectors are specified rather than learned. The fragments
+architecture, with no regulariser needing to be coaxed into producing it. The
+parts themselves are built from designed material, since the elementary
+feature detectors are specified by hand. The fragments
 assembled from them are learned, by Hebbian plasticity from data, and how
 those fragments are joined into a representation is fixed by the
 architecture.
 
-The relation to \cref{chap:grokking} is a convergence and not a consequence,
-and the submission dates in the two publication boxes say why. The manuscript below went out in $2024$,
-two years ahead of the grokking study, so no argument can run from that study
-to this architecture. What is true is that an architecture designed for its own
-reasons arrives at the same mechanism, redundancy of support, that a credit
-assignment rule can be made to produce by training. The chapter is offered as
+This chapter and \cref{chap:grokking} converge, and neither follows from the
+other, which the submission dates in the two publication boxes explain. The manuscript below
+went out in $2024$, two years ahead of the grokking study, so no argument can
+run from that study to this architecture. The claim here is narrower: an
+architecture designed for its own reasons arrives at the same mechanism,
+redundancy of support, that a credit assignment rule can be made to produce by
+training. The chapter is offered as
 a proposal, and \cref{chap:discussion} says what would have to be measured
 before it is more than that.
 
@@ -57,8 +58,8 @@ sensory pattern, a set of neurons bound together by recurrent connections, and
 a \emph{net fragment} is a reusable piece of one. Neither is the thesis's
 circuit, which is a count of participating units in a trained feedforward
 layer. This chapter computes no participation ratio and runs no deletion
-protocol, so the connection to the earlier chapters is through the mechanism
-and not through a shared measurement.
+protocol, so the mechanism is what connects it to the earlier chapters, with
+no measurement shared between them.
 
 % ---------------------------------------------------------------------------
 % The published paper, included verbatim. Do not edit imported_papers/.
@@ -88,17 +89,16 @@ Noise is filtered without being modelled. A spurious activation has nothing
 supporting it, so it fails to join a net, and the pattern remains
 distinguishable with up to about $59\%$ of the input corrupted. Occluded
 figures are completed, because the fragments that are present support the
-parts that are missing. And fragments learned separately recombine: a network
-whose fragments were learned on straight lines assembles representations of
-digits and characters it was never trained on, which is compositional
-generalisation obtained from the structure of the representation rather than
-from more data.
+parts that are missing. Fragments learned separately also recombine: a
+network whose fragments were learned on straight lines assembles
+representations of digits and characters it was never trained on, so the
+compositional generalisation comes out of the structure of the representation
+with no extra data.
 
 The features the model composes are hand designed rather than learned end to
-end. The demonstrations
-are on line drawings, and the paper defers natural images rather than
-attempting them, so the architecture has not been shown to scale. And although
-a net has dynamics of its own, which is how it settles and how it filters, no
+end. The demonstrations are on line drawings, and the paper defers natural
+images to later work, so the architecture has not been shown to scale. A net
+has dynamics of its own, which is how it settles and how it filters, while no
 transition over the represented world is defined, so there is nothing in the
 representation to plan with. These are the three limits that
 \cref{sec:bg_substratelimits} identifies in the whole lineage this work

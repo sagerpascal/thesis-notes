@@ -13,8 +13,8 @@ Which rules move it can be read off the form of their update. A neuron falls out
 beside the non gradient part of its own update, and that criterion unifies
 three mechanisms the literature had kept apart. The
 ratio it compares can be altered only by a normalising factor belonging to a
-single neuron, which is a yes or no about
-a rule rather than a ranking among rules. Of the rules compared, Nero is the only
+single neuron, which answers a yes or a no for each rule and ranks none of
+them. Of the rules compared, Nero is the only
 published optimizer on the far side of that line, and the credit equalisation
 introduced for the comparison is the other.
 
@@ -35,8 +35,8 @@ pairs the objective admits decides whether a Transformer's attention weights
 stay close to symmetric or become directional, with columns of high norm
 outnumbering rows of high norm, in models at the scale the field works at.
 
-Any claim about a trained network inherits the weaknesses of whatever read it
-out. The probe used to score latent world models responds largely to the norm
+Every claim about a trained network carries the weaknesses of the readout
+behind it. The probe used to score latent world models responds largely to the norm
 of a predicted latent, a quantity a cosine training loss never fixes, and
 rescaling each prediction to a reference norm taken from the encodings removes
 most of the error without retraining anything.
@@ -48,20 +48,19 @@ and all three rise together under credit equalisation, so the direction of the c
 survives the check and the level reported by the structural measure is the
 largest of the three.
 
-The last chapter is a proposal rather than a result. An architecture in which
+The last chapter offers a proposal and reports no result. An architecture in which
 every active neuron is held in place by several others filters noise that
 nothing supports, completes figures that are partly hidden, and recombines
 fragments learned separately into patterns it was never trained on, all
-without a learning rule being tuned to produce that structure. It has not been
-shown to work beyond line drawings, its elementary features are designed
-rather than learned, and it defines no transition over the world it
-represents.
+without a learning rule being tuned to produce that structure. It has been
+demonstrated only on line drawings, its elementary features are designed by
+hand, and it defines no transition over the world it represents.
 
 Four further studies carry the thesis author's name and are summarised rather
 than reproduced, each with the share of the work stated. Two of them sharpen
 the gaps the survey names. Of the other two, one writes domain knowledge into
 the input of a segmentation model and one keeps what it knows in an index.
 
-What the thesis establishes is that how far a computation spreads over a
-network is a property of how the network was trained, that the property can be
-chosen, and that the choice was priced here in four ways.
+The thesis establishes that how far a computation spreads over a network is a
+property of how the network was trained, that the property can be chosen, and
+that the choice was priced here in four ways.

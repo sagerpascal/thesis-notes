@@ -20,24 +20,23 @@ The results of this thesis separate two levels at which a question about a
 trained network can be asked. At one level the question is what the network
 computes, and for modular addition the answer is settled: every rule that
 generalises arrives at the same Fourier construction. That is what the
-universality claim says, and \cref{chap:grokking} confirms it rather than
-disputing it. At the other level the question is how that computation is
+universality claim says, and \cref{chap:grokking} confirms it. At the other level the question is how that computation is
 spread across the parts available to it, and there the answer is not settled by the
 task. The same algorithm is implemented by about $154$ neurons or by about
 $254$ at width $256$, depending on the rule that trained the network.
 
-Nobody had claimed otherwise, and it would be easy to present this as a
-refutation. The literature read the concentrated
-solutions it found as what the task offers, and did so on evidence from
-networks that were all trained the same way. What was missing was the comparison.
+Nobody had claimed otherwise, and presenting this as a refutation would
+overstate it. The literature read the concentrated solutions it found as what
+the task offers, and did so on evidence from networks that were all trained
+the same way. Nobody had run the comparison that would have shown otherwise.
 
 The separation is not peculiar to neurons. \Cref{chap:attention} holds the
 credit assignment algorithm fixed and varies the objective, and finds that the
 objective settles whether a Transformer's attention weights stay close to
 symmetric, at a scale where the question can be asked of models people use.
 \Cref{chap:bounded} takes the limiting case, a quantity that a loss comparing
-directions alone does not constrain at all, and shows what happens when a measurement is taken of
-it without anyone noticing. Together these say that different components of the
+directions alone leaves unconstrained, and shows what a measurement of it then
+reports. Together these say that different components of the
 training setup settle different structural properties, and that the objective
 settles none of them directly. Which component settled a property has to be
 established before that property is read as a fact about the task.
@@ -70,10 +69,10 @@ The check that asks how much the reported quantity carries beyond a measure
 immune to the free direction is the expensive one. Measures tied to the
 computation, which weight a neuron by what it contributes on real inputs or by
 what is lost when it is removed, place the untouched network at about $0.34$
-and $0.42$ where the structural measure places it at about $0.60$. Under the
-intervention they rise to about $0.81$ and $0.80$. So the direction of the
-result survives the check and the level does not. The headline therefore reads that the intervention raises every measure of spread, with the
-structural one giving the largest numbers.
+and $0.42$ where the structural measure places it at about $0.60$. Under the intervention they rise to about $0.81$ and $0.80$. The check
+therefore confirms the direction of the result and puts the level in doubt.
+The headline reads that the intervention raises every measure of
+spread, with the structural one giving the largest numbers.
 
 The check on agreement between readouts is passed. The three participation
 measures, structural, contribution weighted and ablation weighted, move the
@@ -83,21 +82,22 @@ two move together.
 
 The check on null controls is passed. A credit profile imposed under a random
 permutation moves the circuit while having nothing to do with what any neuron
-computes. And one rule settles the gauge question outright. Nero holds each
+computes. One rule settles the gauge question outright. Nero holds each
 neuron's incoming weight norm fixed, so it cannot move scale between the two
 sides of a neuron, and it reaches participation $0.986$ at test accuracy
 $0.985$ without the intervention at all.
 
-So the structural measure overstates the level while reporting the direction
-correctly, and this is visible only because the chapter reports the other two
-alongside it. A reader comparing circuit sizes across papers should ask which
+The structural measure therefore overstates the level while reporting the
+direction correctly, and that is visible only because the chapter reports the
+other two measures alongside it. A reader comparing circuit sizes across papers should ask which
 measure produced the number.
 
 One question the checks do not settle sits in that chapter's own appendix. A
 network trained with decoupled decay has nearly equal outgoing norms, which
 the structural measure calls distributed, and it prunes to about as few
-neurons as the concentrated reference. One network the measure separates and
-the pruning does not. Participation and minimal circuit size are different
+neurons as the concentrated reference. The structural measure therefore
+separates a pair of networks that the pruning treats alike. Participation and
+minimal circuit size are different
 quantities, and which of them a claim about spread should rest on is open.
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -110,24 +110,24 @@ is a thing to be chosen. This thesis leaves three places where the choice can
 be made, of which the first two concern the circuit it measures and the third
 a different structure reached by the same mechanism.
 
-The first is to choose the rule. The condition of \cref{chap:grokking} says
-which rules can move the circuit and which cannot, as a yes or no and not as
-a ranking, and the answer is that only a normaliser shared by exactly one
-neuron can. This is the cheapest route and the most constrained, because it
+The first is to choose the rule. The condition of \cref{chap:grokking} answers
+with a yes or a no for each rule and supplies no ranking among them, and the
+answer is that only a normaliser shared by exactly one neuron moves the
+circuit. This is the cheapest route and the most constrained, because it
 offers whichever circuits the available rules happen to produce.
 
 The second is to impose the circuit and then establish that the imposition did
 what it claims. The imposed profiles of \cref{chap:grokking} are an existence
 proof that the circuit can be set directly, and the standard of
-\cref{chap:bounded} is what distinguishes a circuit that was set from a
-measurement artefact. No experiment runs across the two chapters.
+\cref{chap:bounded} distinguishes a circuit that was set from a measurement
+artefact. No experiment runs across the two chapters.
 
 The third is to build the structure into the architecture, which is
 \cref{chap:cna}. There a neuron is part of a representation only while others hold it there,
 so the redundancy sits in the architecture and no regulariser produces it.
 
 A structural parallel between two of the chapters is recorded here as an
-observation and not as a result. A Hebbian update changes the connection
+observation, with nothing resting on it. A Hebbian update changes the connection
 between two neurons by a quantity symmetric in the two, so repeated
 application accumulates a symmetric weight matrix. That is the same mechanism
 \cref{chap:attention} identifies in bidirectional training, where each pair of
@@ -152,9 +152,8 @@ moved away from. Adding an L2 penalty to the gradient before an adaptive
 optimizer produces the concentration most directly, and under decoupled weight
 decay the untouched reference already spreads its computation across most of
 the settings that chapter measures. The general claim, that a neuron drops out when its credit
-is small relative to a non gradient term of its update, survives that change.
-What does not survive is the claim that the condition explains what is left.
-Its other two terms dominate only where the decay reaches a network's
+is small relative to a non gradient term of its update, survives that change,
+while the claim that the condition explains what is left fails. Its other two terms dominate only where the decay reaches a network's
 normalisation parameters, and where it does not the untouched network still
 moves from $0.82$ to $0.91$ under the intervention, which the paper's
 limitations say the condition does not account for. The headline numbers
@@ -171,8 +170,9 @@ whose width is already fully used is outside its scope.
 in matched twelve layer models. The comparison across released models is
 observational, since those models differ in more than their objective. Part of
 what distinguishes the two objectives in a decoder is the attention mask,
-which belongs to the architecture, so the clean statement is about the set of
-token pairs that enter the update rather than about the loss function alone.
+which belongs to the architecture, so the clean statement concerns the set of
+token pairs that enter the update, with the loss function being only part of
+what fixes that set.
 
 \Cref{chap:bounded} reproduces a manuscript that is not yet submitted. Its
 synthetic analysis is exact and its demonstration on published models covers
@@ -187,11 +187,10 @@ that would connect it to \cref{chap:grokking} cannot now be made.
 Finally, no single measurement runs across the chapters. Two were planned, participation over the attention
 weights of pretrained models and neuron deletion on the nets of
 \cref{chap:cna}, and neither was made. The second cannot be made now, because
-the code no longer runs. The first could be, on models anyone can download,
-and it was not.
-What crosses the chapters is a standard and an argument about a shared
-mechanism, which is less than a shared measurement and is what this thesis
-has.
+the code no longer runs. The first remains possible, on models anyone can download, and the time to do
+it ran out. A standard
+and an argument about a shared mechanism cross the chapters, which falls short
+of a shared measurement.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Outlook}
@@ -203,16 +202,16 @@ asked of populations of cells and not of a trained layer, and where the
 participation ratio used here comes from. The analogy is limited in the three
 respects \cref{sec:bg_sparsedistributed} names. Where learning is local and no
 global error is propagated, nothing plays the role that credit assignment
-plays here, and what does is not known.
+plays here, and the question of what does play it is open.
 
 The nearer prospect is the one \cref{chap:cna} opens. A representation in
 which the parts of a pattern are explicit and support one another is close to
 what an agent needs as the state of a model of its environment, which is the
 third of the gaps \cref{chap:acu} identifies. To serve that purpose it would
 need features learned from data, a demonstration beyond line drawings, and dynamics defined over the representation so that a
-successor state can be predicted from a current one and an action. The probe
-correction of \cref{chap:bounded} is what such a predictor would have to be
-evaluated with, and the condition of \cref{chap:grokking} is what would decide
-how much of it ends up carrying the work. This thesis does not build that
-system. It establishes that the question of how much of a network carries a
-computation has an answer somebody chooses, and it says what choosing costs.
+successor state can be predicted from a current one and an action. Such a
+predictor would have to be evaluated with the probe correction of
+\cref{chap:bounded}, and the condition of \cref{chap:grokking} would decide
+how much of it ends up carrying the work. Building that system is left to
+later work. This thesis establishes that how much of a network carries a
+computation is open to choice, and it measures what each choice costs.

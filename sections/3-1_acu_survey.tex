@@ -88,8 +88,8 @@ success rates almost six times lower than people. The survey cites three
 causes: the interface changes while the agent is working, the task requires
 switching between applications, and the interface is dense, as a spreadsheet
 is. The figure comes from one benchmark, which the survey cites rather than
-runs~\cite{sager_survey_2026}. That distance between what these systems are asked to
-do and what they do is where this thesis starts.
+runs~\cite{sager_survey_2026}. This thesis starts at that distance between
+what these systems are asked to do and what they manage.
 
 The survey classifies $87$ agents and $33$ datasets from publications between
 $2018$ and $2024$. The number of papers read is larger, because agents and
@@ -100,9 +100,9 @@ advice are out, because the survey is about systems that act. Agents that play
 video games, control server facilities, write code or test software are out,
 because each is a field with its own literature. Only instructions given as
 text are covered, and only agents built on deep learning, which leaves out the
-rule based automation that does much of this work in practice. And only fully
-disclosed systems are covered, which leaves out some of the recent commercial
-products, the ones a reader in $2026$ thinks of first.
+rule based automation that does much of this work in practice. Coverage is
+also restricted to fully disclosed systems, which leaves out some of the
+recent commercial products, the ones a reader in $2026$ thinks of first.
 
 The survey is not a systematic review, and says so. The field lacks a shared
 vocabulary, which makes a classic systematic review infeasible, so the
@@ -123,24 +123,24 @@ interaction perspective describes what the agent observes and what actions it
 can take. The agent perspective concerns the internal structure of the agent
 and how it learns.
 
-Building the scheme on agent theory, and on no particular technology, lets
-work that had never been compared be compared. Earlier surveys each cover one
+Building the scheme on agent theory, and on no particular technology, brings
+work together that had never been compared. Earlier surveys each cover one
 technology or one platform: some review only agents built on foundation models
 and leave out reinforcement learning as a design principle, others review
 reinforcement learning agents in general without treating computer use, and
 one covers mobile agents alone. One earlier survey has a similar scope, and
-the paper's claim against it is depth rather than breadth. A scheme that
-applies both to an agent trained by reinforcement learning and to an agent
-assembled by prompting is what allows the field to be read as one field.
+the paper's claim against it rests on depth. A scheme that applies both to an
+agent trained by reinforcement learning and to an agent assembled by prompting
+lets the whole area be read as one field.
 
 The paper states four limits of the taxonomy. It supports no comparison of
 capability across agents, because many of the surveyed systems cover only part
 of a benchmark and report different metrics, which makes a common ranking
 infeasible. It carries no analysis of how individual design choices affect
-performance. It covers instructions given as text. And although the scheme
-would accommodate an observation and action loop that changes over time, the
-survey applies it only to interaction patterns that do not, which is a choice
-of scope and not a limit of the scheme.
+performance. It covers instructions given as text. The fourth limit concerns
+an observation and action loop that changes over time, which the scheme would
+accommodate while the survey applies it only to interaction patterns that stay
+fixed, a choice of scope the scheme itself does not force.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{The field is moving to foundation agents and has not settled how they learn}
@@ -148,21 +148,21 @@ of scope and not a limit of the scheme.
 % ─────────────────────────────────────────────────────────────────────────────
 
 Specialised agents built for one narrow task are giving way to agents built on
-foundation models. The survey reads that shift as what open ended reasoning
-over a general computer requires of a model. Specialised designs remain viable where the task is narrow
-and efficiency matters.
+foundation models. The survey reads that shift as a consequence of what open
+ended reasoning over a general computer demands of a model. Specialised
+designs remain viable where the task is narrow and efficiency matters.
 
 How those agents learn is not settled, and the survey says in as many words
 that the field has yet to converge on a unified framework. Counting agents by
 strategy, $31$ clone human demonstrations, $12$ use reinforcement learning,
 $12$ keep a long term memory and $30$ learn nothing from the environment at
-all. Those figures are the survey's own and they total $85$ rather than $87$,
-so they are counts per strategy and not a partition of the agents. Among the
+all. Those figures are the survey's own and they total $85$ against the $87$
+agents, so they count strategies and leave the agents unpartitioned. Among the
 agents that do learn from experience, behaviour cloning is the most common
 choice.
 
-What the agent sees is shifting in one direction without having arrived.
-Counting agents by modality, $35$ observe through text alone, $31$ through
+The modality the agents observe through is moving in one direction without
+having arrived. Counting agents by modality, $35$ observe through text alone, $31$ through
 images, $15$ through both and $4$ indirectly, which again totals $85$ rather
 than $87$. Text is still the most common single modality. The movement is in the yearly counts: agents observing through
 images go from none in $2022$ to $12$ in $2023$ and $19$ in $2024$, while the
@@ -196,9 +196,9 @@ Applying the taxonomy to the $87$ agents yields six limitations that recur acros
     and partly in the environment, whose dynamics are usually unknown.
 
     \item \textbf{Low task complexity in benchmarks.} Benchmark designers have
-    pursued realistic perception ahead of realistic tasks. What is missing is
-    structural and causal dependency between the actions in a sequence, which
-    is what makes a real task hard.
+    pursued realistic perception ahead of realistic tasks. The missing
+    ingredient is structural and causal dependency between the actions in a
+    sequence, which is where the difficulty of a real task lies.
 
     \item \textbf{Non standardised evaluation.} Metrics differ between papers,
     and success rates in particular are computed in ways that are not
@@ -215,9 +215,9 @@ Applying the taxonomy to the $87$ agents yields six limitations that recur acros
 \end{enumerate}
 
 The first five are discussed throughout the survey's own body. The sixth is
-different in kind: the paper presents it as a set of real world discrepancies
-that the current literature does not address, so it is the survey's own
-addition rather than a finding drawn from other people's work.
+different in kind. The paper presents it as a set of real world discrepancies
+that the current literature does not address, which makes it the survey's own
+addition to the list.
 
 Against the six the paper sets six directions, which are as much of its
 contribution as the gaps are. It recommends observation spaces built on images
@@ -234,18 +234,18 @@ grounded in the conditions under which these agents would actually run.
 
 Two of the six gaps are about what training produced, and those two are where
 the thesis begins. Three are about evaluation and about the conditions the field assumes when it
-builds. The remaining one, planning over many
-steps, does not sort, for a reason \cref{sec:acu_takes} gives. None of the other four is this
-thesis's subject.
+builds. The remaining one, planning over many steps, does not sort, for a
+reason the fourth paragraph of this section sets out. None of the other four
+is this thesis's subject.
 
 Taking the first that way is a reading, and the survey supports it only in
 passing. Its own diagnosis of insufficient generalisation is the input
 modality, and the remedy it proposes is to change what the agent observes. The
 sentence this thesis leans on is the survey's aside that an agent trained on
 such representations may develop heuristics specific to the situations it saw,
-which do not carry beyond the training data. A heuristic learned in training
-is a property of what training produced, not of the input format. The survey
-offers the point as a hypothesis.
+which do not carry beyond the training data. The survey's own diagnosis
+points at the input format, and a heuristic learned in training is a property
+of what training produced. The survey offers the point as a hypothesis.
 
 The second gap needs a distinction. The survey counts the cost of the whole
 training pipeline, simulators and labelled demonstrations included, and its
@@ -257,11 +257,11 @@ and how well what it learnt carries to a related task.
 Planning is the gap that does not sort. The survey puts the difficulty in a model whose planning over
 long horizons is weak and in an environment whose dynamics are unknown, and
 its recommendation asks for better policy architectures while one of its two
-remedies is a hybrid with symbolic planning. So it is partly about what
-training produced and partly not. This thesis measures neither part.
+remedies is a hybrid with symbolic planning. It therefore sits partly inside
+what training produced and partly outside it. This thesis measures neither
+part.
 
-What the survey cannot do with the two gaps it hands over is settle what
-causes them. It classifies $87$ agents by learning strategy and compares
+The survey cannot settle what causes the two gaps it hands over. It classifies $87$ agents by learning strategy and compares
 across them, so it does vary the procedure. It never varies the procedure with
 the task, the data, the architecture and the width held fixed, which is the
 only comparison in which a difference between two trained networks can be
@@ -271,7 +271,7 @@ therefore measures inside the network, on tasks small enough that the solution
 can be read neuron by neuron.
 
 The survey does not predict the result of \cref{chap:grokking}, and no part of
-the argument rests on it. It is where the question came from.
+the argument rests on it. The question came from there.
 \Cref{chap:further} takes up a paper that sharpens the first of those two
 gaps, and another that shows a score missing what it stands for, before
 \cref{part:procedure} turns to what decides them.

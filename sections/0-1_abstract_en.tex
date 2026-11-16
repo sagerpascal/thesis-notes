@@ -12,18 +12,23 @@
 % described a paper that is no longer in the thesis.
 %
 % Every paragraph opens on the question the one before it left open. It runs
-% to about $800$ words. Cutting it further means dropping a step rather than
-% thinning every sentence.
+% to about $800$ words. Cutting it further would drop a step of the argument,
+% and thinning every sentence instead would not save enough.
+%
+% Rhythm pass of 2026-11-16: the antithesis closers, the pseudo-clefts and the
+% one sentence punchlines were taken out. They had accumulated to the point of
+% being the voice of the text.
 
 Two networks can learn the same arithmetic equally well and use very
 different amounts of themselves to do it. On addition modulo a prime, a layer
 of $256$ units carries the solution on about $154$ of them at a test accuracy
 of $0.998$. Alter one property of the update, which parameters share a
 normalising factor, and the same solution occupies about $254$ units at
-$0.976$. Nothing about the problem has changed. Widen the layer to $2048$ and
-the two settings use $332$ units and $2046$, both at $0.998$. How much of a network ends up doing the
-work is therefore not settled by what the network is asked to do. It is
-settled by how training divides the error among the neurons.
+$0.976$, with the problem itself untouched. Widen the layer to $2048$ and the
+two settings use $332$ units and $2046$, both at $0.998$. The arithmetic a
+network is asked to compute therefore leaves how much of the network does the
+computing open, and the way training divides the error among the neurons
+settles it.
 
 The question comes from a survey of $87$ agents for computer use and $33$
 datasets. Specialised agents are giving way to agents built on pretrained
@@ -35,7 +40,8 @@ namely that these systems generalise poorly beyond the situations they were
 trained on and need large amounts of demonstration data.
 A survey cannot explain those two, because it never holds a task fixed and
 varies how a network is trained, and because a success rate cannot separate
-two networks that score alike. They have to be measured inside the network.
+two networks that score alike. Both call for a measurement taken inside the
+network itself.
 
 Doing that needs a task whose solution is known neuron by neuron, and
 arithmetic modulo a prime is such a task. Networks trained on it grok: they fit the
@@ -46,34 +52,36 @@ rule that assigns credit, every rule that generalises recovers the same
 Fourier construction, and the number of neurons implementing it differs by
 more than half again between rules.
 
-One condition accounts for this. A unit survives training when its credit outweighs the
-non gradient part of its own update, and that single criterion subsumes three
-mechanisms previously described one at a time: an L2 term that reaches the weights through the
-gradient, the small constant that keeps an adaptive optimizer's denominator
-from vanishing, and a trainable gain that decays away. Only a normalising factor shared by exactly one neuron can change that
-ratio, which places the optimizers in general use on one side of a line and
-two rules on the other. Equalising the credit neurons receive, while leaving
+A single condition accounts for the spread between the rules. A unit
+survives training when its credit outweighs the non gradient part of its own
+update, and that criterion subsumes three mechanisms previously described one
+at a time: an L2 term that reaches the weights through the gradient, the small
+constant that keeps an adaptive optimizer's denominator from vanishing, and a
+trainable gain that decays away. A normalising factor shared by exactly one
+neuron is the only part of an update able to shift that ratio, which separates
+the optimizers in general use from the two rules that carry such a factor.
+Equalising the credit neurons receive, while leaving
 every gradient's direction unchanged, moves the computation from $60$ to $99$
 per cent of the layer, at a cost of two points of test accuracy, $0.998$ to
 $0.976$. Imposing a
 credit profile directly, with a random permutation deciding which neuron
-receives which magnitude, moves it the same way, which rules out the
-possibility that the credit merely followed what the neurons were already
-doing. The effect grows with the width of the layer and vanishes where the
+receives which magnitude, moves it the same way, which excludes an account in
+which the credit merely tracked what the neurons were already doing. The
+effect grows with the width of the layer and vanishes where the
 untouched network already uses all of it.
 
-The choice is paid for in both directions. A computation spread over many
+The choice carries a price at each end of its range. A computation spread over many
 neurons tolerates the deletion of neurons far better. A computation held on
 few prunes further and reaches a task that needs new combinations of the
 features already learned in $640$ epochs against $1540$ for the spread one,
-which is no faster than the $1410$ needed from scratch. The advantage is
-narrow: it vanishes when a target keeps the same features and merely
-reassigns their votes, and on multiplication no pretrained network beats training
-from scratch at all.
+whose $1540$ about matches the $1410$ that training from scratch needs. The
+advantage is a narrow one. It disappears when a target keeps the same features
+and merely reassigns their votes, and on multiplication training from scratch
+beats every pretrained network.
 
-The learning rule is not the only part of training that leaves structure
-behind. Hold the credit assignment algorithm fixed and vary the training objective
-instead, and a Transformer's attention weights accumulate a sum restricted to
+Other components of the training setup leave structure behind as well. Hold
+the credit assignment algorithm fixed and vary the training objective, and a
+Transformer's attention weights accumulate a sum restricted to
 whichever ordered token pairs that objective admits. Under bidirectional training every pair
 arrives in both orders and the weights stay near symmetric. Under
 autoregressive training a token is a target once and context repeatedly, and
@@ -83,10 +91,11 @@ twelve layer models and the structure appears in released models across text,
 vision and audio. An initialisation that follows from the derivation speeds up
 bidirectional training.
 
-A measurement of a trained network is only as good as the readout behind it,
-including this thesis's own. The standard probe for a latent world model is
+Every measurement of a trained network depends on the readout that produced
+it, this thesis's own measurement included. The standard probe for a latent world model is
 fitted on encoded observations and applied to predicted ones, and when the training objective
-scores direction alone, the magnitude is left to drift. The probe then reports mostly the drift in it: in synthetic data
+scores direction alone, the magnitude is left to drift. Most of what the
+probe then reports is that drift. In synthetic data
 its error reaches $27$ times that of predicting the average state, and for a
 published model rescaling the predictions to the norm of the encodings removes
 $97$ per cent of the error without retraining anything. Four checks come with
@@ -94,14 +103,14 @@ the correction, and applying them to this thesis's own measure of how far a
 computation spreads shows that the direction of the central result survives
 while the level it reports is the highest of three measures.
 
-A structure that training settles can instead be built in, and one
-architecture did so before any of this was measured. The last study, submitted
+A structure that training settles can also be built into an architecture,
+and one architecture did so before any of this was measured. The last study, submitted
 two years before the work above, builds a sensory pattern out of neurons that
 hold one another in place, assembled from fragments that Hebbian plasticity
-learns from data. Noise, which
-nothing supports, is filtered with more than half the input corrupted,
-partially hidden figures are completed, and fragments learned separately
-recombine into patterns never seen in training. The model has not been shown to work
-beyond line drawings, so the thesis closes by setting out what a
+learns from data. Noise that nothing supports is filtered out with more than
+half the input corrupted, partially hidden figures are completed, and
+fragments learned separately recombine into patterns never seen in training.
+The model has so far been demonstrated only on line drawings, so the thesis
+closes by setting out what a
 representation of this kind would need in order to serve as the state of an
 agent's model of its environment.

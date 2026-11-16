@@ -185,6 +185,15 @@ SOFT = {
     "placement announcement": PLACEMENT,
     "wordy cross reference": WORDY_REF,
     "anaphoric triple": ANAPHORIC_TRIPLE,
+    # The pseudo-cleft, "What survives is the condition". It fronts the
+    # predicate to make an ordinary statement sound like a finding, and it is
+    # the construction a generator reaches for when a paragraph needs a
+    # conclusion. Soft, because "What the survey cannot do is settle what
+    # causes them" is sometimes the only way to put the emphasis where it
+    # belongs. The count went from 25 to 2 on 2026-11-16.
+    "pseudo-cleft": re.compile(
+        r"(?:^|\.\s+)What\b[^.]{0,70}?\bis\b|"
+        r"\b(?:That|This|Which) is (?:what|where|how|why)\b", re.M),
     "personified abstraction": re.compile(
         r"\b(the thesis|the chapter|the benchmark|the task|the dataset|"
         r"the literature|the field|the measure)\s+"
@@ -199,10 +208,15 @@ SOFT = {
 ANTITHESIS = re.compile(
     r"\brather than\b|\bis not (just|merely|only)\b|\bnot\b[^.]{0,40}\bbut\b|"
     r",\s*not\s+\w", re.I)
-ANTITHESIS_PER_1000 = 4.0
+# Lowered from 4.0 on 2026-11-16. At 4.0 the gate never fired, while the
+# thesis owned prose carried 48 antitheses over 21,600 words, 2.21 per 1000,
+# and a reader took that rhythm for the voice of the text. The sweep of that
+# day brought it to 7, 0.32 per 1000, with 4 in the worst file. The gate is
+# set just above what the sweep left, so the habit cannot come back unnoticed.
+ANTITHESIS_PER_1000 = 1.5
 # A rate alone fires on a short file for three instances, where three is not a
 # habit and the rate is mostly noise. Both have to be exceeded.
-ANTITHESIS_MIN = 6
+ANTITHESIS_MIN = 5
 DENSITY_MIN = 4
 
 

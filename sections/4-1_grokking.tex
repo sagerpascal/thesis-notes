@@ -37,9 +37,9 @@ the thesis author with Pau Vilimelis Aceituno. Benjamin Grewe, Pau Vilimelis
 Aceituno and Thilo Stadelmann supervised the work, shaped the experimental
 design through discussion and revised the manuscript.
 
-The reading of the paper's result as a statement about the circuit of a
-learned solution, rather than about grokking alone, was developed for this
-thesis and is the thesis author's.
+This thesis reads the paper's result as a statement about the circuit of a
+learned solution, a reading wider than grokking alone, and that reading was
+developed here and is the thesis author's.
 
 \section{Chapter Introduction}
 %% The 2026-11-14 version of the paper moved the definition of the learning
@@ -50,8 +50,9 @@ thesis and is the thesis author's.
 %% is sec:background, and the thesis background chapter is its replacement, so
 %% that label is placed there.
 
-\Cref{chap:acu} left two of its six gaps unexplained, because a survey can
-compare agents but cannot hold a task fixed and vary how a network is trained.
+\Cref{chap:acu} left two of its six gaps unexplained, because a survey
+compares agents without being able to hold a task fixed and vary how a network
+is trained.
 This chapter makes that comparison in the smallest setting where it can be
 made properly. Modular addition is one of the few tasks whose generalising
 solution has been read out neuron by neuron, so a count of how many neurons
@@ -67,12 +68,13 @@ it does not apply.
 The paper's vocabulary differs from the thesis's in three places. It writes \emph{effective unit
 count} for the participation ratio as a count of neurons, and \emph{circuit
 participation} for the same quantity divided by the width of the layer. Both
-are the circuit this thesis defines, reported two ways. \emph{Credit participation} is the same measure
-applied to the credit each neuron receives rather than to its outgoing weight
-norm, and the two are distinct quantities that happen to agree in some of the
-comparisons and not in others. And the paper's \emph{grain} is the number of
-parameters that share one normalising factor in an optimizer's update, which
-is the axis \cref{sec:bg_grain} lays the optimizers along.
+are the circuit this thesis defines, reported two ways. \emph{Credit
+participation} applies the same measure to the credit each neuron receives
+instead of to its outgoing weight norm, so the two are distinct quantities
+that agree in some of the comparisons and part company in others. The paper's
+\emph{grain} is the number of parameters that share one normalising factor in
+an optimizer's update, which is the axis \cref{sec:bg_grain} lays the
+optimizers along.
 
 % ---------------------------------------------------------------------------
 % The published paper, included verbatim. Do not edit imported_papers/.
@@ -106,8 +108,9 @@ construction, and the count of neurons implementing it varies from rule to
 rule at one width, with everything outside the rule held constant. Among the
 eight that concentrate the spread is modest, from $0.470$ to $0.613$ of the
 layer. Nero and the credit equalisation this
-chapter introduces reach the other end, near $0.99$, so the full range is a
-property of this comparison and not of the optimizers in general use. Unless
+chapter introduces reach the other end, near $0.99$, so the full range
+belongs to this comparison and reaches past the optimizers in general use.
+Unless
 stated otherwise the measurements concern the first of the network's two
 hidden layers.
 
@@ -118,17 +121,18 @@ before an adaptive optimizer, the numerical floor in that optimizer's
 denominator, and the decay of a trainable per neuron gain. The control that
 establishes it, holding each neuron's ratio of credit to that term fixed while
 equalising the gradients, works fully for the decay and the gain and removes
-about half of the effect for the numerical floor. And for the gain the
+about half of the effect for the numerical floor. For the gain the
 intervention has to act on the gain and the outgoing weights as well as the
 incoming rows: equalising the incoming rows alone gives $0.364$ against a
-reference of $0.366$, which is no effect at all.
+reference of $0.366$, which leaves the measure where it was.
 
 Acting on the condition moves the circuit. Equalising the credit each neuron
 receives, while leaving every gradient's direction untouched, lifts a layer of
 $256$ units from $60$ per cent in use to $99$, about $154$ neurons against
 about $254$. The same expansion follows when the
 intervention is switched on after the network has already generalised, so the
-rule holds the circuit open rather than setting it once. Margin and parameter
+circuit stays open under the rule and is never fixed once at the transition.
+Margin and parameter
 norm stay within a few percent and mean test accuracy falls from $0.998$ to
 $0.976$.
 
@@ -139,8 +143,8 @@ neuron computes. The circuit tracks the imposed profile across its
 range, $0.637$ to $0.990$, deletion tolerance climbs with it, and test
 accuracy never drops below $0.96$.
 
-Which published rules move the circuit follows from the condition as a
-yes or no rather than as an ordering. Only a normaliser shared by exactly one
+The condition answers which published rules move the circuit with a yes or a
+no, and supplies no ordering among them. Only a normaliser shared by exactly one
 neuron can change a neuron's ratio of credit to its non gradient term, so
 varying how many parameters share one factor leaves the circuit concentrated
 at groups of eight or more and distributes it fully only at one factor per
@@ -154,10 +158,9 @@ perfect test accuracy. Equal credit that arises on its own and equal credit
 imposed give the same kind of circuit. Credit participation alone does not order them. Lion and
 the credit equalisation of this chapter both equalise credit completely, at
 credit participation $1.000$, and land at circuit participation $0.535$ and
-$0.992$. The first is an optimizer in general use and the second is this
-chapter's intervention, so they are not two points on one scale of optimizers.
-What separates them is whether the normalisation is shared by exactly one
-neuron.
+$0.992$. The first is an optimizer in general use and the second is this chapter's
+intervention, so they sit on different scales. They differ in whether the
+normalisation is shared by exactly one neuron.
 
 Four quantities move when the circuit does: test accuracy, how much deletion
 the network survives, how far it prunes, and how quickly it transfers. A distributed circuit
@@ -165,11 +168,12 @@ tolerates random deletion of neurons better. A concentrated circuit prunes
 further, and on a target built from fresh combinations of the features it
 already holds it arrives in $640$ epochs against $1540$ for the spread one,
 largely by recruiting the neurons it was not using. The distributed circuit's
-$1540$ epochs are no better than the $1410$ needed from scratch, so the result is
-that concentration helps and not that spreading hurts. Neither circuit helps when a target leaves the
-features alone and changes only which answer they support. And on modular multiplication no pretrained network beats training
-from scratch at all, at any setting of the intervention. The
-move itself costs the two points of test accuracy above.
+$1540$ epochs about match the $1410$ needed from scratch, so the gain belongs
+to concentration and no penalty attaches to the spread circuit. Neither
+circuit helps when a target leaves the features alone and changes only which
+answer they support. On modular multiplication training from scratch beats
+every pretrained network, at any setting of the intervention. The move itself
+costs the two points of test accuracy above.
 
 The effect grows with width: across widths from $32$ to $2048$ the untouched network's participation falls from
 $0.937$ to $0.162$, so at width $32$ there are $30$ of $32$ neurons in use
@@ -177,12 +181,11 @@ before anything changes and the intervention finds a thirty first, while at
 width $2048$ it uses $332$ and the
 equalised network $2046$. On a vision task and on a canonical transformer the
 untouched network is already distributed and the intervention changes nothing.
-And the reference configuration puts an L2 penalty into the gradient ahead of
-an adaptive optimizer, a pairing the paper describes as a test bed for the
-condition and not as advice. Decouple the decay, as current training code
-does, and the untouched network already spreads its computation across most of
-the settings measured here. What survives that change is the condition
-itself. Its other two terms dominate only where the decay reaches the
+The reference configuration also puts an L2 penalty into the gradient ahead of
+an adaptive optimizer, a pairing the paper presents as a test bed for the
+condition. Decouple the decay, as current training code does, and the
+untouched network already spreads its computation across most of the settings
+measured here. The condition itself comes through that change intact. Its other two terms dominate only where the decay reaches the
 normalisation parameters, which most current code does not do, and with decay
 on the weight matrices alone the reference sits at $0.82$ against $0.91$ under
 the intervention. That remaining gap, and the $0.91$ against $0.96$ on modular
@@ -193,9 +196,9 @@ has not been measured there. In a language model of $30$ million parameters
 trained with an adaptive optimizer and an L2 penalty, balancing each unit's
 decay against its gradient leaves $1.3\%$ of the units nearly unused instead
 of $24\%$, at a lower validation loss. Decoupling the decay instead leaves
-$0.9\%$ at a lower loss still, which is what the condition predicts rather
-than a competing result: decoupling stops a non gradient term from dominating,
-and balancing the credit against it does the same thing another way. The redistribution also holds on
+$0.9\%$ at a lower loss still, which follows from the condition and competes
+with nothing in it: decoupling stops a non gradient term from dominating, and
+balancing the credit against it does the same thing another way. The redistribution also holds on
 modular subtraction and multiplication, on composition in a permutation group,
 on sparse parity and on a transformer with a wide feedforward block.
 

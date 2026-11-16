@@ -8,6 +8,10 @@
 % die nicht mehr Teil der Dissertation ist.
 %
 % Keine geprägten Begriffe, nach CLAUDE.md 3.5.
+%
+% Rhythmus-Durchgang vom 2026-11-16, parallel zum englischen Abstract: die
+% Gegensatzschlüsse, die Spaltsätze und die einsätzigen Pointen sind
+% herausgenommen.
 
 Zwei Netzwerke können dieselbe Arithmetik gleich gut lernen und dabei sehr
 unterschiedlich viel von sich selbst einsetzen. Bei der Addition modulo einer
@@ -15,11 +19,12 @@ Primzahl trägt eine Schicht aus $256$ Einheiten die Lösung auf etwa $154$
 davon, bei einer Testgenauigkeit von $0.998$. Ändert man eine einzige
 Eigenschaft der Aktualisierung, nämlich welche Parameter sich einen
 Normierungsfaktor teilen, so belegt dieselbe Lösung etwa $254$ Einheiten, bei
-$0.976$. An der Aufgabe hat sich nichts geändert. Verbreitert man die Schicht
-auf $2048$, nutzen die beiden Einstellungen $332$ Einheiten und $2046$, beide
-bei $0.998$. Wie viel eines Netzwerks am Ende die Arbeit leistet, wird
-also nicht dadurch entschieden, was das Netzwerk berechnen soll. Es wird
-dadurch entschieden, wie das Training den Fehler unter den Neuronen aufteilt.
+$0.976$, und die Aufgabe selbst bleibt dabei unberührt. Verbreitert man die
+Schicht auf $2048$, nutzen die beiden Einstellungen $332$ Einheiten und
+$2046$, beide bei $0.998$. Die Arithmetik, die ein Netzwerk berechnen soll,
+lässt also offen, wie viel des Netzwerks die Arbeit leistet, und darüber
+entscheidet die Art, wie das Training den Fehler unter den Neuronen
+aufteilt.
 
 Die Frage entstammt einer Übersichtsarbeit über $87$ Agenten für die Computernutzung
 und $33$ Datensätze. Spezialisierte Agenten weichen solchen, die auf
@@ -33,8 +38,8 @@ hat: Diese Systeme verallgemeinern schlecht über die Situationen
 hinaus, auf denen sie trainiert wurden, und benötigen grosse Mengen an
 Demonstrationsdaten. Eine Übersicht kann diese beiden nicht erklären, weil sie
 nie eine Aufgabe festhält und das Training variiert, und weil eine Erfolgsrate
-zwei Netzwerke nicht trennen kann, die gleich abschneiden. Sie müssen im
-Netzwerk selbst gemessen werden.
+zwei Netzwerke nicht trennen kann, die gleich abschneiden. Beide verlangen
+eine Messung im Netzwerk selbst.
 
 Dafür braucht es eine Aufgabe, deren Lösung Neuron für Neuron bekannt ist, und
 die Arithmetik modulo einer Primzahl ist eine solche. Netzwerke, die darauf
@@ -45,38 +50,40 @@ fest und variiert nur die Regel, die den Fehler zuteilt, findet jede Regel, die
 verallgemeinert, dieselbe Fourier-Konstruktion, und die Zahl der Neuronen, die
 sie umsetzen, unterscheidet sich zwischen den Regeln um mehr als die Hälfte.
 
-Eine Bedingung erklärt das. Ein Neuron bleibt in Gebrauch, wenn der Anteil am
+Eine einzige Bedingung erklärt den Abstand zwischen den Regeln. Ein Neuron
+bleibt in Gebrauch, wenn der Anteil am
 Fehler, den es erhält, gross ist im Verhältnis zu jenem Teil seiner eigenen
 Aktualisierung, der nicht aus dem Gradienten stammt. Das deckt drei
 Mechanismen ab, für die es zuvor keine gemeinsame Erklärung gab: einen
 Gewichtszerfallsterm, der zum Gradienten addiert wird, die numerische
 Untergrenze im Nenner eines adaptiven Optimierers und den Zerfall eines
-trainierbaren Verstärkungsfaktors. Nur ein Normierungsfaktor, den sich genau
-ein Neuron teilt, kann dieses Verhältnis ändern, was die gebräuchlichen
-Optimierer auf die eine Seite einer Grenze stellt und zwei Regeln auf die
-andere. Gleicht man den Anteil am Fehler zwischen den Neuronen an, ohne die
+trainierbaren Verstärkungsfaktors. Ein Normierungsfaktor, den sich genau ein
+Neuron teilt, ist der einzige Bestandteil einer Aktualisierung, der dieses
+Verhältnis verschieben kann, was die gebräuchlichen Optimierer von den zwei
+Regeln trennt, die einen solchen Faktor führen. Gleicht man den Anteil am
+Fehler zwischen den Neuronen an, ohne die
 Richtung eines einzigen Gradienten zu ändern, verschiebt sich die Berechnung
 von $60$ auf $99$ Prozent der Schicht, zum Preis der oben genannten zwei
 Punkte Genauigkeit. Gibt man ein Profil der Fehleranteile direkt vor und lässt
 eine zufällige Permutation entscheiden, welches Neuron welche Grösse erhält,
-verschiebt sich die Berechnung ebenso. Damit ist ausgeschlossen, dass der
-Fehleranteil nur dem folgte, was die Neuronen ohnehin taten. Der Effekt wächst
+verschiebt sich die Berechnung ebenso, was eine Deutung ausschliesst, nach
+der der Fehleranteil nur dem folgte, was die Neuronen ohnehin taten. Der
+Effekt wächst
 mit der Breite der Schicht und verschwindet dort, wo das unveränderte Netzwerk
 sie bereits ganz nutzt.
 
-Die Wahl wird in beide Richtungen bezahlt. Eine über viele Neuronen verteilte
+Die Wahl hat an beiden Enden ihres Bereichs einen Preis. Eine über viele Neuronen verteilte
 Berechnung verträgt das Entfernen von Neuronen deutlich besser. Eine auf wenige
 Neuronen konzentrierte Berechnung lässt sich stärker beschneiden und erreicht
 eine Aufgabe, die neue Kombinationen der bereits gelernten Merkmale verlangt,
-in $640$ Epochen, wo die verteilte $1540$ benötigt. Der Vorteil ist eng: die
-verteilte Berechnung ist damit nicht langsamer als die $1410$ Epochen eines
-Trainings von Grund auf, für eine Aufgabe, die nur ändert, welche Antwort
-jedes Merkmal stützt, hilft keine der beiden, und bei der Multiplikation
-modulo einer Primzahl schlägt kein vortrainiertes Netzwerk ein Training von
-Grund auf.
+in $640$ Epochen, wo die verteilte $1540$ benötigt, womit die verteilte in
+etwa die $1410$ Epochen eines Trainings von Grund auf erreicht. Der Vorteil
+bleibt eng. Bei einer Aufgabe, die nur ändert, welche Antwort jedes Merkmal
+stützt, hilft keine der beiden, und bei der Multiplikation modulo einer
+Primzahl schlägt das Training von Grund auf jedes vortrainierte Netzwerk.
 
-Die Lernregel ist nicht der einzige Teil des Trainings, der Struktur
-hinterlässt. Hält man den Algorithmus zur Fehlerzuteilung fest und variiert das
+Auch andere Bestandteile des Trainings hinterlassen Struktur. Hält man den
+Algorithmus zur Fehlerzuteilung fest und variiert das
 Trainingsziel, so ist die Aktualisierung der Aufmerksamkeitsgewichte eines
 Transformers eine Summe über die geordneten Token-Paare, die das Ziel zulässt.
 Bidirektionales Training nimmt jedes Paar in beiden Reihenfolgen auf, und die
@@ -88,12 +95,13 @@ zwölf Schichten, und die Struktur zeigt sich in veröffentlichten Modellen übe
 Text, Bild und Audio hinweg. Eine Initialisierung, die aus der Herleitung
 folgt, beschleunigt bidirektionales Training.
 
-Eine Messung an einem trainierten Netzwerk taugt nur so viel wie das
-Ausleseverfahren dahinter, auch die Messungen dieser Arbeit selbst. Das übliche
+Jede Messung an einem trainierten Netzwerk hängt von dem Ausleseverfahren ab,
+das sie hervorgebracht hat, die Messungen dieser Arbeit eingeschlossen. Das übliche
 Ausleseverfahren für ein latentes Weltmodell wird auf kodierten Beobachtungen
 angepasst und auf vorhergesagte angewandt, und wo der Trainingsverlust
 Richtungen vergleicht und Beträge ignoriert, legt nichts den Betrag fest. Das
-Verfahren berichtet dann vor allem dessen Abdriften: In synthetischen Daten
+meiste, was das Verfahren dann berichtet, ist dieses Abdriften. In
+synthetischen Daten
 erreicht sein Fehler das $27$-fache dessen, der entsteht, wenn man stets den
 mittleren Zustand vorhersagt, und bei einem veröffentlichten Modell entfernt
 das Skalieren der Vorhersagen auf den Betrag der Kodierungen $97$ Prozent des
@@ -102,15 +110,16 @@ Wendet man sie auf das eigene Mass dieser Arbeit an, so zeigt sich, dass die
 Richtung des zentralen Ergebnisses bestehen bleibt, während der Wert, den
 dieses Mass angibt, der höchste von drei Massen ist.
 
-Eine Struktur, die das Training festlegt, lässt sich stattdessen einbauen, und
-eine Architektur hat das getan, bevor irgendetwas davon gemessen wurde. Die
+Eine Struktur, die das Training festlegt, lässt sich auch in eine Architektur
+einbauen, und eine Architektur hat das getan, bevor irgendetwas davon gemessen
+wurde. Die
 letzte Studie, zwei Jahre vor den obigen Arbeiten eingereicht, stellt ein
 sensorisches Muster als eine Menge von Neuronen dar, von denen jedes durch mehrere andere gehalten wird,
 zusammengesetzt aus Fragmenten, die durch Hebbsche Plastizität gelernt wurden.
 Rauschen, das nichts stützt, wird herausgefiltert, selbst wenn mehr als die
 Hälfte der Eingabe verfälscht ist, teilweise verdeckte Figuren werden ergänzt,
 und getrennt gelernte Fragmente setzen sich zu Mustern zusammen, die im
-Training nie vorkamen. Das Modell lässt sich nicht über Strichzeichnungen
-hinaus skalieren, und so schliesst die Arbeit damit, darzulegen, was eine
+Training nie vorkamen. Gezeigt wurde das Modell bislang nur an
+Strichzeichnungen, und so schliesst die Arbeit damit, darzulegen, was eine
 Darstellung dieser Art benötigen würde, um als Zustand des Umweltmodells eines
 Agenten zu dienen.

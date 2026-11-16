@@ -65,16 +65,15 @@ A network with more parameters than training examples can fit its training
 data exactly. It can do so even when the labels are random, which means that
 no property of the data stands in the way of memorisation and that reaching
 zero training loss says almost nothing about which function was
-found~\cite{zhang_understanding_2017}. Fitting is not the constraint.
+found~\cite{zhang_understanding_2017}. Fitting alone constrains very little.
 
-What fits is therefore a set and not a point. Many parameter settings
-reach the same training loss, and they differ in properties the loss never
-sees: how large the weights are, how wide the margin is, how the computation
+The settings that fit therefore form a set. Many of them reach the same
+training loss, and they differ in properties the loss never sees: how large the weights are, how wide the margin is, how the computation
 is arranged across the network's parts. Classical accounts of generalisation
 were built for the regime in which that set is small, and the behaviour of
 modern networks past the interpolation threshold does not fit
-them~\cite{neyshabur_search_2015, belkin_reconciling_2019}. This thesis is
-about one property that the loss leaves open, which is how many of a network's
+them~\cite{neyshabur_search_2015, belkin_reconciling_2019}. This thesis takes
+up one of the properties the loss leaves open, namely how many of a network's
 neurons end up carrying the computation.
 
 \subsection{The training procedure selects among them}
@@ -83,22 +82,20 @@ neurons end up carrying the computation.
 % among the settings that fit, produced by the procedure rather than by the
 % objective.
 
-If the objective does not single out one setting, something else does. The
-preference that training shows among the settings that fit, produced by how
-the network is trained rather than by what it is asked to compute, is what the
-literature calls implicit bias.
+Something other than the objective must single out the setting that training
+reaches. That preference among the settings that fit, produced by how the
+network is trained, is called implicit bias in the literature.
 
 Sometimes that preference can be stated exactly. On data a linear model can
 separate, gradient descent on the logistic loss sends the weights to infinity,
 and the direction it converges to is the maximum margin
-solution~\cite{soudry_implicit_2018}. The objective is indifferent between
-separating directions, and the procedure is not.
+solution~\cite{soudry_implicit_2018}. The objective treats every separating
+direction alike, and the procedure singles one of them out.
 
-Which property gets minimised depends on the geometry of the update rather
-than on the objective. Steepest descent under different norms, and mirror
+The geometry of the update decides which property gets minimised. Steepest descent under different norms, and mirror
 descent under different potentials, reach different minima of the same
-loss~\cite{gunasekar_characterizing_2018}. Changing the update is changing
-which member of the solution set is reached.
+loss~\cite{gunasekar_characterizing_2018}. Changing the update changes which
+member of the solution set is reached.
 
 The scale at which the weights are initialised moves a network between two
 regimes. Small initialisation leaves the features free to move and the network
@@ -109,8 +106,8 @@ solutions, and the transition between them has been connected to the delay
 between fitting and generalising that this chapter turns to
 below~\cite{kumar_grokking_2024}.
 
-The optimizer changes the solution and not only the speed of reaching it.
-Adaptive methods and plain gradient descent, trained to the same training
+The optimizer changes the solution itself, along with the speed of reaching
+it. Adaptive methods and plain gradient descent, trained to the same training
 loss, reach solutions that generalise
 differently~\cite{wilson_marginal_2017}.
 
@@ -129,17 +126,17 @@ The general statement is that every continuous symmetry of the
 parameterisation gives a quantity the dynamics cannot
 alter~\cite{kunin_neural_2021}. Rescaling a unit's incoming weights and
 dividing its outgoing weights by the same factor leaves the function
-unchanged, and permuting units does too, and each such freedom pins something
-in the flow. Weight decay and momentum break these conservation laws, and they
+unchanged, and permuting units has the same effect. Each such freedom pins
+something in the flow. Weight decay and momentum break these conservation laws, and they
 break them in ways that can be written down.
 
-The consequence this thesis uses is about ratios. If the flow conserves the
-ratio between two units' contributions, then no amount of training can reshape
-the relative sizes the network started with, and a rule that conserves their
-difference instead can. \Cref{chap:grokking} turns that observation into a
+The consequence this thesis uses is about ratios. A flow that conserves the
+ratio between two units' contributions holds the relative sizes the network
+started with fixed for the whole of training. A rule conserving their
+difference can reshape them. \Cref{chap:grokking} turns that observation into a
 condition on the update.
 
-\subsection{It has asked about norms, and not about how many units carry the computation}
+\subsection{This literature characterises global properties and leaves the working units aside}
 \label{sec:bg_biasgap}
 
 The properties this literature characterises are global. Norm, margin, rank
@@ -147,8 +144,8 @@ and effective dimension are all properties of the whole parameter vector, and
 a network can be described completely in those terms without any statement
 about which of its units are doing the work. The closest the literature comes
 to a structural claim is the bias of deep matrix factorisation towards
-solutions of low rank, which is a statement about the spectrum and not about
-the parts~\cite{arora_implicit_2019, gunasekar_characterizing_2018}.
+solutions of low rank, which is a statement about the
+spectrum~\cite{arora_implicit_2019, gunasekar_characterizing_2018}.
 
 The part of the procedure these results vary is also narrow. They vary the
 optimizer, or the geometry of the update, or the scale of the initialisation.
@@ -209,8 +206,8 @@ signal, which makes the resulting update interpretable as an approximation to
 a known optimisation
 method~\cite{meulemans_credit_2021, meulemans_least_2022}.
 
-What every one of these is asked is the same question. Does it match the
-accuracy of backpropagation, and does it converge? Which member of the
+Every one of these is asked the same two questions, whether it matches the
+accuracy of backpropagation and whether it converges. Which member of the
 solution set it selects is left open, and none of them has been run on a task
 whose solution is known at the level of single neurons. The closest case is a
 kernel method that reproduces the delayed generalisation of grokking without
@@ -243,25 +240,25 @@ is shared by many neurons at once.
 
 At the other end sits a normaliser shared by exactly the weights entering one
 neuron. Nero normalises the update of each neuron's incoming weights and
-constrains their norm~\cite{liu_learning_2021}. Weight normalisation looks
-similar and is not: it reparameterises those weights into a direction and a
-length and leaves the update itself alone~\cite{salimans_weight_2016}, so it
-does not rescale a neuron's gradient against the other terms of its update.
-\Cref{chap:grokking} measures both, and only the first distributes.
+constrains their norm~\cite{liu_learning_2021}. Weight normalisation is a different
+thing despite the resemblance. It reparameterises those weights into a direction and a
+length and leaves the update itself alone~\cite{salimans_weight_2016}, so a
+neuron's gradient is never rescaled against the other terms of its update.
+\Cref{chap:grokking} measures both, and only Nero distributes.
 
 These methods are usually compared on convergence speed and final accuracy,
-and the axis above is not what they are usually sorted by. It is the axis
-\cref{chap:grokking} sorts them by.
+and sorted along axes other than the one above, which is the axis
+\cref{chap:grokking} sorts them along.
 
-\subsection{What is known about these rules is convergence and accuracy}
+\subsection{These rules are known by their convergence and their accuracy}
 \label{sec:bg_rulesgap}
 
 Each of the rules above arrives with its own convergence analysis and its own
-table of benchmark numbers. What does not exist is a comparison that holds the
-task, the data, the architecture and the width fixed, varies the rule, and
-then reads the solution each rule reached at the level of single neurons. That
-comparison is what would separate a property of the task from a property of
-the procedure, and it is the comparison \cref{chap:grokking} makes.
+table of benchmark numbers. No comparison exists that holds the task, the
+data, the architecture and the width fixed, varies the rule, and then reads
+the solution each rule reached at the level of single neurons. Such a
+comparison would separate a property of the task from a property of the
+procedure, and \cref{chap:grokking} makes it.
 
 
 \section{In modular addition the grokked solution has been read neuron by neuron}
@@ -299,14 +296,14 @@ Closest to this thesis is the finding that the optimizer decides whether
 grokking happens at all, and when. Adaptive methods produce a cyclic
 instability around the transition that changes its
 timing~\cite{thilak_slingshot_2022}. That result varies a component of the
-procedure and reads the consequence in the training curve. It does not ask
-which of the solutions that fit was reached.
+procedure and reads the consequence in the training curve, leaving open which
+of the solutions that fit was reached.
 
 \subsection{For modular arithmetic the circuit is known neuron by neuron}
 \label{sec:bg_grokcircuit}
 
-What makes this setting useful is that the generalising solution has been
-taken apart. Each operand is embedded onto a handful of frequencies, trigonometric
+This setting is useful because the generalising solution has been taken
+apart. Each operand is embedded onto a handful of frequencies, trigonometric
 identities in the hidden layer turn the pair into functions of the sum, and
 the output unit for every candidate answer peaks at the right
 one~\cite{nanda_progress_2023}. The same computation has been derived in
@@ -319,14 +316,14 @@ A margin analysis of a one hidden layer model sharpens the picture and bundles
 two properties together. The solutions it describes have neurons that each
 tune to a single frequency, and they have a computation carried by many
 neurons at once~\cite{morwani_feature_2024}. These are separate properties.
-What each neuron represents is one question, and how many neurons the
-computation is spread over is another, and this thesis is about the second.
+One question asks what each neuron represents, another asks how many neurons
+the computation is spread over, and this thesis takes up the second.
 
 Even with backpropagation held fixed, the circuit is not unique. A different
 algorithm appears under other hyperparameters, one that composes rotations
 instead of reading off a sum~\cite{zhong_clock_2023}. A sparse generalising
 subnetwork can be separated from the dense memorising network around
-it~\cite{merrill_tale_2023}. And a small initialisation drives a network into
+it~\cite{merrill_tale_2023}. A small initialisation also drives a network into
 a condensed regime in which few effective neurons remain active at
 all~\cite{luo_phase_2021}.
 
@@ -338,14 +335,14 @@ Its strongest form is universality, the claim that networks solving the same
 task converge on the same features and the same construction, so that an
 account read out of one network stands for the
 task~\cite{chughtai_toy_2023, olah_zoom_2020}. The word circuit is used in that
-literature for a subgraph of components, which is not the count this thesis
-measures, and the two senses are kept apart here.
+literature for a subgraph of components, a different quantity from the count
+this thesis measures, and the two senses are kept apart here.
 
 The claim operates at two levels that the evidence does not separate. One is
 what is computed, and for modular addition the answer is the Fourier
-construction above. The other is how many neurons carry it. This thesis does
-not contest the first. What the evidence for the second shares is that all of that evidence comes from networks trained one
-way, by backpropagation under an adaptive optimizer.
+construction above. The other is how many neurons carry it. This thesis
+leaves the first alone. The evidence for the second comes entirely from
+networks trained one way, by backpropagation under an adaptive optimizer.
 
 
 \section{How far a computation spreads has been measured in neuroscience, and the measures disagree}
@@ -369,7 +366,7 @@ specificity~\cite{barlow_single_1972}, and the second in the argument that a
 concept is better held as a pattern over many units, each of which
 participates in many concepts~\cite{hinton_distributed_1986}.
 
-Sparsity can be derived and need not be assumed. Optimising a linear code of
+Sparsity also follows from an objective. Optimising a linear code of
 natural images for sparse activity yields filters that are localised, oriented
 and bandpass, which is what receptive fields in primary visual cortex look
 like~\cite{olshausen_emergence_1996}, and the argument has been developed as a
@@ -378,8 +375,8 @@ in learning rules that produce sparse
 representations~\cite{foldiak_sparse_1995}. Cells of remarkable specificity do
 exist: single neurons in the human medial temporal lobe respond to one person
 across photographs, drawings and the written
-name~\cite{quianquiroga_invariant_2005}. That is evidence for one end of the range
-and not a settlement of the question.
+name~\cite{quianquiroga_invariant_2005}. That is evidence for one end of the
+range, and the question itself remains open.
 
 The relation between that literature and this thesis is an analogy, and where it fails should
 be said before the measure is borrowed from it. Sparse
@@ -388,10 +385,10 @@ stimuli, measured over an ensemble of stimuli, where the quantity this thesis
 measures is structural and is read off the weights. The mechanisms that
 concentrate a computation in \cref{chap:grokking} are a coupled weight decay
 term, an optimizer's numerical floor and the decay of a trainable gain, none
-of which has a counterpart in a brain. And classical sparse coding derives
+of which has a counterpart in a brain. Classical sparse coding also derives
 sparsity from an explicit prior in an efficient coding objective, where here
-it is an unintended consequence of a regulariser. What this thesis takes from
-the literature is the measure, and it does not claim to model a brain.
+it arrives as an unintended consequence of a regulariser. This thesis borrows
+the measure from that literature and makes no claim to model a brain.
 
 \subsection{Each end of the range buys something and gives something up}
 \label{sec:bg_codingprice}
@@ -416,7 +413,7 @@ single directions in activation space varies, and depending on few of them
 goes with worse
 generalisation~\cite{morcos_importance_2018, zhou_importance_2018}. Sparse
 subnetworks exist inside dense ones that train to full accuracy on their
-own~\cite{frankle_lottery_2019}. And redundancy can be bought deliberately, by
+own~\cite{frankle_lottery_2019}. Redundancy can also be bought deliberately, by
 dropping units at random during training~\cite{srivastava_dropout_2014} or by
 imposing sparse high dimensional activity by
 design~\cite{ahmad_can_2019}.
@@ -461,13 +458,13 @@ product of one token's query with another's key, and a third map produces the
 value that is mixed. Up to the softmax taken over each row, the score is a
 bilinear function of the two embeddings.
 
-That is why the object worth studying is the product of the query and key
-matrices rather than either of them. The two never appear separately in the
+The product of the query and key matrices is therefore the object worth
+studying. The two never appear separately in the
 score, so any structure visible in one alone can be moved into the other by a
 change of basis, while their product acts on the embeddings as a single
-bilinear form~\cite{elhage_mathematical_2021}. Reading that product directly,
-rather than the attention maps it produces, has been used to interpret what a
-head attends to~\cite{dar_analyzing_2023}.
+bilinear form~\cite{elhage_mathematical_2021}. Reading that product directly
+has been used to interpret what a head attends to, in place of reading the
+attention maps it produces~\cite{dar_analyzing_2023}.
 
 \subsection{The two pretraining objectives differ in which pairs enter the update}
 \label{sec:bg_objectives}
@@ -515,7 +512,7 @@ key value memories~\cite{geva_transformer_2021}.
 
 All of this works from the activations of a network that has already been
 trained. None of it derives what structure a training objective must leave in
-the weights, which is the opening \cref{chap:attention} works in.
+the weights, and \cref{chap:attention} starts from there.
 
 
 \section{A world model is scored through a probe, and the probe's own behaviour has rarely been checked}
@@ -531,9 +528,9 @@ the weights, which is the opening \cref{chap:attention} works in.
 
 No procedure generalises from finite data without a preference among the
 hypotheses that fit it. Averaged over all problems no learner beats any
-other~\cite{wolpert_free_1997}, so the question is never whether to have a
-bias but which one, and the classical statement of the cost is the trade
-between bias and variance~\cite{etal_neural_1992, mitchell_need_1980}.
+other~\cite{wolpert_free_1997}, so every learner carries a bias and the
+question is which one, with the classical statement of the cost being the
+trade between bias and variance~\cite{etal_neural_1992, mitchell_need_1980}.
 
 The bias can be placed in the architecture. Sharing weights across positions
 makes a network equivariant to translation~\cite{etal_gradient_1998}, and the
@@ -541,12 +538,12 @@ general treatment derives architectures from the symmetries of the domain they
 act on~\cite{bronstein_geometric_2021}.
 
 It can be placed in the input or the loss instead. Known physical law can be
-written into the objective rather than left to be discovered from
+written into the objective, sparing the network the job of finding it in the
 data~\cite{raissi_physics_2019}, and the same idea applied to a medical image
 is the subject of \cref{sec:hounsfield}.
 
-Or it can be supplied at inference. Retrieval grounds a prediction in an
-external index rather than in the weights~\cite{lewis_retrieval_2021}, which
+It can also be supplied at inference. Retrieval grounds a prediction in an
+external index held outside the weights~\cite{lewis_retrieval_2021}, which
 scales to very large stores~\cite{borgeaud_improving_2022}, and the standard
 components are lexical matching~\cite{robertson_probabilistic_2009}, dense
 retrieval against learned embeddings~\cite{karpukhin_dense_2020} and a cross
@@ -560,9 +557,8 @@ A latent world model encodes an observation, applies a learned transition in
 that latent space, and never reconstructs the observation
 itself~\cite{lecun_path_2022}. Training the encoder to predict its own
 representations rather than pixels is the self supervised version of the same
-idea~\cite{assran_self_2023}, and models of this family are what current model
-based agents plan
-with~\cite{hafner_mastering_2023, schwarzer_data_2021}.
+idea~\cite{assran_self_2023}, and current model based agents plan with models
+of this family~\cite{hafner_mastering_2023, schwarzer_data_2021}.
 
 Rolling such a model forward composes the transition with itself. Each
 application can magnify whatever error is already present by its Lipschitz
@@ -584,19 +580,18 @@ latents~\cite{belinkov_probing_2022, hewitt_designing_2019}.
 A prediction loss computed in latent space need not fix the scale of that
 space. Where the loss compares directions and ignores magnitudes, the
 magnitude is free, and the collapse phenomena studied in self supervised
-learning are what a free direction in the representation can
+learning show what a free direction in the representation can
 do~\cite{grill_bootstrap_2020, chen_exploring_2021, jing_understanding_2022}.
 
 The control that catches a readout reporting the wrong quantity is a predictor
 that learns nothing. Several fields have found headline results that a trivial
 baseline matches once someone ran
 one~\cite{ferraridacrema_really_2019, musgrave_metric_2020, lin_neural_2019}, and in
-each case the response was a protocol rather than a better
-model~\cite{henderson_deep_2018}. That is the standard this thesis holds its
-own comparisons to.
+each case the field answered with a protocol~\cite{henderson_deep_2018}. This
+thesis holds its own comparisons to that standard.
 
 
-\section{Mutual support between neurons has been built into architectures rather than trained}
+\section{Architectures have been built in which neurons hold one another in place}
 \label{sec:bg_substrate}
 % ─────────────────────────────────────────────────────────────────────────────
 % Job of this section: give the lineage Chapter~\ref{chap:cna} belongs to, so
@@ -612,13 +607,13 @@ neurons becomes the unit in which something is
 represented~\cite{hebb_organization_1949}. Support is structural: a neuron is
 part of the representation because other neurons hold it there.
 
-Associative memory made the idea precise and, in doing so, rigid.
-Strengthening the connection between every pair of neurons active in a pattern
+Associative memory made the idea precise, and the precise form of it turned
+out to be a rigid one. Strengthening the connection between every pair of neurons active in a pattern
 stores that pattern as a whole~\cite{amari_learning_1972}, and retrieval
 becomes descent on an energy function towards the nearest stored
-state~\cite{hopfield_neural_1982}. What is stored is a complete snapshot
-rather than a set of parts that can be recombined, and capacity holds only
-while the stored states overlap little.
+state~\cite{hopfield_neural_1982}. A stored pattern is a complete snapshot
+with no parts available for recombination, and capacity holds only while the
+stored states overlap little.
 
 Stochastic recurrent networks gave the same machinery a learning rule.
 A Boltzmann machine settles into configurations that satisfy its constraints
@@ -656,10 +651,10 @@ convolutional networks handle routinely.
 
 Three limits run through the whole lineage. The features these models compose
 are hand designed rather than learned from data. The demonstrations are on
-small, often synthetic inputs. And although these models have dynamics by
-which a representation settles, none defines a transition over the world being
-represented, so there is nothing in them to plan with. \Cref{chap:cna}
-inherits all three.
+small, often synthetic inputs. The third is that these models have dynamics by
+which a representation settles, while none of them defines a transition over
+the world being represented, so there is nothing in them to plan with.
+\Cref{chap:cna} inherits all three.
 
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -685,35 +680,34 @@ die~\cite{dufortlabbe_maxwell_2025}. A decayed per unit gain acts as a gate
 that induces sparsity~\cite{mehta_implicit_2019, kolb_differentiable_2025}.
 In large language models trained with a matrix
 preconditioner, neurons whose rows are updated by persistently small amounts
-simply die~\cite{dewulf_aurora_2026}. And under coupled decay, where a neuron
-settles depends on its own gradient norm~\cite{kosson_rotational_2024}. Each
+simply die~\cite{dewulf_aurora_2026}. Under coupled decay, finally, where a
+neuron settles depends on its own gradient norm~\cite{kosson_rotational_2024}. Each
 of these is treated as a pathology to be avoided or as a lever for pruning.
 
-What has not been done is to treat them as one thing. There is no account that
-derives a single condition covering the separate routes, and none that reads
-the number of neurons left in use as a property of the rule, to be compared
-across rules at a matched setting and priced. The closest work asks how
-grokking relates to the structure a network settles
-into~\cite{manningcoe_grokking_2025}, which is a question about the phenomenon
-rather than about the rule.
+Nobody has treated them as one thing. There is no account that derives a
+single condition covering the separate routes, and none that reads the number
+of neurons left in use as a property of the rule, to be compared across rules
+at a matched setting and priced. The closest work asks how grokking relates to
+the structure a network settles into~\cite{manningcoe_grokking_2025}, which
+asks about the phenomenon and leaves the rule aside.
 
 Three literatures above come close from other directions and none of them asks
 it either. \Cref{sec:bg_solutionset} varies the optimizer and characterises
 which norm or margin the procedure selects, never which units are in use.
 \Cref{sec:bg_coding} supplies a measure for how far a computation spreads and
-evidence that the answer has a price, in populations of cells rather than in a
-trained layer. \Cref{sec:bg_grokking} supplies the one setting where the
+evidence that the answer has a price, taken in populations of cells where this
+thesis needs it in a trained layer. \Cref{sec:bg_grokking} supplies the one setting where the
 answer can be read off a network neuron by neuron, with the procedure held
 fixed throughout.
 
-So three specific things are missing. A comparison that holds the task, the
-data, the architecture and the width fixed, varies the rule that assigns
-credit, and reads the solution each rule reached. A statement of which rules
-change the number of neurons in use, derived from the form of their update
-rather than found by trying them. And a measurement of what the resulting
-circuit costs.
+Three specific things are therefore missing. The first is a comparison that
+holds the task, the data, the architecture and the width fixed, varies the
+rule that assigns credit, and reads the solution each rule reached. The second
+is a statement of which rules change the number of neurons in use, derived
+from the form of their update rather than found by trying them. The third is a
+measurement of what the resulting circuit costs.
 
-Two smaller ones are missing too. The same question has not been asked of a
-Transformer's attention weights with the training objective as the variable.
-And the assembly tradition has not been read as a case where the structure is
-fixed by construction rather than produced by training.
+Two smaller ones are missing too. Nobody has asked the same question of a
+Transformer's attention weights with the training objective as the variable,
+and nobody has read the assembly tradition as a case where the structure is
+fixed by construction instead of being produced by training.

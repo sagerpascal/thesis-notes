@@ -35,14 +35,14 @@ reductions did not survive the controls the thesis author added later, and
 the paper was rewritten twice: first as a study of what the constraint really
 does to the measurement, and then as the correction to the measurement
 protocol that this chapter reproduces. The decision to publish the correction
-rather than the original claim is the thesis author's.
+in place of the original claim is the thesis author's.
 
 \section{Chapter Introduction}
 
 The two chapters before this one each measured a trained network and drew a
-conclusion from what the measurement said. That move is only as good as the
-readout behind it, and this chapter is about a case where the readout the
-field uses reports something other than what it names.
+conclusion from what the measurement said. Each conclusion rests on the
+readout that produced it, and this chapter takes up a case where the readout
+the field uses reports something other than what it names.
 
 The setting is a latent world model, which encodes an observation, predicts
 forward in its own latent space, and never reconstructs an observation. There
@@ -51,14 +51,15 @@ A regressor is fitted from latent space to physical state on encoded
 observations and then turned loose on the latents the model predicts. The quantity the
 probe is supposed to report is how well the model predicts the state.
 
-What it reports instead, when the training loss leaves the norm of a latent
-free, is largely the drift in that norm. This is the same shape of problem as
+Where the training loss leaves the norm of a latent free, most of what the
+probe reports is the drift in that norm. This is the same shape of problem as
 the one the previous chapters have to answer about their own measure, and
 \cref{chap:discussion} turns the standard set here back on the participation
-ratio. The contribution to the thesis argument is therefore twofold. It is a
-property that training leaves open and that something else then settles, which
-is the thesis's subject in a third substrate. And it is the one standard in
-this thesis that applies to more than one chapter.
+ratio. The contribution to the thesis argument is therefore twofold. The
+chapter takes up a property that training leaves open and that something else
+then settles, which is the thesis's subject in a third substrate. It also
+supplies the one standard in this thesis that applies to more than one
+chapter.
 
 This chapter has no circuit in it and computes no participation ratio. It is
 the methodological chapter and is introduced as such. The manuscript it
@@ -104,8 +105,9 @@ latents that hold the state in their direction, a norm error of $5\%$ per
 prediction step multiplies the norm by ten within $47$ steps, and the probe's
 error reaches $27$ times that of always predicting the mean state. When the norm varies
 independently of the true error, the probe orders only about $61\%$ of pairs
-of latents correctly, where chance is $50\%$. So a worse model that drifts
-less can rank above a better one, which is not a hypothetical. Against models
+of latents correctly, where chance is $50\%$. A worse model that drifts less
+can therefore rank above a better one, and the chapter shows it happening.
+Against models
 built to have a known accuracy, the ordinary probe ranks the worse model first
 in all $120$ pairs, and re-projection recovers $88$ of those rankings with no
 false confirmation.
@@ -121,17 +123,15 @@ prediction norms.
 The correction is re-projection. Each prediction is rescaled to a reference
 norm taken from the encodings, its direction is kept, and the same probe is
 applied again. It needs no retraining and can be added to any state probe
-evaluation. Four checks come with it, testing whether what the re-projected
-error reports is what the model predicts rather than an artefact of the
-rescaling.
+evaluation. Four checks come with it, each asking whether the re-projected
+error reports the model's prediction or an artefact of the rescaling.
 
 Run on the paper's own trained world models, those checks fail. None of the
 rankings between the four dynamics modules holds, because the rollouts do no
 better than a probe fitted from the initial encoding, or they land away from
 the directions the encoder produces. That is a negative result about the
 authors' own models, and it is the strongest evidence in the chapter that the
-checks do real work. A protocol that never rejects anything is not a
-protocol.
+checks have teeth.
 
 Where the training design already keeps the norm in check, the correction
 changes nothing and should not be applied blindly. Squared error training
@@ -141,9 +141,9 @@ then carrying the model's uncertainty about an uncertain future and removing
 it discards information. An output constraint that sets the norm of every
 prediction from its direction leaves predictions unchanged under re-projection
 by construction. Beyond the supervised horizon the drift returns even under
-squared error. The lesson is not that norms should be removed, but that an
-evaluation has to establish which quantity its readout is responding to before
-its ranking means anything.
+squared error. The chapter asks that an evaluation establish which quantity
+its readout responds to before its ranking is read. Removing norms is a
+separate question and the chapter takes no position on it.
 
 \Cref{chap:cna} takes the last of the properties this thesis treats as open
 and asks what happens if it is closed by construction instead.
