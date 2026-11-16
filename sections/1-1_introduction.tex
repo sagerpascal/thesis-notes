@@ -26,9 +26,9 @@ accuracy falls to $0.976$. The difference grows with the layer. At $2048$
 neurons the untouched network uses $332$ and the changed one $2046$, and there
 both networks reach $0.998$~\cite{sager_grokking_2026}.
 
-So how much of a network ends up doing the work is not settled by what the
-network is asked to do. It is settled by how the network is trained, and more
-precisely by how training divides the error among the neurons. This thesis
+So the share of a network that ends up doing the work does not follow from
+the problem it was given. It follows from the training, and specifically from
+the way training apportions the error across neurons. This thesis
 measures that, measures what it costs, and asks what else a task leaves open
 in a trained network.
 
@@ -46,7 +46,8 @@ and more room to put to a new use. The second effect is narrow and the
 limits belong with it. A concentrated network reaches a task that needs new
 combinations of the features it already has in $640$ epochs where the spread
 one needs $1540$, which is no better than the $1410$ it takes from scratch.
-Neither helps on a task that only changes which answer each feature votes for,
+Neither circuit helps where the target keeps the same features and only
+reassigns which answer each supports,
 and on modular multiplication no pretrained network beats training from
 scratch~\cite{sager_grokking_2026}.
 

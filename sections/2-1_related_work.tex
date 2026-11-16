@@ -299,9 +299,9 @@ which of the solutions that fit was reached.
 \label{sec:bg_grokcircuit}
 
 What makes this setting useful is that the generalising solution has been
-taken apart. The embedding maps each operand onto a small number of
-frequencies, the hidden layer combines them into the sine and cosine of the
-sum, and the output unit for each candidate answer is largest at the correct
+taken apart. Each operand is embedded onto a handful of frequencies, trigonometric
+identities in the hidden layer turn the pair into functions of the sum, and
+the output unit for every candidate answer peaks at the right
 one~\cite{nanda_progress_2023}. The same computation has been derived in
 closed form for a network of one hidden layer~\cite{gromov_grokking_2023}, and
 the analysis carries over to composition in a group that is not commutative,
@@ -338,8 +338,8 @@ The claim operates at two levels that the evidence does not separate. One is
 what is computed, and for modular addition the answer is the Fourier
 construction above. The other is how many neurons carry it. This thesis does
 not contest the first. What is worth noticing about the evidence for the
-second is that every network behind it was trained with backpropagation and an
-adaptive optimizer, which is one procedure among many.
+second is that all of that evidence comes from networks trained one
+way, by backpropagation under an adaptive optimizer.
 
 
 \section{How far a computation spreads has been measured, and the measure has to be chosen}
@@ -418,9 +418,8 @@ design~\cite{ahmad_dense_2019}.
 \subsection{Participation ratio counts the parts that contribute, and some measures mislead}
 \label{sec:bg_measures}
 
-The quantity this thesis measures is the participation ratio. For a set of
-non negative quantities it is the square of their sum divided by the sum of
-their squares, which equals the number of quantities when they are all equal
+The quantity this thesis measures is the participation ratio. Given a set of non negative
+quantities, it divides the squared total by the total of the squares, which equals the number of quantities when they are all equal
 and falls towards one as a few of them dominate. Multiplying the normalised
 form by the number of units reads as an effective count of how many units
 contribute. The measure is standard in both

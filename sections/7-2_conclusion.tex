@@ -9,19 +9,19 @@ how many neurons carry a grokked solution, and the settlement is not small:
 the same Fourier construction is implemented by about $154$ of $256$ neurons
 or by about $254$, depending on the rule.
 
-Which rules move it can be read off the form of their update. A neuron drops
-out of use when the credit it receives is small relative to the part of its
-own update that does not come from the gradient, and that one condition covers
-three mechanisms which had no common account before. Only a normalising factor
-shared by exactly one neuron can change that ratio, which is a yes or no about
+Which rules move it can be read off the form of their update. A neuron falls out of use when its
+share of the error is small beside whatever else is moving its weights, and
+that criterion unifies three mechanisms the literature had kept apart. The
+ratio it compares can be altered only by a normalising factor belonging to a
+single neuron, which is a yes or no about
 a rule rather than a ranking among rules. Of the rules compared, Nero is the
 only optimizer in general use on the far side of that line, together with the
 credit equalisation introduced for the comparison.
 
 The choice is not free. A computation spread over more neurons tolerates the
-deletion of neurons better. A computation held on fewer prunes further and
-reaches a task that needs new combinations of the features already learned in
-$640$ epochs, where the spread one needs $1540$. That advantage is narrow: the
+deletion of neurons better. A computation held on fewer prunes further, and on a
+target assembled from fresh combinations of what it already knows it arrives
+in $640$ epochs where the spread one takes $1540$. That advantage is narrow: the
 spread circuit is no slower than the $1410$ epochs training from scratch
 takes, neither circuit helps on a task that only changes which answer each
 feature votes for, and on modular multiplication no pretrained network beats
@@ -35,16 +35,16 @@ pairs the objective admits decides whether a Transformer's attention weights
 stay close to symmetric or become directional, with columns of high norm
 outnumbering rows of high norm, in models at the scale the field works at.
 
-A measurement taken of a trained network is only as good as the readout behind
-it. The probe used to score latent world models responds largely to the norm
+Any claim about a trained network inherits the weaknesses of whatever read it
+out. The probe used to score latent world models responds largely to the norm
 of a predicted latent, a quantity a cosine training loss never fixes, and
 rescaling each prediction to a reference norm taken from the encodings removes
 most of the error without retraining anything.
 
 That standard applies to this thesis's own measure, and applying it changes
-the answer in part. Measures tied to the computation place the untouched
-network lower than the structural measure does while moving in the same
-direction under every intervention, so the direction of the central result
+the answer in part. The two measures anchored in what the network
+actually computes put the untouched case lower than the structural one does,
+and all three rise together under every intervention, so the direction of the central result
 survives the check and the level reported by the structural measure is the
 largest of the three.
 

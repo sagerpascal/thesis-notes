@@ -156,7 +156,7 @@ brittle and semantic matching alone is imprecise. The pipeline uses both.
 Keyword matching with BM25 returns the $30$ best candidates, a dense search
 over a vector store using a fine tuned retriever returns $100$, the two
 candidate sets are merged, and a cross encoder built on a language model
-re-ranks what is left.
+rescores what is left.
 
 The pipeline reaches a mean reciprocal rank at five of $76.46\%$ on the
 development set, which placed first on that leaderboard, and $66.43\%$ on the

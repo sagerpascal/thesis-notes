@@ -59,8 +59,8 @@ implement it is a count of something whose meaning is settled, and a network
 of a few hundred hidden units is small enough that every one of them can be
 examined.
 
-The chapter is where this thesis establishes its claim, and nothing later
-re-establishes it. Everything \cref{sec:intro_rule} states in one line is
+The chapter is where this thesis establishes its claim, and no later chapter
+establishes it again. Everything \cref{sec:intro_rule} states in one line is
 stated here in full, with the controls that support it and the settings where
 it does not apply.
 
@@ -102,24 +102,24 @@ is the axis \cref{sec:bg_grain} lays the optimizers along.
 \section{Chapter Summary}
 
 Every learning rule that groks modular addition recovers the same Fourier
-construction, and the number of neurons that implement it differs between
-rules at the same width, with the task, the data, the architecture and the
-width held fixed. Among the eight published optimizers compared the spread is
-modest, from $0.470$ to $0.613$ of the layer. Nero and the credit equalisation
+construction, and the count of neurons implementing it varies from rule to
+rule at one width, with everything outside the rule held constant. Among the
+eight published optimizers compared the spread is modest, from $0.470$ to $0.613$ of the layer. Nero and the credit equalisation
 introduced below reach the other end, near $0.99$, so the full range is a
 property of this comparison and not of the optimizers in general use. Unless
 stated otherwise the measurements concern the first of the network's two
-hidden layers. A neuron stays in use when
-the credit it receives is large relative to the part of its own update that
-does not come from the gradient. That single condition accounts for three
-mechanisms which previously had no common explanation: a weight decay term
+hidden layers.
+
+A neuron survives when its share of the error is large beside whatever else
+is moving its weights. That one criterion accounts for three mechanisms which
+had been described separately: a weight decay term
 added to the gradient before an adaptive optimizer, the numerical floor in
 that optimizer's denominator, and the decay of a trainable per neuron gain.
 
 Acting on the condition moves the circuit. Equalising the credit each neuron
-receives, while leaving every gradient's direction untouched, expands the
-circuit from $60\%$ to $99\%$ of the layer at width $256$, which is about
-$154$ neurons against about $254$. The same expansion follows when the
+receives, while leaving every gradient's direction untouched, lifts a layer of
+$256$ units from $60$ per cent in use to $99$, about $154$ neurons against
+about $254$. The same expansion follows when the
 intervention is switched on after the network has already generalised, so the
 rule holds the circuit open rather than setting it once. Margin and parameter
 norm stay within a few percent and mean test accuracy falls from $0.998$ to
@@ -128,9 +128,9 @@ $0.976$.
 The causal evidence does not depend on the intervention. Imposing a credit
 profile directly, with a random permutation drawn once per run deciding which
 neuron receives which magnitude, makes the assignment independent of what any
-neuron computes. Circuit participation follows the imposed value from $0.637$
-to $0.990$, tolerance of neuron deletion rises with it, and test accuracy
-stays above $0.96$.
+neuron computes. The circuit tracks the imposed profile across its
+range, $0.637$ to $0.990$, deletion tolerance climbs with it, and test
+accuracy never drops below $0.96$.
 
 Which published rules move the circuit follows from the condition as a
 yes or no rather than as an ordering. Only a normaliser shared by exactly one
@@ -147,11 +147,11 @@ chapter's intervention, so they are not two points on one scale of optimizers.
 What separates them is whether the normalisation is shared by exactly one
 neuron.
 
-The circuit is paid for in test accuracy, in tolerance of neuron deletion, in
-how far the network prunes and in how fast it transfers. A distributed circuit
+Four quantities move when the circuit does: test accuracy, how much deletion
+the network survives, how far it prunes, and how quickly it transfers. A distributed circuit
 tolerates random deletion of neurons better. A concentrated circuit prunes
-further, and reaches a task that needs new combinations of the features
-already learned in $640$ epochs where the distributed one needs $1540$,
+further, and on a target built from fresh combinations of the features it
+already holds it arrives in $640$ epochs against $1540$ for the spread one,
 largely by recruiting the neurons it was not using. Two limits belong in the
 same breath. The distributed circuit's $1540$ epochs are no better than the
 $1410$ needed from scratch, so the result is that concentration helps rather
@@ -161,15 +161,16 @@ move itself costs the two points of test accuracy above.
 
 Three limits belong with the result. The effect grows with width: across
 widths from $32$ to $2048$ the untouched network's participation falls from
-$0.937$ to $0.162$, so at width $32$ it already uses $30$ of its $32$ neurons
-and the intervention reaches $31$, while at width $2048$ it uses $332$ and the
+$0.937$ to $0.162$, so at width $32$ there are $30$ of $32$ neurons in use
+before anything changes and the intervention finds a thirty first, while at
+width $2048$ it uses $332$ and the
 equalised network $2046$. On a vision task and on a canonical transformer the
 untouched network is already distributed and the intervention changes nothing.
-And the reference setting adds an L2 penalty to the gradient before an
-adaptive optimizer, which the paper is explicit is there to exercise the
-condition rather than as a recommendation. Under decoupled weight decay, which
-is what current training code uses, the reference is already distributed in
-most of the places this chapter looks. What survives that change is the
+And the reference configuration puts an L2 penalty into the gradient ahead of
+an adaptive optimizer, a pairing the paper describes as a test bed for the
+condition and not as advice. Decouple the decay, as current training code
+does, and the untouched network already spreads its computation across most of
+the settings measured here. What survives that change is the
 condition itself, and two of its three non gradient terms remain live under
 decoupled decay.
 

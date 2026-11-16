@@ -46,9 +46,9 @@ field uses reports something other than what it names.
 
 The setting is a latent world model, which encodes an observation, predicts
 forward in its own latent space, and never reconstructs an observation. There
-is nothing directly interpretable in that space, so such a model is scored
-through a probe: a regressor fitted from latent to physical state on encoded
-observations, then applied to the latents the model predicts. The quantity the
+is nothing directly interpretable in that space, so a probe stands in for one.
+A regressor is fitted from latent space to physical state on encoded
+observations and then turned loose on the latents the model predicts. The quantity the
 probe is supposed to report is how well the model predicts the state.
 
 What it reports instead, when the training loss leaves the norm of a latent
@@ -91,8 +91,9 @@ reproduces is not yet submitted, as the publication box above states.
 
 \section{Chapter Summary}
 
-A state probe fitted on encoded observations and applied to predicted latents
-is sensitive to the norm of what it is given, and the training loss of a
+Fit a regressor from latent space to physical state on encoded observations,
+apply it to predicted latents, and it responds to the size of what it is given
+as well as to the direction, and the training loss of a
 decoder free world model need not fix that norm. A cosine loss compares
 directions and leaves the norm free. During autoregressive rollout the norm of
 a predicted latent then drifts while its direction stays accurate, and the

@@ -49,6 +49,8 @@ TELLS = [
     # Self congratulation: it asks the reader to credit the candour before
     # the content arrives, and implies the alternatives were dishonest.
     "the honest answer", "the honest shape", "the honest thing",
+    "the honest form", "the honest comparison", "with room to spare",
+    "where the thesis is strongest",
     "what is true is more interesting", "what has to be admitted",
     "will find anyway", "before it is asked",
     "to be fair", "it is fair to say", "in truth",
@@ -84,6 +86,46 @@ ANAPHORIC_TRIPLE = re.compile(
 COUNT_WORDS = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
                "seven": 7, "eight": 8, "nine": 9, "ten": 10}
 
+# A paragraph whose content is what the text does NOT claim. One is candour,
+# ten is a habit, and a thesis that keeps announcing its scrupulousness reads
+# as anxious rather than careful.
+DISCLAIMER = re.compile(
+    r"\b(computes|measures|runs|counts|reports|contains|establishes)\s+no\b"
+    r"|\b(does|do)\s+not\s+(claim|show|contest|predict|develop|bear|argue"
+    r"|establish)\b"
+    r"|\bno\s+(claim|participation ratio|argument|deletion protocol"
+    r"|single measurement)\b"
+    r"|\bneither\s+confirms\b", re.I)
+DISCLAIMER_PER_1000 = 2.0
+
+# Announcing a count and then delivering it. Fine once, and at twenty times
+# it is the rhythm of something that enumerates before it writes.
+COUNTED_OPENER = re.compile(
+    r"(?:^|(?<=\.)\s)(One|Two|Three|Four|Five|Six)\s+(?:\w+\s+){0,3}"
+    r"(things?|points?|limits?|reasons?|ways?|kinds?|results?|checks?"
+    r"|consequences?|currencies|literatures?|measures?|parallels?|places?"
+    r"|of notation|smaller)\b")
+COUNTED_OPENER_PER_1000 = 1.5
+
+# CLAUDE.md 3.3 bans a hyphen used as a connector. The exceptions are names.
+HYPHEN_OK = {
+    "sign-sgd", "k-fac", "forward-forward", "vision-language", "re-projection",
+    "re-projected", "re-projecting", "re-ranking", "co-authors", "arc-agi",
+    "pre-activation", "self-attention", "non-stationary",
+    # Ordinary English compounds and words from a published title, which the
+    # guide's "a hyphen inside an established name is fine" covers.
+    "full-time", "part-time", "decision-making", "state-probe", "long-term",
+    "state-of-the-art", "e-mail",
+}
+HYPHEN = re.compile(r"(?<![\\{/\w-])([a-z]{2,}-[a-z]{2,})(?![\w/}-])")
+
+# The frame uses \cref throughout. A bare Chapter~\ref is the older style and
+# marks a file written in a different pass.
+BARE_REF = re.compile(r"\b(Chapter|Section|Figure|Table|Appendix)~\\ref\{")
+
+SHINGLE_N = 12
+
+
 HARD = {
     "em dash": re.compile(r"[—–]"),
     "banned word": re.compile("|".join(re.escape(w) for w in BANNED), re.I),
@@ -103,6 +145,7 @@ HARD = {
     # to generalise" as the example. A short capitalised run before a colon at
     # the head of a line is that shape.
     "label sentence": re.compile(r"(?m)^\s*[A-Z][A-Za-z][A-Za-z ]{0,22}:\s+\S"),
+    "bare cross reference": BARE_REF,
 }
 
 SOFT = {
@@ -159,10 +202,35 @@ def heading_lines(text: str) -> set[int]:
     return covered
 
 
+def imported_lines(text: str) -> set[int]:
+    """Line numbers inside an importedpaper block.
+
+    A wrapper reproduces a published float there, under the paper's own
+    label, so that the body's references resolve (CLAUDE.md 4.3). That text
+    is published and exempt from the style guide like any other imported
+    text, and a checker that flags it would be flagging something nobody is
+    allowed to change.
+    """
+    covered: set[int] = set()
+    lines = text.split("\n")
+    depth = 0
+    for n, raw in enumerate(lines, 1):
+        if "\\begin{importedpaper}" in raw:
+            depth += 1
+        if depth:
+            covered.add(n)
+        if "\\end{importedpaper}" in raw:
+            depth = max(0, depth - 1)
+    return covered
+
+
 def strip_latex(text: str) -> list[tuple[int, str]]:
     """Return (line number, prose) with comments, math and markup removed."""
     out = []
+    skip = imported_lines(text)
     for n, raw in enumerate(text.split("\n"), 1):
+        if n in skip:
+            continue
         line = re.sub(r"(?<!\\)%.*$", "", raw)
         # Lines that are nothing but a path or a declaration. They carry file
         # names with underscores, which the code identifier rule would
@@ -301,6 +369,21 @@ def check_file(path: Path) -> tuple[list, list]:
         for n, what in anti:
             soft.append(("antithesis", n, what[:60]))
 
+    n_disc = len(DISCLAIMER.findall(prose))
+    if words > 400 and n_disc / words * 1000 > DISCLAIMER_PER_1000:
+        soft.append(("disclaimer density", 0,
+                     f"{n_disc} passages say what the text does not claim, "
+                     f"{n_disc / words * 1000:.1f} per 1000 words"))
+    n_cnt = len(COUNTED_OPENER.findall(prose))
+    if words > 400 and n_cnt / words * 1000 > COUNTED_OPENER_PER_1000:
+        soft.append(("counted opener density", 0,
+                     f"{n_cnt} sentences announce a count before delivering "
+                     f"it, {n_cnt / words * 1000:.1f} per 1000 words"))
+    for n, line in lines:
+        for m in HYPHEN.finditer(line):
+            if m.group(1).lower() not in HYPHEN_OK:
+                hard.append(("hyphen as connector", n, m.group(1)))
+
     drafts = [text.count("\n", 0, m.start()) + 1
               for m in DRAFT_REF.finditer(text)]
     if len(drafts) > DRAFT_REF_MAX:
@@ -320,9 +403,32 @@ def main() -> int:
             targets.extend(sorted(p.glob("*.tex")))
         elif p.is_file():
             targets.append(p)
+    # Cross file duplication. Nothing else in this script looks across files,
+    # and a twelve word run that appears in two of them is a copy rather than
+    # a coincidence. It is how the abstract and the introduction came to open
+    # on the same twenty five words.
+    dup: dict[Path, list[tuple[str, int, str]]] = {}
+    seen: dict[str, tuple[Path, int]] = {}
+    for path in targets:
+        reported: set[Path] = set()
+        for start, body in paragraphs(strip_latex(path.read_text(encoding="utf-8"))):
+            w = re.sub(r"[^a-z ]", " ", body.lower()).split()
+            for i in range(len(w) - SHINGLE_N + 1):
+                key = " ".join(w[i:i + SHINGLE_N])
+                if key in seen and seen[key][0] != path:
+                    other, oline = seen[key]
+                    if other in reported:
+                        continue
+                    reported.add(other)
+                    dup.setdefault(path, []).append(
+                        ("duplicated across files", start,
+                         f"also in {other.name}:{oline}: {key[:60]}..."))
+                seen.setdefault(key, (path, start))
+
     n_hard = n_soft = 0
     for path in targets:
         hard, soft = check_file(path)
+        hard.extend(dup.get(path, []))
         if not hard and not soft:
             continue
         rel = path.relative_to(ROOT)

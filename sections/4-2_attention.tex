@@ -91,9 +91,9 @@ the product written $W_Q^\top W_K$ elsewhere in the literature.
 
 \section{Chapter Summary}
 
-The update to a Transformer's attention weights is a sum over the ordered
-pairs of tokens that the training objective admits, and the two standard
-objectives admit different sets. Bidirectional training enters every pair in
+Every gradient step on a Transformer's attention weights accumulates over
+whichever ordered token pairs the objective allows, and the two standard
+objectives allow different ones. Bidirectional training enters every pair in
 both orders, once with each token as the masked target, so the contributions
 cancel antisymmetrically and the query key product stays close to symmetric.
 Autoregressive training makes each token the target exactly once and the
