@@ -1141,11 +1141,26 @@ and `generated/` trees, and all seven scripts.
     flags the two float list pages, and there it is an artefact: `trimclip`
     hides the end of a clipped caption but leaves it in the text layer, so its
     boxes still run past the edge with nothing visible there.
-13. **The two float lists print whole captions.** The papers contain 211
-    captions and not one carries LaTeX's short form. The entries are currently
-    clipped to one line with an ellipsis, which is a truncation and not a
-    summary. The options, the measurements and a recommended mechanism are in
-    `00_ADMIN/06_float_presentation_concept.md`.
+13. **Three float list entries still clip.** Option 2 of
+    `00_ADMIN/06_float_presentation_concept.md` is implemented in
+    `thesis_import.sty`: inside a block `\caption` is patched to compute a
+    short form, taking the contents of a leading `\textbf` group where the
+    paper writes its claim in bold, and otherwise the first sentence, with a
+    width guard so that an abbreviation such as "Fig." does not end the
+    sentence early. The clipping in `thesis_style.tex` stays as the fallback
+    and now fires on three entries of about $130$ rather than on all of them.
+
+    Cross references are dropped from the short form, because a float list is
+    an index and a reference there points at something the reader has not
+    reached. That also keeps the attention paper's upstream-broken equation
+    label from printing a second `??`, this time in the list of figures. The
+    cost is a stray parenthesis in one clipped entry, where the reference sat
+    inside brackets.
+
+    The three that still clip are the cases Option 3 of that note exists for,
+    which is a declared summary keyed by label. That needs the entry to be
+    stashed at `\caption` and written at `\label`, and it has not been built.
+    Two of the three open with a panel label rather than a claim.
 14. **Table style is not uniform across the papers.** 89 `\toprule` against
     39 `\hline`, table font sizes from `\footnotesize` to nothing at all, and
     COGITAO putting its captions below the table while the other eight put

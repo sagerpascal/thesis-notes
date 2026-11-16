@@ -344,6 +344,105 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   \expandafter\graphicspath\expandafter{\ip@gpath}%
 }
 
+
+% ---------------------------------------------------------------------------
+% SHORT FORMS FOR THE LIST OF FIGURES AND THE LIST OF TABLES
+%
+% Option 2 of 00_ADMIN/06_float_presentation_concept.md. The papers contain
+% 211 captions and not one carries LaTeX's short form, so the two lists were
+% walls of text. thesis_style.tex clips an over-long entry to one line, which
+% is a truncation rather than a summary. Inside a block the caption is still an
+% ordinary token list when \caption receives it, so the first sentence can be
+% split off there and passed as the optional argument. The clipping stays as
+% the fallback for a first sentence that is itself too long.
+%
+% Two guards, both found by the concept note.
+%
+% An abbreviation ends the sentence early: "Fig. 2 shows ..." splits at "Fig".
+% The candidate is therefore typeset into a box and measured, and one narrower
+% than \ip@capmin is extended with the next sentence. Measuring is used rather
+% than counting characters because a caption is a token list and may hold
+% macros that no string test can see through.
+%
+% Measuring typesets the candidate, so anything with a side effect is disabled
+% first. \label matters most: letting one fire twice is how this repository
+% gets a duplicate label.
+%
+% A caption that already carries a short form is left alone, and so is a
+% caption inside a subfigure, which does not belong in the list anyway.
+\newsavebox{\ip@capbox}
+\newlength{\ip@capmin}
+\setlength{\ip@capmin}{5em}
+\newif\ifip@capdone
+
+\def\ip@mark{\ip@mark@}
+
+\newcommand{\ip@firstsentence}[1]{%
+  \let\ip@cand\@empty
+  \ip@capdonefalse
+  \ip@fs#1. \ip@mark\ip@stop}
+
+\def\ip@fs#1. #2\ip@stop{%
+  \ifx\ip@cand\@empty
+    \protected@edef\ip@cand{\unexpanded{#1}}%
+  \else
+    \protected@edef\ip@cand{\ip@cand. \unexpanded{#1}}%
+  \fi
+  \def\ip@rest{#2}%
+  \ifx\ip@rest\ip@mark
+    % No further sentence to take.
+    \ip@capdonetrue
+  \else
+    \begingroup
+      \let\label\@gobble \let\index\@gobble \let\footnote\@gobble
+      \let\nonumber\relax
+      \sbox\ip@capbox{\ip@cand}%
+      \ifdim\wd\ip@capbox>\ip@capmin \aftergroup\ip@capdonetrue \fi
+    \endgroup
+  \fi
+  \ifip@capdone\else\ip@fs#2\ip@stop\fi}
+
+% Most of these papers open a caption with the claim in bold, which is the
+% convention CLAUDE.md 3.8 asks for and is exactly the short form wanted. The
+% period then sits inside the \textbf group, where the sentence splitter
+% cannot see it, so that case is taken first: a caption whose very first token
+% is \textbf contributes the contents of that group. A bold lead-in too narrow
+% to be a sentence, such as a panel label, falls through to the splitter.
+\def\ip@bfmark{\ip@bfmark@}
+\def\ip@bfprobe#1\textbf#2#3\ip@stop{%
+  \def\ip@pre{#1}%
+  \def\ip@bf{#2}}
+
+% A cross reference does not belong in a list of figures entry. It is an
+% index rather than prose, the number it prints points at something the reader
+% has not reached, and a caption whose reference is broken upstream would
+% print ?? twice instead of once: the self-attention paper's
+% eq:weight-update-bilinear-form-prediction lives only in a variant the thesis
+% does not import. References are therefore dropped from the short form and
+% kept in the caption itself.
+\newcommand{\ip@shortform}[1]{{%
+  \let\ref\@gobble \let\eqref\@gobble \let\pageref\@gobble
+  \let\cref\@gobble \let\Cref\@gobble \let\autoref\@gobble
+  \let\nameref\@gobble
+  #1}}
+
+\newcommand{\ip@caption}{\@ifnextchar[{\ip@save@caption}{\ip@caption@auto}}
+\newcommand{\ip@caption@auto}[1]{%
+  \ip@bfprobe#1\ip@bfmark\textbf{}\ip@stop
+  \ifx\ip@pre\@empty
+    \begingroup
+      \let\label\@gobble \let\index\@gobble \let\footnote\@gobble
+      \sbox\ip@capbox{\ip@bf}%
+      \ifdim\wd\ip@capbox>\ip@capmin \aftergroup\ip@capdonetrue
+      \else \aftergroup\ip@capdonefalse \fi
+    \endgroup
+    \ifip@capdone \let\ip@cand\ip@bf \else \ip@firstsentence{#1}\fi
+  \else
+    \ip@firstsentence{#1}%
+  \fi
+  \protected@edef\ip@cand{\protect\ip@shortform{\ip@cand}}%
+  \expandafter\ip@save@caption\expandafter[\ip@cand]{#1}}
+
 \newenvironment{importedpaper}[1]{%
   \ifip@inside
     \PackageError{thesis_import}{importedpaper cannot be nested}{}%
@@ -397,6 +496,11 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   % Papers built with the subfiles package.
   \let\ip@save@subfile\subfile
   \let\subfile\ip@subfile
+  % Short forms for the float lists, see above. Captions inside a
+  % subfigure keep the original, because \subcaption is a separate
+  % command and is not patched.
+  \let\ip@save@caption\caption
+  \let\caption\ip@caption
   \renewcommand{\ip@cwd}{}%
 }{%
   % Flush this paper's floats before the next block starts. Without it one
@@ -404,6 +508,7 @@ autoref,cref,Cref,crefrange,Crefrange,addcontentsline}
   % enough queue deadlocks the output routine.
   \clearpage
   \let\subfile\ip@save@subfile
+  \let\caption\ip@save@caption
   \@for\ip@c:=\ip@allcommands\do{\expandafter\ip@unpatch\expandafter{\ip@c}}%
   \let\Ginput@path\ip@save@Ginput@path
   \let\input@path\ip@save@inputpath
