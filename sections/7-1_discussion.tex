@@ -19,8 +19,7 @@
 The results of this thesis separate two levels at which a question about a
 trained network can be asked. At one level the question is what the network
 computes, and for modular addition the answer is settled: every rule that
-generalises arrives at the same Fourier construction. That is what the
-universality claim says, and \cref{chap:grokking} confirms it. At the other level the question is how that computation is
+generalises arrives at the same Fourier construction. The universality claim says exactly that, and \cref{chap:grokking} confirms it. At the other level the question is how that computation is
 spread across the parts available to it, and there the answer is not settled by the
 task. The same algorithm is implemented by about $154$ neurons or by about
 $254$ at width $256$, depending on the rule that trained the network.
@@ -132,8 +131,8 @@ between two neurons by a quantity symmetric in the two, so repeated
 application accumulates a symmetric weight matrix. That is the same mechanism
 \cref{chap:attention} identifies in bidirectional training, where each pair of
 tokens enters the update in both orders and the antisymmetric parts cancel.
-Both arrive at symmetric weights for the same reason, which is that their
-updates are sums over unordered pairs.
+Both arrive at symmetric weights for the same reason: their updates are sums over
+unordered pairs.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Limitations}

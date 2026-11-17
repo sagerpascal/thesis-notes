@@ -47,7 +47,7 @@ study in which eight human raters judged the generated text.
 Two results matter here. Quantisation reduces the memory a model needs by a
 large factor, which is the saving it is sold on. It also costs text quality
 that the human raters noticed and that the standard automatic metrics missed,
-where the advertising of the day promised a saving without a cost. Low-rank
+where the advertising of the day promised a saving without a cost. Low rank
 adapters allow a model to be fine tuned with moderate compute and avoid that
 cost.
 
@@ -56,7 +56,7 @@ that was not sensitive to the property the score was taken to stand for, and
 the gap only became visible when a different readout, human judgement, was
 applied to the same models. \Cref{chap:bounded} analyses the same failure in
 a setting where the readout admits a correction. The two are cases of one
-mistake, and the mechanism behind each is its own.
+mistake, with a different mechanism behind each.
 
 % ---------------------------------------------------------------------------
 \section{Architectures built for composition still fail on unseen rule combinations}
